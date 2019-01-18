@@ -1,0 +1,23 @@
+[
+  {
+    "text": "Jobcard",
+    "sref": "",
+    "icon": "fa fa-vcard-o",
+		"subnav": [
+		  {"text": "All", "sref": "app.CrmAllJobcard", "translate": "" },
+		  {"text": "Add/Edit", "sref": "app.CrmJobcard", "translate": "" }
+		],
+		"translate": "",
+    "permission": "jobcard"
+  },
+  {
+    "text": "Clients",
+    "sref": "",
+    "icon": "icon-head",
+		"subnav": [
+		  {"text": "List of Clients", "sref": "app.CrmClientFilterView", "translate": "" }
+		],
+		"translate": "",
+    "permission": "clients"
+  }
+]

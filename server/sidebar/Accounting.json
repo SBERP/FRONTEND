@@ -1,0 +1,142 @@
+[
+  {
+    "text": "Sales",
+    "sref": "#",
+    "icon": "icon-outbox",
+    "subnav": [
+      { "text": "Add/Edit", "sref": "app.AccSales", "translate": "" },
+      { "text": "Tax Invoice", "sref": "app.AccViewWholeSales", "translate": "" }
+    ],
+    "permission":"sales"
+  },
+  {
+    "text": "Purchase",
+    "sref": "#",
+    "icon": "icon-inbox",
+    "subnav": [
+      { "text": "Purchase", "sref": "app.AccPurchase", "translate": "" },
+      { "text": "Tax Purchase", "sref": "app.AccTaxPurchase", "translate": "" }
+    ],
+    "permission":"purchase"
+  },
+  {
+    "text": "Sales Order",
+    "sref": "app.AccSalesOrder",
+    "icon": "fa fa-credit-card",
+    "permission":"salesOrder"
+  },
+  {
+    "text": "Purchase Order",
+    "sref": "app.PurchaseOrder",
+    "icon": "fa fa-credit-card",
+    "permission":"purchaseOrder"
+  },
+  {
+    "text": "Quotation",
+    "sref": "app.QuotationPrint",
+    "icon": "fa fa-quora",
+    "permission":"quotation"
+  },
+  {
+    "type": "separator",
+    "permission":"creditNote"
+  },
+  {
+    "text": "Notes of Account",
+    "sref": "#",
+    "icon": "icon-ribbon",
+    "type": "heading",
+    "permission":"creditNote"
+  },
+  {
+    "text": "Credit Notes",
+    "sref": "#",
+    "icon": "icon-content-right",
+    "subnav": [
+      { "text": "View",  "sref": "app.AccViewCreditNotes", "translate": "" },
+      { "text": "Add/Edit", "sref": "app.AccCreditNotes", "translate": "" }
+    ],
+    "permission":"creditNote"
+  },
+  {
+    "text": "Debit Notes",
+    "sref": "#",
+    "icon": "icon-content-left",
+    "subnav": [
+      { "text": "View",  "sref": "app.AccViewDebitNotes", "translate": "" },
+      { "text": "Add/Edit", "sref": "app.AccDebitNotes", "translate": "" }
+    ],
+    "permission":"debitNote"
+  },
+  {
+    "type": "separator",
+    "permission":"specialJournal"
+  },
+  {
+    "text": "Special Journal",
+    "sref": "#",
+    "icon": "icon-book",
+    "subnav": [
+      { "text": "View",  "sref": "app.AccViewSpecialJrnl", "translate": "" },
+      { "text": "Add/Edit", "sref": "app.AccSpecialJrnl", "translate": "" }
+    ],
+    "permission":"specialJournal"
+  },
+  {
+    "text": "Payment",
+    "sref": "#",
+    "icon": "icon-map",
+    "subnav": [
+      { "text": "View",  "sref": "app.AccViewPayment", "translate": "" },
+      { "text": "Add/Edit", "sref": "app.AccPayment", "translate": "" }
+    ],
+    "permission":"payment"
+  },
+  {
+    "text": "Receipt",
+    "sref": "#",
+    "icon": "icon-play",
+    "subnav": [
+      { "text": "View",  "sref": "app.AccViewReceipt", "translate": "" },
+      { "text": "Add/Edit", "sref": "app.AccReceipt", "translate": "" }
+    ],
+    "permission":"receipt"
+  },
+  {
+    "type": "separator",
+    "permission":"statements"
+  },
+  {
+    "text": "Statements",
+    "sref": "#",
+    "icon": "icon-ribbon",
+    "subnav": [
+      { "text": "Trial Balance",  "sref": "app.AccTrailBalance", "translate": "" },
+      { "text": "Cash Flow",  "sref": "app.AccCashFlow", "translate": "" },
+      { "text": "P&L", "sref": "app.AccProfitLoss", "translate": "" },
+      { "text": "Balance Sheet", "sref": "app.AccBalanceSheet", "translate": "" }
+    ],
+    "permission":"statements"
+  },
+  {
+    "text": "Taxation",
+    "sref": "#",
+    "icon": "icon-stack",
+    "subnav": [
+      { "text": "SalesTax",  "sref": "app.AccViewSalesTaxation", "translate": "" },
+      { "text": "PurchaseTax", "sref": "app.AccViewPurchaseTaxation", "translate": "" },
+      { "text": "Purchase Details", "sref": "app.AccViewPurchaseDetailTaxation", "translate": "" },
+      { "text": "GST R1", "sref": "app.AccViewGstReturn", "translate": "" },
+      { "text": "GST R2", "sref": "app.AccViewGstR2", "translate": "" },
+      { "text": "GST R3", "sref": "app.AccViewGstR3", "translate": "" },
+      { "text": "GST R3B", "sref": "app.AccViewGstR3b", "translate": "" }
+    ],
+    "permission":"taxation"
+  },
+  {
+    "text": "Ledgers",
+    "sref": "app.AccLedger",
+    "icon": "icon-stack",
+    "permission":"ledger"
+  }
+]

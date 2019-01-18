@@ -1,0 +1,82 @@
+[
+  {
+    "text": "Dashboard",
+    "sref": "app.dashboard",
+    "icon": "icon-bar-graph",
+    "permission": "dashboard"
+  },
+  {
+    "text": "Companies",
+    "sref": "#",
+    "icon": "icon-box",
+    "subnav": [
+      {"text": "All", "sref": "app.Company" },
+      {"text": "Modify", "sref": "app.AddCompany" }
+    ],
+    "permission": "companies"
+  },
+  {
+    "text": "Branches",
+    "sref": "#",
+    "icon": "icon-grid",
+    "subnav": [
+      {"text": "All", "sref": "app.Branch", "translate": "" },
+      {"text": "Modify", "sref": "app.AddBranch", "translate": "" }
+    ],
+    "translate": "",
+    "permission": "branches"
+  },
+  {
+    "text": "Staff",
+    "sref": "#",
+    "icon": "fa fa-users",
+    "subnav": [
+      {"text": "All", "sref": "app.Staff", "translate": "","icon": "fa fa-users"},
+      {"text": "Add/Modify", "sref": "app.AddStaff", "translate": "" }
+    ],
+    "translate": "",
+    "permission": "staff"
+  },
+  {
+    "type": "separator",
+    "permission": "invoiceNumber"
+  },
+  {
+    "text": "Invoice#",
+    "sref": "app.Invoice",
+    "icon": "icon-paper",
+    "permission": "invoiceNumber"
+  },
+  {
+    "text": "Quotation#",
+    "sref": "app.Quotation",
+    "icon": "fa fa-quora",
+    "permission": "quotationNumber"
+  },
+  {
+    "text": "Template",
+    "sref": "app.tempGeneral",
+    "icon": "fa fa-text-height",
+    "permission": "template"
+  },
+  {
+    "type": "separator",
+    "permission": "setting"
+  },
+  {
+    "text": "Setting",
+    "sref": "#",
+    "icon": "fa fa-cog",
+    "subnav": [
+      {"text": "Option", "sref": "app.SettingOption", "icon": "fa fa-barcode", "translate": "" },
+      {"text": "Integration", "sref": "app.SettingIntegration", "icon": "fa fa-globe", "translate": "" },
+      {"text": "Jobcard#", "sref": "app.SettingJobcardNumber", "icon": "fa fa-barcode", "translate": "" },
+      {"text": "Client Profession", "sref": "app.SettingClientProfession", "icon": "fa fa-suitcase", "translate": "" },
+      {"text": "Reminders", "sref": "app.SettingReminders", "icon": "fa fa-bell-o", "translate": "" },
+      {"text": "Expenses", "sref": "app.SettingExpenses", "icon": "fa fa-bell-o", "translate": "" },
+      {"text": "Advance Measure", "sref": "app.AdvanceMeasureUnits", "icon": "fa balance-scale-right", "translate": "" }
+    ],
+    "translate": "",
+    "permission": "setting"
+  }
+]

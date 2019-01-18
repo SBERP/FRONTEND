@@ -1,0 +1,473 @@
+<style>
+.upDownIconSmall{
+height:30px;
+padding-top:2px !important;
+}
+.upDownIcon{
+height:39px;
+}
+</style>
+
+<!-- START Top Navbar-->
+<nav role="navigation" data-ng-controller="HeaderNavController" class="navbar topnavbar">
+	<!--My -->
+   <!-- {{$storage.defaultCompany.companyName}} -->
+   <!-- START navbar header-->
+   <!--div data-ng-class="app.theme.brand" class="navbar-header" style="background-color: #17A1E5 !important;height:81px" -->
+	<div data-ng-class="app.theme.brand" class="navbar-header" style="height:81px"	ng-if="app.topbar.isCollapsed">
+      <a ui-sref="app.dashboard" class="navbar-brand">
+         <img src="app/img/banner_113_45.png" alt="App Logo" class="brand-logo" />
+         <img src="app/img/banner_45_45.png" alt="App Logo" class="brand-logo-collapsed" ng-if="$storage.defaultCompany.logo.documentName"/>
+         <!-- <img src="{{erpPath+$storage.defaultCompany.logo.documentUrl+$storage.defaultCompany.logo.documentName}}" alt="App Logo" class="brand-logo" data-ng-if="$storage.defaultCompany.logo.documentName"/>
+         <img src="{{erpPath+'Storage/No-Image/no-image.jpg'}}" alt="App Logo" class="brand-logo" ng-if="!$storage.defaultCompany.logo.documentName"/> -->
+      </a>
+      <!-- Mobile buttons-->
+      <div class="mobile-toggles" >
+         <!-- Button to show/hide the header menu on mobile. Visible on mobile only.-->
+         <a href="#" toggle-state="hmenu-toggled" no-persist="no-persist" data-ng-click="toggleHeaderMenu()" class="menu-toggle">
+            <em class="fa fa-cog"></em>
+         </a>
+         <!-- Button to show/hide the sidebar on mobile. Visible on mobile only.-->
+         <a href="#" toggle-state="aside-toggled" no-persist="no-persist" class="sidebar-toggle">
+            <em class="fa fa-navicon"></em>
+         </a>
+      </div>
+	</div>
+   
+    <div data-ng-class="app.theme.brand" class="navbar-header" style="height:60px"	ng-if="!app.topbar.isCollapsed" >
+      <a ui-sref="app.dashboard" class="navbar-brand">
+         <img src="app/img/banner_113_45.png" alt="App Logo" class="brand-logo" />
+         <img src="app/img/banner_45_45.png" alt="App Logo" class="brand-logo-collapsed" />
+         <!-- <img src="{{erpPath+$storage.defaultCompany.logo.documentUrl+$storage.defaultCompany.logo.documentName}}" alt="App Logo" class="brand-logo" data-ng-if="$storage.defaultCompany.logo.documentName"/>
+         <img src="{{erpPath+'Storage/No-Image/no-image.jpg'}}"alt="App Logo" class="brand-logo" ng-if="!$storage.defaultCompany.logo.documentName"/> -->
+      </a>
+      <!-- Mobile buttons-->
+      <div class="mobile-toggles" >
+         <!-- Button to show/hide the header menu on mobile. Visible on mobile only.-->
+         <a href="#" toggle-state="hmenu-toggled" no-persist="no-persist" data-ng-click="toggleHeaderMenu()" class="menu-toggle">
+            <em class="fa fa-cog"></em>
+         </a>
+         <!-- Button to show/hide the sidebar on mobile. Visible on mobile only.-->
+         <a href="#" toggle-state="aside-toggled" no-persist="no-persist" class="sidebar-toggle">
+            <em class="fa fa-navicon"></em>
+         </a>
+      </div>
+	</div>
+   <!-- END navbar header-->
+   <!-- START Nav wrapper-->
+   <!--div collapse="headerMenuCollapsed" class="nav-wrapper collapse navbar-collapse" style="background-color: #5F7076 !important;" -->
+   <div collapse="headerMenuCollapsed" class="nav-wrapper collapse navbar-collapse headerMobileScroll" >
+      <!-- START Left navbar-->
+      <ul class="nav navbar-nav" >
+        <li class="my-topbar-select">
+            <!-- Button used to collapse the left sidebar. Only visible on tablet and desktops-->
+			<a href="#" data-ng-click="app.topbar.isCollapsed = !app.topbar.isCollapsed" class="hidden-xs my-topbar-select my-ancher-topbar-select" data-ng-class="app.topbar.isCollapsed ? 'upDownIcon' : 'upDownIconSmall'" >
+               <em data-ng-class="app.topbar.isCollapsed ? 'fa-caret-up':'fa-caret-down' " class="fa"></em>
+            </a>
+			
+            <!-- <a href="#" data-ng-click="app.sidebar.isCollapsed = !app.sidebar.isCollapsed" class="hidden-xs my-topbar-select my-ancher-topbar-select" data-ng-class="app.topbar.isCollapsed ? 'upDownIcon' : 'upDownIconSmall'">
+               <em data-ng-class="app.sidebar.isCollapsed ? 'fa-caret-right':'fa-caret-left'" class="fa"></em>
+            </a> -->
+            <a href="#" class="hidden-xs my-topbar-select my-ancher-topbar-select" data-ng-class="app.topbar.isCollapsed ? 'upDownIcon' : 'upDownIconSmall'">
+               <em data-ng-class="app.sidebar.isCollapsed ? 'fa-caret-right':'fa-caret-left'" class="fa"></em>
+            </a>
+        </li>
+      </ul>
+      <!-- END Left navbar-->
+      <!-- START Top navbar search form-->
+      <!-- Header Link Start -->
+	  <ul class="nav navbar-nav navbar-left" data-ng-class="app.topbar.isCollapsed ? 'topbarWithIcon' : 'topbarWithoutIcon'" >
+		<li class="my-topbar-select" ng-if="permissionCheck(userPermisionKey.configuration)">
+            <a ng-click="$state.go('app.dashboard');configuration()"   popover="Dashboard" popover-trigger="mouseenter" popover-placement="bottom" popover-animation="true" class="my-ancher-topbar-select myCursorPointer" >
+				<center ng-if="app.topbar.isCollapsed" ><i class="fa fa-dashboard" style="font-size:28px;" ></i> <br /> Dashboard  </center>
+				<center ng-if="!app.topbar.isCollapsed"><i class="fa fa-dashboard" style="font-size:28px;" ></i></center>
+			
+			</a>
+        </li>
+		<li  class="my-topbar-select"  data-ng-class="accountSelected ? app.theme.brand:''"  ng-if="permissionCheck(userPermisionKey.accounting)" >
+		 <!--a ng-click="getsidebar()" ui-sref="app.table-ngtable" href="/app/table-ngtable" -->
+            <a ui-sref="." ng-click="getsidebar()" popover="Accounting" popover-trigger="mouseenter" popover-placement="bottom"  popover-animation="true" class="my-ancher-topbar-select"  >
+				<center ng-if="app.topbar.isCollapsed" ><i class="fa fa-inr" style="font-size:28px;" ></i> <br />  Accounting </center>
+				<center ng-if="!app.topbar.isCollapsed" ><i class="fa fa-inr" style="font-size:28px;" ></i> </center>
+				 
+			</a>
+        </li>
+		<!--li  class="my-topbar-select {{invetorySelected?'set-my-topbar-select':''}}"  -->
+		<li  class="my-topbar-select " data-ng-class="invetorySelected ? app.theme.brand:''" ng-if="permissionCheck(userPermisionKey.inventory)" >
+            <a ui-sref="." ng-click="getInventory();"  popover="Inventory" popover-trigger="mouseenter" popover-placement="bottom"  popover-animation="true" class="my-ancher-topbar-select" >
+			<center ng-if="app.topbar.isCollapsed"><i class="fa fa-file-text-o" style="font-size:28px;" ></i> <br />  Inventory</center>
+			<center ng-if="!app.topbar.isCollapsed"><i class="fa fa-file-text-o" style="font-size:28px;" ></i></center>
+             
+			</a>
+        </li>
+		<!--li  class="my-topbar-select " data-ng-class="stockSummarySelected ? app.theme.brand:''" >
+            <a ui-sref="app.InvStockSummary" ng-click="getStockSummary()"  popover="Stock Summary" popover-trigger="mouseenter" popover-placement="bottom"  popover-animation="true" class="my-ancher-topbar-select" >
+			<center ng-if="app.topbar.isCollapsed"><i class="material-icons" style="font-size:32px;" >&#xE563;</i> <br /> Stock Summary</center>
+			<center ng-if="!app.topbar.isCollapsed"><i class="material-icons" style="font-size:32px;" >&#xE563;</i></center>
+             
+			</a>
+        </li-->
+		<li  class="my-topbar-select"  data-ng-class="crmSelected ? app.theme.brand:''" ng-if="permissionCheck(userPermisionKey.crm)">
+            <a ui-sref="."  ng-click="getCRM()" popover="CRM" popover-trigger="mouseenter" popover-placement="bottom"  popover-animation="true" class="my-ancher-topbar-select" >
+			<center ng-if="app.topbar.isCollapsed" ><i class="fa fa-users" style="font-size:28px;" ></i> <br /> CRM </center>
+			<center ng-if="!app.topbar.isCollapsed"><i class="fa fa-users" style="font-size:28px;" ></i></center>
+              
+			</a>
+        </li>
+		<li  class="my-topbar-select" data-ng-class="analyzerSelected ? app.theme.brand:''" ng-if="permissionCheck(userPermisionKey.analyzer)" >
+            <a ui-sref="."  ng-click="getAnalyzer()"  popover="Analyzer" popover-trigger="mouseenter" popover-placement="bottom"  popover-animation="true" class="my-ancher-topbar-select"  >
+			<center ng-if="app.topbar.isCollapsed" ><i class="fa icon-bar-graph-2" style="font-size:28px;" ></i> <br /> Analyzer </center>
+			<center ng-if="!app.topbar.isCollapsed" ><i class="fa icon-bar-graph-2" style="font-size:28px;" ></i></center>
+              
+			</a>
+        </li>
+		<li  class="my-topbar-select" data-ng-class="priceListSelected ? app.theme.brand:''" ng-if="permissionCheck(userPermisionKey.pricelist)" >
+            <a ui-sref="." ng-click="getPriceList()" popover="Price List" popover-trigger="mouseenter" popover-placement="bottom"  popover-animation="true" class="my-ancher-topbar-select"  >
+			<center ng-if="app.topbar.isCollapsed" ><i class="fa fa-list" style="font-size:28px;" ></i> <br /> Price List</center>
+			<center ng-if="!app.topbar.isCollapsed" ><i class="fa fa-list" style="font-size:28px;" ></i></center>
+             
+			</a>
+        </li>
+		<li  class="my-topbar-select"  >
+            <a ui-sref="."  ng-click="openCalculator('sm')" popover="Calculator" popover-trigger="mouseenter" popover-placement="bottom"  popover-animation="true" class="my-ancher-topbar-select"  >
+			<center ng-if="app.topbar.isCollapsed" >
+				<i class="fa fa-calculator" style="font-size:27px;" ></i>
+			<br /> Calculator</center>
+			<center ng-if="!app.topbar.isCollapsed" >
+				<i class="fa fa-calculator"  style="font-size:27px;"></i>
+				</center>
+             
+			</a>
+        </li>
+		
+	  </ul>
+	  
+	  <!-- Header link End -->
+	  <!--form role="search" class="search-form navbar-form navbar-left">
+         <div class="form-group">
+            <div data-ng-controller="SearchFormController" class="input-group">
+               <span class="input-group-addon">
+                  <em class="icon-search"></em>
+               </span>
+               <input type="text" data-ng-model="routeSelected" typeahead="state for state in states | filter:$viewValue | limitTo:8" placeholder="{{ 'topbar.search.PLACEHOLDER' | translate }}" typeahead-on-select="onRouteSelect($item, $model, $label)"
+               class="form-control" />
+            </div>
+         </div>
+         <button type="submit" class="hidden btn btn-default">Submit</button>
+      </form-->
+      <!-- END Top navbar search form-->
+      <!-- START Right Navbar-->
+      <ul class="nav navbar-nav navbar-right">
+		
+         <!-- START Alert menu
+         <!--li dropdown="" class="dropdown dropdown-list my-topNav-padding" style="padding-top:10px">
+            <a href="" dropdown-animate="" dropdown-toggle="" class="dropdown-toggle">
+               <div class="point-pin">
+                  <em class="icon-mail fa-fw"></em>
+                  <div class="point point-success point-lg"></div>
+				  
+               </div>
+               <span class="visible-xs-inline ml">View Alerts</span>
+            </a>
+            <!-- START Dropdown menu
+            <ul offcanvas-dropdown="" class="dropdown-menu fadeInLeft2 animated">
+               <!-- START list item
+               <li data-ng-init="offcontent1 = true" data-ng-click="cancel($event)">
+                  <a href="#" data-ng-click="offcontent1 = false" class="p">
+                     <!-- START media preview
+                     <div class="media">
+                        <div class="pull-left">
+                           <div class="point-pin">
+                              <img src="app/img/user/03.jpg" alt="user msg" class="img-responsive thumb32 img-circle" />
+                              <div class="point point-success point-lg"></div>
+                           </div>
+                        </div>
+                        <div class="media-body clearfix">
+                           <p class="m0">Francis Butler</p>
+                           <p class="m0 text-gray text-sm">5 minutes ago</p>
+                        </div>
+                     </div>
+                  </a>
+                  <!-- START offcanves content
+                  <div data-ng-hide="offcontent1" data-ng-click="cancel($event)" class="offcanvas-content p">
+                     <div class="offcanvas-toggle pull-right text-gray">
+                        <em data-ng-click="offcontent1 = true" class="fa fa-times"></em>
+                     </div>
+                     <div class="media mt0 mb clearfix">
+                        <div class="pull-left">
+                           <div class="point-pin">
+                              <img src="app/img/user/03.jpg" alt="user msg" class="img-responsive thumb32 img-circle" />
+                              <div class="point point-success point-lg"></div>
+                           </div>
+                        </div>
+                        <div class="media-body clearfix">
+                           <p class="m0">Clifford Bell</p>
+                           <p class="m0 text-gray text-sm">5 minutes ago</p>
+                        </div>
+                     </div>
+                     <p>
+                        <em>Donec ornare dui non eros dapibus ullamcorper. Cras nunc velit, bibendum vel imperdiet eget, posuere nec diam. Sed vel elementum ante.</em>
+                     </p>
+                  </div>
+               </li>
+               <!-- START list item
+               <li data-ng-init="offcontent2 = true" data-ng-click="cancel($event)" class="bt">
+                  <a href="#" data-ng-click="offcontent2 = false" class="p">
+                     <!-- START media preview
+                     <div class="media">
+                        <div class="pull-left">
+                           <div class="point-pin">
+                              <img src="app/img/user/04.jpg" alt="user msg" class="img-responsive thumb32 img-circle" />
+                              <div class="point point-warning point-lg"></div>
+                           </div>
+                        </div>
+                        <div class="media-body clearfix">
+                           <p class="m0">Arron Sutton</p>
+                           <p class="m0 text-gray text-sm">45 minutes ago</p>
+                        </div>
+                     </div>
+                  </a>
+                  <!-- START offcanves content
+                  <div data-ng-hide="offcontent2" data-ng-click="cancel($event)" class="offcanvas-content p">
+                     <div class="offcanvas-toggle pull-right text-gray">
+                        <em data-ng-click="offcontent2 = true" class="fa fa-times"></em>
+                     </div>
+                     <div class="media mt0 mb clearfix">
+                        <div class="pull-left">
+                           <div class="point-pin">
+                              <img src="app/img/user/04.jpg" alt="user msg" class="img-responsive thumb32 img-circle" />
+                              <div class="point point-warning point-lg"></div>
+                           </div>
+                        </div>
+                        <div class="media-body clearfix">
+                           <p class="m0">Clifford Bell</p>
+                           <p class="m0 text-gray text-sm">45 minutes ago</p>
+                        </div>
+                     </div>
+                     <p>
+                        <em>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</em>
+                     </p>
+                  </div>
+               </li>
+               <!-- START list item
+               <li data-ng-init="offcontent3 = true" data-ng-click="cancel($event)" class="bt">
+                  <a href="#" data-ng-click="offcontent3 = false" class="p">
+                     <!-- START media preview
+                     <div class="media">
+                        <div class="pull-left">
+                           <div class="point-pin">
+                              <img src="app/img/user/05.jpg" alt="user msg" class="img-responsive thumb32 img-circle" />
+                              <div class="point point-danger point-lg"></div>
+                           </div>
+                        </div>
+                        <div class="media-body clearfix">
+                           <p class="m0">Wallace Thompson</p>
+                           <p class="m0 text-gray text-sm">yesterday</p>
+                        </div>
+                     </div>
+                  </a>
+                  <!-- START offcanves content
+                  <div data-ng-hide="offcontent3" data-ng-click="cancel($event)" class="offcanvas-content p">
+                     <div class="offcanvas-toggle pull-right text-gray">
+                        <em data-ng-click="offcontent3 = true" class="fa fa-times"></em>
+                     </div>
+                     <div class="media mt0 mb clearfix">
+                        <div class="pull-left">
+                           <div class="point-pin">
+                              <img src="app/img/user/05.jpg" alt="user msg" class="img-responsive thumb32 img-circle" />
+                              <div class="point point-danger point-lg"></div>
+                           </div>
+                        </div>
+                        <div class="media-body clearfix">
+                           <p class="m0">Clifford Bell</p>
+                           <p class="m0 text-gray text-sm">yesterday</p>
+                        </div>
+                     </div>
+                     <p>
+                        <em>Etiam porttitor consectetur lectus, in adipiscing nisi bibendum eu. Phasellus sed dui massa, vitae dapibus augue. Proin non lacinia sapien. Nam enim libero, lacinia a tristique a, accumsan sed purus.</em>
+                     </p>
+                  </div>
+               </li>
+               <!-- START last list item	
+               <li data-ng-init="offcontent3 = true" class="text-center bt">
+                  <a ui-sref="app.mailbox.folder.list" class="p">
+                     <small>View All</small>
+                  </a>
+               </li>
+            </ul>
+         </li-->
+		 <!--Quick Menu -->
+		 <li dropdown="" class="dropdown dropdown-list my-topNav-padding" style="padding-top:10px" ng-if="permissionCheck(userPermisionKey.quickMenu)">
+            <a href="" dropdown-animate="" dropdown-toggle="" class="dropdown-toggle my-ancher-topbar-select" popover="Quick Access" popover-trigger="mouseenter" popover-placement="bottom"  popover-animation="true" style="text-align:center;" >
+               <div class="point-pin" >
+                  <em class="fa fa-ellipsis-h"></em>
+                  <div class=""></div>
+				  
+               </div>
+            </a>
+            <!-- START Dropdown menu-->
+            <ul offcanvas-dropdown="" class="dropdown-menu flipInX animated">
+			
+               <!-- START list item-->
+               <!--li data-ng-init="offcontent1 = true"  class="bt" ui-sref="app.Bill">
+				
+                  <a href="#" title="Bill" style="color:#43a8eb;" >
+                    <em class="fa fa-credit-card" title="Bill" style="font-size:28px;color:#43a8eb" ></em>
+					&nbsp;
+					Bill
+                  </a>
+				 
+				  
+               </li-->
+			   <li data-ng-init="offcontent1 = true" >
+                  <!--a ui-sref="app.RetailsaleBill" data-ng-click="offcontent1 = false" class="p ">
+                    <div class="media">
+					    <div class="pull-left">
+                            <div class="point-pin">
+								<i class="fa fa-credit-card"></i>
+                            </div>
+                        </div>
+                        <div class="media-body clearfix">
+                           <p class="m0">Retailsales Bill</p>
+                        </div>
+                    </div>
+                  </a-->
+				   <a ui-sref="app.WholesaleBill" data-ng-click="offcontent1 = false" class="p" ng-if="taxInvoicePermission">
+                     <!-- START media preview-->
+                    <div class="media">
+					    <div class="pull-left">
+                            <div class="point-pin">
+								<i class="icon icon-outbox"></i>
+                            </div>
+                        </div>
+                        <div class="media-body clearfix">
+                           <p class="m0">Sales</p>
+                           <!-- <p class="m0">Sale Invoice</p> -->
+                        </div>
+                    </div>
+               </a>
+				  <a ui-sref="app.PurchaseBill" data-ng-click="offcontent1 = false" class="p" ng-if="taxPurchasePermission">
+                     <!-- START media preview-->
+                    <div class="media">
+					    <div class="pull-left">
+                            <div class="point-pin">
+								<i class="icon icon-inbox"></i>
+                            </div>
+                        </div>
+                        <div class="media-body clearfix">
+                           <p class="m0">Purchase</p>
+                           <!-- <p class="m0">Sale Purchase</p> -->
+                        </div>
+                    </div>
+                  </a>
+               </li>
+			 
+               <!-- START list item-->
+               <!--li data-ng-init="offcontent2 = true" data-ng-click="cancel($event)">
+                  <a href="#"  >
+                     <em class="fa fa-inr" style="font-size:28px;" ></em>
+                  </a>
+				  <a href="#" >
+                    <em class="fa fa-inr" style="font-size:28px;" ></em>
+                  </a>
+				  <a href="#" >
+                    <em class="fa fa-inr" style="font-size:28px;" ></em>
+                  </a>
+               </li-->
+              
+            </ul>
+         </li>
+		 
+		 
+		 <!--Quick Menu End -->
+         <!-- Fullscreen (only desktops)-->
+         <li class="visible-lg my-topNav-padding">
+            <a href="#" toggle-fullscreen="toggle-fullscreen" class="my-ancher-topbar-select" popover="Full Screen" popover-trigger="mouseenter" popover-placement="bottom"  popover-animation="true">
+               <em class="fa fa-expand"></em>
+            </a>
+         </li>
+         <!-- START lock screen-->
+         <!--li class="my-topNav-padding">
+            <a ui-sref="page.lock" title="Lock screen">
+               <em class="icon-lock fa-fw"></em>
+               <span class="visible-xs-inline ml">Lock Screen</span>
+            </a>
+         </li-->
+		 
+		<!--Start -->
+		<li dropdown="" class="dropdown dropdown-list my-topNav-padding">
+            <a href="" dropdown-animate="" dropdown-toggle="" class="dropdown-toggle my-ancher-topbar-select" style="text-transform:capitalize;text-align:center;">
+			 <img data-ng-src="{{user.picture}}" alt="" class="center-block img-circle img-responsive thumb32" ng-if="app.topbar.isCollapsed" />
+			  <span ng-if="userName" ng-bind="::userName" ></span>
+               <div class="point-pin">
+                  <em class="fa fa-caret-down"></em>
+               </div>
+            </a>
+            <!-- START Dropdown menu-->
+            <ul offcanvas-dropdown="" class="dropdown-menu fadeInRight animated">
+               <!-- START list item-->
+               <li >
+                  <a href="#" data-ng-click="offcontent1 = false" class="p ">
+                     <!-- START media preview-->
+                    <div class="media">
+					    <div class="pull-left">
+                            <div class="point-pin">
+								<i class="fa fa-user"></i>
+                            </div>
+                        </div>
+                        <div class="media-body clearfix">
+                           <p class="m0">Profile</p>
+                        </div>
+                    </div>
+                  </a>
+               </li>
+               <!-- START list item-->
+               <li   class="bt" ng-if="permissionCheck(userPermisionKey.configuration)">
+                  <a href="#"  ng-click="configuration()" class="p ">
+                     <!-- START media preview-->
+                    <div class="media">
+					    <div class="pull-left">
+                            <div class="point-pin">
+								<i class="fa fa-cog"></i>
+                            </div>
+                        </div>
+                        <div class="media-body clearfix">
+                           <p class="m0">Configuration</p>
+                        </div>
+                    </div>
+                  </a>
+               </li>
+               <!-- START list item-->
+               <!--li data-ng-init="offcontent3 = true" data-ng-click="cancel($event)" class="bt"-->
+               <li  class="bt">
+                  <!--a class="p" ui-sref="page.login"-->
+                  <a href="#" class="p" ng-click="logout()">
+                     <!-- START media preview-->
+                    <div class="media">
+					    <div class="pull-left">
+                            <div class="point-pin">
+								<i class="fa fa-sign-out"></i>
+                            </div>
+                        </div>
+                        <div class="media-body clearfix">
+                           <p class="m0">Logout</p>
+                        </div>
+                    </div>
+                  </a>
+               </li>
+            </ul>
+         </li>
+		<!--End-->
+		 
+         <!-- END lock screen-->
+
+
+         <!-- END Alert menu-->
+      </ul>
+      <!-- END Right Navbar-->
+   </div>
+   <!-- END Nav wrapper-->
+   
+
+</nav>
+<!-- END Top Navbar-->

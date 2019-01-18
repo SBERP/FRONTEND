@@ -1,0 +1,116 @@
+<style>
+.chosen-container .chosen-results {
+    max-height:130px;
+}
+</style>
+<h3>
+   <small>
+   <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+	<span ng-if="saleType == 'retail_sales'"> Form RetailSales </span> 
+	<span ng-if="saleType == 'whole_sales'"> Form Tax </span> </small>
+</h3>
+<!-- START panel-->
+
+<div  class="container-fluid panel-body">
+ <toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+	
+   <div class="panel panel-default">
+	  <div class="panel-heading" data-ng-class="app.theme.brand" >
+				<div class="panel-title">
+					Search
+				</div>
+			</div>
+      <div class="panel-body">
+         <form method="get" action="/" novalidate="" class="form-horizontal">
+			<div class="col-md-12">
+			
+				
+				<div class="col-sm-12">
+					<div class="col-sm-6">
+						<fieldset >
+						   <div class="form-group">
+							  <label class="col-sm-3 control-label">Company</label>
+							  <div class="col-sm-9">
+								 <select chosen="" ng-model="PriceRetailSales.companyDropDown" tabindex="2" data-ng-options="s.companyName for s in form.companyDrop track by s.companyId" ng-change="changeStockData('companyId',PriceRetailSales.companyDropDown.companyId)"  class="form-control chosen-select" ng-required="true" ></select>
+							  </div>
+						   </div>
+						</fieldset>
+					</div>
+					<!--div class="col-sm-6">
+						 <fieldset >
+						   <div class="form-group">
+							  <label class="col-sm-3 control-label">Product</label>
+							  <div class="col-sm-9">
+								 <select chosen="" ng-model="PriceRetailSales.productDropDown" data-ng-options="s.productName for s in form.productDrop track by s.productId"   class="form-control chosen-select"  ></select>
+							  </div>
+						   </div>
+						</fieldset>
+				
+					</div-->
+					<div class="col-sm-6">
+						<fieldset >
+						   <div class="form-group">
+							  <label class="col-sm-3 control-label">Brand</label>
+							  <div class="col-sm-9">
+								 <select chosen="" data-ng-model="PriceRetailSales.category" data-ng-options="s.productCategoryName for s in form.categoryDrop track by s.productCategoryId" ng-change="changeStockData('productCategoryId',PriceRetailSales.category.productCategoryId)" class="form-control chosen-select" ></select>
+							  </div>
+						   </div>
+						</fieldset>
+					</div>
+				</div>
+				
+				<div class="col-sm-12">
+					
+					<div class="col-sm-6">
+						<fieldset>
+						   <div class="form-group">
+							  <label class="col-sm-3 control-label">Category</label>
+							  <div class="col-sm-9">
+								<select chosen="" data-ng-model="PriceRetailSales.group" data-ng-options="s.productGroupName for s in form.groupDrop track by s.productGroupId" ng-change="changeStockData('productGroupId',PriceRetailSales.group.productGroupId)" class="form-control chosen-select" ng-size="5" ></select>
+							  </div>
+						   </div>
+						</fieldset>	
+				
+					</div>
+				</div>
+				
+				<div class="col-sm-12">
+				
+					<div class="col-sm-6">
+						<fieldset >
+						   <div class="form-group">
+							  <label class="col-sm-3 control-label"></label>
+							  <div class="col-sm-9">
+								 
+							  </div>
+						   </div>
+						</fieldset>
+					</div>
+					<div class="col-sm-6">
+						<fieldset>
+						   <div class="form-group">
+							  <label class="col-sm-3 control-label"></label>
+							  <div class="col-sm-9">
+								  <!--button type="button" class="mr mb-sm btn btn-success pull-right" ui-sref="app.InvStock" >Generate</button-->
+								  <button type="button" class="mr mb-sm btn btn-success pull-right" ng-click="generate()" >Generate</button>
+							  </div>
+						   </div>
+						</fieldset>	
+				
+					</div>
+					
+				</div>
+				
+		</div>
+			
+			
+			 
+         </form>
+      </div>
+   </div>
+   
+   
+   
+   
+   <!-- END panel-->
+</div>

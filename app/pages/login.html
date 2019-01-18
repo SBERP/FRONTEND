@@ -1,0 +1,228 @@
+<style>
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('https://fonts.googleapis.com/css?family=Poiret+One');
+
+body, html {
+	height: 100%;
+	background-repeat: no-repeat;    /*background-image: linear-gradient(rgb(12, 97, 33),rgb(104, 145, 162));*/
+	background:white;
+	position: relative;
+}
+#login-box {
+	position: absolute;
+	top: 0px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 350px;
+	margin: 0 auto;
+	min-height: 250px;
+	padding: 20px;
+	z-index: 9999;
+}
+
+#particles-js{
+  	width: 100%;
+  	height: 100%;
+  	background-size: cover;
+  	background-position: 50% 50%;
+  	position: fixed;
+  	top: 0px;
+  	z-index:1;
+}
+</style>
+<div class="center-block mt-xl wd-xl" ng-controller="loginController as loginCtrl"  id="login-box">
+   <!-- START panel-->
+   <div class="panel panel-inverse">
+      <div class="panel-heading text-center">
+         <img src="app/img/banner_white.png" height="45" width="125" alt="Image" class="center-block img-rounded" />
+      </div>
+      <div class="panel-body">
+         <p class="text-center pv text-bold">LOGIN</p>
+         <form novalidate="" name="loginForm" class="mb-lg form-validate" ng-submit="login()">
+		 
+            <div class="form-group has-feedback">
+               <input id="exampleInputEmail1" type="email" name="emailId" ng-model="loginData.emailId" ng-change="changeIt()" placeholder="Your email" autocomplete="off" class="form-control" ng-required="true"  ng-pattern="/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$/" />
+               <span class="fa fa-envelope form-control-feedback text-muted"></span>
+            </div>
+			
+			<span ng-messages="loginForm.emailId.$error" ng-if="loginForm.emailId.$dirty || loginForm.emailId.$touched"  role="alert">
+				<span ng-messages-include="errorRequired"></span>
+				<span ng-messages-include="errorEmail"></span>
+			</span>
+			
+            <div class="form-group has-feedback">
+               <input id="exampleInputPassword1" type="password" ng-model="loginData.password" ng-change="changeIt()" placeholder="Your password"  class="form-control" ng-required="true" ng-minlength="6" ng-maxlength="28" />
+               <span class="fa fa-lock form-control-feedback text-muted"></span>
+            </div>
+			
+			<span ng-messages="loginForm.emailId.$error" ng-if="loginForm.emailId.$dirty || loginForm.emailId.$touched"  role="alert">
+				<span ng-messages-include="errorRequired"></span>
+				<span ng-messages-include="errorEmail"></span>
+			</span>
+			
+			
+			
+			
+			<!--div class="g-recaptcha" data-sitekey="6LetFRoUAAAAAESKewnFkYr88sVgYCSPxugTgo7C"></div--> <!-- swaminarayan --> 
+			<!--div class="g-recaptcha" data-sitekey="6LetFRoUAAAAAESKewnFkYr88sVgYCSPxugTgo7C"></div-->  <!-- siliconbrain --> 
+			<div class="form-group has-feedback">
+				<div vc-recaptcha key="loginCtrl.googleSiteKey" on-create="createCallback(widgetId)" on-success="checkCaptcha(response)" style="transform:scale(0.92);-webkit-transform:scale(0.92);transform-origin:0 0;-webkit-transform-origin:0 0;" ></div> <!-- local --> 
+				
+				<!-- div vc-recaptcha key="loginCtrl.swaminarayanSiteKey" on-create="createCallback(widgetId)" on-success="checkCaptcha(response)" style="transform:scale(0.95);-webkit-transform:scale(0.95);transform-origin:0 0;-webkit-transform-origin:0 0;" ></div-->  <!-- swaminarayan --> 
+				
+				<!-- div vc-recaptcha key="loginCtrl.siliconSiteKey" on-create="createCallback(widgetId)" on-success="checkCaptcha(response)" style="transform:scale(0.95);-webkit-transform:scale(0.95);transform-origin:0 0;-webkit-transform-origin:0 0;" ></div -->  <!-- siliconbrain --> 
+				
+				<!--div vc-recaptcha key="loginCtrl.v2erp" on-create="createCallback(widgetId)" on-success="checkCaptcha(response)" style="transform:scale(0.95);-webkit-transform:scale(0.95);transform-origin:0 0;-webkit-transform-origin:0 0;" ></div-->  <!-- v2erp --> 
+				
+			</div>
+			
+			<span class="text-danger" ng-if="notMatch">EmailId or Password is Wrong.</span>
+			<span class="text-danger" ng-if="errorCaptcha">Please resolve the captcha and submit!</span>
+            <!--div class="checkbox c-checkbox pull-left mt0">
+               <label>
+                  <input type="checkbox" value="" />
+                  <span class="fa fa-check"></span>Remember me</label>
+            </div-->
+            <!--br/-->
+            <!--button type="submit" class="btn btn-block btn-primary mt-lg" ui-sref="app.dashboard">Login</button-->
+            <button type="submit" class="btn btn-block btn-primary mt-lg"  ng-disabled="disableValue || loginForm.$invalid" >Login <i class="fa fa-circle-o-notch fa-spin" ng-show="loginCtrl.loaderIcon" style="font-size:20px" aria-hidden="true"></i></button>
+            
+         </form>
+        <!-- <p class="text-center text-muted">Or</p>
+         <a ui-sref="page.register" class="btn btn-block btn-default">
+            <strong>Register an Account</strong>
+         </a>-->
+      </div>
+   </div>
+   <!--div class="text-center mt"><a ui-sref="page.recover" class="text-muted">Forgot your password?</a>
+   </div-->
+   <!-- END panel-->
+   <div data-ng-include="'app/pages/page-footer.html'" class="p-lg text-center"></div>
+</div>
+<div id="particles-js"></div>
+<script>$.getScript("https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js", function(){
+    particlesJS('particles-js',
+      {
+        "particles": {
+          "number": {
+            "value": 80,
+            "density": {
+              "enable": true,
+              "value_area": 800
+            }
+          },
+          "color": {
+            "value": "#808080"
+          },
+          "shape": {
+            "type": "circle",
+            "stroke": {
+              "width": 0,
+              "color": "#000000"
+            },
+            "polygon": {
+              "nb_sides": 5
+            },
+            "image": {
+              "width": 100,
+              "height": 100
+            }
+          },
+          "opacity": {
+            "value": 0.5,
+            "random": false,
+            "anim": {
+              "enable": false,
+              "speed": 1,
+              "opacity_min": 0.1,
+              "sync": false
+            }
+          },
+          "size": {
+            "value": 5,
+            "random": true,
+            "anim": {
+              "enable": false,
+              "speed": 40,
+              "size_min": 0.1,
+              "sync": false
+            }
+          },
+          "line_linked": {
+            "enable": true,
+            "distance": 150,
+            "color": "#808080",
+            "opacity": 0.4,
+            "width": 1
+          },
+          "move": {
+            "enable": true,
+            "speed": 6,
+            "direction": "none",
+            "random": false,
+            "straight": false,
+            "out_mode": "out",
+            "attract": {
+              "enable": false,
+              "rotateX": 600,
+              "rotateY": 1200
+            }
+          }
+        },
+        "interactivity": {
+          "detect_on": "canvas",
+          "events": {
+            "onhover": {
+              "enable": true,
+              "mode": "repulse"
+            },
+            "onclick": {
+              "enable": true,
+              "mode": "push"
+            },
+            "resize": true
+          },
+          "modes": {
+            "grab": {
+              "distance": 400,
+              "line_linked": {
+                "opacity": 1
+              }
+            },
+            "bubble": {
+              "distance": 400,
+              "size": 40,
+              "duration": 2,
+              "opacity": 8,
+              "speed": 3
+            },
+            "repulse": {
+              "distance": 200
+            },
+            "push": {
+              "particles_nb": 4
+            },
+            "remove": {
+              "particles_nb": 2
+            }
+          }
+        },
+        "retina_detect": true,
+        "config_demo": {
+          "hide_card": false,
+          "background_color": "#b61924",
+          "background_image": "",
+          "background_position": "50% 50%",
+          "background_repeat": "no-repeat",
+          "background_size": "cover"
+        }
+      }
+    );
+
+});
+
+</script>
+<!--script src='https://www.google.com/recaptcha/api.js'></script-->
+<!--script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer>
+    </script-->
+	<script src="https://www.google.com/recaptcha/api.js?onload=vcRecaptchaApiLoaded&render=explicit" async defer></script> 

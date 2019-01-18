@@ -1,0 +1,170 @@
+<h3>
+   <small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+   Taxation >>
+   <a ui-sref="app.AccViewGstR2" >View</a> >>
+   GST Return2</small>
+</h3>
+<div class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true,'time-out': 10000}"></toaster-container>
+	
+   <div class="panel panel-default">
+		<div class="panel-heading myHeading" >
+			<a ng-click="generatePdf('gst-return-excel')" class="pull-right btn btn-sm btn-primary" ng-if="exportPdfHidden"  data-ng-class="app.theme.brand" >Export to Excel</a>
+			<div class="panel-title">
+				GST Return2
+			</div>
+		</div>
+		<div class="panel-body">
+		<tabset>
+            <tab heading="b2b" active="true" >
+				<div class="panel-heading bg-default" data-ng-class="app.theme.brand" >
+					 <div class="panel-title" id="allPro"> b2b of <b>{{displayCompany}}</b> Company Between {{::displayfromDate}} to {{::displaytoDate}} </div>
+				</div>
+			   <div class="table-responsive">
+				  <table ng-table="tableParams" show-filter="false" class="table table-bordered table-striped">
+					 <tbody>
+						<tr data-ng-repeat="user in $data">
+							<td data-title="'#'"  >{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td>
+							<td data-title="'GSTIN of Supplier'"  filter="{ 'gstinSup': 'text' }" >{{user.company.cgst}}</td>
+							<td data-title="'Invoice#'"  filter="{ 'invoiceNumber': 'text' }" >{{user.invoiceNumber}}</td>
+							 <td data-title="'EntryDate'"  filter="{ 'entryDate': 'text' }" >{{dateConvert(user.entryDate) | date:dateFormat}}</td>
+							<td data-title="'Client Name'"  filter="{ 'clientName': 'text' }" >{{user.client.clientName}}</td>
+							<td data-title="'Place of Supply'"  filter="{ 'supply': 'text' }" >{{user.client.state.stateName}}</td>
+							<td data-title="'Invoice Value'"  filter="{ 'grandTotal': 'text' }"  style="text-align:right" >{{user.grandTotal}}</td>
+						</tr>
+					 </tbody>
+				  </table>
+				</div>
+			   <span ng-include="'app/views/partials/tableFooter/tableFooter.html'"></span>
+			</tab>
+			<tab heading="b2bur" active="false" >
+				<div class="panel-heading bg-default" data-ng-class="app.theme.brand" >
+					 <div class="panel-title" id="allPro"> b2bur of <b>{{displayCompany}}</b> Company Between {{::displayfromDate}} to {{::displaytoDate}} </div>
+				</div>
+			   <div class="table-responsive">
+				  <table ng-table="tableParams3" show-filter="false" class="table table-bordered table-striped">
+					 <tbody>
+						<tr data-ng-repeat="user in data3 track by $index">
+							<td data-title="'#'"  >{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td>
+							<td data-title="'Supplier Name'"  filter="{ 'gstinSup': 'text' }" >{{user.client.clientName}}</td>
+							<td data-title="'Invoice#'"  filter="{ 'invoiceNumber': 'text' }" >{{user.invoiceNumber}}</td>
+							 <td data-title="'EntryDate'"  filter="{ 'entryDate': 'text' }" >{{dateConvert(user.entryDate) | date:dateFormat}}</td>
+							<td data-title="'Client Name'"  filter="{ 'clientName': 'text' }" >{{user.client.clientName}}</td>
+							<td data-title="'Place of Supply'"  filter="{ 'supply': 'text' }" >{{user.client.state.stateName}}</td>
+							<td data-title="'Invoice Value'"  filter="{ 'grandTotal': 'text' }"  style="text-align:right" >{{user.grandTotal}}</td>
+						</tr>
+					 </tbody>
+				  </table>
+				</div>
+			   <span ng-include="'app/views/partials/tableFooter/tableFooter.html'"></span>
+			</tab>
+			<tab heading="imps" active="false" ng-click="refreshTable()"  >
+				<div class="panel-heading bg-default" data-ng-class="app.theme.brand">
+					<div class="panel-title" id="allPro"> imps of <b>{{displayCompany}}</b> Company Between {{::displayfromDate}} to {{::displaytoDate}} </div>
+				</div>
+
+				<div class="table-responsive">
+				  <table ng-table="tableParams2" show-filter="false" class="table table-bordered table-striped">
+					 <tbody>
+
+						<tr ng-repeat="user in data2 track by $index">
+							<td data-title="'#'"  >{{ (itemsPerPage2 * (pageNumber2 - 1)) + $index+1 }}</td>
+							<td data-title="'Invoice#'"  filter="{ 'billNumber': 'text' }" >{{user.invoiceNumber}}</td>
+							<td data-title="'Entry Date'"  filter="{ 'entryDate': 'text' }" >{{dateConvert(user.entryDate) | date:dateFormat}}</td>
+							<td data-title="'Place of Supply'"  filter="{ 'supply': 'text' }" >{{user.client.state.stateName}}</td>
+							<td data-title="'Invoice Value'"  filter="{ 'grandTotal': 'text' }"  style="text-align:right" >{{user.grandTotal}}</td>
+						</tr>
+					 </tbody>
+				  </table>
+				</div>
+				<span >  
+					<pre style="margin-bottom:0px"> Page : {{pageNumber2}} / {{totalPages2}}  <span> Total Records: {{totalData2}} </span> </pre>
+				</span>
+			</tab>
+			<!-- <tab heading="Stock Detail" active="false" ng-click="refreshTable()"  >
+				<div class="panel-heading bg-default" data-ng-class="app.theme.brand">
+					<div class="panel-title" id="allPro"> Stock Detail of <b>{{displayCompany}}</b> Company Between {{::displayfromDate}} to {{::displaytoDate}} </div>
+				</div>
+				<div class="table-responsive">
+				  <table class="table table-bordered table-striped">
+					 <thead>
+						<tr>
+							<th>#</th>
+							<th>Particulars</th>
+							<th>HSN Code</th>
+							<th colspan="2">Opening Balance</th>
+							<th colspan="2">Purchase</th>
+							<th colspan="2">Total</th>
+							<th colspan="2">Sales</th>
+							<th colspan="2">Closing Stock</th>
+						</tr>
+						<tr>
+							<th></th>
+							<th ></th>
+							<th></th>
+							<th >Qty</th>
+							<th >Amount</th>
+							<th>Qty</th>
+							<th >Amount</th>
+							<th>Qty</th>
+							<th >Amount</th>
+							<th>Qty</th>
+							<th >Amount</th>
+							<th>Qty</th>
+							<th >Amount</th>
+						</tr>
+					  </thead>
+					 <tbody>
+
+					 	<tr ng-repeat="user in data3 track by user.productId">
+							<td>{{ (itemsPerPage3 * (pageNumber3 - 1)) + $index+1 }}</td>
+							<td>{{user.productName}}</td>
+							<td>{{user.hsn}}</td>
+							<td>{{user.openingQty}}</td>
+							<td>{{user.openingPrice | setDecimal: 2}}</td>
+							<td>{{user.purchaseQty}}</td>
+							<td>{{user.purchasePrice | setDecimal: 2}}</td>
+							
+							<td>{{additionOfValue(user.openingQty,user.purchaseQty)}}</td>
+							<td>{{additionOfValue(user.openingPrice,user.purchasePrice) | setDecimal: 2}}</td>
+							
+							<td>{{user.saleQty}}</td>
+							<td>{{user.salePrice | setDecimal: 2}}</td>
+							
+							<td>{{substractionOfValue(user.openingQty,user.purchaseQty,user.saleQty)}}</td>
+							<td>{{substractionOfValue(user.openingPrice,user.purchasePrice,user.salePrice) | setDecimal: 2}}</td>
+						</tr>
+					</tbody>
+				  </table>
+				</div>
+				<span >  
+					<pre style="margin-bottom:0px"> Page : {{pageNumber3}} / {{totalPages3}}  <span> Total Records: {{totalData3}} </span> </pre>
+				</span>
+			</tab> -->
+			<!-- <tab heading="Income Expense Detail" active="false" ng-click="refreshTable()"  >
+				<div class="panel-heading bg-default" data-ng-class="app.theme.brand">
+					<div class="panel-title" id="allPro"> Stock Detail of <b>{{displayCompany}}</b> Company Between {{::displayfromDate}} to {{::displaytoDate}} </div>
+				</div>
+				<div class="table-responsive">
+				  <table class="table table-bordered table-striped">
+					 <thead>
+						<tr>
+							<th style="text-align:left">Trading Amount = {{incomeExpenseDetail.tradingAmount | setDecimal: 2}}</th>
+						</tr>
+						<tr>
+							<th style="text-align:left">Profit-Loss Amount = {{incomeExpenseDetail.profitLossAmount | setDecimal: 2}}</th>
+						</tr>
+						<tr>
+							<th style="text-align:left">Balancesheet Amount =  {{incomeExpenseDetail.balancesheetAmount | setDecimal: 2}}</th>
+						</tr>
+					  </thead>
+				 </table>
+				</div>
+				<span >  
+					<!-- <pre style="margin-bottom:0px"> Page : {{pageNumber3}} / {{totalPages3}}  <span> T otal Records: {{totalData3}} </span> </pre>
+				<!-- </span> -->
+			<!-- </tab>  -->
+        </tabset>
+		</div>
+   </div>
+</div>

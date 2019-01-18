@@ -1,0 +1,82 @@
+<h3>
+   <small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+   Inventory >>
+   Stock Summary</small>
+</h3>
+<div data-ng-controller="InvStockSummaryController as table" class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true,'time-out': 10000}"></toaster-container>
+	<div class="panel panel-default" >
+		<div class="panel-body">
+			<div class="col-md-8">
+				<label class="col-sm-2 control-label"> Company </label>
+				<div class="col-sm-10">
+					<select chosen=""  ng-model="stateCheck" ng-options="s.companyName for s in table.states track by s.companyId" class="form-control chosen-select hightlight-company" >
+					</select>
+				</div>
+			</div>
+			<div class="col-md-1 myPaddingTop">
+				<div class="col-sm-12">
+					<button type="button" class="mb-sm btn btn-primary pull-right"  ng-click="showProduct()"  data-ng-class="app.theme.brand">Go</button>
+				</div>
+			</div>
+			<div class="col-sm-3">
+			</div>
+		</div>
+	</div>
+	
+   <div class="panel panel-default">
+      <div class="panel-heading myHeading" >
+         <!--button data-ng-click="table.tableParams.sorting({})" class="pull-right btn btn-default btn-sm">Clear sorting</button-->
+         <div class="panel-title" id="allPro">All Product  </div>
+      </div>
+	   <div class="table-responsive">
+		  <table data-ng-table="table.tableParams" show-filter="true" class="table table-bordered table-striped">
+		  <!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
+			 <tbody>
+				<tr data-ng-repeat="user in ($parent.filteredItems = $data) track by user.productTrnSummaryId">
+					<td data-title="'Brand'" sortable="'productCategoryName'" filter="{ 'productCategoryName': 'text' }" ng-bind="user.productCategoryName"></td>
+					 <td data-title="'Category'" sortable="'productGroupName'" filter="{ 'productGroupName': 'text' }" ng-bind="user.productGroupName"></td>
+					<td data-title="'Product Name'" sortable="'productName'" filter="{ 'productName': 'text' }" ng-bind="::user.productName"></td>
+				   
+					<td ng-show="enableDisableColor" data-title="'Color'"  filter="{ 'color': 'text' }" ng-bind="::user.color"></td>
+					<td ng-show="enableDisableSize" data-title="'Size'"  filter="{ 'size': 'text' }" ng-bind="::user.size"></td>
+					<!-- <td  data-title="'Purchase-Price'"  filter="{ 'purchasePrice': 'text' }" ng-bind="::user.product.purchasePrice"></td> -->
+					<td  data-title="'Mrp'"  filter="{ 'mrp': 'text' }" ng-bind="::user.product.mrp"></td>
+					<td data-title="'Qty'" sortable="'qty'" filter="{ 'qty': 'text' }" ng-bind="::user.qty"></td>
+				</tr>
+				<tr style="background-color: #f5f5f5;">
+					<td><b>Page Total</b></td>
+					<td></td>
+					<td></td>
+					<td ng-show="enableDisableColor" ></td>
+					<td ng-show="enableDisableSize" ></td>
+					<!-- <td></td> -->
+					<td></td>
+					<td>{{calculateQty()}}</td>
+				</tr>
+				<tr style="background-color: #f5f5f5;">
+					<td><b>Search Total</b></td>
+					<td></td>
+					<td></td>
+					<td ng-show="enableDisableColor" ></td>
+					<td ng-show="enableDisableSize" ></td>
+					<!-- <td></td> -->
+					<td></td>
+					<td>{{searchQty}}</td>
+				</tr>
+				<tr style="background-color: #f5f5f5;">
+					<td><b>Grand Total</b></td>
+					<td></td>
+					<td></td>
+					<td ng-show="enableDisableColor" ></td>
+					<td ng-show="enableDisableSize" ></td>
+					<!-- <td></td> -->
+					<td></td>
+					<td>{{calculateTotalQty()}}</td>
+				</tr>
+			 </tbody>
+		  </table>
+		 </div>
+	   <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
+   </div>
+</div>

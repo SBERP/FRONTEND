@@ -1,0 +1,48 @@
+<h3>
+	
+   <small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> Jobcard</small>
+</h3>
+<div data-ng-controller="CrmAllJobcardController as table" class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+   <div class="panel panel-default">
+      <div class="panel-heading myHeading" >
+         <!--button data-ng-click="table.tableParams.sorting({})" class="pull-right btn btn-default btn-sm">Clear sorting</button-->
+		 <button class="btn btn-labeled btn-primary pull-right btn-sm" ui-sref="app.CrmJobcard"   data-ng-class="app.theme.brand" >
+			<span class="btn-label"><i class="fa fa-plus"></i></span>
+		Add Jobcard</button>
+         <div class="panel-title">All Jobcards</div>
+      </div>
+	  
+	  <div class="table-responsive">
+      <table data-ng-table="table.tableParams" show-filter="false" class="table table-bordered table-striped">
+	  <!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
+        <tbody>
+            <tr data-ng-repeat="user in $data">
+				<td data-title="'#'"   >{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td>
+				<td data-title="'Date'"  sortable="'date'" filter="{ 'entryDate': 'text' }" >{{dateConvert(user.entryDate) | date:dateFormat}}</td>
+				<td data-title="'Delivery Date'"  filter="{ 'deliveryDate': 'text' }" >{{dateConvert(user.deliveryDate) | date:dateFormat}}</td>
+				<td data-title="'Jobcard#'"  >{{user.jobCardNo}}</td>
+				<td data-title="'Client Name'"  filter="{ 'clientName': 'text' }" >{{user.clientName}}</td>
+				<td data-title="'Contact#'"  filter="{ 'contactNo': 'text' }" >{{user.contactNo}}</td>
+				<!--td data-title="'Company'" filter="{ 'companyName': 'text' }" >{{user.company.companyName}}</td-->
+				
+				<td data-title="'Tax'" filter="{ 'tax': 'text' }" style="text-align:right">{{user.tax}}</td>
+				<td data-title="'Total'" filter="{ 'total': 'text' }" style="text-align:right">{{user.total}}</td>
+				<td data-title="'GrandTotal'" filter="{ 'total': 'text' }" style="text-align:right">{{(user.total*1)+(user.tax*1)}}</td>
+				<td data-title="'Advance'"  filter="{ 'advance': 'text' }" style="text-align:right">{{user.advance}}</td>
+				<td data-title="'Balance'"  filter="{ 'balance': 'text' }" style="text-align:right">{{((user.total*1)+(user.tax*1))-(user.advance*1)}}</td>
+				 
+               
+			    <td data-title="'Action'" > 
+					<center>
+						<i ui-sref="" ng-click="edit_Jobcard(user)" class="fa fa-edit" style="font-size:17px;color:#10709f"> </i>
+					</center>
+				</td>
+            </tr>
+        </tbody>
+			
+      </table>
+	  </div>
+	   <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
+   </div>
+</div>

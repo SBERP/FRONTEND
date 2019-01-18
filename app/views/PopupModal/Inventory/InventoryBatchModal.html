@@ -1,0 +1,519 @@
+
+<div class="modal-header">
+	<button type="button" data-dismiss="modal" data-ng-click="closeButton()" aria-hidden="true" class="close">×</button>  
+	 <h4 id="myModalLabel" class="modal-title"> {{inventoryType}} Batch</b></h4>
+</div>
+<div class="modal-body my-model-body">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+      <div data-ng-init="activeStep=1" class="wizard">
+         <ul class="steps-bar">
+            <li data-ng-class="{'active':activeStep&gt;=1}">
+               <span>Step 1</span>
+            </li>
+            <li data-ng-class="{'active':activeStep&gt;=2}">
+               <span>Step 2</span>
+            </li>
+            <li data-ng-class="{'active':activeStep&gt;=3}">
+               <span>Step 3</span>
+            </li>
+         </ul>
+         <div data-ng-show="activeStep==1" class="wizard-step">
+            <h4>Download The Sample File And Fill Data
+               <small>&mdash; Step 1</small>
+            </h4>
+        
+               <p>Sample.xls</p>
+               <button class="btn btn-success " ng-click="openSampleFile()" >Download</button>
+         
+               <div class="mt">
+                  <button type="submit" data-ng-click="activeStep=2" class="btn btn-primary">Next</button>
+               </div>
+            
+         </div>
+         <div data-ng-show="activeStep==2" class="wizard-step" >
+            <h4>Upload Excel File
+               <small>&mdash; Step 2</small>
+            </h4>
+            <form name="form_step2" class="form-validate">
+              
+               <input type="file" name="uploadxls"   onchange="angular.element(this).scope().uploadFile(this.files)" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" fileread="" opts="vm.gridOptions" required="required"  />
+			   
+               <div class="mt">
+                  <button type="button" data-ng-click="activeStep=1" class="btn btn-default">Prev</button>
+                  <button type="button" ng-disabled="form_step2.$invalid || validFile" data-ng-click="activeStep=3;getExcelData()" class="btn btn-primary">Next</button>
+               </div>
+            </form>
+         </div>
+         <div data-ng-show="activeStep==3" class="wizard-step" >
+            <h4>Maping
+               <small>&mdash; Step 3</small>
+            </h4>
+			
+
+			<!--div class="row"  ng-if="inventoryType != 'Product'">
+				<div class="col-xs-4">
+					 
+				</div>
+				<div class="col-xs-4">
+					 
+				</div>
+				<div class="col-xs-4">
+					
+				</div>
+			</div-->
+			
+			 <div class="row" style="margin-left:0px" ng-if="inventoryType == 'Products'">
+				<style  >
+				.chosen-container{
+					font-size:8px !important;
+					width:60px !important;
+					float:left !important;
+					position:relative;
+				}
+				body .chosen-container-single .chosen-single, body .chosen-container-active.chosen-with-drop .chosen-single{
+					font-size:11px !important;
+					padding-left:2px;
+					padding-right:0px;
+				}
+				</style>
+				
+                  
+					 <select chosen ng-model="dropdownData.brandName"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('0',dropdownData.brandName.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+               
+				  
+                  
+                     <select chosen ng-model="dropdownData.description"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('1',dropdownData.description.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+                 
+				   
+                     <select chosen ng-model="dropdownData.Companybrand"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('2',dropdownData.Companybrand.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+                 
+				  
+                     <select chosen ng-model="dropdownData.category"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('3',dropdownData.category.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+                 
+				   
+                     <select chosen ng-model="dropdownData.productName"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('4',dropdownData.productName.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+                 
+				   
+                     <select chosen ng-model="dropdownData.color"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('5',dropdownData.color.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+                 
+				   
+                     <select chosen ng-model="dropdownData.size"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('6',dropdownData.size.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+                 
+				   
+                     <select chosen ng-model="dropdownData.desc"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('7',dropdownData.desc.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+                 
+				   
+                     <select chosen ng-model="dropdownData.measurement"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('8',dropdownData.measurement.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+                 
+				   
+                     <select chosen ng-model="dropdownData.purchasePrice"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('9',dropdownData.purchasePrice.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+                 
+					
+					<select chosen ng-model="dropdownData.taxMargin"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('10',dropdownData.taxMargin.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+					 
+					 <select chosen ng-model="dropdownData.taxMarginFlat"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('11',dropdownData.taxMarginFlat.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+					 
+					 <select chosen ng-model="dropdownData.semiTaxMargin"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('12',dropdownData.semiTaxMargin.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+					 
+					 <select chosen ng-model="dropdownData.vat"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('13',dropdownData.vat.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+					 
+					  <select chosen ng-model="dropdownData.margin"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('14',dropdownData.margin.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+					 
+					 <select chosen ng-model="dropdownData.marginFlat"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('15',dropdownData.marginFlat.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+					 
+					 <select chosen ng-model="dropdownData.additionalTax"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('16',dropdownData.additionalTax.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+					 
+					 
+                     <select chosen ng-model="dropdownData.mrp"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('17',dropdownData.mrp.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+					 
+					  <select chosen ng-model="dropdownData.minimumStock"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('18',dropdownData.minimumStock.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+
+					 <select chosen ng-model="dropdownData.productMenu"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('19',dropdownData.productMenu.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+
+					 <select chosen ng-model="dropdownData.productType"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('20',dropdownData.productType.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+
+					 <select chosen ng-model="dropdownData.maxSaleQty"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('21',dropdownData.maxSaleQty.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+
+					 <select chosen ng-model="dropdownData.notForSale"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('22',dropdownData.notForSale.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+
+					 <select chosen ng-model="dropdownData.bestBeforeTime"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('23',dropdownData.bestBeforeTime.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+
+					 <select chosen ng-model="dropdownData.bestBeforeType"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('24',dropdownData.bestBeforeType.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+
+					 <select chosen ng-model="dropdownData.cessFlat"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('25',dropdownData.cessFlat.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+
+					 <select chosen ng-model="dropdownData.cessPercentage"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('26',dropdownData.cessPercentage.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+					 <select chosen ng-model="dropdownData.opening"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('26',dropdownData.opening.key)"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+                 
+              </div>
+			   
+		    <!--div id="grid1" ui-grid="vm.gridOptions" class="grid" ui-grid-auto-resize ui-grid-resize-columns >
+			</div-->
+				
+				 <div class="table-responsive" style="height:400px;">
+				 <style>
+					.myPaddingTh{
+						padding-top: 0px !important;
+						padding-bottom: 0px !important;
+
+					}
+				 </style>
+					<table id="table-ext-1" class="table table-bordered table-hover">
+						 <thead>
+							<tr ng-if="inventoryType == 'Brand' || inventoryType == 'Category'">
+								<th class="myPaddingTh">
+									<select chosen ng-model="dropdownData.parentName"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('0',dropdownData.parentName.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								</th>
+								<th class="myPaddingTh">
+									<select chosen ng-model="dropdownData.brandName"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('1',dropdownData.brandName.key)"  class="form-control chosen-select" >
+										<option value=""></option>
+									</select>
+								</th>
+								<th class="myPaddingTh">
+									 <select chosen ng-model="dropdownData.description"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('2',dropdownData.description.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								</th>
+							</tr>
+							 <tr ng-if="inventoryType == 'Brand'">
+								<th>Parent Name</th>
+								<th>Brand Name</th>
+								<th>Description</th>
+							</tr>
+							<tr ng-if="inventoryType == 'Category'">
+								<th>Parent Name</th>
+								<th>Category Name</th>
+								<th>Description</th>
+							</tr>
+							<tr ng-if="inventoryType == 'Product'">
+							
+								<th class="myPaddingTh">
+									 <select chosen ng-model="dropdownData.brandName"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('0',dropdownData.brandName.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								</th>
+								  
+								<th class="myPaddingTh"> 
+									 <select chosen ng-model="dropdownData.description"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('1',dropdownData.description.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								 </th>
+								 
+								 <th class="myPaddingTh">  
+									 <select chosen ng-model="dropdownData.Companybrand"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('2',dropdownData.Companybrand.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								 </th>
+								 
+								<th class="myPaddingTh">  
+									 <select chosen ng-model="dropdownData.category"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('3',dropdownData.category.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								 </th>
+								 
+								<th class="myPaddingTh">   
+									 <select chosen ng-model="dropdownData.productName"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('4',dropdownData.productName.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								 </th>
+								 
+								 <th class="myPaddingTh">  
+									 <select chosen ng-model="dropdownData.color"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('5',dropdownData.color.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								 </th>
+								 
+								<th class="myPaddingTh">   
+									 <select chosen ng-model="dropdownData.size"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('6',dropdownData.size.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								 </th>
+								 
+								<th class="myPaddingTh">  
+									 <select chosen ng-model="dropdownData.desc"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('7',dropdownData.desc.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								 </th>
+								 
+								<th class="myPaddingTh">   
+									 <select chosen ng-model="dropdownData.measurement"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('8',dropdownData.measurement.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								 </th>
+								 
+								<th class="myPaddingTh">   
+									 <select chosen ng-model="dropdownData.purchasePrice"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('9',dropdownData.purchasePrice.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								 </th>
+								 
+								<th class="myPaddingTh">	
+									<select chosen ng-model="dropdownData.taxMargin"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('10',dropdownData.taxMargin.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								</th>
+								
+								<th class="myPaddingTh">								
+									 <select chosen ng-model="dropdownData.taxMarginFlat"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('11',dropdownData.taxMarginFlat.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								</th>
+									 
+								<th class="myPaddingTh">
+									 <select chosen ng-model="dropdownData.semiTaxMargin"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('12',dropdownData.semiTaxMargin.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								</th>
+									 
+								<th class="myPaddingTh">
+									 <select chosen ng-model="dropdownData.vat"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('13',dropdownData.vat.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								</th>
+									 
+								<th class="myPaddingTh">
+									  <select chosen ng-model="dropdownData.margin"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('14',dropdownData.margin.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								</th>
+									 
+								<th class="myPaddingTh">
+									 <select chosen ng-model="dropdownData.marginFlat"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('15',dropdownData.marginFlat.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								</th>
+									 
+								<th class="myPaddingTh">
+									 <select chosen ng-model="dropdownData.additionalTax"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('16',dropdownData.additionalTax.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								</th>
+									 
+								<th class="myPaddingTh">
+									 <select chosen ng-model="dropdownData.mrp"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('17',dropdownData.mrp.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								</th>
+								
+								<th class="myPaddingTh">
+									  <select chosen ng-model="dropdownData.minimumStock"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('18',dropdownData.minimumStock.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								</th>
+
+								<th class="myPaddingTh">
+									  <select chosen ng-model="dropdownData.productMenu"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('19',dropdownData.productMenu.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								</th>
+
+								<th class="myPaddingTh">
+									  <select chosen ng-model="dropdownData.productType"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('20',dropdownData.productType.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								</th>
+
+								<th class="myPaddingTh">
+									  <select chosen ng-model="dropdownData.maxSaleQty"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('21',dropdownData.maxSaleQty.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								</th>
+
+								<th class="myPaddingTh">
+									  <select chosen ng-model="dropdownData.notForSale"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('22',dropdownData.notForSale.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								</th>
+
+								<th class="myPaddingTh">
+									  <select chosen ng-model="dropdownData.bestBeforeTime"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('23',dropdownData.bestBeforeTime.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								</th>
+
+								<th class="myPaddingTh">
+									  <select chosen ng-model="dropdownData.bestBeforeType"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('24',dropdownData.bestBeforeType.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								</th>
+
+								<th class="myPaddingTh">
+									  <select chosen ng-model="dropdownData.cessFlat"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('25',dropdownData.cessFlat.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								</th>
+
+								<th class="myPaddingTh">
+									  <select chosen ng-model="dropdownData.cessPercentage"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('26',dropdownData.cessPercentage.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								</th>
+								<th class="myPaddingTh">
+									  <select chosen ng-model="dropdownData.opening"  data-ng-options="s.value for s in vm.batchdropdown" ng-change="changeBatchDropdownData('26',dropdownData.opening.key)"  class="form-control chosen-select" >
+										 <option value=""></option>
+									 </select>
+								</th>
+							</tr>
+							<tr ng-if="inventoryType == 'Product'">
+								<th>CompanyName</th>
+								<th>BranchName</th>
+								<th>BrandName</th>
+								<th>CategoryName</th>
+								<th>ProductName</th>
+								<th>Color</th>
+								<th>Size</th>
+								<th>Description</th>
+								<th>Measurement</th>
+								<th>PurhcasePrice</th>
+								<th>TaxMargin</th>
+								<th>TaxMarginFlat</th>
+								<th>SemiTaxMargin</th>
+								<th>Cgst</th>
+								<th>Margin</th>
+								<th>MarginFlat</th>
+								<th>Sgst</th>
+								<th>MRP</th>
+								<th>minimumStock</th>
+								<th>ProductMenu</th>
+								<th>ProductType</th>
+								<th>MaxSaleQty</th>
+								<th>NotForSale</th>
+								<th>BestBeforeTime</th>
+								<th>BestBeforeType</th>
+								<th>cessFlat</th>
+								<th>cessPercentage</th>
+								<th>opening</th>
+							</tr>
+						</thead>
+						 <tbody ng-if="inventoryType == 'Brand'">
+							<tr ng-repeat="item in vm.gridOptions.data" >
+								<td>{{item.ParentName}}</td>
+								<td>{{item.BrandName}}</td>
+								<td>{{item.Description}}</td>
+							</tr>
+						 </tbody>
+						  <tbody ng-if="inventoryType == 'Category'">
+							<tr ng-repeat="item in vm.gridOptions.data" >
+								<td>{{item.ParentName}}</td>
+								<td>{{item.CategoryName}}</td>
+								<td>{{item.Description}}</td>
+							</tr>
+						 </tbody>
+						 <tbody ng-if="inventoryType == 'Product'">
+							<tr ng-repeat="item in vm.gridOptions.data" >
+								<td>{{item.CompanyName}}</td>
+								<td>{{item.BranchName}}</td>
+								<td>{{item.BrandName}}</td>
+								<td>{{item.CategoryName}}</td>
+								<td>{{item.ProductName}}</td>
+								<td>{{item.Color}}</td>
+								<td>{{item.Size}}</td>
+								<td>{{item.Description}}</td>
+								<td>{{item.Measurement}}</td>
+								<td>{{item.PurchasePrice}}</td>
+								<td>{{item.TaxMargin}}</td>
+								<td>{{item.TaxMarginFlat}}</td>
+								<td>{{item.semiTaxMargin}}</td>
+								<td>{{item.Vat}}</td>
+								<td>{{item.Margin}}</td>
+								<td>{{item.marginFlat}}</td>
+								<td>{{item.AdditionalTax}}</td>
+								<td>{{item.MRP}}</td>
+								<td>{{item.minimumStock}}</td>
+								<td>{{item.ProductMenu}}</td>
+								<td>{{item.ProductType}}</td>
+								<td>{{item.MaxSaleQty}}</td>
+								<td>{{item.NotForSale}}</td>
+								<td>{{item.BestBeforeTime}}</td>
+								<td>{{item.BestBeforeType}}</td>
+								<td>{{item.CessFlat}}</td>
+								<td>{{item.CessPercentage}}</td>
+								<td>{{item.opening}}</td>
+							</tr>
+						 </tbody>
+					</table>
+				</div>
+			   
+				<div  class="mv-lg" ng-show="hideExport == 1">
+				
+					<a  class="pull-right btn btn-sm btn-primary" style="margin-right: 5px;line-height:2.1" data-ng-click="activeStep=2;exportData()" >Download .xls</a>
+				</div>
+				
+				<div  class="alert alert-danger mv-lg" ng-show="hideExport == 1" >
+					<p class="text-bold m0">{{remarkData.length}} Raw Not Inserted....Please Download This Excel and Resolve Problem..</p>
+					
+					
+				</div>
+				
+            <!--div data-ng-show="stepsDone" class="alert alert-success mv-lg">
+			
+               <p class="text-bold m0">Excellent ! You've completed all steps.</p>
+            </div-->
+            <div class="mt">
+               <button type="button" data-ng-click="activeStep=2" class="btn btn-default">Prev</button>
+               <button type="button" data-ng-disabled="form_step3.$invalid" data-ng-click="stepsDone=true;insertBatchData();" class="btn btn-primary">Finish</button>
+            </div>
+         </div>
+      </div>
+  
+	
+</div>
+

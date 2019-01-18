@@ -1,0 +1,30 @@
+<div class="modal-header">
+		<button type="button" data-dismiss="modal" data-ng-click="cancel()" aria-hidden="true" class="close">×</button>  
+		  <h4 id="myModalLabel" class="modal-title">{{ledgerGroupType}}</h4>
+	</div>
+	<div class="modal-body my-model-body" >
+		 <table    class="table table-bordered table-striped" >
+	  <!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
+		<thead>
+			<th style="width:35%">Ledger Name</th>
+			<th style="width:15%">Amount</th>
+			
+		</thead>
+         <tbody  >
+            <!--tr data-ng-repeat="user in $data" ng-if="user.length > 0" -->
+            <tr ng-repeat="user in ledgerGroupData"  >
+			
+				<td  sortable="'ledgerName'" filter="{ 'ledgerName': 'text' }"  ><a ng-click="goToLedgerTransaction(user.ledger.ledgerId)"  style="text-transform:capitalize;cursor: pointer"><span ng-if="user.ledger.ledgerName" >{{user.ledger.ledgerName}}</span></a></td>
+				<td  sortable="'debitAmount'" filter="{ 'debitAmount': 'text' }" style="text-align:right" header-class="text-right"><span>{{user.amount | number:noOfDecimalPoints}}</span></td>
+				
+            </tr>
+			
+         </tbody>
+		 <tfoot>
+			<td><b>Total Amount</b></td>
+			<td style="text-align:right"><b>{{totalDebitorCreditor | number:noOfDecimalPoints}}</b></td>
+			
+		 </tfoot>
+      </table>
+	</div>
+	

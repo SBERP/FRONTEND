@@ -1,0 +1,89 @@
+
+	<div class="modal-header">
+		<button type="button" data-dismiss="modal" data-ng-click="closeButton()" aria-hidden="true" class="close">×</button>  
+		 <h4 id="myModalLabel" class="modal-title"> Barcode Print</b></h4>
+	</div>
+	<div class="modal-body my-model-body">
+		
+		<form action="#" name="barcodeForm" class="form-validate form-horizontal" >
+			
+			<fieldset class="my-fieldset-paddingBottom">
+			   <div class="form-group">
+				  <label class="col-sm-3 control-label" id="allPro">Name</label>
+				  <div class="col-sm-9 col-lg-6" >
+					<p class="form-control-static" > {{::productName}} </p>
+				  </div>
+			   </div>
+			</fieldset>
+				<fieldset class="my-fieldset-paddingBottom">
+			   <div class="form-group">
+				  <label class="col-sm-3 control-label">Color</label>
+				  <div class="col-sm-9 col-lg-6" >
+					<p class="form-control-static" > {{::productColor}} </p>
+				  </div>
+			   </div>
+			</fieldset>
+				<fieldset class="my-fieldset-paddingBottom">
+			   <div class="form-group">
+				  <label class="col-sm-3 control-label">Size</label>
+				  <div class="col-sm-9 col-lg-6" >
+					<p class="form-control-static" > {{::productSize}} </p>
+				  </div>
+			   </div>
+			</fieldset>
+			
+			<fieldset class="my-fieldset-paddingBottom">
+			   <div class="form-group">
+			   
+				  <label class="col-sm-3 control-label">Quantity</label>
+				  <div class="col-sm-5" >
+					 <input id="input-id-1" tabindex="2" name="quantity" ng-model="productBarcodeForm.quantity"  type="text" placeholder="Quantity" class="form-control"  ng-required="true" ng-pattern="/^[0-9]*$/"   min="1" auto-focus only-number />
+					 
+					 <span ng-messages="barcodeForm.quantity.$error" ng-if="barcodeForm.quantity.$dirty || barcodeForm.quantity.$touched"  role="alert">
+						<span ng-messages-include="errorRequired"></span>
+						<span ng-messages-include="errorShortlength"></span>
+						<span ng-messages-include="errorLonglength"></span>
+						<span ng-messages-include="errorPatternNumber"></span>
+					</span>
+					
+				  </div>
+			   </div>
+			</fieldset>
+				
+			<fieldset class="my-fieldset-paddingBottom">
+			   <div class="form-group">
+			   
+				  <label class="col-sm-3 control-label"></label>
+				  <div class="col-sm-5" >
+					
+					  <button type="button" class="mr mb-sm btn btn-labeled btn-primary pull-right"  tabindex="2" ng-disabled="barcodeForm.$invalid" ng-click="printBarcodeFun()">
+					   <span class="btn-label"><i class="fa fa-print"></i>
+					   </span>Print</button>
+			   
+				  </div>
+			   </div>
+			</fieldset>
+			
+			<div ng-bind-html="customHtmlContent">
+			</div>
+		</form>
+		
+	</div>
+
+	
+<script type="text/ng-template" id="errorRequired">
+	<span class="text-danger" ng-message="required">{{errorMessage.require}}</span>
+</script>
+
+
+<script type="text/ng-template" id="errorLonglength">
+	<span class="text-danger" ng-message="maxlength">{{errorMessage.longLength}}</span>
+</script>
+
+<script type="text/ng-template" id="errorShortlength">
+	<span class="text-danger" ng-message="minlength">{{errorMessage.shortLength}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternNumber">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.Numbers}}</span>
+</script>

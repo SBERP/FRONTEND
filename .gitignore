@@ -1,0 +1,4 @@
+#Ignore All Vendors except for Request file for Routing
+# /vendor
+/app/js/app.js
+

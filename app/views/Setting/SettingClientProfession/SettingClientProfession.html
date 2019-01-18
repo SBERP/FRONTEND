@@ -1,0 +1,80 @@
+<h3>
+   <small>
+   <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+   Client Profession</small>
+</h3>
+<!-- START panel-->
+<div data-ng-controller="SettingClientProfessionController as form" class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+   <div class="panel panel-default" >
+	  <div class="panel-heading" data-ng-class="app.theme.brand">
+		 <div class="panel-title">Client Profession</div>
+	  </div>
+      <div class="panel-body">
+         <form action="#" name="formInvoice" class="form-validate form-horizontal">
+			<div class="col-md-12 col-sm-8 col-sx-12">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-2 control-label"> Name </label>
+							<div class="col-sm-8">
+								<select chosen="" data-ng-model="clientProfessionForm.professionDropDown" data-ng-options="s.professionName for s in form.professionDrop track by s.professionId" ng-change="changeProfessionData('professionParentId',clientProfessionForm.professionDropDown.professionId)" class="form-control chosen-select" tabindex="2"></select>
+							</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+				   <div class="form-group">
+					  <label for="input-id-1" class="col-sm-4 control-label">*Profession Name</label>
+					  <div class="col-sm-8">
+						 <input id="input-id-1" tabindex="2" name="jobCardNumberLabel" ng-pattern="/^[a-zA-Z0-9 &_`#().\'-]*$/" ng-minlength="2"  ng-maxlength="50" ng-model="clientProfessionForm.professionName" ng-change="changeProfessionData('professionName',clientProfessionForm.professionName)" type="text" placeholder="Profession Name" required class="form-control" auto-focus/>
+						 
+						 <span ng-messages="formInvoice.jobCardNumberLabel.$error" ng-if="formInvoice.jobCardNumberLabel.$dirty || formInvoice.jobCardNumberLabel.$touched"  role="alert">
+							<span ng-messages-include="errorRequired"></span>
+							<span ng-messages-include="errorLonglength"></span>
+							<span ng-messages-include="errorShortlength"></span>
+							<span ng-messages-include="errorPatternThisSpecial"></span>
+						</span>
+					  </div>
+				   </div>
+				</div>
+			</div>
+			
+			<div class="col-md-6 col-md-offset-6 col-sm-4 col-sx-6">
+				 <button type="button" class="mr mb-sm btn btn-danger pull-right" tabindex="4" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="cancel()" >Cancel</button>
+				<button type="button" class="mr mb-sm btn btn-success pull-right" ng-disabled="formInvoice.$invalid" tabindex="3" ng-click="insertProfessionData()">
+				<span ng-if="!clientProfessionForm.id">Insert </span>
+				<span ng-if="clientProfessionForm.id">Update </span>
+				</button>
+			</div>
+		
+         </form>
+      </div>
+   </div>
+   
+   <div class="panel panel-primary">
+      <div class="panel-heading" data-ng-class="app.theme.brand" >
+         <div class="panel-title">All Professions of Clients</div>
+      </div>
+	  <tree-grid  col-defs="col_defs" expand-on="expanding_property" on-click="my_tree_handler(branch)" tree-data="tree_data"></tree-grid>
+   </div>
+   <!-- END panel-->
+</div>
+
+<script type="text/ng-template" id="errorRequired">
+	<span class="text-danger" ng-message="required">{{errorMessage.require}}</span>
+</script>
+
+<script type="text/ng-template" id="errorLonglength">
+	<span class="text-danger" ng-message="maxlength">{{errorMessage.longLength}}</span>
+</script>
+
+<script type="text/ng-template" id="errorShortlength">
+	<span class="text-danger" ng-message="minlength">{{errorMessage.shortLength}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternNumber">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.Numbers}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternThisSpecial">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacter}}</span>
+</script>

@@ -1,0 +1,212 @@
+<style>
+.chosen-container .chosen-results {
+    max-height:100px;
+}
+.chosen-container .chosen-drop{
+	display: block !imporatant;
+}
+</style>
+<h3>
+   <small>
+   <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+   Setting >> 
+   Reminders</small>
+</h3>
+<!-- START panel-->
+<div data-ng-controller="settingRemindersController as remindCtrl" class="row">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+	<div class="col-md-6" >
+		<div class="panel panel-primary" >
+			<div class="panel-heading" data-ng-class="app.theme.brand">
+				<div class="panel-title">
+					<i class="fa fa-birthday-cake fa-lg fa-fw" aria-hidden="true" ></i> Birthday 
+					<label class="switch switch-lg switch-success pull-right ph-lg">
+                        <input type="checkbox" data-ng-model="birthReminder.birthday.toggle" ng-change="remindCtrl.updateBirthReminder(birthReminder)"/>
+                        <span></span>
+                     </label>
+					<label class="control-label pull-right text-left">
+	                	<span ng-if="birthReminder.birthday.toggle">  ON </span>
+	                	<span ng-if="!birthReminder.birthday.toggle">  OFF </span>
+	              	</label>
+				</div>
+			</div>
+			<div class="panel-body" ng-if="birthReminder.birthday.toggle">
+				 <form  action="#" name="formBirthday" class="form-validate form-horizontal" autocomplete="off">
+					
+					   <div class="form-group">
+						  <label for="input-id-1" class="col-sm-3 control-label">Reminder Time</label>
+						  <div class="col-sm-3">
+							 <select  data-ng-model="birthReminder.birthday.prefixTime" data-ng-options="s for s in remindCtrl.beforeAfterTime" class="form-control chosen-select" ng-required="true"  name="height" id="height" tabIndex="2" auto-focus  >
+								<option value=""></option>
+							</select>
+						  </div>
+						   <div class="col-sm-5">
+							 <select data-ng-model="birthReminder.birthday.time" data-ng-options="s for s in remindCtrl.reminderHour" class="form-control chosen-select" ng-required="true" ng-change="changeInBarcodeData('barcodeHeight',birthReminder.birthday.barcodeHeight)" name="height" id="height" tabIndex="2" auto-focus  >
+								<option value=""></option>
+							</select>
+						  </div>
+					   </div>
+						
+						<div class="form-group">
+							<label for="input-id-1" class="col-sm-3 control-label">Notify By</label>
+							<div class="col-sm-9">
+								<div class="radio-inline c-radio">
+									<label>
+										<input ng-model="birthReminder.birthday.notify"  id="inlineradio1" type="radio" name="i-radio" value="sms" ng-checked="true"  />
+										<span class="fa fa-circle" ></span>SMS
+									</label>
+								</div>
+								<div class="radio-inline c-radio">
+									<label>
+									   <input ng-model="birthReminder.birthday.notify" id="inlineradio2" type="radio" name="i-radio" value="email"  />
+									   <span class="fa fa-circle"></span>Email</label>
+								</div>
+								<div class="radio-inline c-radio">
+									<label>
+									   <input ng-model="birthReminder.birthday.notify" id="inlineradio3" type="radio" name="i-radio" value="both"  />
+									   <span class="fa fa-circle"></span>Both</label>
+								</div>
+								<div class="radio-inline c-radio">
+									<label>
+									   <input ng-model="birthReminder.birthday.notify" id="inlineradio4" type="radio" name="i-radio" value="none"  />
+									   <span class="fa fa-circle"></span>None</label>
+								</div>
+							</div>
+						</div>
+
+					   <div class="form-group">
+					   		<div class="col-sm-8 col-sm-offset-3">
+						  	 <button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="remindCtrl.updateBirthReminder(birthReminder)" ng-disabled="formBirthday.$invalid"  data-ng-class="app.theme.brand" >{{birthDateButton}}</button>
+							</div>
+					   </div>
+				</form>
+			</div>
+		</div >
+	</div>
+<!-- Anniversory -->
+
+<div class="col-md-6" >
+		<div class="panel panel-primary" >
+			<div class="panel-heading" data-ng-class="app.theme.brand">
+				<div class="panel-title">
+					<i class="fa fa-gift fa-lg fa-fw" aria-hidden="true" ></i> Anniversary 
+					<label class="switch switch-lg switch-success pull-right ph-lg">
+                        <input type="checkbox" data-ng-model="anniReminder.annivesary.toggle" ng-change="remindCtrl.updateAnniReminder(anniReminder)"/>
+                        <span></span>
+                     </label>
+					<label class="control-label pull-right text-left">
+	                	<span ng-if="anniReminder.annivesary.toggle">  ON </span>
+	                	<span ng-if="!anniReminder.annivesary.toggle">  OFF </span>
+	              	</label>
+				</div>
+			</div>
+			<div class="panel-body" ng-if="anniReminder.annivesary.toggle">
+				 <form  action="#" name="formAnniversary" class="form-validate form-horizontal" autocomplete="off">
+					
+					   <div class="form-group">
+						  <label for="input-id-1" class="col-sm-3 control-label">Reminder Time</label>
+						  <div class="col-sm-3">
+							 <select  data-ng-model="anniReminder.annivesary.prefixTime" data-ng-options="s for s in remindCtrl.beforeAfterTime" class="form-control chosen-select" ng-required="true"  name="height" id="height" tabIndex="2" auto-focus  >
+								<option value=""></option>
+							</select>
+						  </div>
+						   <div class="col-sm-5">
+							 <select data-ng-model="anniReminder.annivesary.time" data-ng-options="s for s in remindCtrl.reminderHour" class="form-control chosen-select" ng-required="true" ng-change="changeInBarcodeData('barcodeHeight',anniReminder.annivesary.barcodeHeight)" name="height" id="height" tabIndex="2" auto-focus  >
+								<option value=""></option>
+							</select>
+						  </div>
+					   </div>
+						
+						<div class="form-group">
+							<label for="input-id-1" class="col-sm-3 control-label">Notify By</label>
+							<div class="col-sm-9 ">
+								<div class="radio-inline c-radio">
+									<label>
+										<input ng-model="anniReminder.annivesary.notify"  id="inlineradio1" type="radio" name="i-radio" value="sms" ng-checked="true"  />
+										<span class="fa fa-circle" ></span>SMS
+									</label>
+								</div>
+								<div class="radio-inline c-radio">
+									<label>
+									   <input ng-model="anniReminder.annivesary.notify" id="inlineradio2" type="radio" name="i-radio" value="email"  />
+									   <span class="fa fa-circle"></span>Email</label>
+								</div>
+								<div class="radio-inline c-radio">
+									<label>
+									   <input ng-model="anniReminder.annivesary.notify" id="inlineradio3" type="radio" name="i-radio" value="both"  />
+									   <span class="fa fa-circle"></span>Both</label>
+								</div>
+								<div class="radio-inline c-radio">
+									<label>
+									   <input ng-model="anniReminder.annivesary.notify" id="inlineradio4" type="radio" name="i-radio" value="none"  />
+									   <span class="fa fa-circle"></span>None</label>
+								</div>
+							</div>
+						</div>
+					   <div class="form-group">
+					   		<div class="col-sm-8 col-sm-offset-3">
+						  	 <button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="remindCtrl.updateAnniReminder(anniReminder)" ng-disabled="formAnniversary.$invalid"  data-ng-class="app.theme.brand" >{{anniDateButton}}</button>
+							</div>
+					   </div>
+				</form>
+			</div>
+		</div >
+</div>
+
+<div class="col-md-6" >
+		<div class="panel panel-primary" >
+			<div class="panel-heading" data-ng-class="app.theme.brand ">
+				<div class="panel-title">
+					<i class="fa fa-gift fa-lg fa-fw icon-map" aria-hidden="true" ></i> Payment-Date
+					<label class="switch switch-lg switch-success pull-right ph-lg">
+                        <input type="checkbox" data-ng-model="paymentDate.payment.toggle" ng-change="remindCtrl.updatepaymentData(paymentDate)"/>
+                        <span></span>
+                     </label>
+					<label class="control-label pull-right text-left">
+	                	<span ng-if="paymentDate.payment.toggle">  ON </span>
+	                	<span ng-if="!paymentDate.payment.toggle">  OFF </span>
+	              	</label>
+				</div>
+			</div>
+			<div class="panel-body" ng-if="paymentDate.payment.toggle">
+				 <form  action="#" name="formAnniversary" class="form-validate form-horizontal" autocomplete="off">
+						<div class="form-group col-md-10">
+							<label for="input-id-1" class="col-sm-2 col-md-4 control-label" >After no of days</label>
+							<div class="col-sm-6">
+								<input ng-model="paymentDate.payment.noOfDays" name="noOfDays"  type="text" placeholder="0" class="form-control input-sm" ng-pattern="/^[0-9]*$/" ng-maxlength="5" only-number ng-required="true"/>
+									<span ng-messages="formServiceDate.noOfDays.$error" ng-if="formServiceDate.noOfDays.$dirty || formServiceDate.noOfDays.$touched" role="alert">
+										<span ng-messages-include="errorRequired"></span>
+										<span ng-messages-include="errorPatternAlpha"></span>
+										<span ng-messages-include="errorLonglength"></span>
+									</span>		
+							</div>
+						</div>
+					   <div class="form-group col-md-2">
+					   		<div class="col-sm-8 col-sm-offset-3">
+						  	 <button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="remindCtrl.updatepaymentData(paymentDate)" ng-disabled="formAnniversary.$invalid"  data-ng-class="app.theme.brand" >{{paymentButton}}</button>
+							</div>
+					   </div>
+				</form>
+			</div>
+		</div >
+</div>
+
+<script type="text/ng-template" id="errorRequired">
+	<span class="text-danger" ng-message="required">{{errorMessage.require}}</span>
+</script>
+
+<script type="text/ng-template" id="errorShortlength">
+	<span class="text-danger" ng-message="minlength">{{errorMessage.shortLength}}</span>
+</script>
+
+<script type="text/ng-template" id="errorLonglength">
+	<span class="text-danger" ng-message="maxlength">{{errorMessage.longLength}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternNumber">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.Numbers}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternThisSpecial">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacterAndNumber}}</span>
+</script>

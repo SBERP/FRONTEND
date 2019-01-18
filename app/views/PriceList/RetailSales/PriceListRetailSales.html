@@ -1,0 +1,42 @@
+<style>
+.chosen-container .chosen-results {
+    max-height:130px;
+}
+</style>
+<h3>
+	
+   <small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+	<a ui-sref="app.FormPriceListRetailSales" ng-if="saleType == 'retail_sales'" > Form RetailSales </a>
+	<a ui-sref="app.FormPriceListWholeSales" ng-if="saleType == 'whole_sales'" > Form Tax </a> >>
+	
+	<span ng-if="saleType == 'retail_sales'" >Data RetailSales </span>
+	<span ng-if="saleType == 'whole_sales'" >Data Tax </span></small>
+   
+</h3>
+<div class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+   <div class="panel panel-default">
+    <div class="panel-heading myHeading">
+		<a ng-click="generatePdf('pdf')" class="pull-right btn btn-sm btn-primary" ng-if="disableButton" data-ng-class="app.theme.brand" >Generate Pdf</a> 
+		<!--a ng-csv="getArray" filename="test.csv" csv-header="['Product Name', 'Category Name', 'Group Name','Price','Vat','Amount']" class="pull-right btn btn-sm btn-primary" style="margin-right: 5px;" >Export to CSV</a-->
+		<a ng-click="generatePdf('excel')" class="pull-right btn btn-sm btn-primary" style="margin-right: 5px;" ng-if="disableButton" data-ng-class="app.theme.brand" >Export to Excel</a>
+		 <div class="panel-title" ng-if="saleType == 'retail_sales'">RetailSales PriceList of <b>{{displayCompany}}</b> Company</div>
+		 <div class="panel-title" ng-if="saleType == 'whole_sales'" >Tax PriceList of <b>{{displayCompany}}</b> Company</div>
+    </div>
+      
+	   <tree-grid  col-defs="col_defs" expand-on="expanding_property"  tree-data="tree_data"   ></tree-grid>
+     <!--table data-ng-table="table.tableParams" export-csv="csv" separator="," class="table table-bordered table-striped" >
+	  <!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/>
+	   <tbody>
+            <tr data-ng-repeat="user in $data">
+			
+				<td data-title="'Product Name'" sortable="'productName'" filter="{ 'productName': 'text' }" >{{user.productName}}</td>
+				<td data-title="'Price'" sortable="'retailPrice'" filter="{ 'retailPrice': 'text' }" >{{user.purchasePrice}}</td>
+			    <td data-title="'Vat'" sortable="'vat'" filter="{ 'vat': 'text' }" >{{user.vat}}</td>
+				<td data-title="'Final Amount'" sortable="'finalAmount'" filter="{ 'finalAmount': 'text' }" >{{user.purchasePrice * user.qty}}</td>
+				
+            </tr>
+         </tbody>
+      </table-->
+   </div>
+</div>

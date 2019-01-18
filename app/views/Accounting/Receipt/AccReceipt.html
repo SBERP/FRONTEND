@@ -1,0 +1,156 @@
+<h3>
+   <small>
+   <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+   Accounting >>
+   Receipt</small>
+</h3>
+<!-- START panel-->
+<div data-ng-controller="AccReceiptController as form" class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+	<form  action="#" name="formReceipt" class="form-validate form-horizontal">
+	<div class="panel panel-default">
+		 <!--h4 class="panel-heading"></h4-->
+		<div class="panel-body">
+			<div class="form-group">
+				<label class="col-sm-1 control-label"> *Company </label>
+					<div class="col-sm-4">
+						<select chosen="" data-ng-model="accReceipt.companyDropDown" data-ng-options="s.companyName for s in form.companyDrop track by s.companyId" ng-change="changeCompany('companyId',accReceipt.companyDropDown)" ng-disabled="disableCompany" class="form-control chosen-select" ng-required="true"></select>
+					</div>
+				<label class="col-sm-1 control-label"> *Date </label>
+					<div class="col-sm-4">
+						 <p class="input-group"style="float:right">
+							<input type="text" datepicker-popup="{{form.format}}"  data-ng-model="form.dt1" is-open="form.openedStart" min-date="false" max-date="false" datepicker-options="form.dateOptions" ng-change="changeReceiptDate('entryDate')" date-disabled="form.disabled(form.date, form.mode)" close-text="Close"
+							class="form-control" readonly />
+							<span class="input-group-btn">
+							   <button type="button" data-ng-click="form.openStart($event)" class="btn btn-default">
+								  <em class="fa fa-calendar"></em>
+							   </button>
+							</span>
+						 </p>
+					</div>
+			</div>
+		</div>
+	</div>
+	<div class="panel panel-default">
+		 <!--h4 class="panel-heading"></h4-->
+		<div class="panel-body">
+			<fieldset class="my-fieldset-paddingBottom">
+			   <div class="form-group">
+				  <label for="input-id-1" class="col-sm-2 control-label">*Account</label>
+				  <div class="col-sm-5">
+					<div class="input-group m-b">
+						<div dropdown="dropdown" class="input-group-btn">
+						   <button type="button" dropdown-toggle="" class="btn btn-default dropdown-toggle">Dr
+							  <span class="caret"></span>
+						   </button>
+						   <ul class="dropdown-menu">
+							  <li><a href="#">Dr</a>
+							  </li>
+							  
+						   </ul>
+						</div>
+						<input typeahead="item.ledgerName for item in form.accountDrop | filter:$viewValue | orderBy:'ledgerName' | limitTo:10" ng-model="accReceipt.account" type="text" typeahead-on-select="setAccReceipt($item)" class="form-control" placeholder="Account" typeahead-editable="false" ng-required="true" name="accountName" auto-focus/>
+						<span class="input-group-btn" >
+						<button type="button" class="btn btn-default" data-ng-click="openLedger('lg',null)"><i class="fa fa-plus" style="font-size:15px;color:#17A1E5;"></i></button>
+						</span>
+					
+					</div>
+					
+					<span ng-messages="formReceipt.accountName.$error" ng-if="formReceipt.accountName.$dirty || formReceipt.accountName.$touched"  role="alert">
+							<span ng-messages-include="errorRequired"></span>
+					</span>
+					<!--div class="input-group">
+						<input typeahead="item.ledgerName for item in form.accountDrop | filter:$viewValue | limitTo:10" ng-model="accReceipt.account" type="text" typeahead-on-select="setAccReceipt('account',$item)" class="form-control" placeholder="Account" />
+						<span class="input-group-btn" ng-controller="AccReceiptLedgerModalController">
+						<button type="button" class="btn btn-default" data-ng-click="open('lg')"><i class="fa fa-plus" style="font-size:15px;color:#17A1E5;"></i></button>
+						</span>
+					</div-->
+				  </div>
+				 
+			  </div>
+			</fieldset>
+			<fieldset>
+				<div class="form-group">
+				  <label for="input-id-1" class="col-sm-2 control-label">Current Balance</label>
+				  <div class="col-sm-6">
+					 <h4>{{form.accountCurrentBalance.currentBalance}} {{form.accountCurrentBalance.amountType}}</h4>
+				  </div>
+			   </div>
+			</fieldset>
+		</div>
+	</div>
+     
+	<div class="col-md-12" style="padding-left:0px;padding-right:0px"> 
+	<div class="panel panel-default">
+			<table  class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<th class="header" style="width:10%">Debit</th>
+						<th class="header" style="width:60%">Particulars</th>
+						<th style="width:20%">Amount</th>
+						<th style="width:10%">Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr id="addAfter" ng-repeat="item in form.AccReceiptTable" data-ng-class="app.tableAnimation" >
+						<td>
+							<select ng-model="item.amountType"  class="form-control"  >
+								<option value="credit" selected="selected" >Cr</option>
+							</select>
+						</td>
+						<td>
+							<div class="input-group">
+								<input typeahead="s.ledgerName for s in form.tableNameDrop | filter:$viewValue | limitTo:10" ng-model="item.ledgerName" typeahead-on-select="settabledata($item,$index)" type="text" class="form-control" placeholder="*Enter Name(JS)" typeahead-editable="false" ng-required="true" />
+								<span class="input-group-btn" >
+								   <button type="button" class="btn btn-default" data-ng-click="openLedger('lg',$index)"><i class="fa fa-plus" style="font-size:15px;color:#17A1E5;"></i></button>
+								</span>
+							</div>
+							<h5>Current Balance {{form.multiCurrentBalance[$index]['currentBalance']}} {{form.multiCurrentBalance[$index]['amountType']}}</h5>
+						</td>
+						<td >
+							<input id="input-id-1" type="text" ng-model="item.amount"  class="form-control"  ng-change="changeJrnlTable()" ng-required="true" ng-pattern="/^[0-9 .]*$/" only-number />
+							<h5 class="text-center" style="visibility:hidden">Current Balance 205000 Dr/Cr</h5>
+						</td>
+						<td style="">
+							<center>
+								<a href="#" ng-click="addRow($index)"  > 
+									<i  ui-sref="" title="Add" class="fa fa-plus" style="font-size:20px;" title="Add"></i>
+								</a>
+								&nbsp;
+								<a href="#" ng-click="removeRow($index)"  class="text-danger" ng-if="$index!=0"> 
+									<i  ui-sref=""  class="fa fa-times" style="font-size:20px;" title="Delete" > </i>
+								</a>
+							</center>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>Total</td>
+						<td >
+							<span style="float:right">{{accReceipt.totalAmount = (getTotal()  | setDecimal: noOfDecimalPoints)}}</span>
+						</td>
+						<td></td>
+					</tr>
+					
+				</tbody>
+			</table>
+		
+	</div>
+	</div>
+
+	<textarea  name="address" ng-model="remark" placeholder="Remark" class="form-control ng-pristine ng-valid ng-touched"></textarea>
+	<br />
+	<button type="button" class="mr mb-sm btn btn-danger pull-right" data-ng-click="cancel()" >Cancel</button>
+	<button type="button" class="mr mb-sm btn btn-success pull-right" ng-click="addUpReceipt()" ng-disabled="formReceipt.$invalid" >
+		<span ng-if="!accReceipt.getSetJrnlId">Insert</span>
+		<span ng-if="accReceipt.getSetJrnlId" >Update</span>
+	</button>
+			
+	</form>
+   <!-- END panel-->
+</div>
+
+
+<script type="text/ng-template" id="errorRequired">
+	<span class="text-danger" ng-message="required">{{errorMessage.require}}</span>
+</script>

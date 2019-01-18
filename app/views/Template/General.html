@@ -1,0 +1,132 @@
+
+<script src="app/vendor/tinymce/js/tinymce/jquery.tinymce.min.js?x=123"></script>
+<script src="app/vendor/tinymce/js/tinymce/tinymce.min.js?x=564"></script>
+
+<h3>
+   <small>
+   <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >>
+   Templates
+   </small>
+</h3>
+<!-- START panel-->
+<div  class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+	<div class="col-md-10" style="padding-left:0px">
+	   <div class="panel panel-default">
+			<div class="panel-heading" data-ng-class="app.theme.brand" >
+				<div class="panel-title">
+					Template Design
+				</div>
+			</div>
+		  
+		  <div class="panel-body">
+			 <form action="#" name="formGeneral" class="form-validate form-horizontal">
+					<fieldset>
+					   <div class="form-group">
+						  <label class="col-sm-2 control-label">*Company</label>
+						  <div class="col-sm-5">
+							 <select chosen="" tabindex="2"  ng-model="generalTemp.companyDropDown"  ng-options="s.companyName for s in form.companyDrop track by s.companyId" class="form-control chosen-select" ng-required="true" ></select>
+						  </div>
+					   </div>
+					</fieldset>
+					<fieldset>
+					   <div class="form-group">
+						  <label for="input-id-1" class="col-sm-2 control-label">*Template Name</label>
+						  <div class="col-sm-5">
+							 <input id="input-id-1"  type="text" name="tempName" ng-model="generalTemp.tempName" placeholder="Name" class="form-control" ng-required="true" ng-pattern="/^[a-zA-Z0-9 &_`#().\'-]*$/" ng-minlength="1" ng-maxlength="100" tabindex="2" auto-focus/>
+							 
+							 <span ng-messages="formGeneral.tempName.$error" ng-if="formGeneral.tempName.$dirty || formGeneral.tempName.$touched"  role="alert">
+								<span ng-messages-include="errorRequired"></span>
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorPatternThisSpecial"></span>
+							 </span>
+							  
+						  </div>
+					   </div>
+					</fieldset>
+					<fieldset>
+					 <label for="input-id-1" class="col-sm-2 control-label">*Template Design</label>
+					 
+					   <div class="form-group">
+						 
+						  <div class="col-sm-12"  >
+							
+							<textarea  id="textdesc"  tabindex="2"  name="textdesc" ui-tinymce ng-model="tinymceModel" placeholder="Your First address"  class="form-control ng-pristine ng-valid ng-touched" ></textarea>
+ 
+							 <span ng-messages="formGeneral.textdesc.$error" ng-if="formGeneral.textdesc.$dirty || formGeneral.textdesc.$touched"  role="alert">
+								<span ng-messages-include="errorRequired"></span>
+							 </span>
+							 
+						  </div>
+					   </div>
+					</fieldset>
+					
+					 <button type="button" class="mr mb-sm btn btn-danger pull-right" style="margin-right:0px !important;visibility:hidden" ng-click="cancel()" >Cancel</button>
+					 <button type="button" class="mr mb-sm btn btn-success pull-right" tabindex="2"  ng-click="addUpTemplate()" ng-disabled="formGeneral.$invalid" ng-if="tempID" >Update</button> 
+					 <!--button type="button" class="mr mb-sm btn btn-success pull-right" tabindex="2"  ng-click="addUpTemplate()" ng-disabled="formGeneral.$invalid"  >Update</button-->
+				 </form>
+			</div>
+				
+		</div >
+    </div>
+	  <div class="col-md-2" style="padding-right:0px">
+	   <div class="panel panel-default">
+		 <div class="panel-heading" data-ng-class="app.theme.brand" >
+			<div class="panel-title">
+				Templates
+			</div>
+		 </div>
+		  <div class="panel-body">
+			
+			<select chosen="" tabindex="1"  ng-model="generalTempList.companyDropDownList"  ng-options="s.companyName for s in form.companyDrop track by s.companyId" class="form-control chosen-select hightlight-company" ng-change="changeTemplateList(generalTempList.companyDropDownList.companyId)" ng-required="true" ></select>
+			
+			<span ng-repeat="item in form.AllTempRight track by item.templateId" >
+				<a class="myCursorPointer" ng-click="EditTemplate(item.templateId)" ng-if="item.templateType == 'invoice'" ><h4><strong>Documents</strong></h4><h4 style="text-align:center;">Invoice</h4></a>
+				<a class="myCursorPointer" ng-click="EditTemplate(item.templateId)" ng-if="item.templateType == 'blank'" ><h4 style="text-align:center;"  >Blank</h4></a>
+				<a class="myCursorPointer" ng-click="EditTemplate(item.templateId)" ng-if="item.templateType == 'quotation'" ><h4 style="text-align:center;"  >Quotation</h4></a>
+				<a class="myCursorPointer" ng-click="EditTemplate(item.templateId)" ng-if="item.templateType == 'payment'" ><h4 style="text-align:center;"  >Payment</h4></a>
+				<a class="myCursorPointer" ng-click="EditTemplate(item.templateId)" ng-if="item.templateType == 'job_card'" ><h4 style="text-align:center;"  >Jobcard</h4></a>
+				
+				<a class="myCursorPointer" ng-click="EditTemplate(item.templateId)" ng-if="item.templateType == 'thermal_invoice'" ><h4 style="text-align:center;"  >Thermal Invoice</h4></a>
+
+			</span>
+			<span ng-repeat="item in form.AllTempRight track by item.templateId" >
+				<a class="myCursorPointer" ng-click="EditTemplate(item.templateId)" ng-if="item.templateType == 'email_newOrder'" ><h4><strong>Email</strong></h4><h4 style="text-align:center;"  >New Order</h4></a>
+				<a class="myCursorPointer" ng-click="EditTemplate(item.templateId)" ng-if="item.templateType =='email_duePayment'" ><h4 style="text-align:center;"  >Due Payment</h4></a>
+				<a class="myCursorPointer" ng-click="EditTemplate(item.templateId)" ng-if="item.templateType == 'email_birthDay'" ><h4 style="text-align:center;"  >Birth Day</h4></a>
+				<a class="myCursorPointer" ng-click="EditTemplate(item.templateId)" ng-if="item.templateType == 'email_anniversary'" ><h4 style="text-align:center;">Anniversary</h4></a>
+				
+			</span>
+			<span ng-repeat="item in form.AllTempRight track by item.templateId" >
+				<a class="myCursorPointer" ng-click="EditTemplate(item.templateId)" ng-if="item.templateType == 'sms_newOrder'" ><h4><strong>Sms</strong></h4><h4 style="text-align:center;"  >New Order</h4></a>
+				<a class="myCursorPointer" ng-click="EditTemplate(item.templateId)" ng-if="item.templateType == 'sms_duePayment'" ><h4 style="text-align:center;"  >Due Payment</h4></a>
+				<a class="myCursorPointer" ng-click="EditTemplate(item.templateId)" ng-if="item.templateType == 'sms_birthDay'" ><h4 style="text-align:center;"  >Birth Day</h4></a>
+				<a class="myCursorPointer" ng-click="EditTemplate(item.templateId)" ng-if="item.templateType == 'sms_anniversary'" ><h4 style="text-align:center;"  >Anniversary</h4></a>
+			</span>
+			<!--a ui-sref=""  >
+					<i class="sidebar-item-icon icon-layout" ></i> <span style="letter-spacing:.025em;font-weight: bold;text-transform:capitalize">{{item.templateName}}</span>
+
+				</a-->
+			</div>
+		</div>
+   </div>
+  
+   <!-- END panel-->
+</div>
+
+
+<script type="text/ng-template" id="errorRequired">
+	<span class="text-danger" ng-message="required">{{errorMessage.require}}</span>
+</script>
+
+<script type="text/ng-template" id="errorLonglength">
+	<span class="text-danger" ng-message="maxlength">{{errorMessage.longLength}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternThisSpecial">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacterAndNumber}}</span>
+</script>
+<script type="text/javascript" >
+	
+     
+</script>

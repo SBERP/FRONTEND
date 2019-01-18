@@ -1,0 +1,76 @@
+<h3>
+   <small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> Staff</small>
+</h3>
+<div data-ng-controller="StaffController as table" class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+	<div class="panel panel-default">
+		 <!--h4 class="panel-heading"></h4-->
+		<div class="panel-body">
+			<div class="form-group">
+			
+				<label class="col-sm-1 control-label"> Company </label>
+					<div class="col-sm-4">
+						<select chosen="" data-ng-model="showStaff.companyDropDown" data-ng-options="s.companyName for s in table.companyDrop track by s.companyId" ng-change="changeCompany(showStaff.companyDropDown.companyId)" class="form-control chosen-select hightlight-company">
+							<option value="">All</option>
+						</select>
+					</div>
+					
+				<label class="col-sm-1 control-label"> Branch </label>
+					<div class="col-sm-4">
+						<select chosen="" data-ng-model="showStaff.branchDropDown" data-ng-options="s.branchName for s in table.branchDrop track by s.branchId"  class="form-control chosen-select" >
+							<option value="">All</option>
+						</select>
+					</div>
+					<div class="col-sm-1 myPaddingTop">
+				<button type="button" class="mb-sm btn btn-primary pull-right" ng-click="showFilterStaff()" data-ng-class="app.theme.brand" >Go</button>
+				</div>
+				<div class="col-sm-1">
+				</div>
+			</div>
+		</div>
+	</div>
+   <div class="panel panel-default">
+      <div class="panel-heading myHeading" >
+         <!--button data-ng-click="table.tableParams.sorting({})" class="pull-right btn btn-default btn-sm">Clear sorting</button-->
+		 <button class="btn btn-labeled btn-primary pull-right btn-sm" ui-sref="app.AddStaff" ng-if="allowedAdd == 'admin' || allowedAdd == 'superadmin'" data-ng-class="app.theme.brand" >
+			<span class="btn-label"><i class="fa fa-plus"></i></span>
+		Add Staff</button>
+         <div class="panel-title"><b>All Staff</b></div>
+      </div>
+	   <div class="table-responsive">
+		  <table data-ng-table="table.tableParams" show-filter="true"  class="table table-bordered table-striped">
+		  <!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
+			 <tbody>
+				<tr data-ng-repeat="user in $data track by user.userId" ng-if="user.userType != 'superadmin'">
+					<td data-title="'User Type'" sortable="'userType'" filter="{ 'userType': 'text' }"  style="text-transform:capitalize;">{{user.userType}}</td>
+					<td data-title="'Name'" sortable="'userName'" filter="{ 'userName': 'text' }" ng-bind="::user.userName" ></td>
+					<td data-title="'Email ID'" sortable="'emailId'" filter="{ 'emailId': 'text' }" ng-bind="::user.emailId"></td>
+					<td data-title="'Address'" sortable="'address'" filter="{ 'address': 'text' }" ng-bind="::user.address" ></td>
+					<td data-title="'Mobile No'" sortable="'contactNo'" filter="{ 'contactNo': 'text' }" ng-bind="::user.contactNo"></td>
+					<td data-title="'City'" sortable="'cityName'" filter="{ 'cityName': 'text' }" ng-bind="::user.city.cityName" ></td>
+				
+					<td data-title="'Action'" sortable="'action'">
+					
+						<center ng-if="allowedAdd == 'superadmin'">
+							<i  ng-click="editStaff(user)" class="fa fa-edit myCursorPointer mr-sm" style="font-size:17px;color:#10709f" ng-if="allowedId != user.userId"> </i>
+							<i ng-click="deleteStaff('sm',user.userId)" class="fa fa-times-circle myCursorPointer mr-sm" style="font-size:17px;color:red" ng-if="allowedId != user.userId"></i>
+							<i ng-click="openPermission('lg',user)" class="fa fa-cog myCursorPointer" style="font-size:17px;color:#10709f" ng-if="allowedId != user.userId"></i>
+						</center>
+						
+						<center ng-if="allowedAdd == 'admin'">
+							<i  ng-click="editStaff(user)" class="fa fa-edit myCursorPointer" style="font-size:17px;color:#10709f"> </i>
+							<i  ng-click="deleteStaff('sm',user.userId)" class="fa fa-times-circle myCursorPointer" style="font-size:17px;color:red" ng-if="allowedId != user.userId"></i>
+							<i ng-click="openPermission('lg',user)" class="fa fa-cog myCursorPointer" style="font-size:17px;color:#10709f" ng-if="allowedId != user.userId"></i>
+						</center>
+						
+						<center ng-if="allowedId == user.userId && allowedAdd == 'staff' && user.userType != 'superadmin'">
+							<i ng-click="editStaff(user)" class="fa fa-edit myCursorPointer" style="font-size:17px;color:#10709f"> </i>
+						</center>
+					</td>
+				</tr>
+			 </tbody>
+		  </table>
+		 </div>
+	 <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
+   </div>
+</div>

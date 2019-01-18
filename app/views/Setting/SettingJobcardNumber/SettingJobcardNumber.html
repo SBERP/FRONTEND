@@ -1,0 +1,117 @@
+<h3>
+   <small> <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> Jobcard#</small>
+</h3>
+<!-- START panel-->
+<div data-ng-controller="SettingJobcardNumberController as form" class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+   <div class="panel panel-default">
+	  <div class="panel-heading" data-ng-class="app.theme.brand" >
+		 <div class="panel-title">Jobcard# Setting</div>
+	  </div>
+      <div class="panel-body">
+         <form action="#" name="formInvoice" class="form-validate form-horizontal">
+			<div class="col-md-6">
+				<fieldset class="my-fieldset-paddingBottom">
+				   <div class="form-group">
+					  <label class="col-sm-3 control-label">*Company</label>
+					  <div class="col-sm-9">
+						 <select chosen="" tabindex="2" data-ng-model="jobcardForm.companyDrop"  data-ng-options="s.companyName for s in form.invoiceCompanyDrop track by s.companyId" class="form-control chosen-select" ng-required="true"></select>
+						 
+					  </div>
+				   </div>
+				</fieldset>
+				
+				<fieldset class="my-fieldset-paddingBottom">
+					<div class="form-group">
+					  <label for="input-id-1" class="col-sm-3 control-label">*Started At</label>
+					  <div class="col-sm-9">
+						 <input id="input-id-1" tabindex="3" name="startAt" ng-model="jobcardForm.startAt" ng-pattern="/^[0-9]*$/" ng-required="true" type="text" placeholder="Started At" class="form-control" only-number />
+						 
+						 <span ng-messages="formInvoice.startAt.$error" ng-if="formInvoice.startAt.$dirty || formInvoice.startAt.$touched"  role="alert">
+							<span ng-messages-include="errorRequired"></span>
+							<span ng-messages-include="errorPatternNumber"></span>
+						</span>
+					  </div>
+				    </div>
+				</fieldset>
+			</div>
+			
+			<div class="col-md-6">
+				<fieldset class="my-fieldset-paddingBottom">
+				   <div class="form-group">
+					  <label for="input-id-1" class="col-sm-3 control-label">*Jobcard Label</label>
+					  <div class="col-sm-9">
+						 <input id="input-id-1" tabindex="2" name="jobCardNumberLabel" ng-pattern="/^[a-zA-Z &_`#().\'-\/]*$/"  ng-maxlength="35" ng-model="jobcardForm.jobCardNumberLabel" type="text" placeholder="Jobcard Label" class="form-control" auto-focus/>
+						 
+						 <span ng-messages="formInvoice.jobCardNumberLabel.$error" ng-if="formInvoice.jobCardNumberLabel.$dirty || formInvoice.jobCardNumberLabel.$touched"  role="alert">
+							<span ng-messages-include="errorRequired"></span>
+							<span ng-messages-include="errorLonglength"></span>
+							<span ng-messages-include="errorShortlength"></span>
+							<span ng-messages-include="errorPatternThisSpecial"></span>
+						</span>
+					  </div>
+				   </div>
+				</fieldset>
+				
+				<fieldset class="my-fieldset-paddingBottom">
+					<div class="form-group">
+						<label class="col-sm-3 control-label"></label>
+						<div class="col-sm-9">
+							<div class="radio-inline c-radio">
+									<label>
+									   <input ng-model="jobcardForm.jobCardNumberType" tabindex="3" id="inlineradio1" type="radio" name="i-radio" value="prefix" ng-checked="true"  />
+									   <span class="fa fa-circle" ></span>Prefix</label>
+								 </div>
+								 <div class="radio-inline c-radio">
+									<label>
+									   <input ng-model="jobcardForm.jobCardNumberType" tabindex="3" id="inlineradio2" type="radio" name="i-radio" value="postfix"  />
+									   <span class="fa fa-circle"></span>Postfix</label>
+								 </div>
+						</div>
+					</div>
+				</fieldset>
+				
+				 <button type="button" class="mr mb-sm btn btn-danger pull-right" tabindex="4" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="cancel()" >Cancel</button>
+				 <button type="button" class="mr mb-sm btn btn-success pull-right" ng-disabled="formInvoice.$invalid" tabindex="3" ng-click="insertInvoiceData(jobcardForm)">Save</button>
+			</div>
+         </form>
+      </div>
+   </div>
+   
+   <div class="panel panel-default" >
+      <div class="panel-heading" data-ng-class="app.theme.brand" >
+         <div class="panel-title">All Jobcard#</div>
+      </div>
+	   <div class="table-responsive">
+		  <table data-ng-table="form.tableParams"  show-filter="true" class="table table-bordered table-striped">
+		  <!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
+			 <tbody style="text-align:center">
+				<tr data-ng-repeat="user in $data track by user.jobCardNumberId">
+					<td data-title="'Company Name'" sortable="'companyName'" filter="{ 'companyName': 'text' }" ng-bind="::user.company.companyName" style="text-align:left" ></td>
+					<td data-title="'Label'" sortable="'jobCardNumberLabel'" filter="{ 'jobCardNumberLabel': 'text' }" ng-bind="::user.jobCardNumberLabel" ></td>
+					<td data-title="'Prefix/Postfix'" sortable="'jobCardNumberType'" filter="{ 'jobCardNumberType': 'text' }" ng-bind="::user.jobCardNumberType" ></td>
+					<td data-title="'Started_at'" sortable="'startAt'" filter="{ 'startAt': 'text' }"  ng-bind="::user.startAt" ></td>
+				</tr>
+			 </tbody>
+		  </table>
+		 </div>
+	   <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
+   </div>
+   <!-- END panel-->
+</div>
+
+<script type="text/ng-template" id="errorRequired">
+	<span class="text-danger" ng-message="required">{{errorMessage.require}}</span>
+</script>
+<script type="text/ng-template" id="errorLonglength">
+	<span class="text-danger" ng-message="maxlength">{{errorMessage.longLength}}</span>
+</script>
+<script type="text/ng-template" id="errorShortlength">
+	<span class="text-danger" ng-message="minlength">{{errorMessage.shortLength}}</span>
+</script>
+<script type="text/ng-template" id="errorPatternNumber">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.Numbers}}</span>
+</script>
+<script type="text/ng-template" id="errorPatternThisSpecial">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacter}}</span>
+</script>

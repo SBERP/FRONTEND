@@ -1,0 +1,189 @@
+<style>
+.chosen-container .chosen-results {
+    max-height:100px;
+}
+.chosen-container .chosen-drop{
+	display: block !imporatant;
+}
+.hackyhack {
+  position: relative;
+}
+.hackyhack .dropdown-menu {
+   top: auto !important;
+   bottom: 0px;
+   left:auto!important;
+   right:0;
+ }
+</style>
+<div class="modal-header"  data-ng-class="app.theme.brand" >
+		<button type="button" data-dismiss="modal" data-ng-click="cancel()" aria-hidden="true" class="close text-md" ><i class="fa fa-times" style="color:white"></i></button>  
+		  <h4 id="myModalLabel" class="modal-title">{{clientForm.clientName}}</h4>
+	</div>
+	<div class="modal-body my-model-body" >
+		<center>
+			<form action="#" name="formClient" class="form-validate form-horizontal" autocomplete="off" >
+				
+				<fieldset class="my-fieldset-paddingBottom">
+				   <div class="form-group">
+					  <label class="col-sm-1 control-label">Contact</label>
+					  <div class="col-sm-5">
+						 <input ng-model="clientForm.clientContact" ng-change="changeInClientData('contactNo',clientForm.clientContact)" id="input-id-1" type="text" placeholder="Enter Contact Number" class="form-control" dir="ltr" name="contactNo" id="contactNoSelect"  auto-focus="true" ng-required="true" ng-maxlength="12" ng-pattern="/^[0-9]+$/"  ng-minlength="10"   only-number style="font-size:15px;" />
+							 
+							<span ng-messages="formClient.contactNo.$error" ng-if="formClient.contactNo.$dirty || formClient.contactNo.$touched" role="alert">
+								<span ng-messages-include="errorRequired"></span>
+								<span ng-messages-include="errorPatternNumberContact"></span>
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorShortlength"></span>
+							</span>
+					  </div>
+					  
+					   <label class="col-sm-1 control-label">Name</label>
+					  <div class="col-sm-5">
+							 <input ng-model="clientForm.clientName" name="clientName" id="input-id-1" type="text" placeholder="Client Name" class="form-control "  ng-required="true" ng-pattern="/^[a-zA-Z0-9 &_`#().\'-]*$/" ng-maxlength="100" ng-change="changeInClientData('clientName',clientForm.clientName)" only-alpha />
+							 
+							  <span ng-messages="formClient.clientName.$error" ng-if="formClient.clientName.$dirty || formClient.clientName.$touched" role="alert">
+								<span ng-messages-include="errorRequired"></span>
+								<span ng-messages-include="errorPatternAlpha"></span>
+								<span ng-messages-include="errorLonglength"></span>
+							</span>
+					  </div>
+				   </div>
+				</fieldset>
+				
+				<fieldset class="my-fieldset-paddingBottom">
+					<div class="form-group">
+						<label  class="col-sm-1 control-label">State</label>
+						<div class="col-sm-5">
+							<select chosen="" data-ng-model="clientForm.stateDropDown" data-ng-options="s.stateName for s in form.statesDrop track by s.stateAbb" ng-change="ChangeState('stateAbb',clientForm.stateDropDown.stateAbb)" class="form-control  chosen-select" ng-required="true" ></select>
+						</div>
+						
+						<label class="col-sm-1 control-label">City</label>
+						<div class="col-sm-5">
+							<select chosen="" data-ng-model="clientForm.cityDrop" data-ng-options="s.cityName for s in form.cityDrop track by s.cityId"  class="form-control chosen-select" ng-required="true" ng-change="changeInClientData('cityId',clientForm.cityDrop.cityId)" ></select>
+						</div>
+				    </div>
+				</fieldset>
+				
+			<fieldset class="my-fieldset-paddingBottom">
+			   <div class="form-group">
+					<label class="col-sm-1 control-label">Email</label>
+						<div class="col-sm-5">
+							<div class="input-group m-b">
+								<span class="input-group-addon" style="padding-left: 6px;padding-right: 6px;">@</span>
+								<input type="email" name="emailId" ng-model="clientForm.emailId" ng-change="changeInClientData('emailId',clientForm.emailId)" placeholder="Email ID" class="form-control"  ng-pattern="/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$/" />
+							</div>
+							
+							<span ng-messages="formClient.emailId.$error" ng-if="formClient.emailId.$dirty || formClient.emailId.$touched"  role="alert">
+								<span ng-messages-include="errorEmail"></span>
+							</span>
+						</div>
+				  
+				  <label class="col-sm-2 control-label">Profession</label>
+					<div class="col-sm-4">
+						<select chosen=""  data-ng-model="clientForm.professionDropDown" data-ng-options="s.professionName for s in form.professionDrop track by s.professionId" ng-change="changeInClientData('professionId',clientForm.professionDropDown.professionId)" class="form-control  chosen-select" ></select>
+					</div>
+					
+			   </div>
+			</fieldset>
+			
+			<fieldset class="my-fieldset-paddingBottom">
+				<div class="form-group">
+					<label  class="col-sm-1 control-label">GST#</label>
+					<div class="col-sm-5">
+						<input rows="1" name="gst" ng-model="clientForm.gst" placeholder="GST Number"  class="form-control input-sm ng-pristine ng-valid ng-touched"  ng-change="changeInClientData('gst',clientForm.gst)" ng-maxlength="50" style="height:38px;" >
+						<span ng-messages="formClient.gst.$error" ng-if="formClient.gst.$dirty || formClient.gst.$touched" role="alert">
+								<span ng-messages-include="errorPatternThisSpecial"></span>
+								<span ng-messages-include="errorLonglength"></span>
+							</span>
+					</div>
+						
+					<label for="input-id-1" class="col-sm-1 control-label">Address</label>
+				  	<div class="col-sm-5">
+						<textarea rows="1" name="firstAddress" ng-model="clientForm.address1" placeholder="Enter Address"  class="form-control  ng-pristine ng-valid ng-touched"  ng-change="changeInClientData('address1',clientForm.address1)" ng-maxlength="200" style="height:38px;" ></textarea>
+						<span ng-messages="formClient.firstAddress.$error" ng-if="formClient.firstAddress.$dirty || formClient.firstAddress.$touched" role="alert">
+							<span ng-messages-include="errorRequired"></span>
+							<span ng-messages-include="errorPatternThisSpecial"></span>
+							<span ng-messages-include="errorLonglength"></span>
+						</span>
+				  </div>
+			   </div>
+			</fieldset>
+
+			<fieldset class="my-fieldset-paddingBottom">
+				<div class="form-group">
+					<label  class="col-sm-2 control-label" title="Birth Date" >BirthDate</label>
+						<div class="col-sm-4">
+							<div class="input-group hackyhack" >
+							<input type="text"  datepicker-popup="{{form.format}}" name="birthDate" data-ng-model="form.birthDate" is-open="form.openedStartBirth" min-date="false" max-date="false" datepicker-options="form.dateOptions" date-disabled="form.disabled(form.date, form.mode)" ng-change="changeDate('birthDate',form.birthDate)" close-text="Close" class="form-control input-sm" id="birthDate"  tooltip="Birth Date" tooltip-trigger="focus" tooltip-placement="top" readonly/>
+							<span class="input-group-btn">
+							   <button type="button" data-ng-click="form.openStartBirth($event)" id="datepickerButton"  class="btn btn-default  btn-sm">
+								  <em class="fa fa-calendar"></em>
+							   </button>
+							</span>
+					 </div>
+					</div>
+					
+					<label class="col-sm-2 control-label" title="Anniversory Date">Annivar. Date</label>
+					<div class="col-sm-4">
+						<div class="input-group hackyhack" >
+						<input type="text" datepicker-popup="{{form.format}}" name="anniversaryDate"  data-ng-model="form.anniversaryDate" is-open="form.openedStartAnivarSary" min-date="false" max-date="false" datepicker-options="form.dateOptions" date-disabled="form.disabled(form.date, form.mode)" ng-change="changeDate('anniversaryDate',form.anniversaryDate)" close-text="Close" class="form-control input-sm" id="anniversaryDate" tooltip="Anniversary date" tooltip-trigger="focus" tooltip-placement="top" readonly/>
+						<span class="input-group-btn">
+						   <button type="button" data-ng-click="form.openStartAnivarSary($event)" id="AniversarydatepickerButton"  class="btn btn-default  btn-sm">
+							  <em class="fa fa-calendar"></em>
+						   </button>
+						</span>
+					 </div>
+					</div>
+			    </div>
+			</fieldset>
+
+			<div class="alert alert-warning" ng-if="form.errorMsg">{{form.errorMsg}}</div>
+			<fieldset class="my-fieldset-paddingBottom">
+				<button type="button"  class="mr mb-sm btn btn-success pull-right" ng-click="clickSave()" ng-disabled="formClient.$invalid || form.buttonHidden" >
+					<span ng-if="!clientForm.getSetClientId" >Save</span>
+					<span ng-if="clientForm.getSetClientId" >Update</span>
+				</button>
+			</fieldset>
+
+			</form>
+		</center>
+	</div>
+	
+<script type="text/ng-template" id="errorRequired">
+	<span class="text-danger" ng-message="required">{{errorMessage.require}}</span>
+</script>
+
+<script type="text/ng-template" id="errorEmail">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.email}}</span>
+</script>
+
+<script type="text/ng-template" id="errorLonglength">
+	<span class="text-danger" ng-message="maxlength">{{errorMessage.longLength}}</span>
+</script>
+
+<script type="text/ng-template" id="errorShortlength">
+	<span class="text-danger" ng-message="minlength">{{errorMessage.shortLength}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternAlpha">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.Alphabets}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternNumber">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.Numbers}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternAlphaNumeric">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.AlphaNumeric}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternThisSpecial">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacter}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternThisSpecial&Number">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacterAndNumber}}</span>
+</script>
+<script type="text/ng-template" id="errorPatternNumberContact">
+	<span class="text-danger" ng-message="pattern">Only Number & Not Start With Zero</span>
+</script>

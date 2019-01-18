@@ -1,0 +1,416 @@
+<style>
+.chosen-container .chosen-results {
+    max-height:100px;
+}
+.chosen-container .chosen-drop{
+	display: block !imporatant;
+}
+.hackyhack {
+  position: relative;
+}
+.hackyhack .dropdown-menu {
+   top: auto !important;
+   bottom: 0px;
+   left:auto!important;
+   right:0;
+ }
+</style>
+<div class="modal-header"  data-ng-class="app.theme.brand" >
+		<button type="button" data-dismiss="modal" data-ng-click="cancel()" aria-hidden="true" class="close text-md" ><i class="fa fa-times" style="color:white"></i></button>  
+		  <h4 id="myModalLabel" class="modal-title"><b>Permission</b></h4>
+	</div>
+	<div class="modal-body my-model-body" >
+		<center>
+			<form action="#" name="formClient" class="form-validate form-horizontal" autocomplete="off" >
+				
+			<tabset>
+				<tab heading="Configuration"   >
+					<fieldset class="my-fieldset-paddingBottom">
+					   <div class="form-group">
+					   	<label class="col-sm-2 col-xs-6 control-label pt-sm" >Dashboard</label>
+						  <div class="col-sm-2 col-xs-6">
+								<label class="switch switch-lg switch-success pull-right ph-lg">
+		                       		 <input type="checkbox" data-ng-model="permissionArray[0].configuration.dashboard" />
+		                       		 <span></span>
+		                    	</label>
+						  </div>
+					   	<label class="col-sm-2 col-xs-6 control-label pt-sm" >Company</label>
+						  <div class="col-sm-2 col-xs-6">
+								<label class="switch switch-lg switch-success pull-right ph-lg">
+		                       		 <input type="checkbox" data-ng-model="permissionArray[0].configuration.companies" />
+		                       		 <span></span>
+		                    	</label>
+						  </div>
+						  <label class="col-sm-2 col-xs-6 control-label pt-sm">Branch</label>
+						   <div class="col-sm-2 col-xs-6">
+								<label class="switch switch-lg switch-success pull-right ph-lg">
+		                       		 <input type="checkbox" data-ng-model="permissionArray[0].configuration.branches" />
+		                       		 <span></span>
+		                    	</label>
+						  </div>
+					   </div>
+					</fieldset>
+					<fieldset class="my-fieldset-paddingBottom">
+					   <div class="form-group">
+					   		<label class="col-sm-2 col-xs-6 control-label pt-sm">Staff</label>
+						   	<div class="col-sm-2 col-xs-6">
+								<label class="switch switch-lg switch-success pull-right ph-lg">
+		                       		 <input type="checkbox" data-ng-model="permissionArray[0].configuration.staff" />
+		                       		 <span></span>
+		                    	 </label>
+						  	</div>
+						   	<label class="col-sm-2 col-xs-6 control-label pt-sm">Invoice#</label>
+							   <div class="col-sm-2 col-xs-6">
+									<label class="switch switch-lg switch-success pull-right ph-lg">
+			                       		 <input type="checkbox" data-ng-model="permissionArray[0].configuration.invoiceNumber" />
+			                       		 <span></span>
+			                    	 </label>
+							  </div>
+						   	<label class="col-sm-2 col-xs-6 control-label pt-sm" >Quotation#</label>
+							  <div class="col-sm-2 col-xs-6">
+									<label class="switch switch-lg switch-success pull-right ph-lg">
+			                       		 <input type="checkbox" data-ng-model="permissionArray[0].configuration.quotationNumber" />
+			                       		 <span></span>
+			                    	 </label>
+							  </div>
+						  </div>
+					</fieldset>
+					<fieldset class="my-fieldset-paddingBottom">
+					   <div class="form-group">
+					   		<label class="col-sm-2 col-xs-6 control-label pt-sm">Template</label>
+							   <div class="col-sm-2 col-xs-6">
+									<label class="switch switch-lg switch-success pull-right ph-lg">
+			                       		 <input type="checkbox" data-ng-model="permissionArray[0].configuration.template" />
+			                       		 <span></span>
+			                    	 </label>
+							  </div>
+						   	<label class="col-sm-2 col-xs-6 control-label pt-sm">Setting</label>
+							   <div class="col-sm-2 col-xs-6">
+									<label class="switch switch-lg switch-success pull-right ph-lg">
+			                       		 <input type="checkbox" data-ng-model="permissionArray[0].configuration.setting" />
+			                       		 <span></span>
+			                    	 </label>
+							  </div>
+						</div>
+					</fieldset>
+			</tab>
+			<tab heading="Accouting" >
+				<fieldset class="my-fieldset-paddingBottom">
+				   <div class="form-group">
+				   	<label class="col-sm-2 col-xs-6 control-label pt-sm" >Sales</label>
+					  <div class="col-sm-2 col-xs-6">
+							<label class="switch switch-lg switch-success pull-right ph-lg">
+	                       		 <input type="checkbox" data-ng-model="permissionArray[0].accounting.sales" />
+	                       		 <span></span>
+	                    	</label>
+					  </div>
+				   	<label class="col-sm-2 col-xs-6 control-label pt-sm" >Purchase</label>
+					  <div class="col-sm-2 col-xs-6">
+							<label class="switch switch-lg switch-success pull-right ph-lg">
+	                       		 <input type="checkbox" data-ng-model="permissionArray[0].accounting.purchase" />
+	                       		 <span></span>
+	                    	</label>
+					  </div>
+					  <label class="col-sm-2 col-xs-6 control-label pt-sm">Sales Order</label>
+					   <div class="col-sm-2 col-xs-6">
+							<label class="switch switch-lg switch-success pull-right ph-lg">
+	                       		 <input type="checkbox" data-ng-model="permissionArray[0].accounting.salesOrder" />
+	                       		 <span></span>
+	                    	</label>
+					  </div>
+				   </div>
+				</fieldset>
+				<fieldset class="my-fieldset-paddingBottom">
+				   <div class="form-group">
+				   		<label class="col-sm-2 col-xs-6 control-label pt-sm">Quotation</label>
+					   	<div class="col-sm-2 col-xs-6">
+							<label class="switch switch-lg switch-success pull-right ph-lg">
+	                       		 <input type="checkbox" data-ng-model="permissionArray[0].accounting.quotation" />
+	                       		 <span></span>
+	                    	 </label>
+					  	</div>
+					   	<label class="col-sm-2 col-xs-6 control-label pt-sm">Credit Notes</label>
+						   <div class="col-sm-2 col-xs-6">
+								<label class="switch switch-lg switch-success pull-right ph-lg">
+		                       		 <input type="checkbox" data-ng-model="permissionArray[0].accounting.creditNote" />
+		                       		 <span></span>
+		                    	 </label>
+						  </div>
+					   	<label class="col-sm-2 col-xs-6 control-label pt-sm" >Debit Notes</label>
+						  <div class="col-sm-2 col-xs-6">
+								<label class="switch switch-lg switch-success pull-right ph-lg">
+		                       		 <input type="checkbox" data-ng-model="permissionArray[0].accounting.debitNote" />
+		                       		 <span></span>
+		                    	 </label>
+						  </div>
+					  </div>
+				</fieldset>
+				<fieldset class="my-fieldset-paddingBottom">
+				   <div class="form-group">
+				   		<label class="col-sm-2 col-xs-6 control-label pt-sm">Special Journal</label>
+						   	<div class="col-sm-2 col-xs-6">
+								<label class="switch switch-lg switch-success pull-right ph-lg">
+		                       		 <input type="checkbox" data-ng-model="permissionArray[0].accounting.specialJournal" />
+		                       		 <span></span>
+		                    	 </label>
+						  	</div>
+					   	<label class="col-sm-2 col-xs-6 control-label pt-sm">Payment</label>
+						   	<div class="col-sm-2 col-xs-6">
+								<label class="switch switch-lg switch-success pull-right ph-lg">
+		                       		 <input type="checkbox" data-ng-model="permissionArray[0].accounting.payment" />
+		                       		 <span></span>
+		                    	 </label>
+						  	</div>
+						<label class="col-sm-2 col-xs-6 control-label pt-sm">Receipt</label>
+						   	<div class="col-sm-2 col-xs-6">
+								<label class="switch switch-lg switch-success pull-right ph-lg">
+		                       		 <input type="checkbox" data-ng-model="permissionArray[0].accounting.receipt" />
+		                       		 <span></span>
+		                    	 </label>
+						  	</div>
+					</div>
+				</fieldset>
+				<fieldset class="my-fieldset-paddingBottom">
+				   <div class="form-group">
+				   		<label class="col-sm-2 col-xs-6 control-label pt-sm">Statements</label>
+						   <div class="col-sm-2 col-xs-6">
+								<label class="switch switch-lg switch-success pull-right ph-lg">
+		                       		 <input type="checkbox" data-ng-model="permissionArray[0].accounting.statements" />
+		                       		 <span></span>
+		                    	 </label>
+						  	</div>
+					   	<label class="col-sm-2 col-xs-6 control-label pt-sm">Taxation</label>
+						   <div class="col-sm-2 col-xs-6">
+								<label class="switch switch-lg switch-success pull-right ph-lg">
+		                       		 <input type="checkbox" data-ng-model="permissionArray[0].accounting.taxation" />
+		                       		 <span></span>
+		                    	 </label>
+						   	</div>
+						<label class="col-sm-2 col-xs-6 control-label pt-sm">Ledgers</label>
+						   	<div class="col-sm-2 col-xs-6">
+								<label class="switch switch-lg switch-success pull-right ph-lg">
+		                       		 <input type="checkbox" data-ng-model="permissionArray[0].accounting.ledger" />
+		                       		 <span></span>
+		                    	 </label>
+						  	</div>
+					</div>
+				</fieldset>
+			</tab>
+			<tab heading="Inventory">
+				<fieldset class="my-fieldset-paddingBottom">
+				   <div class="form-group">
+				   		<label class="col-sm-2 col-xs-6 control-label pt-sm">Brand</label>
+						   <div class="col-sm-2 col-xs-6">
+								<label class="switch switch-lg switch-success pull-right ph-lg">
+		                       		 <input type="checkbox" data-ng-model="permissionArray[0].inventory.brand" />
+		                       		 <span></span>
+		                    	 </label>
+						  	</div>
+					   	<label class="col-sm-2 col-xs-6 control-label pt-sm">Category</label>
+						   <div class="col-sm-2 col-xs-6">
+								<label class="switch switch-lg switch-success pull-right ph-lg">
+		                       		 <input type="checkbox" data-ng-model="permissionArray[0].inventory.category" />
+		                       		 <span></span>
+		                    	 </label>
+						   	</div>
+						<label class="col-sm-2 col-xs-6 control-label pt-sm">Product</label>
+						   	<div class="col-sm-2 col-xs-6">
+								<label class="switch switch-lg switch-success pull-right ph-lg">
+		                       		 <input type="checkbox" data-ng-model="permissionArray[0].inventory.product" />
+		                       		 <span></span>
+		                    	 </label>
+						  	</div>
+					</div>
+				</fieldset>
+				<fieldset class="my-fieldset-paddingBottom">
+				   <div class="form-group">
+				   		<label class="col-sm-2 col-xs-6 control-label pt-sm">Barcode Print</label>
+						   <div class="col-sm-2 col-xs-6">
+								<label class="switch switch-lg switch-success pull-right ph-lg">
+		                       		 <input type="checkbox" data-ng-model="permissionArray[0].inventory.barcodePrint" />
+		                       		 <span></span>
+		                    	 </label>
+						  	</div>
+					   	<label class="col-sm-2 col-xs-6 control-label pt-sm">Stock Register</label>
+						   <div class="col-sm-2 col-xs-6">
+								<label class="switch switch-lg switch-success pull-right ph-lg">
+		                       		 <input type="checkbox" data-ng-model="permissionArray[0].inventory.stockRegister" />
+		                       		 <span></span>
+		                    	 </label>
+						   	</div>
+						<label class="col-sm-2 col-xs-6 control-label pt-sm">Stock Summary</label>
+						   	<div class="col-sm-2 col-xs-6">
+								<label class="switch switch-lg switch-success pull-right ph-lg">
+		                       		 <input type="checkbox" data-ng-model="permissionArray[0].inventory.stockSummary" />
+		                       		 <span></span>
+		                    	 </label>
+						  	</div>
+					</div>
+				</fieldset>
+			</tab>
+			<tab heading="CRM">
+				<fieldset class="my-fieldset-paddingBottom">
+				   <div class="form-group">
+				   		<label class="col-sm-2 col-xs-6 control-label pt-sm">Jobcard</label>
+						   <div class="col-sm-2 col-xs-6">
+								<label class="switch switch-lg switch-success pull-right ph-lg">
+		                       		 <input type="checkbox" data-ng-model="permissionArray[0].crm.jobcard" />
+		                       		 <span></span>
+		                    	 </label>
+						  	</div>
+					   	<label class="col-sm-2 col-xs-6 control-label pt-sm">Client</label>
+						   <div class="col-sm-2 col-xs-6">
+								<label class="switch switch-lg switch-success pull-right ph-lg">
+		                       		 <input type="checkbox" data-ng-model="permissionArray[0].crm.clients" />
+		                       		 <span></span>
+		                    	 </label>
+						   	</div>
+					</div>
+				</fieldset>
+			</tab>
+			<tab heading="Analyzer">
+				<fieldset class="my-fieldset-paddingBottom">
+				   <div class="form-group">
+				   		<label class="col-sm-2 col-xs-6 control-label pt-sm">Reports</label>
+						   <div class="col-sm-2 col-xs-6">
+								<label class="switch switch-lg switch-success pull-right ph-lg">
+		                       		 <input type="checkbox" data-ng-model="permissionArray[0].analyzer.reports" />
+		                       		 <span></span>
+		                    	 </label>
+						  	</div>
+					</div>
+				</fieldset>
+			</tab>
+			<tab heading="Pricelist">
+				<fieldset class="my-fieldset-paddingBottom">
+				   <div class="form-group">
+				   		<label class="col-sm-2 col-xs-6 control-label pt-sm">Tax</label>
+						   <div class="col-sm-2 col-xs-6">
+								<label class="switch switch-lg switch-success pull-right ph-lg">
+		                       		 <input type="checkbox" data-ng-model="permissionArray[0].pricelist.tax" />
+		                       		 <span></span>
+		                    	 </label>
+						  	</div>
+					</div>
+				</fieldset>
+			</tab>
+			<tab heading="Quick-Access">
+				<fieldset class="my-fieldset-paddingBottom">
+				   	<div class="form-group">
+				   		<label class="col-sm-2 col-xs-6 control-label pt-sm">Tax Invoice</label>
+						   <div class="col-sm-2 col-xs-6">
+								<label class="switch switch-lg switch-success pull-right ph-lg">
+		                       		 <input type="checkbox" data-ng-model="permissionArray[0].quickMenu.taxInvoice" />
+		                       		 <span></span>
+		                    	 </label>
+						  	</div>
+						<label class="col-sm-2 col-xs-6 control-label pt-sm">Tax Purchase</label>
+						   <div class="col-sm-2 col-xs-6">
+								<label class="switch switch-lg switch-success pull-right ph-lg">
+		                       		 <input type="checkbox" data-ng-model="permissionArray[0].quickMenu.taxPurchase" />
+		                       		 <span></span>
+		                    	 </label>
+						  	</div>
+					</div>
+				</fieldset>
+			</tab>
+			<tab heading="Commission Settings">
+				<fieldset class="my-fieldset-paddingBottom">
+					<div class="form-group">
+						<label class="col-sm-2 col-xs-2 control-label pt-sm text-right">Commission</label>
+						   <div class="col-sm-6 col-xs-6 text-left">
+								<label class="switch switch-lg switch-success ph-lg">
+		                       		 <input type="checkbox" data-ng-model="commissionArray.commissionStatus" ng-change="enableDisableCommission()"/>
+		                       		 <span></span>
+		                    	 </label>
+						  	</div>
+					</div>
+					<div ng-if="commissionArray.commissionStatus">
+						<div class="form-group">
+							<div class="col-sm-3 col-md-3">
+								<div class="radio-inline c-radio">
+									<label>
+									   <input  name="commissionType" ng-model="commissionArray.commissionType" value="general" ng-click="" type="radio" >
+									   <span class="fa fa-check"></span>General
+									</label>
+								</div>
+							</div>
+							<div class="col-sm-3 col-md-3">
+								<div class="radio-inline c-radio">
+									<label>
+									   <input  name="commissionType" ng-model="commissionArray.commissionType" value="categoryWise" ng-click="" type="radio" >
+									   <span class="fa fa-check"></span>Category Wise
+									</label>
+								</div>
+							</div>
+							<div class="col-sm-3 col-md-3">
+								<div class="radio-inline c-radio">
+									<label>
+									   <input  name="commissionType" ng-model="commissionArray.commissionType" value="brandWise" ng-click="" type="radio" >
+									   <span class="fa fa-check"></span>Brand Wise
+									</label>
+								</div>
+							</div>
+							<div class="col-sm-3 col-md-3" ng-if="false">
+								<div class="radio-inline c-radio">
+									<label>
+									   <input  name="commissionType" ng-model="commissionArray.commissionType" value="itemWise" ng-click="" type="radio" >
+									   <span class="fa fa-check"></span>Item Wise
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group mt-xl">
+							<label class="control-label col-md-2">Commission Rate</label>
+							<div class="col-md-5">
+								<input type="text" class="form-control" ng-model="commissionArray.commissionRate" value="0" only-number>
+							</div>
+							<div class="col-md-2">
+								<select chosen="" placeholder="Rate" ng-model="commissionArray.commissionRateType" ng-change="changeRateType()" data-ng-options="s as s for s in commissionArray.commissionRateTypeDrop track by s" class="form-control chosen-select">
+									<option value=""></option>
+								</select>
+							</div>
+							<div class="col-md-3">
+								<select chosen="" placeholder="Calc On" ng-model="commissionArray.commissionCalcOn" ng-change="changeRateType()" data-ng-options="f as f for f in commissionArray.commissionCalcDrop track by f" class="form-control chosen-select">
+									<option value=""></option>
+								</select>
+							</div>
+						</div>
+						<div ng-switch="commissionArray.commissionType">
+							<div ng-switch-when="categoryWise">
+
+								<div class="form-group mt-lg mb-lg">
+									<label class="control-label col-md-2">Categories</label>
+									<div class="col-md-10 row">
+										<div class="checkbox c-checkbox text-left m0 col-md-4" ng-repeat="cd in commissionArray.categoryDrop">
+											<label>
+	  											<input type="checkbox" ng-model="commissionArray.category[cd.productCategoryId]" ng-checked="commissionArray.category[cd.productCategoryId]"> <span class="fa fa-check pl-lg"></span>{{cd.productCategoryName}}</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div ng-switch-when="brandWise">
+								<div class="form-group mt-lg mb-lg">
+									<label class="control-label col-md-2">Brands</label>
+									<div class="col-md-10 row">
+										<div class="checkbox c-checkbox text-left m0 col-md-4" ng-repeat="cd in commissionArray.productBrandDrop">
+											<label>
+	  											<input type="checkbox" ng-model="commissionArray.brand[cd.productGroupId]" checked="commissionArray.brand[cd.productGroupId]"> <span class="fa fa-check pl-lg"></span>{{cd.productGroupName}}</label>
+										</div>
+									</div>
+								</div>
+							</div>	
+						</div>
+					</div>
+				</fieldset>
+			</tab>
+		</tabset>
+			<fieldset class="my-fieldset-paddingBottom mt-sm">
+				<button type="button"  class="mb-sm btn btn-success pull-right" ng-click="clickSave()" >
+					<span >Update</span>
+				</button>
+			</fieldset>
+
+			</form>
+		</center>
+	</div>

@@ -1,0 +1,108 @@
+
+<h3>
+   <small>
+   <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+   Taxation >> 
+   View Taxation</small>
+</h3>
+<!-- START panel-->
+
+<div data-ng-controller="AccViewTaxationController as form" class="container-fluid panel-body">
+ <toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+	
+   <div class="panel panel-default">
+      <h4 class="panel-heading">View</h4>
+      <div class="panel-body">
+         <form method="get" action="/" novalidate="" class="form-horizontal">
+			 <fieldset>
+               <div class="form-group">
+                  <label class="col-sm-2 control-label">Company</label>
+                  <div class="col-sm-5">
+                     <select chosen="" data-ng-model="accViewPurchase.companyDropDown" data-ng-options="s.companyName for s in form.companyDrop track by s.companyId" ng-change="changeCompany(accViewPurchase.companyDropDown.companyId)" class="form-control chosen-select"></select>
+                  </div>
+               </div>
+			</fieldset>
+			<fieldset>
+               <div class="form-group">
+                  <label class="col-sm-2 control-label">Branch</label>
+                  <div class="col-sm-5">
+                     <select chosen="" data-ng-model="accViewPurchase.branchDropDown" data-ng-options="s.branchName for s in form.branchDrop track by s.branchId" class="form-control chosen-select"></select>
+                  </div>
+               </div>
+			</fieldset>
+			<fieldset>
+               <div class="form-group">
+                  <label class="col-sm-2 control-label">Start Date</label>
+                  <div class="col-sm-8 col-lg-4">
+                     <p class="input-group">
+                        <input type="text" datepicker-popup="{{form.format}}" ng-change="form.check()" data-ng-model="form.dt1" is-open="form.openedStart" min-date="form.minStart" max-date="false" datepicker-options="form.dateOptions" date-disabled="form.disabled(form.date, form.mode)" close-text="Close"
+                        class="form-control" />
+                        <span class="input-group-btn">
+                           <button type="button" data-ng-click="form.openStart($event)" class="btn btn-default">
+                              <em class="fa fa-calendar"></em>
+                           </button>
+                        </span>
+                     </p>
+                  </div>
+                  
+               </div>
+            </fieldset>
+			<fieldset>
+				<div class="form-group">
+				<label class="col-sm-2 control-label">End Date</label>
+				  <div class="col-sm-8 col-lg-4">
+					 <p class="input-group">
+						<input type="text" datepicker-popup="{{form.format}}" data-ng-model="form.dt2" is-open="form.openedEnd" min-date="form.dt1" max-date="false" datepicker-options="form.dateOptions" date-disabled="form.disabled(form.date, form.mode)" close-text="Close"
+						class="form-control" />
+						<span class="input-group-btn">
+						   <button type="button" data-ng-click="form.openEnd($event)" class="btn btn-default">
+							  <em class="fa fa-calendar"></em>
+						   </button>
+						</span>
+					 </p>
+				  </div>
+				</div>
+			</fieldset>
+			
+			<button type="button" class="mr mb-sm btn btn-success pull-right" ui-sref="app.AccDataTaxation" >Generate</button>
+			
+			
+			<!-- Not Visible -->
+			<fieldset style="visibility:hidden">
+				<div class="form-group">
+				<label class="col-sm-2 control-label">End Date:</label>
+				  <div class="col-sm-8 col-lg-4">
+					 <p class="input-group">
+						<input type="text" datepicker-popup="{{format}}" data-ng-model="form.dt2" is-open="form.openedEnd" min-date="form.dt1" max-date="false" datepicker-options="form.dateOptions" date-disabled="form.disabled(form.date, form.mode)" close-text="Close"
+						class="form-control" />
+						<span class="input-group-btn">
+						   <button type="button" data-ng-click="form.openEnd($event)" class="btn btn-default">
+							  <em class="fa fa-calendar"></em>
+						   </button>
+						</span>
+					 </p>
+				  </div>
+				</div>
+			</fieldset>
+			<fieldset style="visibility:hidden">
+				<div class="form-group">
+				<label class="col-sm-2 control-label">End Date</label>
+				  <div class="col-sm-8 col-lg-4">
+					 <p class="input-group">
+						<input type="text" datepicker-popup="{{format}}" data-ng-model="form.dt2" is-open="form.openedEnd" min-date="form.dt1" max-date="false" datepicker-options="form.dateOptions" date-disabled="form.disabled(form.date, form.mode)" close-text="Close"
+						class="form-control" />
+						<span class="input-group-btn">
+						   <button type="button" data-ng-click="form.openEnd($event)" class="btn btn-default">
+							  <em class="fa fa-calendar"></em>
+						   </button>
+						</span>
+					 </p>
+				  </div>
+				</div>
+			</fieldset>
+			<!-- End -->
+         </form>
+      </div>
+   </div>
+   <!-- END panel-->
+</div>

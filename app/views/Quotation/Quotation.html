@@ -1,0 +1,136 @@
+<h3>
+   <small>
+   <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+   Quotation#</small>
+</h3>
+<!-- START panel-->
+<div data-ng-controller="QuotationController as form" class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+   <div class="panel panel-default">
+	  <div class="panel-heading" data-ng-class="app.theme.brand">
+			<div class="panel-title">
+				Quotation Setting
+			</div>
+		  </div>
+      <div class="panel-body">
+         <form action="#" name="formQuotation" class="form-validate form-horizontal">
+			<div class="col-md-6">
+				<fieldset class="my-fieldset-paddingBottom">
+				   <div class="form-group">
+					  <label class="col-sm-3 control-label">*Company</label>
+					  <div class="col-sm-9">
+						 <select chosen="" tabindex="2"  data-ng-model="addquotation.companyDrop" data-ng-options="s.companyName for s in form.quotationCompanyDrop track by s.companyId" class="form-control chosen-select" ng-required="true"></select>
+					  </div>
+				   </div>
+				</fieldset>
+				
+				<fieldset class="my-fieldset-paddingBottom">
+					<div class="form-group">
+					  <label for="input-id-1" class="col-sm-3 control-label">*Started At</label>
+					  <div class="col-sm-9">
+						 <input id="input-id-1" tabindex="3" name="startAt" ng-model="addquotation.startAt" type="text" placeholder="Started At" class="form-control" ng-pattern="/^[0-9]*$/" ng-required="true" only-number />
+						 
+						 <span ng-messages="formQuotation.startAt.$error" ng-if="formQuotation.startAt.$dirty || formQuotation.startAt.$touched"  role="alert">
+							<span ng-messages-include="errorRequired"></span>
+							<span ng-messages-include="errorPatternNumber"></span>
+						</span>
+						
+					  </div>
+				    </div>
+				</fieldset>
+			</div>
+			
+			<div class="col-md-6">
+				
+				<fieldset class="my-fieldset-paddingBottom">
+				   <div class="form-group">
+					  <label for="input-id-1" class="col-sm-3 control-label">Quotation Label</label>
+					  <div class="col-sm-9">
+						 <input id="input-id-1" tabindex="2" name="invoiceLabel" ng-model="addquotation.quotationLabel" type="text" placeholder="Quotation Label" class="form-control" ng-pattern="/^[a-zA-Z &_`#().\'-\/]*$/" ng-minlength="1" ng-maxlength="35"   auto-focus />
+						 
+						 <span ng-messages="formQuotation.invoiceLabel.$error" ng-if="formQuotation.invoiceLabel.$dirty || formQuotation.invoiceLabel.$touched"  role="alert">
+							<span ng-messages-include="errorRequired"></span>
+							<span ng-messages-include="errorLonglength"></span>
+							<span ng-messages-include="errorShortlength"></span>
+							<span ng-messages-include="errorPatternThisSpecial"></span>
+						</span>
+						
+					  </div>
+				   </div>
+				</fieldset>
+				
+				<fieldset class="my-fieldset-paddingBottom">
+						<div class="form-group">
+							<label class="col-sm-3 control-label"></label>
+							<div class="col-sm-9">
+								<div class="radio-inline c-radio">
+										<label>
+										   <input tabindex="3" ng-model="addquotation.quotationType" id="inlineradio1" type="radio" name="i-radio" value="prefix" />
+										   <span class="fa fa-circle"></span>Prefix</label>
+									 </div>
+									 <div class="radio-inline c-radio">
+										<label>
+										   <input tabindex="3" ng-model="addquotation.quotationType" id="inlineradio2" type="radio" name="i-radio" value="postfix"  />
+										   <span class="fa fa-circle"></span>Postfix</label>
+									 </div>
+							</div>
+							
+						</div>
+				</fieldset>
+				
+				 <button type="button" class="mr mb-sm btn btn-danger pull-right" tabindex="4"  onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id" ng-click="cancel()" >Cancel</button>
+				 <button type="button" class="mr mb-sm btn btn-success pull-right" tabindex="3" ng-click="insertQuotationData(addquotation)" ng-disabled="formQuotation.$invalid" >Save</button>
+			</div>
+         </form>
+      </div>
+   </div>
+   
+   <div class="panel panel-default">
+      <div class="panel-heading" data-ng-class="app.theme.brand" >
+         <div class="panel-title">All Quotation</div>
+      </div>
+	   <div class="table-responsive">
+		  <table data-ng-table="form.tableParams"  show-filter="true" class="table table-bordered table-striped">
+		  <!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
+			 <tbody style="text-align:center">
+				<tr data-ng-repeat="user in $data track by user.quotationId" >
+					<td data-title="'Company Name'" sortable="'companyName'" filter="{ 'companyName': 'text' }" ng-bind="::user.company.companyName" style="text-align:left" ></td>
+					<td data-title="'Label'" sortable="'quotationLabel'" filter="{ 'quotationLabel': 'text' }" ng-bind="::user.quotationLabel" ></td>
+					<td data-title="'Prefix/Postfix'" sortable="'quotationType'" filter="{ 'quotationType': 'text' }" ng-bind="::user.quotationType" ></td>
+					<td data-title="'Started_at'" sortable="'startAt'" filter="{ 'startAt': 'text' }"  ng-bind="::user.startAt" ></td>
+					<!--td data-title="'created_at'" sortable="'created_at'" filter="{ 'created_at': 'text' }" >{{user.created_at}}</td-->
+			
+				   <!--td data-title="'Action'" filter="{ '': 'text' }">
+						<center>
+							<i ui-sref="" ng-click="edit_comp(user.branch_id)" class="fa fa-edit" style="font-size:17px;color:#10709f"> </i> &nbsp; &nbsp;
+							<i ui-sref="" ng-click="delete_comp(user.branch_id)" class="fa fa-times-circle" style="font-size:17px;color:red"></i>
+						</center>
+					</td-->
+				</tr>
+			 </tbody>
+		  </table>
+		 </div>
+	   <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
+   </div>
+   <!-- END panel-->
+</div>
+
+<script type="text/ng-template" id="errorRequired">
+	<span class="text-danger" ng-message="required">{{errorMessage.require}}</span>
+</script>
+
+<script type="text/ng-template" id="errorLonglength">
+	<span class="text-danger" ng-message="maxlength">{{errorMessage.longLength}}</span>
+</script>
+
+<script type="text/ng-template" id="errorShortlength">
+	<span class="text-danger" ng-message="minlength">{{errorMessage.shortLength}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternNumber">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.Numbers}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternThisSpecial">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacter}}</span>
+</script>

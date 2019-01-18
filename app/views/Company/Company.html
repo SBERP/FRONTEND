@@ -1,0 +1,57 @@
+<h3>
+   <small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> Company</small>
+</h3>
+<div data-ng-controller="CompanyController as table" class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+   <div class="panel panel-default">
+      <div class="panel-heading myHeading" >
+         <!--button data-ng-click="table.tableParams.sorting({})" class="pull-right btn btn-default btn-sm">Clear sorting</button-->
+		  <button class="btn btn-labeled btn-primary pull-right btn-sm" ng-click="GoToAddCompany()"  data-ng-class="app.theme.brand" >
+			<span class="btn-label"><i class="fa fa-plus"></i></span>
+		Add Company</button>
+        <div class="panel-title">All Companies</div>
+      </div>
+	  
+	  <div class="table-responsive">
+      <table data-ng-table="table.tableParams" show-filter="true" class="table table-bordered table-striped">
+	  <!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
+        <tbody>
+            <tr data-ng-repeat="user in $data track by user.companyId">
+
+				<td   data-title="'Image'"  filter="{ 'companyName': '' }" ><img ng-if="user.logo.documentName" ng-src="{{::erpPath}}{{::user.logo.documentUrl}}{{::user.logo.documentName}}" height="50" width="70" title="{{::user.logo.documentName}}" /> 
+					<img ng-if="!user.logo.documentName" src="app/img/noImage.jpg" height="50" width="70"  />
+				</td>
+				<td data-title="'Name'" sortable="'companyName'" filter="{ 'companyName': 'text' }" ng-bind="::user.companyName" ></td>
+				<td data-title="'Address'" sortable="'address1'" filter="{ 'address1': 'text' }" ng-bind="::user.address1" ></td>
+			    <td data-title="'Address2'" sortable="'address2'" filter="{ 'address2': 'text' }" ng-bind="::user.address2" ></td>
+				<td data-title="'Pincode'" sortable="'pincode'" filter="{ 'pincode': 'text' }" ng-bind="::user.pincode"  ></td>
+				<td data-title="'City'" sortable="'cityName'" filter="{ 'cityName': 'text' }" ng-bind="::user.cityName"  ></td>
+				 
+                <!-- <td data-title="'Default'" >
+					<center>
+						<div class="radio-inline c-radio">
+                        	<label>
+								<input class="myCursorPointer" type="radio" name="companyradio" ng-model="companyradio"  ng-value="::user.isDefault" ng-click="isDefault_comp(user.companyId,user.isDefault)" />
+								 <span class="fa fa-circle"></span></label>
+							</label>
+                    	 </div>
+					</center>
+                </td> -->
+				<td data-title="'Sticker'"  ng-init="user.qty=0"  >
+						<input   name="quantity" ng-model="user.qty" type="text" placeholder="Qty" class="form-control input-sm" ng-pattern="/^[0-9]*$/" style="width:50px"  min="1" only-number />
+					</td>
+			    <td data-title="'Action'" style="width:10%" sortable="'action'" >
+					<center>
+						<i  title="Barcode" ng-click="singleStickerPrint(user)"  ng-if="user.qty>0" class="fa fa-print myCursorPointer" style="font-size:17px;"> </i> &nbsp; 
+						<i  ng-click="edit_comp(user)" class="fa fa-edit myCursorPointer" style="font-size:17px;color:#10709f"> </i> &nbsp; 
+						<i  ng-click="delete_comp('sm',user.companyId)" class="fa fa-times-circle myCursorPointer" style="font-size:17px;color:red" data-ng-if="::checkDefaultCompany(user)"></i>
+					</center>
+				</td>
+            </tr>
+        </tbody>
+			
+      </table>
+	  </div>
+	   <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
+   </div>
+</div>

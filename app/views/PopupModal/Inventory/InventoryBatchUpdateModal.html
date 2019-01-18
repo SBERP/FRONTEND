@@ -1,0 +1,401 @@
+
+<div class="modal-header">
+	<button type="button" data-dismiss="modal" data-ng-click="closeButton()" aria-hidden="true" class="close">×</button>  
+	 <h4 id="myModalLabel" class="modal-title"> {{inventoryType}} Batch Update</b></h4>
+</div>
+<div class="modal-body my-model-body">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+    <!-- <div class="panel panel-default"> -->
+
+		<!-- <div class="panel-heading" data-ng-class="app.theme.brand">
+			<button type="button" class="btn btn-default pull-right btn-sm" ng-click="openProductBatchModal()"  data-ng-class="app.theme.brand" > Mass Insertion </button> 
+			<div class="panel-title">
+				Product Form
+			</div>
+		</div> -->
+      <div class="panel-body">
+	  
+         <form action="#" name="formProduct" class="form-validate form-horizontal">
+		
+			<div class="col-md-12" >
+			<!-- <h4 class="panel-heading bg-default myHeading">Basic Details</h4> -->
+				
+			<h4 class="panel-heading bg-default myHeading">Product Information</h4>
+			<div class="panel-body">
+				<div class="col-md-6">
+					<label class="col-sm-3 control-label">Product-Type</label>
+					 	<div class="col-sm-9">
+							<select chosen=""  ng-model="addInvProduct.productType" ng-options="s for s in form.productTypeDrop" ng-change="changeInvProductData('productType',addInvProduct.productType)" class="form-control chosen-select" tabindex="10">
+							<option value=""></option>	
+							</select>
+						</div>
+				</div>
+				<div class="col-md-6">
+					<label class="col-sm-3 control-label" ng-if="enableDisableBestBefore">Best Before</label>
+					  <div class="col-sm-3" ng-if="enableDisableBestBefore">
+						 <input id="input-id-1" name="bestBeforeTime"  ng-model="addInvProduct.bestBeforeTime" ng-change="changeInvProductData('bestBeforeTime',addInvProduct.bestBeforeTime)" type="text" class="form-control" tabindex="11" ng-pattern="/^[0-9 .]*$/"  ng-maxlength="8"  only-number />
+						 
+						<span ng-messages="formProduct.bestBeforeTime.$error" ng-if="formProduct.bestBeforeTime.$dirty || formProduct.bestBeforeTime.$touched"  role="alert">
+							<span ng-messages-include="errorLonglength"></span>
+							<span ng-messages-include="errorPatternThisSpecial"></span>
+						 </span>
+						
+					  </div>
+					  
+					  <div class="col-sm-6">
+						 <select  chosen="" data-ng-model="addInvProduct.bestBeforeType" data-ng-options="s for s in form.bestBeforeDrop" ng-change="changeInvProductData('bestBeforeType',addInvProduct.bestBeforeType)" class="form-control chosen-select" tabindex="12" >
+						 	<option value=""></option>
+						 </select>
+					  </div>
+				</div>
+			</div>
+			<!-- <div class="panel-body"> -->
+				<!-- <div class="col-md-6" >	 
+					<div class="form-group">
+						<label class="col-sm-3 control-label">Measurement Unit</label>
+						<div class="col-sm-9">
+							<select chosen="" data-ng-model="addInvProduct.measureUnit" data-ng-options="s for s in form.measureUnitDrop" ng-change="changeInvProductData('measurementUnit',addInvProduct.measureUnit)" class="form-control chosen-select" tabindex="10">
+							<option value=""></option>
+							</select>
+						</div>
+					</div>
+			   
+				</div> -->
+				
+			<!-- </div> -->
+			
+			<h4 class="panel-heading bg-default myHeading">Product Price & Margin</h4>
+				<div class="panel-body">
+					<div class="col-md-6" >
+					   <div class="form-group">
+						  <label for="input-id-1" class="col-sm-3 control-label">Purchase Price</label>
+						  <div class="col-sm-9">
+							 <input id="input-id-1" name="purchasePrice"  ng-model="addInvProduct.purchasePrice" ng-change="changeInvProductData('purchasePrice',addInvProduct.purchasePrice)" type="text" placeholder="Purchase Price" class="form-control" tabindex="11" ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
+							 
+							<span ng-messages="formProduct.purchasePrice.$error" ng-if="formProduct.purchasePrice.$dirty || formProduct.purchasePrice.$touched"  role="alert">
+								<span ng-messages-include="errorRequired"></span>
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorPatternThisSpecial"></span>
+							 </span>
+							
+						  </div>
+					   </div>
+					    <div class="form-group">
+						  <label for="input-id-1" class="col-sm-3 control-label">Retail Margin</label>
+						  <div class="col-sm-3">
+							 <input id="input-id-1" name="marginFlat" ng-model="addInvProduct.marginFlat" ng-change="changeInvProductData('marginFlat',addInvProduct.marginFlat)" type="text" placeholder="Flat" class="form-control" tabindex="13" ng-pattern="/^[0-9 .]*$/" ng-maxlength="8" only-number />
+							 
+							<span ng-messages="formProduct.marginFlat.$error" ng-if="formProduct.marginFlat.$dirty || formProduct.marginFlat.$touched"  role="alert">
+								<span ng-messages-include="errorRequired"></span>
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorPatternThisSpecial"></span>
+							 </span>
+							
+						  </div>
+						  
+							<div class="col-sm-3">
+								 <input id="input-id-1" name="margin"  ng-model="addInvProduct.margin" ng-change="changeInvProductData('margin',addInvProduct.margin)" type="text" placeholder="(%)Per." class="form-control" tabindex="14" ng-pattern="/^[0-9 .]*$/" ng-maxlength="8" max="100" only-number />
+								 
+								<span ng-messages="formProduct.margin.$error" ng-if="formProduct.margin.$dirty || formProduct.margin.$touched"  role="alert">
+									<span ng-messages-include="errorRequired"></span>
+									<span ng-messages-include="errorLonglength"></span>
+									<span ng-messages-include="errorPatternThisSpecial"></span>
+								 </span>
+							
+							</div>
+						  
+							<div class="col-sm-3">
+								<p class="form-control-static">{{ (displayParseFloat(addInvProduct.marginFlat) + (displayParseFloat(addInvProduct.purchasePrice) * displayParseFloat(addInvProduct.margin) / 100)) |  currency:"&#8377; "}}</p>
+							</div>
+					   </div>
+					    <div class="form-group">
+						  <label for="input-id-1" class="col-sm-6 control-label">Semi-Wholesale Margin</label>
+							<div class="col-sm-6">
+								<input id="input-id-1" name="semiWholesaleMargin" ng-model="addInvProduct.semiWholesaleMargin" ng-change="changeInvProductData('semiWholesaleMargin',addInvProduct.semiWholesaleMargin)" type="text" placeholder="(%)Percentage" class="form-control" tabindex="17" ng-pattern="/^[0-9 .]*$/" ng-maxlength="8" max="100" only-number />
+							 
+								<span ng-messages="formProduct.semiWholesaleMargin.$error" ng-if="formProduct.semiWholesaleMargin.$dirty || formProduct.semiWholesaleMargin.$touched"  role="alert">
+									<span ng-messages-include="errorRequired"></span>
+									<span ng-messages-include="errorLonglength"></span>
+									<span ng-messages-include="errorPatternThisSpecial"></span>
+								</span>
+							
+							</div>
+						</div>
+			   
+					</div>
+					<div class="col-md-6" >
+						<div class="form-group">
+						  <label for="input-id-1" class="col-sm-3 control-label">MRP</label>
+						  <div class="col-sm-9">
+							 <input id="input-id-1" name="mrp" ng-model="addInvProduct.mrp" ng-change="changeInvProductData('mrp',addInvProduct.mrp)" type="text" placeholder="MRP" class="form-control" tabindex="12" ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20"  only-number />
+							 
+							<span ng-messages="formProduct.mrp.$error" ng-if="formProduct.mrp.$dirty || formProduct.mrp.$touched"  role="alert">
+								<span ng-messages-include="errorRequired"></span>
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorPatternThisSpecial"></span>
+							 </span>
+							
+						  </div>
+					   </div>
+					    <div class="form-group">
+			   
+						  <label for="input-id-1" class="col-sm-3 control-label"><b>Tax Margin</b></label>
+						  <div class="col-sm-3">
+							 <input id="input-id-1" name="wholesaleMarginFlat"  ng-model="addInvProduct.wholesaleMarginFlat" ng-change="changeInvProductData('wholesaleMarginFlat',addInvProduct.wholesaleMarginFlat)" type="text" placeholder="Flat" class="form-control" tabindex="15" ng-pattern="/^[0-9 .]*$/"  ng-maxlength="8"  only-number />
+							 
+							<span ng-messages="formProduct.wholesaleMarginFlat.$error" ng-if="formProduct.wholesaleMarginFlat.$dirty || formProduct.wholesaleMarginFlat.$touched"  role="alert">
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorPatternThisSpecial"></span>
+							 </span>
+							
+						  </div>
+						  
+						  <div class="col-sm-3">
+							 <input id="input-id-1" name="wholesaleMargin"  ng-model="addInvProduct.wholesaleMargin" ng-change="changeInvProductData('wholesaleMargin',addInvProduct.wholesaleMargin)" type="text" placeholder="(%)Per." class="form-control" tabindex="16"  ng-pattern="/^[0-9 .]*$/"  ng-maxlength="8" max="100" only-number />
+							 
+							<span ng-messages="formProduct.wholesaleMargin.$error" ng-if="formProduct.wholesaleMargin.$dirty || formProduct.wholesaleMargin.$touched"  role="alert">
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorPatternThisSpecial"></span>
+							</span>
+							
+						  </div>
+						  
+							<div class="col-sm-3">
+								<p class="form-control-static">
+								{{ (displayParseFloat(addInvProduct.wholesaleMarginFlat) + (displayParseFloat(addInvProduct.purchasePrice) * displayParseFloat(addInvProduct.wholesaleMargin) / 100)) |  currency:"&#8377; "}}
+								</p>
+							</div>
+							
+						  <label for="input-id-1" class="col-sm-3 control-label-left" ></label>
+					   </div>
+					</div>
+				</div>
+			
+				
+			<h4 class="panel-heading bg-default myHeading">Taxation</h4>
+				<div class="panel-body">
+					<div class="col-md-4" >
+					   <div class="form-group">
+						  <label for="input-id-1" class="col-sm-3 control-label">CGST(%)</label>
+						  <div class="col-sm-9">
+							 <input id="input-id-1" name="vat" ng-model="addInvProduct.vat" ng-change="changeInvProductData('vat',addInvProduct.vat);addInvProduct.additionalTax=addInvProduct.vat;" type="text" placeholder="CGST(%)" class="form-control" tabindex="18" ng-pattern="/^[0-9 .]*$/" ng-maxlength="8" max="100" only-number />
+							 
+							<span ng-messages="formProduct.vat.$error" ng-if="formProduct.vat.$dirty || formProduct.vat.$touched"  role="alert">
+								<span ng-messages-include="errorRequired"></span>
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorPatternThisSpecial"></span>
+							 </span>
+							
+						  </div>
+					   </div>
+					</div>
+					<div class="col-md-4" >
+					   <div class="form-group">
+						  <label for="input-id-1" class="col-sm-3 control-label">SGST(%)</label>
+						  <div class="col-sm-9">
+							 <input id="input-id-1" name="additionalTax" ng-model="addInvProduct.additionalTax" ng-change="changeInvProductData('additionalTax',addInvProduct.additionalTax);addInvProduct.vat=addInvProduct.additionalTax;" type="text" placeholder="SGST(%)" class="form-control" tabindex="19" ng-pattern="/^[0-9 .]*$/" ng-maxlength="8" max="100" only-number />
+							 
+							<span ng-messages="formProduct.additionalTax.$error" ng-if="formProduct.additionalTax.$dirty || formProduct.additionalTax.$touched"  role="alert">
+								<span ng-messages-include="errorRequired"></span>
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorPatternThisSpecial"></span>
+							 </span>
+							
+						  </div>
+					   </div>
+					</div>
+					<div class="col-md-4" >
+						 <div class="form-group">
+						  <label for="input-id-1" class="col-sm-3 control-label">IGST(%)</label>
+						  <div class="col-sm-9">
+							 <input id="input-id-1" name="igst" ng-model="addInvProduct.igst" ng-change="changeInvProductData('igst',addInvProduct.igst)" type="text" placeholder="IGST(%)" class="form-control" tabindex="20" ng-pattern="/^[0-9 .]*$/" ng-maxlength="8" max="100" only-number />
+							 
+							<span ng-messages="formProduct.igst.$error" ng-if="formProduct.igst.$dirty || formProduct.igst.$touched"  role="alert">
+								<span ng-messages-include="errorRequired"></span>
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorPatternThisSpecial"></span>
+							 </span>
+						  </div>
+					   </div>
+					</div>
+					<div class="col-md-6" >
+						<div class="form-group">
+							<label for="input-id-1" class="col-sm-2 control-label">HSN/SAC#</label>
+							<div class="col-sm-10">
+								<input id="input-id-1" name="hsn" ng-model="addInvProduct.hsn" ng-change="changeInvProductData('hsn',addInvProduct.hsn)" type="text" placeholder="HSN/SAC Number" class="form-control"  ng-pattern="/^[a-zA-Z0-9 &,\/_`#().\'-]+$/" ng-maxlength="15" tabindex="24"/>
+							 
+							<span ng-messages="formProduct.hsn.$error" ng-if="formProduct.hsn.$dirty || formProduct.hsn.$touched"  role="alert">
+								<span ng-messages-include="errorRequired"></span>
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorPatternThisSpecial"></span>
+							 </span>
+							
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6" >
+						<div class="form-group">
+			   				<label class="col-sm-2 control-label"><b>CESS</b></label>
+							<div class="col-sm-3">
+							 	<input id="input-id-1" name="cessFlat"  ng-model="addInvProduct.cessFlat" ng-change="changeInvProductData('cessFlat',addInvProduct.cessFlat)" type="text" placeholder="Flat" class="form-control" tabindex="28" ng-pattern="/^[0-9 .]*$/"  ng-maxlength="8"  only-number />
+							 
+								<span ng-messages="formProduct.cessFlat.$error" ng-if="formProduct.cessFlat.$dirty || formProduct.cessFlat.$touched"  role="alert">
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorPatternThisSpecial"></span>
+							 	</span>
+							</div>
+						  	<div class="col-sm-3">
+							    <input id="input-id-1" name="cess"  ng-model="addInvProduct.cess" ng-change="changeInvProductData('cessPercentage',addInvProduct.cess)" type="text" placeholder="(%)Per." class="form-control" tabindex="29"  ng-pattern="/^[0-9 .]*$/"  ng-maxlength="8" max="100" only-number />
+							 
+								<span ng-messages="formProduct.cess.$error" ng-if="formProduct.cess.$dirty || formProduct.cess.$touched"  role="alert">
+									<span ng-messages-include="errorLonglength"></span>
+									<span ng-messages-include="errorPatternThisSpecial"></span>
+								</span>
+							</div>
+						  	<div class="col-sm-3">
+								<p class="form-control-static">
+								{{ (displayParseFloat(addInvProduct.cessFlat) + (displayParseFloat(addInvProduct.purchasePrice) * displayParseFloat(addInvProduct.cessPercentage) / 100)) |  currency:"&#8377; "}}
+								</p>
+							</div>
+							<label class="col-sm-3 control-label-left" ></label>
+					   </div>
+					</div>
+				</div>
+			
+			<!--h4 class="panel-heading bg-default myHeading">Purchase GST</h4>
+				<div class="panel-body">
+					<div class="col-md-4" >
+					   <div class="form-group">
+						  <label for="input-id-1" class="col-sm-3 control-label">CGST(%)</label>
+						  <div class="col-sm-9">
+							 <input id="input-id-1" name="purchaseCgst" ng-model="addInvProduct.purchaseCgst" ng-change="changeInvProductData('purchaseCgst',addInvProduct.purchaseCgst)" type="text" placeholder="CGST(%)" class="form-control" tabindex="21" ng-pattern="/^[0-9 .]*$/" ng-maxlength="8" max="100" only-number />
+							 
+							<span ng-messages="formProduct.purchaseCgst.$error" ng-if="formProduct.purchaseCgst.$dirty || formProduct.purchaseCgst.$touched"  role="alert">
+								<span ng-messages-include="errorRequired"></span>
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorPatternThisSpecial"></span>
+							 </span>
+							
+						  </div>
+					   </div>
+					</div>
+					<div class="col-md-4" >
+					   <div class="form-group">
+						  <label for="input-id-1" class="col-sm-3 control-label">SGST(%)</label>
+						  <div class="col-sm-9">
+							 <input id="input-id-1" name="purchaseSgst" ng-model="addInvProduct.purchaseSgst" ng-change="changeInvProductData('purchaseSgst',addInvProduct.purchaseSgst)" type="text" placeholder="SGST(%)" class="form-control" tabindex="22" ng-pattern="/^[0-9 .]*$/" ng-maxlength="8" max="100" only-number />
+							 
+							<span ng-messages="formProduct.purchaseSgst.$error" ng-if="formProduct.purchaseSgst.$dirty || formProduct.purchaseSgst.$touched"  role="alert">
+								<span ng-messages-include="errorRequired"></span>
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorPatternThisSpecial"></span>
+							 </span>
+							
+						  </div>
+					   </div>
+					</div>
+					<div class="col-md-4" >
+						 <div class="form-group">
+						  <label for="input-id-1" class="col-sm-3 control-label">IGST(%)</label>
+						  <div class="col-sm-9">
+							 <input id="input-id-1" name="purchaseIgst" ng-model="addInvProduct.purchaseIgst" ng-change="changeInvProductData('purchaseIgst',addInvProduct.purchaseIgst)" type="text" placeholder="IGST(%)" class="form-control" tabindex="23" ng-pattern="/^[0-9 .]*$/" ng-maxlength="8" max="100" only-number />
+							 
+							<span ng-messages="formProduct.purchaseIgst.$error" ng-if="formProduct.purchaseIgst.$dirty || formProduct.purchaseIgst.$touched"  role="alert">
+								<span ng-messages-include="errorRequired"></span>
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorPatternThisSpecial"></span>
+							 </span>
+						  </div>
+					   </div>
+					</div>
+				</div-->
+				
+			<h4 class="panel-heading bg-default myHeading">Other</h4>
+				<div class="panel-body">
+					<div class="col-md-6" >
+					   <div class="form-group">
+						  <label  class="col-sm-3 control-label">Minimum Stock</label>
+						  <div class="col-sm-9">
+							 <input id="input-id-1" name="minimumStockLevel"  ng-model="addInvProduct.minimumStockLevel" ng-change="changeInvProductData('minimumStockLevel',addInvProduct.minimumStockLevel)" type="text" placeholder="Minimum Stock" class="form-control" tabindex="25" ng-pattern="/^[0-9]*$/" ng-maxlength="10"  only-number />
+							 
+							<span ng-messages="formProduct.minimumStockLevel.$error" ng-if="formProduct.minimumStockLevel.$dirty || formProduct.minimumStockLevel.$touched"  role="alert">
+								<span ng-messages-include="errorRequired"></span>
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorPatternThisSpecial"></span>
+							 </span>
+							
+						  </div>
+					   </div>
+					</div>
+					<div class="col-md-5" >
+					    <div class="form-group">
+							<label class="col-sm-3 control-label">Product-Menu</label>
+							 <div class="col-sm-9">
+								<div class="radio-inline c-radio">
+									<label>
+									   <input  name="i-radio-printed" value="ok" ng-model="addInvProduct.productMenu" ng-click="changeInvProductData('productMenu',addInvProduct.productMenu)" type="radio">
+									   <span class="fa fa-check"></span>Required</label>
+								</div>
+								<div class="radio-inline c-radio">
+									<label>
+									   <input  name="i-radio-printed" value="not" ng-model="addInvProduct.productMenu" ng-click="changeInvProductData('productMenu',addInvProduct.productMenu)" type="radio">
+									   <span class="fa fa-check"></span>Not Required</label>
+								</div>
+							</div>
+					   </div>
+					</div>
+					<div class="col-md-6" >
+					   <div class="form-group">
+						  <label class="col-sm-3 control-label">Opening</label>
+						  <div class="col-sm-9">
+							 <input id="input-id-1" name="opening"  ng-model="addInvProduct.opening" ng-change="changeInvProductData('opening',addInvProduct.opening)" type="text" placeholder="Opening Stock" class="form-control" tabindex="25" ng-pattern="/^[0-9]*$/" ng-maxlength="10"  only-number />
+							 
+							<span ng-messages="formProduct.opening.$error" ng-if="formProduct.opening.$dirty || formProduct.opening.$touched"  role="alert">
+								<span ng-messages-include="errorRequired"></span>
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorPatternThisSpecial"></span>
+							 </span>
+						   </div>
+					   </div>
+					</div>
+					<div class="col-md-6" >
+						<div class="form-group">
+							<label class="col-sm-3 control-label">Max Sale Qty</label>
+							<div class="col-sm-3">
+							 <input id="input-id-1" name="maxSaleQty"  ng-model="addInvProduct.maxSaleQty" ng-change="changeInvProductData('maxSaleQty',addInvProduct.maxSaleQty)" type="text" placeholder="Max Sell Quantity" class="form-control" tabindex="30" ng-pattern="/^[0-9]*$/" ng-maxlength="10"  only-number />
+							 
+							<span ng-messages="formProduct.maxSaleQty.$error" ng-if="formProduct.maxSaleQty.$dirty || formProduct.maxSaleQty.$touched"  role="alert">
+								<span ng-messages-include="errorRequired"></span>
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorPatternThisSpecial"></span>
+							 </span>
+							</div>
+							<label class="col-sm-3 control-label"><b>Not for Sale</b></label>
+								<div class="col-sm-3">
+									<label class="switch switch-lg switch-success ph-lg">
+									    <input type="checkbox" data-ng-model="addInvProduct.notForSale" tabindex="31" value="true" checked="checked" ng-change="changeInvProductData('notForSale',addInvProduct.notForSale)"/>
+									    <span></span>
+									</label>
+								</div>
+						</div>
+					</div>
+					
+				</div>
+
+
+			 <button type="button" class="mr mb-sm btn btn-danger pull-right" data-ng-click="cancel()" tabindex="27" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id" >Cancel</button>
+			 <button type="button" class="mr mb-sm btn btn-success pull-right" data-ng-click="pop()" ng-disabled="formProduct.$invalid" tabindex="26" >
+				 <span ng-if="!addInvProduct.getSetProductId" >Update</span> 
+				 <!-- <span ng-if="addInvProduct.getSetProductId" >Update</span> -->
+			 </button>
+			 
+			<!-- </div> -->
+         </form>
+      </div>
+   <!-- </div> -->
+   
+   <!-- END panel-->  
+  
+	
+</div>
+

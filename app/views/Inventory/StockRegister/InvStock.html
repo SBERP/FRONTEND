@@ -1,0 +1,103 @@
+<style>
+.bgWhiteTR{
+background-color: white;
+}
+</style>
+<h3>
+	
+   <small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+   Inventory >>
+   <a ui-sref="app.AddInvStock" >Search </a> >>
+   Stock</small>
+</h3>
+<div data-ng-controller="InvStockController as table" class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true,'time-out': 10000}"></toaster-container>
+	<div class="panel panel-default">
+		<div class="panel-body">
+		
+			<div class="col-md-8">
+				<label class="col-sm-2 control-label"> Product </label>
+					<div class="col-sm-10">
+						<select chosen=""  ng-model="allProductModel" ng-options="s as s.productName+' ('+s.color+' | '+s.size+')' for s in table.states track by s.productId" class="form-control chosen-select" >
+						</select>
+					</div>
+			</div>
+			
+			<div class="col-md-1 myPaddingTop">
+				<div class="col-sm-12">
+					<button type="button" class="mb-sm btn btn-default pull-right" data-ng-class="app.theme.brand" ng-click="showProduct()" >Go</button>
+		
+				</div>
+			</div>
+			
+			<div class="col-sm-3">
+			</div>
+			
+		</div>
+	</div>
+	
+   <div class="panel panel-default">
+    <div class="panel-heading myHeading">
+	<a ng-click="generatePdf('pdf')" class="pull-right btn btn-sm btn-primary" ng-if="disableButton" data-ng-class="app.theme.brand" >Generate Pdf</a> 
+	
+	<!--a data-ng-mousedown="csv.generate()" data-ng-href="{{ csv.link() }}" download="test.csv" class="pull-right btn btn-sm btn-primary" style="margin-right: 5px;">Export to CSV</a-->
+	<a ng-click="generatePdf('excel')" class="pull-right btn btn-sm btn-primary" data-ng-class="app.theme.brand" style="margin-right: 5px;" ng-if="disableButton" >Export to Excel</a>
+	<!--a ng-csv="getArray" filename="test.csv" csv-header="['Date', 'Sale/Purchase', 'Qty','Amount','Date','Qty','Amount']" class="pull-right btn btn-sm btn-primary" style="margin-right: 5px;" >Export to CSV</a-->
+         <div class="panel-title">Stock of <b>{{displayCompany}}</b> Company Between <b>{{displayFromDate}}</b> To <b>{{displayToDate}}</b> </div>
+    </div>
+       <div class="table-responsive">
+		 <table data-ng-table="table.tableParams" export-csv="csv"  class="table table-bordered table-striped">
+		  <!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
+		  <thead>
+			<tr>
+				<th  colspan="4" >Inward/Outward</th>
+				
+				<th  colspan="3" >Balance</th>
+			</tr>
+			<tr>
+				<th sortable="'date'" >Dt.</th>
+				<th >Sale/purchase</th>
+				<th>Qty</th>
+				<th >Amount</th>
+				
+				<th >Dt.</th>
+				<th>Qty</th>
+				<th >Amount</th>
+			</tr>
+		  </thead>
+			 <tbody data-ng-repeat="user in $data" style="text-align:center">
+				<!-- tr data-ng-repeat="user in $data" -->
+				<tr class="bgWhiteTR">
+					
+					<td rowspan="{{::user.balance.length == 0?1:user.balance.length}}"   ng-if="$index != 0"> {{::user.transactionDate}}</td>
+					<td rowspan="{{::user.balance.length == 0?1:user.balance.length}}" ng-if="user.transactionType == 'Inward' && $index != 0">Purchase</td>
+					<td rowspan="{{::user.balance.length == 0?1:user.balance.length}}" ng-if="user.transactionType == 'Outward' && $index != 0">Sales</td>
+					<td rowspan="{{::user.balance.length == 0?1:user.balance.length}}" ng-if="$index != 0">{{::user.qty}} </td>
+					<td rowspan="{{::user.balance.length == 0?1:user.balance.length}}" ng-if="$index != 0" >{{::user.price}}</td>
+					            
+					<td rowspan="{{::user.balance.length}}"    ng-if="$index == 0"> {{::user.transactionDate}}</td>
+					<td rowspan="{{::user.balance.length}}" ng-if="user.transactionType == 'Inward' && $index == 0">Purchase</td>
+					<td rowspan="{{::user.balance.length}}" ng-if="user.transactionType == 'Outward' && $index == 0">Sales</td>
+					<td rowspan="{{::user.balance.length}}" ng-if="$index == 0">{{::user.qty}} </td>
+					<td rowspan="{{::user.balance.length}}" ng-if="$index == 0">{{::user.price}}</td>
+					
+					
+					<td>{{::user.balance[0].date}} </td>
+					<td>{{::user.balance[0].qty}}</td>
+					<td>{{::user.balance[0].price}}</td>
+					
+				</tr>
+				<tr ng-repeat="bal in user.balance" ng-if="$index > 0" style="background-color: white;">
+						<td>{{::bal.date}} </td>
+						<td>{{::bal.qty}}</td>
+						<td>{{::bal.price}}</td>
+				</tr >
+					
+				
+			</tbody>
+			
+		  </table>
+		 </div>
+	   <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
+   </div>
+</div>

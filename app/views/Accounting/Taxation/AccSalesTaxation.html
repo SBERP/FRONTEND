@@ -1,0 +1,35 @@
+<h3>
+   <small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+   Taxation >>
+   <a ui-sref="app.AccViewSalesTaxation" >View</a> >>
+   Sales Tax</small>
+</h3>
+<div class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+   <div class="panel panel-default">
+      <div class="panel-heading myHeading" >
+         <!--button data-ng-click="table.tableParams.sorting({})" class="pull-right btn btn-default btn-sm">Clear sorting</button-->
+		<a ng-click="generatePdf('excel')" class="pull-right btn btn-sm btn-primary"  ng-if="exportPdfHidden" data-ng-class="app.theme.brand" >Export to Excel</a>
+         <div class="panel-title" id="allPro"> <h5>SalesTax of <b>{{displayCompany}}</b> Company Between {{::displayfromDate}} to {{::displaytoDate}} </h5> </div>
+		   
+      </div>
+	   <div class="table-responsive">
+		  <table data-ng-table="table.tableParams" show-filter="false" class="table table-bordered table-striped">
+			 <tbody>
+				<tr data-ng-repeat="user in $data">
+					<td data-title="'#'"  ng-bind="(itemsPerPage * (pageNumber-1)) + $index+1"></td>
+					<td data-title="'Invoice#'"  filter="{ 'invoiceNumber': 'text' }" ng-bind="::user.invoiceNumber" ></td>
+					 <td data-title="'EntryDate'"  filter="{ 'entryDate': 'text' }" ng-bind="::dateConvert(user.entryDate) | date:dateFormat" ></td>
+					<td data-title="'Client Name'"  filter="{ 'clientName': 'text' }" ng-bind="::user.client.clientName" ></td>
+					<td data-title="'SalesType'"  filter="{ 'salesType': 'text' }" ng-bind="::user.salesType" ></td>
+					<td data-title="'Tax'"  filter="{ 'tax': 'text' }" style="text-align:right" ng-bind="::user.tax" ></td>
+					<td data-title="'AdditionalTax'"  filter="{ 'additionalTax': 'text' }" style="text-align:right" ng-bind="::user.additionalTax" ></td>
+					<td data-title="'Total'"  filter="{ 'total': 'text' }" style="text-align:right" ng-bind="::user.total" ></td>
+					<td data-title="'GrandTotal'"  filter="{ 'grandTotal': 'text' }" style="text-align:right" ng-bind="::user.grandTotal" ></td>
+				</tr>
+			 </tbody>
+		  </table>
+		</div>
+	   <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
+   </div>
+</div>

@@ -1,0 +1,39 @@
+<h3>
+	<small>
+   <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+   Taxation >> 
+   View Data Taxation</small>
+</h3>
+<div   class="container-fluid" >
+	<div id="panelDemo14" class="panel panel-default">
+         <div class="panel-heading">Basic Tabs</div>
+         <div class="panel-body">
+            <tabset>
+               <tab heading="Table">
+				
+				<table data-ng-table="table.tableParams"  show-filter="true" class="table table-bordered table-striped">
+					<!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
+					 <tbody>
+						<tr data-ng-repeat="user in $data">
+						<td data-title="'Sr. No.'"  >{{$index+1}}</td>
+							<td data-title="'Date'" sortable="'date'" filter="{ 'date': 'text' }" >{{user.createdAt}}</td>
+							<td data-title="'Perticular'" sortable="'branchName'" filter="{ 'branchName': 'text' }" >{{user.branchName}}</td>
+						   <td data-title="'Action'" sortable="'action'">
+								<center>
+									<i ui-sref="" ng-click="edit_comp(user.branchId)" class="fa fa-edit" style="font-size:17px;color:#10709f"> </i> &nbsp; &nbsp;
+									<i ui-sref="" ng-click="delete_comp(user.branchId)" class="fa fa-times-circle" style="font-size:17px;color:red"></i>
+								</center>
+							</td>
+						</tr>
+					 </tbody>
+				</table>
+			   
+			   </tab>
+				  
+               <tab heading="Chart">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis
+                  aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat , sunt in culpa qui officia deserunt mollit anim id est laborum.</tab>
+            </tabset>
+         </div>
+    </div>
+   
+</div>

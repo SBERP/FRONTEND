@@ -1,0 +1,26 @@
+<!-- END action buttons-->
+<!-- START Mails-->
+<div class="clearfix mb">
+</div>
+<div class="panel panel-default">
+   <div class="panel-body">
+      <form role="form-horizontal" action="#" name="formSMS" >
+		<div class="col-sm-12">
+				<div class="form-group">
+					<textarea  name="address" ng-model="sms.conversation" placeholder="Write Your Text Here.."  class="form-control ng-pristine ng-valid ng-touched" tabindex="2" ng-maxlength="160" ng-required="true" rows="7" ></textarea>
+					<span ng-messages="formSMS.address.$error" ng-if="formSMS.address.$dirty || formSMS.address.$touched" role="alert">
+						<span ng-messages-include="errorRequired"></span>
+						<span ng-messages-include="errorPatternThisSpecial"></span>
+						<span ng-messages-include="errorLonglength"></span>
+					</span>
+				</div>
+				<div class="form-group  pull-right" style="margin-top:5px">
+					<button type="button" tabindex="3"  class="btn btn-primary pull-right" ng-click="sendEmail()" ng-disabled="formSMS.$invalid">
+						<em class="icon-location fa-fw"></em>
+						<span>Send</span>
+					</button>
+				</div>
+		</div>
+      </form>
+   </div>
+</div>

@@ -1,0 +1,109 @@
+<h3>
+	
+   <small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> Brand</small>
+</h3>
+<div data-ng-controller="InvCategoryController as table" class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+	<div class="panel panel-default">
+		 <!--h4 class="panel-heading"></h4-->
+		<form  action="#" name="formCategory" class="form-validate form-horizontal">
+			<div class="panel-body">
+			
+				<div class="col-sm-12">
+					<div class="col-sm-6">
+						<div class="form-group">
+						
+							<label class="col-sm-2 control-label"> Brand </label>
+								<div class="col-sm-8">
+									<select chosen="" data-ng-model="invCategoryData.categoryDropDown" data-ng-options="s.productCategoryName for s in table.categoryDrop track by s.productCategoryId" class="form-control chosen-select" tabindex="2"></select>
+								</div>
+						</div>
+					</div>
+					
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label class="col-sm-2 control-label"> *Name </label>
+								<div class="col-sm-8">
+									<input ng-model="invCategoryData.categoryName" name="categoryName" id="input-id-1" type="text" placeholder="Brand Name" class="form-control" ng-required="true" ng-pattern="/^[a-zA-Z0-9 &,\/_`#().\'-]*$/" tabindex="2" ng-maxlength="35" auto-focus/>
+									
+									<span ng-messages="formCategory.categoryName.$error" ng-if="formCategory.categoryName.$dirty || formCategory.categoryName.$touched"  role="alert">
+										<span ng-messages-include="errorRequired"></span>
+										<span ng-messages-include="errorLonglength"></span>
+										<span ng-messages-include="errorPatternAlpha"></span>
+									 </span>
+									  
+								</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-12">
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label class="col-sm-2 control-label"> Description </label>
+							<div class="col-sm-10">
+								<textarea ng-model="invCategoryData.categoryDesc" name="desc" id="input-id-1" type="text" placeholder="Brand Description" class="form-control" ng-pattern="/^[a-zA-Z0-9 *,-\/_`#\[\]().\']+$/" tabindex="2" ></textarea>
+								
+								<span ng-messages="formCategory.desc.$error" ng-if="formCategory.desc.$dirty || formCategory.desc.$touched"  role="alert">
+									<span ng-messages-include="errorPatternThisSpecial"></span>
+								 </span>
+								 
+							</div>
+							
+							
+						</div>
+					</div>
+					
+					<div class="col-sm-5">
+					
+						<button type="button" class="btn btn-danger my-small-button pull-right" ng-click="cancel()" tabindex="3"  style="margin-left:5px">Cancel</button>
+						
+						<button type="button" class="btn btn-success my-small-button pull-right" ng-click="addUpCategory()" tabindex="2" ng-disabled="formCategory.$invalid" >
+							<span ng-if="!invCategoryID.id">Insert </span>
+							<span ng-if="invCategoryID.id">Update </span>
+						</button>
+						
+					</div>
+				</div>
+		</div>
+		</form>
+	</div>
+   <div class="panel panel-default">
+      <div class="panel-heading myHeading" >
+         <!--button data-ng-click="table.tableParams.sorting({})" class="pull-right btn btn-default btn-sm">Clear sorting</button-->
+		 <!--button class="btn btn-labeled btn-primary pull-right btn-sm"  ui-sref="#" >
+			<span class="btn-label"><i class="fa fa-plus"></i></span>
+		Add Category</button-->
+		
+		<!--button class="btn btn-labeled btn-primary pull-right btn-sm" ui-sref="#" >
+			<span class="btn-label"><i class="fa fa-plus"></i></span>
+		Add Sub Category</button-->
+		<button type="button" class="btn btn-primary my-small-button pull-right" ng-click="openCategoryBatchModal()" > Batch </button> 
+			<div class="panel-title">
+				<span> Brand </span> 
+				
+			</div>
+      </div>
+      
+	  <tree-grid  col-defs="col_defs" expand-on="expanding_property" on-click="my_tree_handler(branch)" tree-data="tree_data"></tree-grid>
+   </div>
+  
+</div>
+
+
+<script type="text/ng-template" id="errorRequired">
+	<span class="text-danger" ng-message="required">{{errorMessage.require}}</span>
+</script>
+
+<script type="text/ng-template" id="errorLonglength">
+	<span class="text-danger" ng-message="maxlength">{{errorMessage.longLength}}</span>
+</script>
+
+
+<script type="text/ng-template" id="errorPatternAlpha">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.Alphabets}}</span>
+</script>
+
+
+<script type="text/ng-template" id="errorPatternThisSpecial">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacter}}</span>
+</script>

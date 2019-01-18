@@ -1,0 +1,93 @@
+<h3>
+   <small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+   Client >>
+   <a ui-sref="app.CrmClientFilterView" >Filter</a> >>
+   Client Filter Data</small>
+</h3>
+<div class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+   <div class="panel panel-default">
+      <div class="panel-heading" data-ng-class="app.theme.brand" >
+         <div class="panel-title" id="allPro">
+			<span ui-sref="app.CrmClientFilterView" class="btn-label" style="display:initial"><i class="fa fa-arrow-left"  ></i></span>
+			<b> Filtered Clients Data {{parentCheckBox}} </b>
+			 <span ng-if="clientContact"><b>~Contact#: </b>{{::clientContact}}</span>
+			 <span ng-if="clientName"><b>~Client Name: </b>{{::clientName}}</span> 
+			 <span ng-if="displayfromDate != '1-1-1970'"><b>~Invoice Date: </b>{{::displayfromDate}} to {{::displaytoDate}}</span> 
+			 <span ng-if="displayJobCardFromDate != '1-1-1970' && displayJobCardFromDate != undefined"><b>~Jobcard Date: </b>{{::displayJobCardFromDate}} to {{::displayJobCardToDate}}</span>
+		 </div>
+      </div>
+	   <div class="table-responsive">
+		  <table data-ng-table="tableParams" show-filter="true" class="table table-bordered table-hover">
+		
+			 <tbody >
+				<tr data-ng-repeat="user in $data">
+					<td style="text-align: left" header="'ng-table/headers/checkbox.html'" >
+						<div class="checkbox c-checkbox">
+						  <label>
+							 <input type="checkbox" ng-model="user.selected" ng-change="changeBox(user.selected,user)" />
+							 <span class="fa fa-check"></span>
+						  </label>
+					   </div>
+					</td>
+					<td data-title="'#'"  >{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td>
+					<td data-title="'Client Name'" sortable="'clientName'" filter="{ 'clientName': 'text' }"  >
+						<a ng-click="goToClientTransaction(user.clientId)" href=""  tabindex="{{$index+1}}" style="text-transform:capitalize"   >
+							{{::user.clientName}}
+						</a>
+					</td>
+					<td data-title="'Contact#'" sortable="'contactNo'"  filter="{ 'contactNo': 'text' }"  style="width:8%" >{{user.contactNo}}</td>
+					<td data-title="'Profession'" sortable="'professionName'"  filter="{ 'professionName': 'text' }"  style="width:15%" >{{::user.professionName}}</td>
+					<td ng-show="enableDisableAddress" data-title="'Address'" sortable="'address1'"  filter="{ 'address1': 'text' }"  >{{::user.address1}}</td>
+					<td ng-show="enableDisableEmailId" data-title="'Email'" sortable="'emailId'"  filter="{ 'emailId': 'text' }"  >{{::user.emailId}}</td>
+					<td ng-show="enableDisableState" data-title="'State'" sortable="'stateAbb'" filter="{ 'stateAbb': 'text' }"  >{{::user.stateAbb}}</td>
+					<td ng-show="enableDisableCity" data-title="'City'" sortable="'cityName'" filter="{ 'cityName': 'text' }"  >{{::user.cityName}}</td>
+					<td  data-title="'Email/SMS'" header="'ng-table/headers/checkboxIcon.html'" style="width:8%">
+						<center>
+							<i  ng-click="goToClientTransaction(user.clientId,'email')" class="fa fa-envelope" title="Email" style="font-size:17px;color:#43a8eb;cursor:pointer" > </i>
+							&nbsp;
+							<i  ng-click="goToClientTransaction(user.clientId,'sms')" class="fa fa-commenting" title="SMS" style="font-size:17px;color:#43a8eb;cursor:pointer"  ></i>
+						</center>
+					</td>
+					<td data-title="'Sticker'"   style="width:4%" ng-init="user.qty=0" header="'ng-table/headers/stickerBox.html'" >
+						<input id="input-id-1"  name="quantity" ng-model="user.qty" type="text" placeholder="Qty." class="form-control input-sm" ng-pattern="/^[0-9]*$/"  min="1" only-number />
+					</td>
+					<td  data-title="'Print'" style="width:10%"  header="'ng-table/headers/stickerIcon.html'"> 
+						<center>
+							<i  title="Barcode" ng-click="singleStickerPrint(user)"  ng-if="user.qty>0" class="fa fa-print" style="font-size:17px;cursor:pointer"> </i> 
+							&nbsp;
+							<i  ng-click="editClientData('lg',user)" class="fa fa-edit" style="font-size:17px;color:#10709f;cursor:pointer"> </i>
+						</center>
+					</td>
+				</tr>
+			 </tbody>
+		  </table>
+		</div>
+	   <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
+   </div>
+</div>
+
+ <script type="text/ng-template" id="ng-table/headers/checkbox.html">
+       <div data-toggle="tooltip" data-title="Check All" class="checkbox c-checkbox" check-all="check-all">
+		  <label>
+			 <input type="checkbox" ng-model="parentCheckBox" ng-change="changeAllBox(parentCheckBox)" />
+			 <span class="fa fa-check"></span>
+		  </label>
+	   </div>
+ </script>
+ <script type="text/ng-template" id="ng-table/headers/checkboxIcon.html">
+      <center ng-if="selectedBoxArray.length > 0 || clientFlag == true">
+		<i ng-click="goToClientTransaction(user.clientId,'email','group')" class="fa fa-envelope" title="Email" style="font-size:17px;color:#43a8eb;cursor:pointer" > </i>
+		&nbsp;
+		<i ng-click="goToClientTransaction(user.clientId,'sms','group')" class="fa fa-commenting" title="SMS" style="font-size:17px;color:#43a8eb;cursor:pointer"  ></i>
+		&nbsp;
+	</center>
+ </script>
+ <script type="text/ng-template" id="ng-table/headers/stickerBox.html">
+       <input id="input-id-1"  name="quantity" ng-model="sticker.multiQty" ng-if="selectedBoxArray.length > 0 || clientFlag == true" type="text" placeholder="Qty." class="form-control input-sm" ng-pattern="/^[0-9]*$/"  min="1" only-number />
+ </script>
+ <script type="text/ng-template" id="ng-table/headers/stickerIcon.html">
+		<center>
+			<i  title="Print" ng-click="multiStickerPrint()" ng-if="sticker.multiQty > 0" class="fa fa-print" style="font-size:17px;cursor:pointer"> </i> 
+		</center>
+ </script>

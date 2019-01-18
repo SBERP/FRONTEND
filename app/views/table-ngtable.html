@@ -1,0 +1,38 @@
+<h3>
+	
+   <small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> Company</small>
+</h3>
+<div data-ng-controller="AngularTableController as table" class="container-fluid">
+   <div class="panel panel-default">
+      <div class="panel-heading" >
+         <!--button data-ng-click="table.tableParams.sorting({})" class="pull-right btn btn-default btn-sm">Clear sorting</button-->
+		 <button class="btn btn-labeled btn-primary pull-right btn-sm" ui-sref="" ng-click="GoToAddCompany()">
+			<span class="btn-label"><i class="fa fa-plus"></i></span>
+		Add Company</button>
+         <div class="panel-title">All Companies</div>
+      </div>
+      <table data-ng-table="table.tableParams" show-filter="true" class="table table-bordered table-striped">
+	  <!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
+        <tbody>
+            <tr data-ng-repeat="user in $data">
+				<td data-title="'Image'"  filter="{ 'companyName': '' }" ><img src="http://api.siliconbrain.co.in/{{user.documentUrl}}{{user.documentName}}" height="50" width="70" title="{{user.documentName}}" /></td>
+				<td data-title="'Name'" sortable="'companyName'" filter="{ 'companyName': 'text' }" >{{user.companyName}}</td>
+				<td data-title="'Address'" sortable="'address1'" filter="{ 'address1': 'text' }" >{{user.address1}}</td>
+			    <td data-title="'Address2'" sortable="'address2'" filter="{ 'address2': 'text' }" >{{user.address2}}</td>
+				<td data-title="'Pincode'" sortable="'pincode'" filter="{ 'pincode': 'text' }" >{{user.pincode}}</td>
+				<td data-title="'City'" sortable="'city.cityName'" filter="{ 'city.cityName': 'text' }" >{{user.city.cityName}}</td>
+				 
+                <td data-title="'Default'" >
+                  <input type="radio"  name="companyradio" ng-model="companyradio"  ng-value="user.is_default" />
+                </td>
+			    <td data-title="'Action'" filter="{ 'action': 'text' }"> 
+					<center>
+						<i ui-sref="" ng-click="edit_comp()" class="fa fa-edit" style="font-size:17px;color:#10709f"> </i> &nbsp; &nbsp;
+						<i ui-sref="" ng-click="delete_comp()" class="fa fa-times-circle" style="font-size:17px;color:red"></i>
+					</center>
+				</td>
+            </tr>
+        </tbody>
+      </table>
+   </div>
+</div>

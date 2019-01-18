@@ -1,0 +1,137 @@
+<h3>
+	
+   <small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> Balance Sheet</small>
+  
+</h3>
+<div   class="container-fluid" >
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div class="col-md-8">
+			
+				<label class="col-sm-2 control-label"> Company </label>
+					<div class="col-sm-10">
+						<select chosen=""  ng-model="stateCheck" ng-options="s.companyName for s in table.states track by s.companyId" class="form-control chosen-select" >
+						
+						</select>
+					</div>
+			</div>
+			<div class="col-md-1 myPaddingTop">
+				<div class="col-sm-12">
+					<button type="button" class="mb-sm btn btn-primary pull-right"  ng-click="showBranches()" data-ng-class="app.theme.brand" >Go</button>
+				</div>
+			</div>
+			<div class="col-sm-3">
+			</div>
+		</div>
+	</div>
+</div>
+	<!-- First -->
+   <div class="panel panel-default" ng-show="firstLayout">
+      <div class="panel-heading myHeading" >
+         <!--button data-ng-click="table.tableParams.sorting({})" class="pull-right btn btn-default btn-sm">Clear sorting</button-->
+		  <!--a  class="btn btn-sm btn-labeled btn-primary pull-right" ng-click="changeLayout()" >
+               <span class="btn-label"><i class="icon icon-layout"></i>
+               </span>Change Layout</a-->
+			   <i class="material-icons pull-right myCursorPointer"  ng-click="oneSide()" style="color:#43a8eb;" >&#xE8F3;</i>
+			 <i class="material-icons pull-right myCursorPointer"  ng-click="twoSide()" style="margin-right: 5px;color:#43a8eb;" >&#xE8EF;</i>
+		 <a ng-click="generatePdf('twoSidePdf')" class="pull-right btn btn-sm btn-primary" style="margin-right: 5px;" data-ng-class="app.theme.brand" >Generate Pdf</a> 
+		 <a  ng-click="generatePdf('twoSideExcel')" class="pull-right btn btn-sm btn-primary" style="margin-right: 5px;" data-ng-class="app.theme.brand" >Export to Excel</a>
+		 <!--a data-ng-mousedown="csv.generate()" data-ng-href="{{ csv.link() }}" download="test.csv" class="pull-right btn btn-sm btn-primary" style="margin-right: 5px;">Export to CSV</a-->
+         <div class="panel-title"><b> <i>{{displayCompany}}</i> Balance Sheet At <i>{{displayDate | date: dateFormat}}</i> </b></div>
+      </div>
+	   <div class="table-responsive">
+		  <table  export-csv="csv"   show-filter="false" class="table table-bordered table-striped" >
+		  <!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
+			<div class="input-group m-b"> 
+				<span class="input-group-addon"><i class="fa fa-search" ></i></span>
+				<input tabindex="1" ng-model="query" type="text" class="form-control" placeholder="Search" />
+			</div>
+			<thead>
+				<th style="width:35%">Assets</th>
+				<th style="width:15%">Amount</th>
+				<th style="width:35%">Liabilities</th>
+				<th style="width:15%">Amount</th>
+			</thead>
+			 <tbody  >
+				<tr data-ng-repeat="user in myArrayData | filter:query track by $index"  >
+					<td  sortable="'ledgerName'" filter="{ 'ledgerName': 'text' }"  ><a ng-click="user[0].ledgerId =='0.9999'? openCreditorDebitorModal('creditor'):goToLedgerTransaction(user[0].ledgerId)"  style="text-transform:capitalize;cursor: pointer" href=""  tabindex="0" ng-if="user[0].ledgerName"   ><span   ng-bind="::user[0].ledgerName"></span></a></td>
+					<td  sortable="'debitAmount'" filter="{ 'debitAmount': 'text' }" style="text-align:right" header-class="text-right"><span ng-if="user[0].ledgerId !='0.9999'" ng-bind="::user[0].creditAmount  | number: noOfDecimalPoints"></span> <span ng-if="user[0].ledgerId =='0.9999'" ng-bind="::totalSundryCreditor  | number: noOfDecimalPoints"></span></td>
+					
+					<td   sortable="'ledgerName'" filter="{ 'ledgerName': 'text' }"  ><a  ng-click="user[1].ledgerId =='0.9999'? openCreditorDebitorModal('debitor'):goToLedgerTransaction(user[1].ledgerId)"  style="text-transform:capitalize;cursor: pointer" href=""  tabindex="0" ng-if="user[1].ledgerName"  ng-bind="::user[1].ledgerName"></a></td>
+					<td   sortable="'creditAmount'" filter="{ 'creditAmount': 'text' }" style="text-align:right;" header-class="text-right"><span ng-if="user[1].ledgerId !='0.9999'" ng-bind="::user[1].debitAmount  | number: noOfDecimalPoints"></span> <span ng-if="user[1].ledgerId =='0.9999'" ng-bind="::totalSundaryDebitor  | number: noOfDecimalPoints"></span></td>
+					
+				</tr>
+			 </tbody>
+			 <tfoot>
+				<td><b>Total Assets</b></td>
+				<td style="text-align:right"><b ng-bind="TotalofCredit| number: noOfDecimalPoints"></b></td>
+				<td><b>Total Liabilities & Equity</b></td>
+				<td style="text-align:right"><b ng-bind="TotalofDebit | number: noOfDecimalPoints"></b></td>
+			 </tfoot>
+		  </table>
+	  </div>
+	  
+   </div>
+   <!-- Second -->
+   
+   <div class="panel panel-default" ng-show="secondLayout" >
+      <div class="panel-heading myHeading" >
+         <!--button data-ng-click="table.tableParams.sorting({})" class="pull-right btn btn-default btn-sm">Clear sorting</button-->
+		  <!--a  class="btn btn-sm btn-labeled btn-primary pull-right" ng-click="changeLayout()" >
+               <span class="btn-label"><i class="icon icon-layout"></i>
+               </span>Change Layout</a-->
+			  <i class="material-icons pull-right myCursorPointer"  ng-click="oneSide()" style="color:#43a8eb;" >&#xE8F3;</i>
+			 <i class="material-icons pull-right myCursorPointer"  ng-click="twoSide()" style="margin-right: 5px;color:#43a8eb;" >&#xE8EF;</i>
+		 <a ng-click="generatePdf('pdf')" class="pull-right btn btn-sm btn-primary" style="margin-right: 5px;" >Generate Pdf</a> 
+		 <a  ng-click="generatePdf('excel')" class="pull-right btn btn-sm btn-primary" style="margin-right: 5px;">Export to Excel</a>
+		 <!--a data-ng-mousedown="csv.generate()" data-ng-href="{{ csv.link() }}" download="test.csv" class="pull-right btn btn-sm btn-primary" style="margin-right: 5px;">Export to CSV</a-->
+         <div class="panel-title"><b> <i>{{displayCompany}}</i> Balance Sheet At <i>{{displayDate | date: dateFormat}}</i> </b></div>
+      </div>
+	   <div class="table-responsive">
+		  <table  export-csv="csv"   show-filter="false" class="table table-bordered table-striped" >
+		  <!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
+			<div class="input-group m-b"> 
+				<span class="input-group-addon"><i class="fa fa-search" ></i></span>
+				<input tabindex="1" ng-model="query" type="text" class="form-control" placeholder="Search" />
+			</div>
+			<thead>
+				<th style="width:70%">Assets & Liabilities</th>
+				
+				<th style="width:30%">Amount</th>
+			</thead>
+			 <tbody  >
+				<!--tr data-ng-repeat="user in $data" ng-if="user.length > 0" -->
+				<tr data-ng-repeat="user in myArrayData | filter:query track by $index"  ng-if="user[0]">
+				
+					<td  class="mytabIndex" tabindex="0" ><a ng-click="user[0].ledgerId =='0.9999'? openCreditorDebitorModal('creditor'):goToLedgerTransaction(user[0].ledgerId)"  style="text-transform:capitalize;cursor: pointer"   ><span ng-if="user[0].ledgerName"  ng-bind="::user[0].ledgerName" ></span></a></td>
+					<td  sortable="'debitAmount'" filter="{ 'debitAmount': 'text' }" style="text-align:right" header-class="text-right"><span ng-if="user[0].ledgerId !='0.9999'" ng-bind="::user[0].creditAmount  | number: noOfDecimalPoints"></span> <span ng-if="user[0].ledgerId =='0.9999'" ng-bind="::totalSundryCreditor  | number: noOfDecimalPoints"></span></td>
+					
+					
+				</tr>
+				 <tr>
+					<td><b>Total Assets</b></td>
+					<td style="text-align:right"><b ng-bind="TotalofCredit| number: noOfDecimalPoints"></b></td>
+				</tr>
+				<tr data-ng-repeat="user in myArrayData | filter:query track by $index"  ng-if="user[1]">
+					
+					<td   class="mytabIndex" tabindex="0" ><a  ng-click="user[1].ledgerId =='0.9999'? openCreditorDebitorModal('debitor'):goToLedgerTransaction(user[1].ledgerId)"  style="text-transform:capitalize;cursor: pointer"  ng-bind="::user[1].ledgerName" ></a></td>
+					<td   sortable="'creditAmount'" filter="{ 'creditAmount': 'text' }" style="text-align:right;" header-class="text-right"><span ng-if="user[1].ledgerId !='0.9999'" ng-bind="::user[1].debitAmount  | number: noOfDecimalPoints"></span> <span ng-if="user[1].ledgerId =='0.9999'" ng-bind="::totalSundaryDebitor  | number: noOfDecimalPoints"></span></td>
+					
+				</tr>
+				 <tr>
+			 
+					<td><b>Total Liabilities & Equity</b></td>
+					<td style="text-align:right"><b ng-bind="TotalofDebit | number: noOfDecimalPoints"></b></td>
+				</tr>
+			 </tbody>
+			 <tfoot>
+			
+			
+			 </tfoot>
+		  </table>
+	  </div>
+	  
+   </div>
+   
+</div>

@@ -1,0 +1,115 @@
+<h3>
+   <small> <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> Expense</small>
+</h3>
+<!-- START panel-->
+<div data-ng-controller="SettingExpenseController as form" class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+   <div class="panel panel-default">
+	  <div class="panel-heading" data-ng-class="app.theme.brand" >
+		 <div class="panel-title">Expense Setting</div>
+	  </div>
+      <div class="panel-body">
+         <form action="#" name="formExpense" class="form-validate form-horizontal">
+			<div class="col-md-6">
+				<fieldset class="my-fieldset-paddingBottom">
+				   <div class="form-group">
+					  <label class="col-sm-3 control-label">*Company</label>
+					  <div class="col-sm-9">
+						 <select chosen="" tabindex="2" data-ng-model="expenseForm.companyDrop"  data-ng-options="s.companyName for s in form.expenseCompanyDrop track by s.companyId" class="form-control chosen-select" ng-required="true"></select>
+						 
+					  </div>
+				   </div>
+				</fieldset>
+				
+				<fieldset class="my-fieldset-paddingBottom">
+					<div class="form-group">
+					  <label for="input-id-1" class="col-sm-3 control-label">Expense Type</label>
+					  <div class="col-sm-3">
+						<select  ng-model="expenseForm.expenseType"  class="form-control input-sm" style="padding-left: 3px;padding-right: 3px;width:100%;float:left;"  > <!--ng-change="changeProductTable();"-->
+							<option value="flat" selected="selected">Flat</option>
+							<option value="percentage">%</option>
+						</select>
+					  </div>
+					  <label for="input-id-1" class="col-sm-3 control-label">Expense Value</label>
+					  <div class="col-sm-3">
+						 <input id="input-id-1" tabindex="2" name="expenseValue" ng-pattern="/^[0-9 .]*$/"  ng-minlength="1" ng-model="expenseForm.expenseValue" type="text" placeholder="Expense Value" class="form-control" auto-focus
+						 only-number/>
+						 
+						 <span ng-messages="formExpense.expenseValue.$error" ng-if="formExpense.expenseValue.$dirty || formExpense.expenseValue.$touched"  role="alert">
+							<span ng-messages-include="errorRequired"></span>
+							<span ng-messages-include="errorLonglength"></span>
+							<span ng-messages-include="errorShortlength"></span>
+							<span ng-messages-include="errorPatternThisSpecial"></span>
+						</span>
+					  </div>
+				    </div>
+				</fieldset>
+			</div>
+			
+			<div class="col-md-6">
+				<fieldset class="my-fieldset-paddingBottom">
+				   <div class="form-group">
+					  <label for="input-id-1" class="col-sm-3 control-label">*Expense Name</label>
+					  <div class="col-sm-9">
+						 <input id="input-id-1" tabindex="2" name="expenseName" ng-pattern="/^[a-zA-Z &_`#().\'-\/]*$/"  ng-maxlength="35" ng-model="expenseForm.expenseName" type="text" placeholder="Expense Name" class="form-control" ng-required="true" auto-focus/>
+						 
+						 <span ng-messages="formExpense.expenseName.$error" ng-if="formExpense.expenseName.$dirty || formExpense.expenseName.$touched"  role="alert">
+							<span ng-messages-include="errorRequired"></span>
+							<span ng-messages-include="errorLonglength"></span>
+							<span ng-messages-include="errorShortlength"></span>
+							<span ng-messages-include="errorPatternThisSpecial"></span>
+						</span>
+					  </div>
+				   </div>
+				</fieldset>
+				
+				<button type="button" class="mr mb-sm btn btn-danger pull-right" tabindex="4" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="cancel()" >Cancel</button>
+				<button type="button" class="mr mb-sm btn btn-success pull-right" ng-disabled="formExpense.$invalid" tabindex="3" ng-click="insertExpenseData(expenseForm)">{{addUpdateLabel}}</button>
+			</div>
+         </form>
+      </div>
+   </div>
+   
+   <div class="panel panel-default" >
+      <div class="panel-heading" data-ng-class="app.theme.brand" >
+         <div class="panel-title">All Expenses</div>
+      </div>
+	   <div class="table-responsive">
+		  <table data-ng-table="tableParams"  show-filter="true" class="table table-bordered table-striped">
+		  <!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
+			 <tbody style="text-align:center">
+				<tr data-ng-repeat="user in expenseData track by user.expenseId">
+					<td data-title="'Company Name'" sortable="'companyName'" filter="{ 'companyName': 'text' }" ng-bind="::user.company.companyName" style="text-align:left" ></td>
+					<td data-title="'Expense Name'" sortable="'expenseName'" filter="{ 'expenseName': 'text' }" ng-bind="::user.expenseName" ></td>
+					<td data-title="'Flat/percentage'" sortable="'expenseType'" filter="{ 'expenseType': 'text' }" ng-bind="::user.expenseType" ></td>
+					<td data-title="'Expense Value'" sortable="'expenseValue'" filter="{ 'expenseValue': 'text' }"  ng-bind="::user.expenseValue" ></td>
+					<td data-title="'Action'" sortable="'action'">
+						<center>
+							<i ng-click="editExpense(user.expenseId)" class="fa fa-edit myCursorPointer mr-sm" style="font-size:17px;color:#10709f"> </i>
+							<i ng-click="deleteExpense(user.expenseId)" class="fa fa-times-circle myCursorPointer mr-sm" style="font-size:17px;color:red"></i>
+						</center>
+					</td>
+				</tr>
+			 </tbody>
+		  </table>
+		 </div>
+	   <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
+   </div>
+   <!-- END panel-->
+</div>
+
+<script type="text/ng-template" id="errorRequired">
+	<span class="text-danger" ng-message="required">{{errorMessage.require}}</span>
+</script>
+<script type="text/ng-template" id="errorLonglength">
+	<span class="text-danger" ng-message="maxlength">{{errorMessage.longLength}}</span>
+</script>
+<script type="text/ng-template" id="errorShortlength">
+	<span class="text-danger" ng-message="minlength">{{errorMessage.shortLength}}</span>
+</script>
+<script type="text/ng-template" id="errorPatternNumber">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.Numbers}}</span>
+</script>
+<script type="text/ng-template" id="errorPatternThisSpecial">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacter}}</span>
+</script>

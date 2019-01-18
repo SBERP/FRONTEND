@@ -1,0 +1,129 @@
+<h3>
+	
+   <small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+   Inventory >>
+   Barcode Print</small>
+</h3>
+<div data-ng-controller="InvBarcodePrintController as table" class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true,'time-out': 10000}"></toaster-container>
+	
+	<div class="panel panel-default">
+		<div class="panel-body">
+		
+			<div class="col-md-8">
+				<label class="col-sm-2 control-label"> Company </label>
+				<div class="col-sm-10">
+					<select chosen=""  ng-model="stateCheck" ng-options="s.companyName for s in table.states track by s.companyId" class="form-control chosen-select hightlight-company" >
+					<option value=""> All </option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="col-md-1 myPaddingTop">
+				<div class="col-sm-12">
+					<button type="button" class="mb-sm btn btn-primary pull-right"  ng-click="showProduct()"  data-ng-class="app.theme.brand">Go</button>
+				</div>
+			</div>
+			
+			<div class="col-sm-3">
+			</div>
+			
+		</div>
+	</div>
+
+	
+   <div class="panel panel-default">
+      <div class="panel-heading" data-ng-class="app.theme.brand">
+         <!--button data-ng-click="table.tableParams.sorting({})" class="pull-right btn btn-default btn-sm">Clear sorting</button-->
+         <div class="panel-title" > All Product   </div>
+		 
+      </div>
+	   <div class="table-responsive">
+		  <table data-ng-table="table.tableParams"  class="table table-bordered table-striped">
+			<thead>
+				 <th check-all="check-all">
+				   <div data-toggle="tooltip" data-title="Check All" class="checkbox c-checkbox">
+					  <label>
+						 <input type="checkbox" ng-model="parentCheckBox" ng-change="changeAllBox(parentCheckBox)" />
+						 <span class="fa fa-check"></span>
+					  </label>
+				   </div>
+				</th>
+				
+				<th  sortable="'productCategoryName'"  >Brand</th>
+				<th>Category</th>
+				<th>Product Name</th>
+				<th ng-if="enableDisableColor">Color</th>
+				<th ng-if="enableDisableSize">Size</th>
+				<th  style="width:3%;" ng-if="selectedBoxArray.length <= 0 && barcodeFlag!=1" >Quantity</th>
+				<th   ng-if="selectedBoxArray.length <= 0 && barcodeFlag!=1" >Print</th>
+				<th style="width:10%" ng-if="selectedBoxArray.length > 0 || barcodeFlag==1" ng-init="barcodePrintData.multiQuantity = 0" >
+					
+						<input id="input-id-1"  name="quantity" ng-model="barcodePrintData.multiQuantity"  type="text" placeholder="Quantity" class="form-control" ng-pattern="/^[0-9]*$/"    min="1"  ng-disabled="hideQtyArray.length > 0" only-number /> 
+					
+						
+					
+				</th>
+				<th  ng-if="selectedBoxArray.length > 0 || barcodeFlag==1" >
+				
+				<i  title="Print All Barcode" ng-click="multipleBarcodePrint()"  class="fa fa-print myCursorPointer" style="font-size:17px;"> </i> 
+				</th>
+			
+			</thead>
+			  
+			 <tbody>
+				<tr>
+					<td>
+					</td>
+					<td>
+						<input type="text" class="input-filter form-control" ng-model="query.productCategoryName"  />
+					</td>
+					<td>
+						<input type="text" class="input-filter form-control" ng-model="query.productGroupName"  />
+					</td>
+					<td>
+						<input type="text" class="input-filter form-control" ng-model="query.productName"  />
+					</td>
+					<td ng-if="enableDisableColor">
+						<input type="text" class="input-filter form-control" ng-model="query.color"  />
+					</td>
+					<td ng-if="enableDisableSize">
+						<input type="text" class="input-filter form-control" ng-model="query.size"  />
+					</td>
+					<td colspan="2">
+					</td>
+				</tr>
+				<tr data-ng-repeat="user in ($parent.filteredItems = $data) track by user.productId">
+				<!--tr data-ng-repeat="user in $data" -->
+					<td>
+					   <div class="checkbox c-checkbox">
+						  <label>
+							 <input type="checkbox" ng-model="user.selected" ng-change="changeBox(user.selected,user)" />
+							 <span class="fa fa-check"></span>
+						  </label>
+					   </div>
+					</td>
+					<td  sortable="'productCategoryName'" ng-bind="::user.productCategory.productCategoryName" ></td>
+					<td   sortable="'productGroupName'"  ng-bind="::user.productGroup.productGroupName"></td>
+					<td   sortable="'productName'"  ng-bind="::user.productName"></td>
+				   
+					<td  ng-if="enableDisableColor" filter="{ 'color': 'text' }" ng-bind="::user.color"></td>
+					<td  ng-if="enableDisableSize"  filter="{ 'size': 'text' }" ng-bind="::user.size"></td>
+					<td  ng-init="user.barcodeQuantity=0"> <input id="input-id-1"  name="quantity" ng-model="user.barcodeQuantity" type="text" placeholder="Quantity" class="form-control input-sm" ng-pattern="/^[0-9]*$/"  ng-disabled="barcodePrintData.multiQuantity>0" ng-change="hideMiltiQuantity(user.barcodeQuantity,user.productId)"  min="1" only-number /> </td>
+			
+				   <td  style="width:10%"> 
+						<center>
+							<!--i ui-sref="" title="Barcode" ng-click="barcodePopup('lg',user.productId,user.productName,user.color,user.size)" class="fa fa-barcode" style="font-size:17px;"> </i--> 
+							<i  title="Barcode" ng-click="singleBarcodePrint(user.barcodeQuantity,user)"  ng-if="user.barcodeQuantity>0" class="fa fa-print myCursorPointer" style="font-size:17px;"> </i> 
+							&nbsp;
+							<i  title="Edit" ng-click="editProduct(user)" class="fa fa-edit myCursorPointer" style="font-size:17px;color:#10709f"> </i> 
+						</center>
+					</td>
+				</tr>
+			 </tbody>
+		  </table>
+		</div>
+	   <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
+   </div>
+    
+</div>

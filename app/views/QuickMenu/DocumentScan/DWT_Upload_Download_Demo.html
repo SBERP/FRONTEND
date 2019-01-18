@@ -1,0 +1,40 @@
+<style>
+.cropArea {
+  background: #E4E4E4;
+  overflow: hidden;
+  width:250px;
+  height:320px;
+}
+canvas{
+margin-top: 0px !important;
+margin-left: 0px !important;
+}
+</style>
+<div class="modal-header">
+	<button type="button" data-dismiss="modal" data-ng-click="closeButton()" aria-hidden="true" class="close pull-right">×</button>  
+		  <h4 id="myModalLabel" class="modal-title">Crop Scan Document</h4>
+			<center>
+			<!--button type="button" class="mr mb-sm btn btn-primary btn-sm"  ng-click="DWT_AcquireImage();" > Scan </button>
+			<button type="button" class="mr mb-sm btn btn-primary btn-sm"  ng-click="ShowImageEditor();" > Edit </button-->
+			<button type="button" class="mr mb-sm btn btn-success btn-sm"  ng-click="doneButton();" > Done </button>
+			<!--button type="button" class="mr mb-sm btn btn-danger btn-sm"  ng-click="ClearScanned();" > Clear All </button-->
+		 </center>
+	</div>
+	
+	<div class="modal-body my-model-body"  >
+		<table >
+			<td>
+				<div class="cropArea">
+				  <ui-cropper image="myImage" area-type="rectangle" aspect-ratio="0" result-image="myCroppedImage" result-image-size="800" ></ui-cropper>
+				</div>
+				</td>
+			<td>
+				<div>Cropped Image:</div>
+				<div><img ng-src="{{myCroppedImage}}" />
+				</div>
+			</td>
+		</table>
+	</div>
+<!--script src="app/views/QuickMenu/DocumentScan/Scripts/script.js"></script-->
+
+

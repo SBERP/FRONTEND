@@ -1,0 +1,161 @@
+<style>
+.chosen-container .chosen-results {
+    max-height:130px;
+}
+</style>
+<h3>
+   <small>
+   <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+   Inventory >> 
+   Generate Stock Register</small>
+</h3>
+<!-- START panel-->
+
+<div data-ng-controller="AddInvStockController as form" class="container-fluid panel-body">
+ <toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+	
+   <div class="panel panel-default">
+      <!--h4 class="panel-heading myFormHeading">Search</h4-->
+	  
+	    <div class="panel-heading" data-ng-class="app.theme.brand">
+			<div class="panel-title" id="allPro">Search</div>
+		</div>
+		 
+      <div class="panel-body">
+         <form method="get" action="/" novalidate="" class="form-horizontal">
+			<div class="col-md-12">
+			
+				<div class="col-sm-12">
+					<div class="col-sm-6">
+						<fieldset >
+						   <div class="form-group">
+							  <label class="col-sm-3 control-label">Start Date</label>
+							  <div class="col-sm-9">
+								 <p class="input-group">
+									<input type="text" datepicker-popup="{{form.format}}" ng-change="form.check()" data-ng-model="form.dt1" is-open="form.openedStart" min-date="form.minStart" max-date="false" datepicker-options="form.dateOptions" date-disabled="form.disabled(form.date, form.mode)" close-text="Close"
+									class="form-control" tabindex="2" auto-focus readonly />
+									<span class="input-group-btn">
+									   <button type="button" tabindex="2" data-ng-click="form.openStart($event)" class="btn btn-default" >
+										  <em class="fa fa-calendar"></em>
+									   </button>
+									</span>
+								 </p>
+							  </div>
+							  
+						   </div>
+						</fieldset>
+					</div>
+					<div class="col-sm-6">
+						<fieldset >
+							 <div class="form-group">
+							<label class="col-sm-3 control-label">End Date</label>
+								  <div class="col-sm-9">
+									 <p class="input-group">
+										<input type="text" datepicker-popup="{{form.format}}" data-ng-model="form.dt2" is-open="form.openedEnd" min-date="form.dt1" max-date="false" datepicker-options="form.dateOptions" date-disabled="form.disabled(form.date, form.mode)" close-text="Close"
+										class="form-control" tabindex="2" readonly />
+										<span class="input-group-btn">
+										   <button type="button" tabindex="2" data-ng-click="form.openEnd($event)" class="btn btn-default">
+											  <em class="fa fa-calendar"></em>
+										   </button>
+										</span>
+									 </p>
+								  </div>
+							</div>
+						</fieldset>
+				
+					</div>
+				</div>
+				
+				<div class="col-sm-12">
+					<div class="col-sm-6">
+						<fieldset >
+						   <div class="form-group">
+							  <label class="col-sm-3 control-label">Company</label>
+							  <div class="col-sm-9">
+								 <select chosen="" ng-model="invStock.companyDropDown" tabindex="2" data-ng-options="s.companyName for s in form.companyDrop track by s.companyId" ng-change="changeStockData('companyId',invStock.companyDropDown.companyId)"  class="form-control chosen-select" ng-required="true" ></select>
+							  </div>
+						   </div>
+						</fieldset>
+					</div>
+					<div class="col-sm-6">
+						 <fieldset >
+						   <div class="form-group">
+							  <label class="col-sm-3 control-label">Brand</label>
+							  <div class="col-sm-9">
+								 <select chosen="" data-ng-model="invStock.category" tabindex="2" data-ng-options="s.productCategoryName for s in form.categoryDrop track by s.productCategoryId" ng-change="changeStockData('productCategoryId',invStock.category.productCategoryId)" class="form-control chosen-select" >
+									<option value=""> All </option>
+								 </select>
+							  </div>
+						   </div>
+						</fieldset>
+				
+					</div>
+				</div>
+				
+				<div class="col-sm-12">
+					<div class="col-sm-6">
+						<fieldset>
+						   <div class="form-group">
+							  <label class="col-sm-3 control-label">Category</label>
+							  <div class="col-sm-9">
+								<select chosen="" data-ng-model="invStock.group" data-ng-options="s.productGroupName for s in form.groupDrop track by s.productGroupId" ng-change="changeStockData('productGroupId',invStock.group.productGroupId)" class="form-control chosen-select" size='5' tabindex="2" >
+									<option value=""> All </option>
+								</select>
+							  </div>
+						   </div>
+						</fieldset>	
+						
+					</div>
+					<div class="col-sm-6">
+						
+						<fieldset >
+						   <div class="form-group">
+							  <label class="col-sm-3 control-label">Product</label>
+							  <div class="col-sm-9">
+								 <select chosen="" ng-model="invStock.productDropDown" data-ng-options="s as s.productName+' ('+s.color+' | '+s.size+')' for s in form.productDrop track by s.productId"   class="form-control chosen-select" tabindex="2" ></select>
+							  </div>
+						   </div>
+						</fieldset>
+				
+					</div>
+				</div>
+				
+				<div class="col-sm-12">
+				
+					<div class="col-sm-6">
+						<fieldset >
+						   <div class="form-group">
+							  <label class="col-sm-3 control-label"></label>
+							  <div class="col-sm-9">
+								 
+							  </div>
+						   </div>
+						</fieldset>
+					</div>
+					<div class="col-sm-6">
+						<fieldset>
+						   <div class="form-group">
+							  <label class="col-sm-3 control-label"></label>
+							  <div class="col-sm-9">
+								  <!--button type="button" class="mr mb-sm btn btn-success pull-right" ui-sref="app.InvStock" >Generate</button-->
+								  <button type="button" class="mr mb-sm btn btn-success pull-right" ng-click="generate()" tabindex="3" ng-disabled="form.productDrop.length <= 0" >Generate</button>
+							  </div>
+						   </div>
+						</fieldset>	
+				
+					</div>
+				</div>
+				
+		</div>
+			
+			
+			 
+         </form>
+      </div>
+   </div>
+   
+   
+   
+   
+   <!-- END panel-->
+</div>

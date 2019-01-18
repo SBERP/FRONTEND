@@ -1,0 +1,123 @@
+<h3>
+   <small>
+   <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+   Accounting >>
+   Special Journal</small>
+</h3>
+<!-- START panel-->
+<div data-ng-controller="AccSpecialJrnlController as form" class="container-fluid">
+<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+	<form  action="#" name="formSpecialJrnl" class="form-validate form-horizontal">
+	<div class="panel panel-default">
+		 <!--h4 class="panel-heading"></h4-->
+		<div class="panel-body">
+			<div class="form-group">
+				<label class="col-sm-1 control-label"> *Company </label>
+					<div class="col-sm-4">
+						<select chosen="" data-ng-model="addAccJrnl.companyDropDown" data-ng-options="s.companyName for s in form.companyDrop track by s.companyId" ng-change="changeCompany('companyId',addAccJrnl.companyDropDown)" ng-disabled="disableCompany" class="form-control chosen-select" ng-required="true"></select>
+					</div>
+				<label class="col-sm-1 control-label"> *Date </label>
+				<div class="col-sm-4">
+					 <p class="input-group"style="float:right">
+						<input type="text" datepicker-popup="{{form.format}}"  data-ng-model="form.dt1" is-open="form.openedStart" min-date="form.minStart" max-date="false"  datepicker-options="form.dateOptions" date-disabled="form.disabled(form.date, form.mode)" close-text="Close"
+						class="form-control" readonly/>
+						<span class="input-group-btn">
+						   <button type="button" data-ng-click="form.openStart($event)" class="btn btn-default" auto-focus >
+							  <em class="fa fa-calendar"></em>
+						   </button>
+						</span>
+					 </p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="panel panel-default">
+		 <!--h4 class="panel-heading"></h4-->
+		<div class="panel-body">
+			
+				<fieldset class="my-fieldset-paddingBottom">
+				   <div class="form-group" >
+					  <label for="input-id-1" class="col-sm-1 control-label">No#</label>
+					  <div class="col-sm-4">
+						 <p class="form-control-static">{{addAccJrnl.jfid}}</p>
+					  </div>
+				   </div>
+				</fieldset>
+			
+		</div>
+	</div>
+     
+	<div class="col-md-12" style="padding-left:0px;padding-right:0px"> 
+	<div class="panel panel-default">
+			<table  class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<th style="width:10%">Dr/Cr</th>
+						<th  style="width:50%">Particulars</th>
+						<th style="width:15%">Debit</th>
+						<th style="width:15%">Credit</th>
+						<th style="width:10%">Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr id="addAfter" ng-repeat="item in form.AccSpecialJrnlTable" data-ng-class="app.tableAnimation">
+						<td>
+							<select  ng-model="item.amountType" class="form-control" ng-change="changeSpecialJrnlTable()">
+								<option value="debit" selected="selected">Dr</option>
+								<option value="credit" ng-if="$index!=0" >Cr</option>
+							</select>
+						</td>
+						<td>
+							<div class="input-group" >
+								<input typeahead="s.ledgerName for s in form.clientNameDrop | filter:$viewValue | orderBy:'ledgerName' | limitTo:20" ng-model="item.ledgerName" typeahead-on-select="settabledata($item,$index)" type="text" class="form-control" placeholder="*Enter Name(JS)" typeahead-editable="false" ng-required="true" />
+								<span class="input-group-btn"  >
+								   <button type="button" class="btn btn-default" data-ng-click="openLedger('lg',$index)"><i  class="fa fa-plus" style="font-size:15px;color:#17A1E5;"></i></button>
+								</span>
+							</div>
+							<h5 >Current Balance {{form.multiCurrentBalance[$index]['currentBalance']}} {{form.multiCurrentBalance[$index]['amountType']}}</h5>
+						</td>
+						<td>
+							<input id="input-id-1" type="text" ng-model="item.amount" ng-change="changeSpecialJrnlTable()" ng-if="item.amountType=='debit'"  class="form-control" ng-required="true" ng-pattern="/^[0-9 .]*$/" only-number />
+						</td>
+						<td>
+							<input id="input-id-1" type="text" ng-model="item.amount" ng-change="changeSpecialJrnlTable()" ng-if="item.amountType=='credit'"  class="form-control" ng-required="true" ng-pattern="/^[0-9 .]*$/" only-number />
+						</td>
+						<td style="">
+							<center>
+								<a href="#"  ng-click="addRow($index)" ng-if="$index!=0">
+									<i ui-sref="" title="Add" class="fa fa-plus" style="font-size:20px;" title="Add" ></i>
+								</a>
+								&nbsp;
+								<a class="text-danger" href="#" ng-click="removeRow($index)" ng-if="$index!=0&&$index!=1">
+									<i  ui-sref=""  class="fa fa-times" style="font-size:20px;" title="Delete" ></i>
+								</a>
+							</center>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>Total</td>
+						<td >
+							<span style="float:right">{{totalDebit  = ((form.AccSpecialJrnlTable | sumOfDebit:'amount') | setDecimal: noOfDecimalPoints) }}</span>
+						</td>
+						<td >
+							<span style="float:right">{{totalCredit = ((form.AccSpecialJrnlTable | sumOfCredit:'amount') | setDecimal: noOfDecimalPoints) }}</span>
+						</td>
+						<td ></td>
+					</tr>
+				</tbody>
+			</table>
+		
+	</div>
+	</div>
+	
+	<textarea  name="address" ng-model="remark" placeholder="Remark" class="form-control ng-pristine ng-valid ng-touched"></textarea>
+	<br />
+	<button type="button" class="mr mb-sm btn btn-danger pull-right" data-ng-click="cancel()" >Cancel</button>
+	<button type="button" class="mr mb-sm btn btn-success pull-right" ng-click="pop()" ng-disabled="formSpecialJrnl.$invalid" >
+		<span ng-if="!addAccJrnl.getSetJrnlId" > Insert </span> <span ng-if="addAccJrnl.getSetJrnlId" > Update </span>
+	</button>
+			
+    </form>
+   <!-- END panel-->
+</div>

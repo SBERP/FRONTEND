@@ -1,0 +1,34 @@
+<h3>
+   <small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+   Reports >>
+    <a ui-sref="app.ReportPolice" >View</a> >>
+   Police Reports</small>
+</h3>
+<div  class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true,'time-out': 10000}"></toaster-container>
+	
+   <div class="panel panel-default">
+      <div class="panel-heading myHeading" >
+         <!--button data-ng-click="table.tableParams.sorting({})" class="pull-right btn btn-default btn-sm">Clear sorting</button-->
+		<a ng-click="generatePdf('pdf')" class="pull-right btn btn-sm btn-primary" ng-if="exportPdfHidden" data-ng-class="app.theme.brand" >Export to Pdf</a>
+		  <div class="panel-title" id="allPro"> <h5>Police Reports of <b>{{displayCompany}}</b> Company Between {{::displayfromDate}} to {{::displaytoDate}} </h5> </div>
+      </div>
+	   <div class="table-responsive">
+		  <table data-ng-table="table.tableParams" show-filter="false" class="table table-bordered table-striped">
+		  <!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
+			 <tbody>
+				<tr data-ng-repeat="user in $data">
+					<td data-title="'#'"  style="text-align:center">{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td>
+					<td data-title="'Date'" sortable="'date'" filter="{ 'entryDate': 'text' }" >{{dateConvert(user.entryDate) | date:dateFormat}}</td>
+					<td data-title="'Invoice#'"  >{{user.invoiceNumber}}</td>
+					<td data-title="'Client Name'"  filter="{ 'clientName': 'text' }" >{{user.client.clientName}}</td>
+					<td data-title="'Document'" >
+						<i ui-sref=""  class="icon-paper-clip" style="font-size:17px;color:#10709f" ng-if="user.imageIcon" ng-click="openImageGallery('lg',user.saleId)"> </i>
+					</td>
+				</tr>
+			 </tbody>
+		  </table>
+		 </div>
+	   <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
+   </div>
+</div>

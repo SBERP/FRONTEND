@@ -1,0 +1,145 @@
+<h3>
+	<small>
+   <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+    Client  >>
+   <a ui-sref="app.CrmClientFilterView"> Filter </a> >>
+   <a ui-sref="app.CrmClientFilterData"> Filter Data </a> >>
+	History
+   </small>
+</h3>
+<div   class="container-fluid" >
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+	<div id="panelDemo14" class="panel panel-default">
+         <div class="panel-heading" data-ng-class="app.theme.brand" >
+			<div class="panel-title" id="allPro">
+				<span ui-sref="app.CrmClientFilterData" class="btn-label" style="display:initial"><i class="fa fa-arrow-left"  ></i></span>
+				<b>{{ClientData.clientName}} History</b>  <!--span>Between {{::displayfromDate}} to {{::displaytoDate}}</span--> 
+			</div>
+		 </div>
+         <div class="panel-body">
+            <tabset>
+				<tab heading="Client Details" active="activeDetail"  >
+					<form  action="#"  class="form-horizontal">
+						<div class="row"> 
+							<div class="col-md-12"> 
+							
+								<div class="col-md-6"> 
+									 <fieldset class="my-fieldset-paddingBottom">
+										<div class="form-group">
+											<label class="col-sm-3 control-label">Client Name</label>
+											<div class="col-sm-9">
+												<p class="form-control-static myFontLarger">{{ClientData.clientName}}</p>
+											</div>
+										</div>
+									</fieldset>
+									<fieldset class="my-fieldset-paddingBottom">
+										<div class="form-group">
+											<label class="col-sm-3 control-label">Email ID</label>
+											<div class="col-sm-9">
+												<p class="form-control-static myFontLarger">{{ClientData.emailId}}</p>
+											</div>
+										</div>
+									</fieldset>
+									<fieldset class="my-fieldset-paddingBottom">
+										<div class="form-group">
+											<label class="col-sm-3 control-label">State</label>
+											<div class="col-sm-9">
+												<p class="form-control-static myFontLarger">{{ClientData.state.stateName}}</p>
+											</div>
+										</div>
+									</fieldset>
+								</div>
+							
+								<div class="col-md-6"> 
+									<fieldset class="my-fieldset-paddingBottom">
+										<div class="form-group">
+											<label class="col-sm-3 control-label">Mobile#</label>
+											<div class="col-sm-9">
+												<p class="form-control-static myFontLarger">{{ClientData.contactNo}}</p>
+											</div>
+										</div>
+									</fieldset>
+									<fieldset class="my-fieldset-paddingBottom">
+										<div class="form-group">
+											<label class="col-sm-3 control-label">Address</label>
+											<div class="col-sm-9">
+												<p class="form-control-static myFontLarger">{{ClientData.address1}}</p>
+											</div>
+										</div>
+									</fieldset>
+									<fieldset class="my-fieldset-paddingBottom">
+										<div class="form-group">
+											<label class="col-sm-3 control-label">City</label>
+											<div class="col-sm-9">
+												<p class="form-control-static myFontLarger">{{ClientData.city.cityName}}</p>
+											</div>
+										</div>
+									</fieldset>
+								</div>
+							</div>
+						</div>
+					</form>
+				</tab>
+			    <tab heading="Conversation" active="false"  >
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="panel panel-primary" ng-init="labelDisplay = true">
+								<div class="panel-heading" ng-dblClick="labelDisplay ? false:true;"><span ng-if="labelDisplay">Primary Panel</span></div>
+								<div class="panel-body">In ac leo dui, vel pellentesque mauris. In ac consectetur lectus. Maecenas suscipit sodales dui. Maecenas dolor ipsum, sodales 	non porttitor non, facilisis at eros.</div>
+							</div>
+						</div>
+						<div class="col-lg-12">
+							<div class="panel panel-primary">
+								<div class="panel-heading">Primary Panel</div>
+								<div class="panel-body">In ac leo dui, vel pellentesque mauris. In ac consectetur lectus. Maecenas suscipit sodales dui. Maecenas dolor ipsum, sodales 	non porttitor non, facilisis at eros.</div>
+							</div>
+						</div>
+						<div class="col-lg-12">
+							<div class="panel panel-primary">
+								<div class="panel-heading">Primary Panel</div>
+								<div class="panel-body">In ac leo dui, vel pellentesque mauris. In ac consectetur lectus. Maecenas suscipit sodales dui. Maecenas dolor ipsum, sodales 	non porttitor non, facilisis at eros.</div>
+							</div>
+						</div>
+					</div>
+				</tab>
+				<tab heading="History" active="false">
+				 
+					
+				</tab>
+				<tab heading="Email/SMS"  active="activeEmail"  >
+				
+					<!--div class="input-group form-group  pull-right" style="margin-top:5px"-->
+						<!--a ui-sref="app.CrmClientHistory.compose" class="btn btn-primary" data-ng-class="app.theme.brand" ng-click="openEMail('email')" >
+							<span>Mail</span>
+						</a-->
+						<div class="btn-switch mb mr btn-switch-default pull-right" ng-click="openEMail('sms');" >
+						   <input id="input-btn-switch-default-sms" type="checkbox" ng-checked="emailSMS == 'sms'" >
+						   <label  class="btn btn-default" data-ng-class="app.theme.brand" > 
+							  <em class="fa fa-check"></em>SMS</label>
+						</div>
+						
+						<div class="btn-switch mb mr btn-switch-default pull-right" ng-click="openEMail('email')">
+						   <input id="input-btn-switch-default-email" type="checkbox" ng-checked="emailSMS == 'email'">
+						   <label  class="btn btn-default" data-ng-class="app.theme.brand" >
+							  <em class="fa fa-check"></em>Mail</label>
+						</div>
+						<!--a ui-sref="app.CrmClientHistory.sms" class="btn btn-primary" data-ng-class="app.theme.brand" ng-click="openEMail('sms')">
+							<span>SMS</span>
+						</a>
+					</div-->
+					<div ui-view="container" class="data-ng-fadeInUp"></div>
+					
+				</tab>
+            </tabset>
+         </div>
+    </div>
+   
+</div>
+
+<script type="text/ng-template" id="errorRequired">
+	<span class="text-danger" ng-message="required">{{errorMessage.require}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternThisSpecial">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacter}}</span>
+</script>

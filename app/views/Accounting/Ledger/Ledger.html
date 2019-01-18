@@ -1,0 +1,343 @@
+<h3>
+   <small>
+   <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+   Accounting >>
+   Ledger </small>
+</h3>
+<!-- START panel-->
+<div data-ng-controller="AccLedgerController as form" class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+<div class="col-md-9" style="padding-left:0px">
+	<div class="panel panel-default" ng-show="alertData">
+		<div class="panel-body">
+			<!--div class="alert alert-info" style="background-color:#17A1E5 !important;" data-ng-class="app.theme.brand" -->
+			<div class="alert alert-info"  data-ng-class="app.theme.brand" >
+				<i class="fa fa-exclamation-triangle"></i> &nbsp; <b>Select Ledger</b>
+			</div>
+			<!-- Not Visible -->
+			<div class="alert alert-info" style="visibility:hidden">
+				Select Ledger
+			</div>
+			<div class="alert alert-info" style="visibility:hidden">
+				Select Ledger
+			</div>
+			<!-- END -->
+		</div>
+	</div>
+	
+   <div class="panel panel-default" ng-show="trueData">
+   <form action="#" name="formLedger" class="form-validate form-horizontal" >
+   	<div class="panel-heading" data-ng-class="app.theme.brand">
+			<div class="panel-title">
+				Ledger Form
+			</div>
+		  </div>
+      <div class="panel-body">
+				   <div class="form-group">
+					  <label class="col-sm-1 control-label">*Company</label>
+					  <div class="col-sm-5">
+						 <select chosen="" ng-model="ledgerForm.companyDropDown" tabindex="2" data-ng-options="s.companyName for s in form.companyDrop track by s.companyId" ng-change="changeLedgerData('companyId',ledgerForm.companyDropDown.companyId)" ng-disabled="form.disableCompanyValue"  class="form-control chosen-select" ng-required="true" ></select>
+					  </div>
+				   
+					  <label class="col-sm-1 control-label">*Name</label>
+					  <div class="col-sm-5">
+						 <input  tabindex="2" name="ledgerName" ng-model="ledgerForm.ledgerName" ng-change="changeLedgerData('ledgerName',ledgerForm.ledgerName)" ng-disabled="form.disableValue" type="text" placeholder="Ledger Name" class="form-control" ng-required="true" ng-pattern="/^[a-zA-Z0-9 &_`#().\'-\/]*$/" ng-maxlength="50" ng-minlength="1" auto-focus/>
+						<span ng-messages="formLedger.ledgerName.$error" ng-if="formLedger.ledgerName.$dirty || formLedger.ledgerName.$touched"  role="alert">
+							<span ng-messages-include="errorRequired"></span>
+							<span ng-messages-include="errorLonglength"></span>
+							<span ng-messages-include="errorPatternThisSpecial"></span>
+						</span>
+						
+					  </div>
+				   </div>
+		
+				   <div class="form-group">
+					  <label  class="col-sm-1 control-label">EmailID</label>
+						<div class="col-sm-5">
+							<div class="input-group m-b">
+								<span class="input-group-addon">@</span>
+								<input type="email" tabindex="2" name="emailId" ng-model="ledgerForm.emailId" ng-change="changeLedgerData('emailId',ledgerForm.emailId)" ng-disabled="form.disableValue" placeholder="Email ID" class="form-control"  ng-pattern="/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$/" />
+							</div>
+							<span ng-messages="formLedger.emailId.$error" ng-if="formLedger.emailId.$dirty || formLedger.emailId.$touched"  role="alert">
+								<span ng-messages-include="errorRequired"></span>
+								<span ng-messages-include="errorEmail"></span>
+							</span>
+						</div>
+				   
+					  <label  class="col-sm-1 control-label">Alias</label>
+					  <div class="col-sm-5">
+						 <input ng-model="ledgerForm.alias" tabindex="2" name="alias" ng-change="changeLedgerData('alias',ledgerForm.alias)"  type="text" ng-disabled="form.disableValue" placeholder="Alias" class="form-control"  ng-pattern="/^[a-zA-Z &_`#().\'-]*$/" ng-maxlength="35" ng-minlength="1" />
+						 
+						 <span ng-messages="formLedger.alias.$error" ng-if="formLedger.alias.$dirty || formLedger.alias.$touched"  role="alert">
+							<span ng-messages-include="errorRequired"></span>
+							<span ng-messages-include="errorLonglength"></span>
+							<span ng-messages-include="errorPatternThisSpecial"></span>
+						</span>
+							
+					  </div>
+				 	</div>
+
+				 	<div class="form-group">
+					  <label  class="col-sm-2 control-label">*Opening B/L</label>
+					  <div class="col-sm-2">
+							<select chosen data-ng-model="ledgerForm.amountType" name="openBal" tabindex="2" data-ng-options="s for s in form.amountTypeDrop" ng-change="changeLedgerData('amountType',ledgerForm.amountType)" ng-disabled="form.disableValue"  class="form-control chosen-select" ng-required="true" >
+								<option value=""></option>
+							</select>
+							
+							<span ng-messages="formLedger.openBal.$error" ng-if="formLedger.openBal.$dirty || formLedger.openBal.$touched"  role="alert">
+								<span ng-messages-include="errorRequired"></span>
+							</span>
+						
+						</div>
+						<div class="col-sm-2">
+							 <input ng-model="ledgerForm.openingBal" name="amount" tabindex="2" ng-change="changeLedgerData('amount',ledgerForm.openingBal)" ng-disabled="form.disableValue"  ng-disabled="form.disableValue" type="text" placeholder="Opening B/L" class="form-control"  ng-required="true" ng-required="true" ng-pattern="/^[0-9]+$/" ng-maxlength="10" only-number />
+							 
+							<span ng-messages="formLedger.amount.$error" ng-if="formLedger.amount.$dirty || formLedger.amount.$touched"  role="alert">
+								<span ng-messages-include="errorRequired"></span>
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorPatternNumber"></span>
+							</span>
+						
+					  </div>
+				   
+					  <label  class="col-sm-2 control-label">Credit Limit</label>
+						<div class="col-sm-4">
+							 <input ng-model="ledgerForm.outstandingLimit" name="outstandingLimit" tabindex="2" ng-change="changeLedgerData('outstandingLimit',ledgerForm.outstandingLimit)"  ng-disabled="form.disableValue" type="text" placeholder="Credit Limit" class="form-control" ng-pattern="/^[0-9 .]+$/" ng-maxlength="10" only-number />
+							 
+							<span ng-messages="formLedger.outstandingLimit.$error" ng-if="formLedger.outstandingLimit.$dirty || formLedger.outstandingLimit.$touched"  role="alert">
+								<span ng-messages-include="errorRequired"></span>
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorPatternNumber"></span>
+							</span>
+						
+					  </div>
+				    </div>
+		
+     
+	   <h4 class="panel-heading bg-default myHeading">Additional Details</h4>
+      
+			   <div class="form-group">
+				  <label  class="col-sm-1 control-label">*Under</label>
+				  <div class="col-sm-4">
+				  
+				  <script type="text/ng-template" id="underCustomTemplate.html">
+					<a><span bind-html-unsafe="match.label | typeaheadHighlight:query"></span> ( {{match.model.underWhat}} ) </a>
+				</script>
+				
+					 <input ng-model="ledgerForm.under" name="under" tabindex="2"  typeahead="state.ledgerGroupName for state in form.underWhat | filter:$viewValue | limitTo:10" typeahead-on-select="setPcode('ledgerGroupId',$item)" ng-model="selected" typeahead-editable="false" typeahead-template-url="underCustomTemplate.html" ng-disabled="form.disableValue"  type="text" placeholder="Under" class="form-control autocomplete" ng-required="true"  />
+					 
+					<span ng-messages="formLedger.under.$error" ng-if="formLedger.under.$dirty || formLedger.under.$touched"  role="alert">
+						<span ng-messages-include="errorRequired"></span>
+					</span>
+							
+				  </div>
+			  
+				  <label class="col-sm-2 control-label">Inventory Affected</label>
+				  <div class="col-sm-2">
+					 <select chosen data-ng-model="ledgerForm.invAffect" tabindex="2" data-ng-options="s for s in form.invAffectDrop" ng-change="changeLedgerData('inventoryAffected',ledgerForm.invAffect)" ng-disabled="form.disableValue"  class="form-control chosen-select" >
+						 <option value=""></option>
+					 </select>
+				  </div>
+			 
+					<label class="col-sm-1 control-label">Dealer?</label>
+					<div class="col-sm-2">
+						<div class="radio-inline c-radio">
+								<label>
+								   <input ng-model="ledgerForm.isDealer" tabindex="2" id="inlineradio1" ng-change="changeLedgerData('isDealer',ledgerForm.isDealer)" type="radio" name="i-radio" value="y" />
+								   <span class="fa fa-circle" ></span>Yes</label>
+							 </div>
+							 <div class="radio-inline c-radio">
+								<label>
+								   <input ng-model="ledgerForm.isDealer" tabindex="2" id="inlineradio2" ng-change="changeLedgerData('isDealer',ledgerForm.isDealer)" type="radio" name="i-radio" value="n" ng-checked="true" />
+								   <span class="fa fa-circle"></span>No</label>
+							 </div>
+					</div>
+				</div>
+	  
+	  <h4 class="panel-heading bg-default myHeading">Address/Contact</h4>
+			   <div class="form-group">
+				  <label class="col-sm-1 control-label">Contact#</label>
+				  <div class="col-sm-3">
+					 <input  tabindex="2" name="contactNo" ng-model="ledgerForm.contact" ng-change="changeLedgerData('contactNo',ledgerForm.contact)" ng-disabled="form.disableValue" type="text" placeholder="Contact Number" class="form-control"  ng-pattern="/^[0-9]+$/" ng-maxlength="12" ng-minlength="10" only-number />
+					 
+					<span ng-messages="formLedger.contactNo.$error" ng-if="formLedger.contactNo.$dirty || formLedger.contactNo.$touched"  role="alert">
+						<span ng-messages-include="errorRequired"></span>
+						<span ng-messages-include="errorLonglength"></span>
+						<span ng-messages-include="errorShortlength"></span>
+						<span ng-messages-include="errorPatternNumber"></span>
+					</span>
+						
+				  </div>
+
+					<label  class="col-sm-2 control-label">First Address</label>
+					<div class="col-sm-6">
+						<textarea ng-model="ledgerForm.address1" name="firstAddress" tabindex="2" ng-change="changeLedgerData('address1',ledgerForm.address1)" ng-disabled="form.disableValue"  name="address"  placeholder="Your First address"  class="form-control ng-pristine ng-valid ng-touched"   ng-maxlength="200" ng-minlength="1" ></textarea>
+						<!-- ng-pattern="/^[a-zA-Z0-9 *,-\/_`#\[\]().\']+$/" -->
+						<span ng-messages="formLedger.firstAddress.$error" ng-if="formLedger.firstAddress.$dirty || formLedger.firstAddress.$touched"  role="alert">
+							<span ng-messages-include="errorRequired"></span>
+							<span ng-messages-include="errorLonglength"></span>
+							<span ng-messages-include="errorPatternThisSpecial"></span>
+						</span>
+						
+					</div>
+				</div>
+			
+				<div class="form-group">
+					<label  class="col-sm-1 control-label">Address2</label>
+					<div class="col-sm-3">
+						<textarea ng-model="ledgerForm.address2" name="secondAddress" tabindex="2" ng-change="changeLedgerData('address2',ledgerForm.address2)" ng-disabled="form.disableValue"  name="address" placeholder="Your Second address" class="form-control ng-pristine ng-valid ng-touched"  ng-maxlength="200" ng-minlength="1" ></textarea>
+						<!-- ng-pattern="/^[a-zA-Z0-9 *,-\/_`#\[\]().\']+$/" -->
+						<span ng-messages="formLedger.secondAddress.$error" ng-if="formLedger.secondAddress.$dirty || formLedger.secondAddress.$touched"  role="alert">
+							<span ng-messages-include="errorRequired"></span>
+							<span ng-messages-include="errorLonglength"></span>
+							<span ng-messages-include="errorPatternThisSpecial"></span>
+						</span>
+						
+					</div>
+				
+                  <label class="col-sm-1 control-label">*State</label>
+                  <div class="col-sm-3">
+                     <select chosen="" ng-model="ledgerForm.stateDropDown" tabindex="2" data-ng-options="s.stateName for s in form.statesDrop track by s.stateAbb" ng-change="ChangeState('stateAbb',ledgerForm.stateDropDown.stateAbb)" ng-disabled="form.disableValue"  class="form-control chosen-select" ng-required="true" ></select>
+                  </div>
+              
+                  <label class="col-sm-1 control-label">*City</label>
+                  <div class="col-sm-3">
+                     <select chosen="" ng-model="ledgerForm.cityDrop" tabindex="2" ng-change="changeLedgerData('cityId',ledgerForm.cityDrop.cityId)" data-ng-options="s.cityName for s in form.cityDrop track by s.cityId" ng-disabled="form.disableValue" class="form-control chosen-select" ng-required="true" ></select>
+                  </div>
+               </div>
+	 
+	  <h4 class="panel-heading bg-default myHeading">Taxation Details</h4>
+               <div class="form-group">
+                  <label  class="col-sm-1 control-label">TIN</label>
+                  <div class="col-sm-3">
+                     <input  ng-model="ledgerForm.tin" name="tin"  tabindex="2" ng-change="changeLedgerData('tin',ledgerForm.tin)" ng-disabled="form.disableValue"  type="text" placeholder="TIN Number" class="form-control" ng-pattern="/^([a-zA-Z0-9])+$/" ng-minlength="11" ng-maxlength="11"  />
+					 
+					 <span ng-messages="formLedger.tin.$error" ng-if="formLedger.tin.$dirty || formLedger.tin.$touched" role="alert">
+						<span ng-messages-include="errorPatternThisSpecial"></span>
+						<span ng-messages-include="errorLonglength"></span>
+						<span ng-messages-include="errorShortlength"></span>
+					</span>
+						
+                  </div>
+				  
+				   <label  class="col-sm-1 control-label">PAN</label>
+                  <div class="col-sm-3">
+                     <input ng-model="ledgerForm.pan" name="pan" tabindex="2" ng-change="changeLedgerData('pan',ledgerForm.pan)"  masked="" type="text" ng-disabled="form.disableValue" placeholder="PAN Number" class="form-control"  ng-pattern="/^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/" ng-minlength="10" ng-maxlength="10" />
+					 
+					 <span ng-messages="formLedger.pan.$error" ng-if="formLedger.pan.$dirty || formLedger.pan.$touched" role="alert">
+						<span ng-messages-include="errorPatternThisSpecial"></span>
+						<span ng-messages-include="errorLonglength"></span>
+						<span ng-messages-include="errorShortlength"></span>
+					</span>
+						
+                  </div>
+
+                    <label  class="col-sm-1 control-label">GST</label>
+                  <div class="col-sm-3">
+                     <input ng-model="ledgerForm.cgst" tabindex="2" ng-change="changeLedgerData('cgst',ledgerForm.cgst)"  masked="" type="text" ng-disabled="form.disableValue" placeholder="GST Number" class="form-control"   />
+                  </div>
+
+               </div>
+	  <h4 class="panel-heading bg-default myHeading">Bank Details</h4>
+           <div class="form-group">
+              <label  class="col-sm-1 control-label">Bank</label>
+              <div class="col-sm-5">
+                 <select chosen="" id="selectId_chzn" ng-model="ledgerForm.bankName" ng-options="s.bankName for s in form.bankDrop track by s.bankId" class="form-control input-sm chosen-select" size="5" ng-change="changeBank('bankId',ledgerForm.bankName.bankId)" ng-disabled="form.disableValue" tabindex="2" ></select>
+              </div>
+			  
+			   <label  class="col-sm-1 control-label">Branch</label>
+              <div class="col-sm-5">
+                  <select chosen="" ng-model="ledgerForm.bankBranch" ng-options="s.branchName for s in form.bankBranchDrop track by s.bankDtlId" class="form-control input-sm chosen-select" ng-change="changeBankBranch('bankDtlId',ledgerForm.bankBranch)" ng-disabled="form.disableValue" tabindex="2" ></select>
+              </div>
+            </div>
+            <div class="form-group">
+                <label  class="col-sm-1 control-label">IFSC</label>
+              <div class="col-sm-5">
+                 <input ng-model="ledgerForm.bankIfsc" tabindex="2"  masked="" type="text" ng-disabled="true" placeholder="IFSC Code" class="form-control"   />
+              </div>
+
+              <label  class="col-sm-1 control-label">MICR</label>
+              <div class="col-sm-5">
+                 <input ng-model="ledgerForm.bankMicr" tabindex="2" ng-change="changeLedgerData('micrCode',ledgerForm.bankMicr)"  masked="" type="text" ng-disabled="form.disableValue" placeholder="MICR Code" class="form-control"   />
+              </div>
+
+           	</div>
+				<button type="button" ng-disabled="form.disableValue" class="mr mb-sm btn btn-danger pull-right" tabindex="3" ng-click="showInput()" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id">Cancel</button>
+				<button type="button" ng-disabled="form.disableValue || formLedger.$invalid" class="mr mb-sm btn btn-success pull-right" tabindex="2" ng-click="addUpLedger()" >
+					<span ng-if="!ledgerEditId.id" > Insert </span> <span ng-if="ledgerEditId.id" > Update </span>
+				</button>
+        </div>
+	 </form>
+   </div>
+</div>
+
+<div class="col-md-3" style="padding-right:0px">
+   <div class="panel panel-default">
+    
+	   <div class="panel-heading myHeading" >
+			<div class="panel-title">
+				Ledger
+				 <button class="btn btn-labeled btn-primary pull-right btn-sm"  ng-click="showInput()" data-ng-class="app.theme.brand" >
+			<span class="btn-label"><i class="fa fa-plus"></i></span>
+			Add Ledger</button>
+			
+			</div>
+		 </div>
+	  <div class="form-group">
+		 <div class="col-sm-12">
+		 
+		   <div class="form-group">
+			 <select chosen="" ng-model="getLegderCompany.companyDropDown"  data-ng-options="s.companyName for s in form.companyDrop track by s.companyId" ng-change="changeCompanyToGetList(getLegderCompany.companyDropDown.companyId)"   class="form-control chosen-select hightlight-company" >
+			 
+			 </select>
+		   </div>
+			<div class="input-group m-b"> 
+				<input  ng-model="query" type="text" class="form-control" placeholder="Search" />
+				<span class="input-group-addon input-sm"><i class="fa fa-search" ></i></span>
+			</div>
+		 </div>
+	  </div>
+      <div class="panel-body" style="overflow-y: scroll !important;
+max-height: calc(100vh - 300px) !important;">
+		<ledgerlist ledgerdata="form.allLedgerData" querydata="query" viewledgerdetail="viewLedgerDetails(ledgerId)" viewdata="viewReadOlny(ledgerId)" editdata="editLedgerData(ledgerId)" viewLedgerData="viewLedgerDetails(ledgerId)"></ledgerlist>
+      </div>
+   </div>
+</div>
+</div>
+
+
+<script type="text/ng-template" id="errorRequired">
+	<span class="text-danger" ng-message="required">{{errorMessage.require}}</span>
+</script>
+
+<script type="text/ng-template" id="errorEmail">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.email}}</span>
+</script>
+
+<script type="text/ng-template" id="errorLonglength">
+	<span class="text-danger" ng-message="maxlength">{{errorMessage.longLength}}</span>
+</script>
+
+<script type="text/ng-template" id="errorShortlength">
+	<span class="text-danger" ng-message="minlength">{{errorMessage.shortLength}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternAlpha">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.Alphabets}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternNumber">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.Numbers}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternAlphaNumeric">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.AlphaNumeric}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternThisSpecial">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacter}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternThisSpecial&Number">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacterAndNumber}}</span>
+</script>

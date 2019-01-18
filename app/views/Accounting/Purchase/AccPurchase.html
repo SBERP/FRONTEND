@@ -1,0 +1,375 @@
+<h3>
+   <small>
+   <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+   Accounting >>
+   Purchase</small>
+</h3>
+<!-- START panel-->
+<!--div data-ng-controller="AccPurchaseController as form" class="container-fluid" -->
+<div class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true,'time-out': 10000}"></toaster-container>
+	<form  action="#" name="formPurchase" class="form-validate form-horizontal">
+	<div class="panel panel-default">
+		 <!--h4 class="panel-heading"></h4-->
+		<div class="panel-body">
+			<div class="form-group">
+				<label class="col-sm-1 control-label my-colMd-paddingLeftRight">*Company </label>
+					<div class="col-sm-2 my-colMd-paddingLeftRight">
+						<select chosen="" data-ng-model="accPurchase.companyDropDown" data-ng-options="s.companyName for s in form.companyDrop track by s.companyId" ng-change="changeCompany('companyId',accPurchase.companyDropDown)" ng-disabled="disableCompany" class="form-control chosen-select" ng-required="true"></select>
+					</div>
+				<label class="col-sm-1 control-label my-colMd-paddingLeftRight">*Date </label>
+					<div class="col-sm-2 my-colMd-paddingLeftRight">
+						 <p class="input-group"style="float:right">
+							<input type="text" datepicker-popup="{{form.format}}"  data-ng-model="form.dt1" is-open="form.openedStart"  max-date="false" ng-change="changePurchaseDate('entryDate')" datepicker-options="form.dateOptions" date-disabled="form.disabled(form.date, form.mode)" close-text="Close"
+							class="form-control my-textbox-paddingLeftRight" ng-required="true"  readonly/>
+							<span class="input-group-btn">
+							   <button type="button" data-ng-click="form.openStart($event)" class="btn btn-default">
+								  <em class="fa fa-calendar"></em>
+							   </button>
+							</span>
+						 </p>
+					</div>
+				<label class="col-sm-1 control-label my-colMd-paddingLeftRight">*Bill#</label>
+					  <div class="col-sm-2 my-colMd-paddingLeftRight">
+						 <input id="input-id-1" name="billNo" ng-model="accPurchase.billNo" ng-change="changeAccPurchase('billNumber',accPurchase.billNo)" type="text" placeholder="Bill Number" class="form-control"  ng-minlength="2" ng-required="true"  ng-pattern="/^[a-zA-Z0-9 &_`#().\'-\/]*$/" />
+						 
+						 <span ng-messages="formPurchase.billNo.$error" ng-if="formPurchase.billNo.$dirty || formPurchase.billNo.$touched"  role="alert">
+							<span ng-messages-include="errorRequired"></span>
+							<span ng-messages-include="shortLength"></span>
+							<span ng-messages-include="errorPatternThisSpecial"></span>
+						</span>
+						
+					  </div>
+				<label class="col-sm-1 control-label my-colMd-paddingLeftRight">*Party Name</label>
+				  <div class="col-sm-2 my-colMd-paddingLeftRight">
+				  <div class="input-group">
+				  
+					 <input  typeahead="s.ledgerName for s in form.clientSuggest | filter:$viewValue | orderBy:'ledgerName' | limitTo:10" ng-model="accPurchase.clientName" typeahead-on-select="setClientName('clientName','vendorId',$item)" typeahead-editable="false" id="input-id-1" type="text" placeholder="Party Name" class="form-control" dir="ltr" name="clientName" id="clientName"  ng-required="true"  ng-pattern="/^[a-zA-Z ]*$/"  />
+					<span class="input-group-btn">
+					<button type="button" class="btn btn-default" data-ng-click="openLedger('lg',-1)"><i class="fa fa-plus" style="color:#17A1E5;"></i></button>
+					</span>
+					
+					
+					
+				  </div>
+				  <span ng-messages="formPurchase.clientName.$error" ng-if="formPurchase.clientName.$dirty || formPurchase.clientName.$touched" role="alert">
+						<span ng-messages-include="errorRequired"></span>
+						<span ng-messages-include="errorPatternAlpha"></span>
+						<span ng-messages-include="errorLonglength"></span>
+						<span ng-messages-include="errorShortlength"></span>
+					</span>
+				  </div>
+				<!--button type="button" class="mr mb-sm btn btn-primary">Go</button-->
+				
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-md-12" style="padding-left:0px;padding-right:0px">
+		<div class="panel panel-default">
+			<script type="text/ng-template" id="customTemplate.html">
+				<a><span bind-html-unsafe="match.label | typeaheadHighlight:query"></span> ({{match.model.color}} | {{match.model.size}})</a>
+			</script>
+			 <div class="table-responsive">
+					<table  class="table table-bordered table-striped">
+						<thead>
+							<tr>
+								<th class="header" style="width:35%">Name of Item</th>
+								<th style="width:3%" >HSN#</th>
+								<th  class="header" style="width:7%">Color|Size</th>
+								<th class="header" style="width:7%">Discount Type</th>
+								<th class="header" style="width:10%">Discount</th>
+								<th style="width:12%" >Rate</th>
+								<th style="width:5%" >Quantity</th>
+								<th style="width:5%" >CGST</th>
+								<th style="width:10%" >Amount</th>
+								<th style="width:6%">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr id="addAfter" ng-repeat="item in form.AccPurchaseTable track by $index" data-ng-class="app.tableAnimation">
+								<td>
+									<!--input id="input-id-1" type="text" ng-model="itemName"  class="form-control" placeholder="Enter Item Name(JS)" style="width:95%;float:left"/>
+									<i ui-sref=""  class="fa fa-plus" style="font-size:20px;color:#17A1E5;float:right" title="Add"> </i-->
+									<div class="input-group mytypeDrop">
+										<input typeahead="item.productName for item in form.productNameDrop | filter:$viewValue | orderBy:'productName' | limitTo:6" ng-model="item.productName" typeahead-on-select="settabledata($item,$index)" type="text" class="form-control" placeholder="*Enter Product Name(JS)" typeahead-editable="false" ng-required="true" typeahead-template-url="customTemplate.html" ng-disabled="form.loadData" auto-focus />
+										<span class="input-group-btn">
+										   <button type="button" class="btn btn-default" data-ng-click="openProduct('lg',$index)"><i class="fa fa-plus" style="font-size:15px;color:#17A1E5;"></i></button>
+										</span>
+									</div>
+								</td>
+								<td>
+									<h6>{{form.productHsn[$index]}}</h6>
+								</td>
+								<td style="text-align:center;">
+									{{item.color}} | {{item.size}}
+								</td>
+								<td>
+									<select  ng-model="item.discountType"  class="form-control" style="float:left;" ng-change="changeProductTable()">
+										<option value="flat" selected="selected">Flat</option>
+										<option value="percentage">%</option>
+									</select>
+									
+								</td>
+								<td>
+									<input id="input-id-1" type="text" ng-model="item.discount" ng-change="changeProductTable()" class="form-control"  ng-pattern="/^[0-9 .]*$/" ng-attr-max="{{item.discountType == 'percentage' && '100' || ''}}" only-number /> 
+								</td>
+								<td>
+									<input id="input-id-1" type="text" ng-model="item.price"  ng-change="changeProductTable()" class="form-control" placeholder="Price"  ng-required="true" ng-pattern="/^[1-9]+[0-9 .]*$/" only-number />
+								</td>
+								<td>
+									<input id="input-id-1" type="text" ng-model="item.qty" ng-change="changeProductTable()" class="form-control"   ng-required="true" ng-minlength="1" ng-maxlength="7" ng-pattern="/^[1-9]+[0-9]*$/" only-number />
+								</td>
+								<td style="text-align:right">{{productArrayFactory.calculateTax(item.amount,form.productTax[$index].tax,0) | setDecimal: noOfDecimalPoints}}</td>
+								<td >
+									<!--span style="float:right">4500</span-->
+									<span style="float:right" ng-if="item.discountType == 'flat'" >{{item.amount = ((item.price*item.qty) - item.discount | setDecimal: noOfDecimalPoints)}}</span>
+									<span style="float:right" ng-if="item.discountType == 'percentage'" >{{item.amount = ((item.price*item.qty)-((item.price*item.qty)*item.discount/100) | setDecimal: noOfDecimalPoints)}}</span>
+								</td>
+								<td style="">
+								<center>
+									<a href="#"  ng-click="addRow($index)">
+										<i  ui-sref="" title="Add" class="fa fa-plus" style="font-size:20px;" title="Add"></i>
+									</a>
+									&nbsp;
+									<a href="#" class="text-danger"  ng-click="removeRow($index)" ng-if="$index!=0">
+										<i   ui-sref=""  class="fa fa-times" style="font-size:20px;" title="Delete" > </i>
+									</a>
+								</center>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="6"></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td colspan="6"></td>
+								<td colspan="2" style="text-align:left"  > <strong> Total </strong></td>
+								<td style="text-align:right">{{totalTable = (getTotal() | setDecimal: noOfDecimalPoints)}}</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td colspan="6"></td>
+								<td colspan="2" style="text-align:left"  > <strong> Tax </strong></td>
+								<td>
+								<input id="input-id-1" name="tax" type="text" ng-model="accPurchase.tax"  ng-change="changeAccPurchase('tax',accPurchase.tax)"  class="form-control"   ng-pattern="/^[0-9 .]*$/" only-number />
+									
+									<span ng-messages="formPurchase.tax.$error" ng-if="formPurchase.tax.$dirty || formPurchase.tax.$touched"  role="alert">
+										<span ng-messages-include="errorPatternNumber"></span>
+									</span>
+								
+								</td>
+								<!--td style="text-align:right">{{accPurchase.tax = (form.productTax | sumOfValue:'tax')}}</td-->
+								<!--td style="text-align:right">{{accPurchase.tax = (getTotalTax() | setDecimal: noOfDecimalPoints)}}</td-->
+								<td></td>
+							</tr>
+							<tr>
+								<td colspan="6"></td>
+								<td colspan="2" style="text-align:left"  > <strong> Grand Total </strong></td>
+								<td style="text-align:right">{{grandTotalTable = (totalTable -- accPurchase.tax | setDecimal: noOfDecimalPoints)}}</td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-md-8" style="padding-left:0px;padding-right:15px"> 
+		<div class="panel panel-default">
+		<!--h4 class="panel-heading">Purchase</h4-->
+				
+			<!-- Client Multiple Table -->
+			 <div class="table-responsive">
+				<table  class="table table-bordered table-striped">
+					<thead>
+						<tr>
+							<th style="width:14%">Dr/Cr</th>
+							<th  style="width:42%">Particulars</th>
+							<th style="width:17%">Debit</th>
+							<th style="width:17%">Credit</th>
+							<th style="width:10%">Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr id="addAfter" ng-repeat="item in form.AccClientMultiTable" data-ng-class="app.tableAnimation" dat-filter="2"> 
+							<td>
+								<select  ng-model="item.amountType" class="form-control" ng-change="changeAmountType($index)">
+									<option value="debit" selected="selected">Dr</option>
+									<option value="credit" ng-if="$index!=0">Cr</option>
+								</select>
+							</td>
+							<td ng-if="item.amountType=='debit'" >
+								<div class="input-group mytypeDrop">
+									<input typeahead="item.ledgerName for item in form.clientNameDropDr | filter:$viewValue | orderBy:'ledgerName' | limitTo:7" ng-model="item.ledgerName" type="text" typeahead-on-select="setAccPurchase($item,$index)" type="text" class="form-control" placeholder="*Enter Vender Name" typeahead-editable="false"  ng-required="true" />
+									<span class="input-group-btn">
+									<button type="button" class="btn btn-default" data-ng-click="openLedger('lg',$index)"><i class="fa fa-plus" style="font-size:15px;color:#17A1E5;"></i></button>
+									</span>
+								</div>
+								<h5 >Current Balance {{form.multiCurrentBalance[$index]['currentBalance']  |  currency:"&#8377; ": noOfDecimalPoints}} {{form.multiCurrentBalance[$index]['amountType']}}</h5>
+							</td>
+							<td ng-if="item.amountType=='credit'">
+								<div class="input-group mytypeDrop" >
+									<input typeahead="item.ledgerName for item in form.clientNameDropCr | filter:$viewValue  | orderBy:'ledgerName' | limitTo:20" ng-model="item.ledgerName" type="text" typeahead-on-select="setAccPurchase($item,$index)" type="text" class="form-control" placeholder="*Enter Vender Name" typeahead-editable="false"  ng-required="true" />
+									<span class="input-group-btn">
+									<button type="button" class="btn btn-default" data-ng-click="openLedger('lg',$index)"><i class="fa fa-plus" style="font-size:15px;color:#17A1E5;"></i></button>
+									</span>
+								</div>
+								<h5 >Current Balance {{form.multiCurrentBalance[$index]['currentBalance']  |  currency:"&#8377; ": noOfDecimalPoints}} {{form.multiCurrentBalance[$index]['amountType']}}</h5>
+							</td>
+							<td>
+								<input id="input-id-1" type="text" ng-model="item.amount" ng-change="changeJrnlTable()" ng-if="item.amountType=='debit'" class="form-control"  ng-required="true" ng-pattern="/^[0-9 .]*$/" only-number />
+							</td>
+							<td>
+								<input id="input-id-1" type="text" ng-model="item.amount" ng-change="changeJrnlTable()" ng-if="item.amountType=='credit'" class="form-control"  ng-required="true" ng-pattern="/^[0-9 .]*$/" only-number />
+							</td>
+							<td style="">
+								<center>
+									<a href="#" ng-click="addClientRow($index)">
+										<i  ui-sref="" title="Add" class="fa fa-plus" style="font-size:20px;" title="Add" ></i>
+									</a>
+									&nbsp;
+									<a href="#" ng-click="removeClientRow($index)" ng-if="$index!=0&&$index!=0" class="text-danger"> 
+										<i  ui-sref=""  class="fa fa-times" style="font-size:20px;" title="Delete" ></i>
+									</a>
+								</center>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>Total</td>
+							<td >
+								<span style="float:right">{{totalDebit  = ((form.AccClientMultiTable | sumOfDebit:'amount') | setDecimal: noOfDecimalPoints)}}</span>
+							</td>
+							<td >
+								<span style="float:right">{{totalCredit = ((form.AccClientMultiTable | sumOfCredit:'amount') | setDecimal: noOfDecimalPoints)}}</span>
+							</td>
+							<td ></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<!-- End Client Multiple Table -->
+		</div>
+	</div>
+	
+	<div class="col-md-4" style="padding-left:15px;padding-right:0px"> 
+		<div class="panel panel-default">
+		<h4 class="panel-heading">History <button type="button" tabindex="-1" ng-click="openHistoryModal('lg')" class="mr mb-sm btn btn-turquoise btn-sm" style="float:right" >View History</button></h4>
+			<div class="panel-body">
+					
+						<dl class="dl-horizontal">
+						   <dt style="width: 115px;" >Opening Balance:</dt>
+						   <dd style="margin-left: 122px;">{{displayOpeningBal |  currency:"&#8377; ": noOfDecimalPoints }} <span style="text-transform: capitalize;">{{displayOpeningBalType}} </span> </dd>
+						   <dt style="width: 115px;" >Current Balance:</dt>
+						   <dd style="margin-left: 122px;">{{displayCurrentBal |  currency:"&#8377; ": noOfDecimalPoints }} <span style="text-transform: capitalize;">{{displayCurrentBalType}} <span> </dd>
+						</dl>
+						
+						
+						
+						<!--dl class="dl-horizontal" style="visibility:hidden">
+							<button type="button" class="mr mb-sm btn btn-turquoise" style="float:right" >View History</button>
+							<button type="button" class="mr mb-sm btn btn-turquoise" style="float:right" >View History</button>
+							<button type="button" class="mr mb-sm btn btn-turquoise" style="float:right" >View History</button>
+						</dl-->
+			</div>
+		</div>
+	</div>
+     
+	 <div class="col-md-4" style="padding-left:15px;padding-right:0px"> 
+		<textarea  name="address" rows="4"  ng-model="accPurchase.remark" placeholder="Remark" class="form-control ng-pristine ng-valid ng-touched"></textarea>
+	</div>
+	
+	
+	<div class="form-group col-md-12">
+		<label for="input-id-1" class="col-sm-1 control-label">Attachment</label>
+		
+		<div class="col-sm-1">
+			<input type="file" ng-model="accPurchase.attach" onchange="angular.element(this).scope().uploadFile(this.files)" multiple />
+		</div>
+		
+		<div class="col-sm-10">
+			<a href="{{erpPath}}{{item.documentUrl}}{{item.documentName}}" target="_blank" ng-repeat="item in accPurchase.documentData" >
+			
+				<img src="{{erpPath}}{{item.documentUrl}}{{item.documentName}}" height="130" width="150" class="brand-logo-collapsed" style="margin-bottom: 5px;margin-right:5px"  />
+			
+			</a>
+			
+		</div>
+	</div>
+	
+	<button type="button" class="mr mb-sm btn btn-danger pull-right" data-ng-click="cancel()" >Cancel</button>
+	<button type="button" class="mr mb-sm btn btn-success pull-right" ng-click="pop()" ng-disabled="formPurchase.$invalid || disableButton" >
+		<span ng-if="!accPurchase.getSetJrnlId" > Insert </span> <span ng-if="accPurchase.getSetJrnlId" > Update </span>
+	</button>
+	</form>
+   <!-- END panel-->
+</div>
+
+<!-- History Modal -->
+
+<script type="text/ng-template" id="/myHistoryPurchaseModalContent.html">
+	<div class="modal-header">
+		<button type="button" data-dismiss="modal" data-ng-click="closeButton()" aria-hidden="true" class="close">×</button>  
+		  <h4 id="myModalLabel" class="modal-title"><b>{{displayCompany}}</b></h4>
+	</div>
+	<div class="modal-body my-model-body">
+		  <div class="table-responsive">
+			<table data-ng-table="tableParams"   class="table table-bordered table-striped">
+				<!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
+				 <tbody>
+					<tr data-ng-repeat="user in $data">
+					<td data-title="'Sr. No.'"  >{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td>
+						<td data-title="'Date'" sortable="'date'"  >{{user.entryDate}}</td>
+						<td data-title="'Perticular'"  >{{user.ledger.ledgerName}}</td>
+						
+						<td data-title="'Debit'"   ><span ng-if="user.amountType=='debit'">{{user.amount}}</span></td>
+						
+						<td data-title="'Credit'"   ><span ng-if="user.amountType=='credit'">{{user.amount}}</span></td>
+						
+					   <!--td data-title="'Action'" sortable="'action'">
+							<center>
+								<i ui-sref="" ng-click="editSales(user.jfId)" class="fa fa-edit" style="font-size:17px;color:#10709f"> </i> &nbsp; &nbsp;
+								<i ui-sref="" ng-click="deleteSales(user.jfId)" class="fa fa-times-circle" style="font-size:17px;color:red"></i>
+							</center>
+						</td-->
+					</tr>
+				 </tbody>
+			</table>
+		</div>
+			<span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
+	</div>
+</script>
+
+
+
+<script type="text/ng-template" id="errorRequired">
+	<span class="text-danger" ng-message="required">{{errorMessage.require}}</span>
+</script>
+
+<script type="text/ng-template" id="errorLonglength">
+	<span class="text-danger" ng-message="maxlength">{{errorMessage.longLength}}</span>
+</script>
+
+<script type="text/ng-template" id="errorShortlength">
+	<span class="text-danger" ng-message="minlength">{{errorMessage.shortLength}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternAlpha">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.Alphabets}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternNumber">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.Numbers}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternAlphaNumeric">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.AlphaNumeric}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternThisSpecial">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacter}}</span>
+</script>

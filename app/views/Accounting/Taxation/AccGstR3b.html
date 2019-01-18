@@ -1,0 +1,109 @@
+<h3>
+   <small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+   Taxation >>
+   <a ui-sref="app.AccViewGstR3b" >View</a> >>
+   GST Return3b</small>
+</h3>
+<div class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true,'time-out': 10000}"></toaster-container>
+	
+   <div class="panel panel-default">
+		<div class="panel-heading myHeading" >
+			<a ng-click="generatePdf('excel')" class="pull-right btn btn-sm btn-primary" ng-if="exportPdfHidden"  data-ng-class="app.theme.brand" >Export to Excel</a>
+			<div class="panel-title">
+				GST Return3b
+			</div>
+		</div>
+		<div class="panel-body">
+		<tabset>
+            <tab heading="Outward Supplies" active="true" >
+				<div class="panel-heading bg-default" data-ng-class="app.theme.brand" >
+					 <div class="panel-title" id="allPro"> GST R3B Outward Supplies of <b>{{displayCompany}}</b> Company Between {{::displayfromDate}} to {{::displaytoDate}} <span class="pull-right"><b>GSTIN:</b> {{companyData.cgst}}</span> </div>
+				</div>
+			   <div class="table-responsive">
+				  <table ng-table="tableParams" show-filter="false" class="table table-bordered table-striped">
+					 <tbody>
+						<tr data-ng-repeat="user in $data">
+							<!-- <td data-title="'#'"  >{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td> -->
+							<td data-title="'Number of Supplies'"  filter="{ 'noOfSupplies': 'text' }" >{{user.perticular}}</td>
+							<td data-title="'Total Taxable Value'"  filter="{ 'invoiceNumber': 'text' }" style="text-align:right" >{{user.totalTax | setDecimal: 2}}</td>
+							 <td data-title="'Integrated Tax'"  filter="{ 'customerName': 'text' }"  style="text-align:right">{{user.igst | setDecimal: 2}}</td>
+							<td data-title="'Central Tax'"  filter="{ 'clientName': 'text' }" style="text-align:right" >{{user.cgst | setDecimal: 2}}</td>
+							<td data-title="'State/UT Tax'"  filter="{ 'supply': 'text' }" style="text-align:right" >{{user.sgst | setDecimal: 2}}</td>
+							
+							<td data-title="'Cess'"  filter="{ 'grandTotal': 'text' }"  style="text-align:right" >{{user.cess | setDecimal: 2}}</td>
+						</tr>
+					 </tbody>
+				  </table>
+				</div>
+			   <span ng-include="'app/views/partials/tableFooter/tableFooter.html'"></span>
+			</tab>
+
+			<tab heading="Inter-State Outward Supply to Unregistered Persons" active="false" >
+				<div class="panel-heading bg-default" data-ng-class="app.theme.brand" >
+					 <div class="panel-title" id="allPro"> GSTR3b Inter-State Outward Supply of <b>{{displayCompany}}</b> Company Between {{::displayfromDate}} to {{::displaytoDate}} <span class="pull-right"><b>GSTIN:</b> {{companyData.cgst}}</span> </div>
+				</div>
+			   <div class="table-responsive">
+				  <table ng-table="tableParams3" show-filter="false" class="table table-bordered table-striped">
+				  	<thead>
+				  		<tr>
+					  		<th>#</th>
+							<th >Place of Supply (State/UT)</th>
+							<th>Total Taxable ValuePlace</th>
+							<th >Amount of Integrated TaxTotal</th>
+						</tr>
+				  	</thead>
+					 <tbody>
+						<tr ng-repeat="user in data3 track by $index" >
+							<td >{{user.perticular}}</td>
+							<td >{{user.placeOfSupply}}</td>
+							<td >{{user.totalTax | setDecimal: 2}}</td>
+							<td >{{user.integratedTax | setDecimal: 2}}</td>
+						</tr>
+					 </tbody>
+				  </table>
+				</div>
+			  	<span >  
+					<pre style="margin-bottom:0px"> Page : {{pageNumber3}} / {{totalPages3}}  <span> Total Records: {{totalData3}} </span> </pre>
+				</span>
+			</tab>
+
+			<tab heading="Inward Supply (Purchase)" active="false" >
+				<div class="panel-heading bg-default" data-ng-class="app.theme.brand" >
+					 <div class="panel-title" id="allPro"> GSTR3b  Inward Supply (Purchase) of <b>{{displayCompany}}</b> Company Between {{::displayfromDate}} to {{::displaytoDate}} <span class="pull-right"><b>GSTIN:</b> {{companyData.cgst}}</span> </div>
+				</div>
+			   <div class="table-responsive">
+				  <table ng-table="tableParams2" show-filter="false" class="table table-bordered table-striped">
+				  	<thead>
+					  	<tr>
+							<th>Number of Supplies</th>
+							<th >Total Taxable Value</th>
+							<th>Integrated Tax</th>
+							<th >Central Tax</th>
+							<th>State/UT Tax</th>
+							<th >Cess</th>
+						</tr>
+					</thead>
+					 <tbody>
+						<tr ng-repeat="user in data2 track by $index">
+							<!-- <td data-title="'#'"  >{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td> -->
+							<td >{{user.perticular}}</td>
+							<td >{{user.totalTax | setDecimal: 2}}</td>
+							 <td >{{user.igst | setDecimal: 2}}</td>
+							<td >{{user.cgst | setDecimal: 2}}</td>
+							<td >{{user.sgst | setDecimal: 2}}</td>
+							<td >{{user.cess | setDecimal: 2}}</td>
+						</tr>
+					 </tbody>
+				  </table>
+				</div>
+				<span >  
+					<pre style="margin-bottom:0px"> Page : {{pageNumber2}} / {{totalPages2}}  <span> Total Records: {{totalData2}} </span> </pre>
+				</span>
+			</tab>
+
+
+        </tabset>
+		</div>
+   </div>
+</div>

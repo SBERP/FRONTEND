@@ -1,0 +1,103 @@
+<style>
+.chosen-container .chosen-results {
+    max-height:100px;
+}
+.chosen-container .chosen-drop{
+	display: block !imporatant;
+}
+</style>
+<h3>
+   <small>
+   <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+   Setting >> 
+   Reminders</small>
+</h3>
+<!-- START panel-->
+<div data-ng-controller="settingIntegrationController as interationCtrl" class="row">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+	<div class="col-md-6" >
+		<div class="panel panel-primary" >
+			<div class="panel-heading" data-ng-class="app.theme.brand">
+				<div class="panel-title">
+					<i class="fa fa-globe fa-lg fa-fw" aria-hidden="true" ></i> Web Integration 
+					<label class="switch switch-lg switch-success pull-right ph-lg">
+                        <input type="checkbox" data-ng-model="integration.web.toggle" ng-change="interationCtrl.updateBirthReminder()"/>
+                        <span></span>
+                     </label>
+					<label class="control-label pull-right text-left">
+	                	<span ng-if="integration.web.toggle">  ON </span>
+	                	<span ng-if="!integration.web.toggle">  OFF </span>
+	              	</label>
+				</div>
+			</div>
+			<div class="panel-body" ng-if="integration.web.toggle">
+				<form  action="#" name="formWeb" class="form-validate form-horizontal" autocomplete="off">
+					
+				   	<div class="form-group">
+					  	<label  class="col-sm-3 control-label">User ID</label>
+						<div class="col-sm-9">
+							<input name="userId" ng-model="integration.web.userId" type="text" placeholder="User ID" class="form-control" ng-required="true" ng-maxlength="100" tabIndex="1" />
+							 
+							<span ng-messages="formWeb.userId.$error" ng-if="formWeb.userId.$dirty || formWeb.userId.$touched"  role="alert">
+								<span ng-messages-include="errorRequired"></span>
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorPatternThisSpecial"></span>
+							</span>
+					  	</div>
+				   	</div>
+
+				   	<div class="form-group">
+					  	<label  class="col-sm-3 control-label">Password</label>
+						<div class="col-sm-9">
+							<input name="password" ng-model="integration.web.password" type="text" placeholder="Password" class="form-control" ng-required="true" ng-maxlength="35" tabIndex="2" />
+							 
+							<span ng-messages="formWeb.password.$error" ng-if="formWeb.password.$dirty || formWeb.password.$touched"  role="alert">
+								<span ng-messages-include="errorRequired"></span>
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorPatternThisSpecial"></span>
+							</span>
+					  	</div>
+				   	</div>
+			
+					<div class="form-group">
+					  	<label  class="col-sm-3 control-label">Push URL</label>
+						<div class="col-sm-9">
+							<input name="pushUrl" ng-model="integration.web.pushUrl" type="url" placeholder="Push URL" class="form-control" ng-required="true" ng-maxlength="100" tabIndex="3" />
+							 
+							<span ng-messages="formWeb.pushUrl.$error" ng-if="formWeb.pushUrl.$dirty || formWeb.pushUrl.$touched"  role="alert">
+								<span ng-messages-include="errorRequired"></span>
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorPatternThisSpecial"></span>
+							</span>
+					  	</div>
+				   	</div>
+
+				   	<div class="form-group">
+				   		<div class="col-sm-8 col-sm-offset-3">
+					  	 <button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="4" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="interationCtrl.updateBirthReminder()" ng-disabled="formWeb.$invalid"  data-ng-class="app.theme.brand" >{{webIntegrationButton}}</button>
+						</div>
+				   	</div>
+				</form>
+			</div>
+		</div >
+	</div>
+
+<script type="text/ng-template" id="errorRequired">
+	<span class="text-danger" ng-message="required">{{errorMessage.require}}</span>
+</script>
+
+<script type="text/ng-template" id="errorShortlength">
+	<span class="text-danger" ng-message="minlength">{{errorMessage.shortLength}}</span>
+</script>
+
+<script type="text/ng-template" id="errorLonglength">
+	<span class="text-danger" ng-message="maxlength">{{errorMessage.longLength}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternNumber">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.Numbers}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternThisSpecial">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacterAndNumber}}</span>
+</script>

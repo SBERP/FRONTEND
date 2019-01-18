@@ -1,0 +1,117 @@
+<div class="modal-header" data-ng-class="app.theme.brand">
+		<button type="button" data-dismiss="modal" data-ng-click="closeButton()" aria-hidden="true" class="close text-md"><i class="fa fa-times" style="color:white"></i></button>  
+		  <h4 id="myModalLabel" class="modal-title">Product List</h4>
+</div>
+<div class="modal-body my-model-body">
+	<tabset>
+		<button type="button" class=" pull-right btn btn-sm pb-sm pt-sm mb-sm"  data-ng-class="app.theme.brand"  data-ng-click="allProductData()" >Go</button>
+		<tab heading="Products Detail">
+			<div class="table-responsive">
+					<table data-ng-table="tableParams"   class="table table-bordered table-striped">
+					<tbody >
+						<tr data-ng-repeat="user in ($parent.filteredItems1 = $data) track by $index" ng-if="user.productType=='product'">
+							<!-- <input type="aria-hidden" name="result" > -->
+							<td style="text-align: left" header="'ng-table/headers/checkbox.html'" style="width:5%" >
+								<div class="checkbox c-checkbox">
+								  <label>
+									 <input type="checkbox" ng-model="user.selected" ng-change="changeBox(user.selected,user)" />
+									 <span class="fa fa-check"></span>
+								  </label>
+							   </div>
+							</td>
+							<td data-title="'#'"  style="text-align:center" ng-bind="(itemsPerPage * (pageNumber-1)) + $index+1" ></td>
+							<td data-title="'Brand'" filter="{ 'productCategoryName': 'text' }" ng-bind="::user.productCategory.productCategoryName" ></td>
+							<td data-title="'Category'"  ng-bind="::user.productGroup.productGroupName"></td>
+							<td data-title="'Product Name'"  filter="{ 'productName': 'text' }" ng-bind="::user.productName" ></td>
+							<td ng-show ="enableDisableColor" data-title="'Color'"  style="text-align:center"  ng-bind="::user.color" ></td>
+							<td ng-show ="enableDisableSize" data-title="'Size'" style="text-align:right" ng-bind="::user.size"></td>
+							<td data-title="'Vat'" style="text-align:right" ng-bind="::user.vat | setDecimal: user.company.noOfDecimalPoints"></td>
+							<td data-title="'AdditionalTax'" style="text-align:right" ng-bind="::user.additionalTax | setDecimal: user.company.noOfDecimalPoints"></td>
+						</tr>
+					</tbody>
+				</table>
+
+				<span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span> 
+			</div>
+
+		</tab>
+		<tab heading="Accessories Detail">
+			<div class="table-responsive">
+				<table data-ng-table="tableParams1"   class="table table-bordered table-striped">
+					<tbody >
+						<tr data-ng-repeat="user in ($parent.filteredItems1 = $data) track by $index" ng-if="user.productType=='accessories'">
+							<td style="text-align: left" header="'ng-table/headers/checkbox.html'" style="width:5%" >
+								<div class="checkbox c-checkbox">
+								  <label>
+									 <input type="checkbox" ng-model="user.selected" ng-change="changeBox(user.selected,user)" />
+									 <span class="fa fa-check"></span>
+								  </label>
+							   </div>
+							</td>
+							<td data-title="'#'"  style="text-align:center" ng-bind="(itemsPerPage * (pageNumber-1)) + $index+1" ></td>
+							<td data-title="'Brand'" filter="{ 'productCategoryName': 'text' }" ng-bind="::user.productCategory.productCategoryName" ></td>
+							<td data-title="'Category'"  ng-bind="::user.productGroup.productGroupName"></td>
+							<td data-title="'Product Name'"  filter="{ 'productName': 'text' }" ng-bind="::user.productName" ></td>
+							<td ng-show ="enableDisableColor" data-title="'Color'"  style="text-align:center"  ng-bind="::user.color" ></td>
+							<td ng-show ="enableDisableSize" data-title="'Size'" style="text-align:right" ng-bind="::user.size"></td>
+							<td data-title="'Vat'" style="text-align:right" ng-bind="::user.vat | setDecimal: user.company.noOfDecimalPoints"></td>
+							<td data-title="'AdditionalTax'" style="text-align:right" ng-bind="::user.additionalTax | setDecimal: user.company.noOfDecimalPoints"></td>
+						</tr>
+					</tbody>
+				</table>
+				<span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span> 
+			</div>
+		</tab>
+		<tab heading="Services Detail">
+			<div class="table-responsive">
+				<table data-ng-table="tableParams2"   class="table table-bordered table-striped">
+					<tbody >
+						<tr data-ng-repeat="user in ($parent.filteredItems1 = $data) track by $index" ng-if="user.productType=='service'">
+							<td style="text-align: left" header="'ng-table/headers/checkbox.html'" style="width:5%" >
+								<div class="checkbox c-checkbox">
+								  <label>
+									 <input type="checkbox" ng-model="user.selected" ng-change="changeBox(user.selected,user)" />
+									 <span class="fa fa-check"></span>
+								  </label>
+							   </div>
+							</td>
+							<td data-title="'#'"  style="text-align:center" ng-bind="(itemsPerPage * (pageNumber-1)) + $index+1" ></td>
+							<td data-title="'Brand'" filter="{ 'productCategoryName': 'text' }" ng-bind="::user.productCategory.productCategoryName" ></td>
+							<td data-title="'Category'"  ng-bind="::user.productGroup.productGroupName"></td>
+							<td data-title="'Product Name'"  filter="{ 'productName': 'text' }" ng-bind="::user.productName" ></td>
+							<td ng-show ="enableDisableColor" data-title="'Color'"  style="text-align:center"  ng-bind="::user.color" ></td>
+							<td ng-show ="enableDisableSize" data-title="'Size'" style="text-align:right" ng-bind="::user.size"></td>
+							<td data-title="'Vat'" style="text-align:right" ng-bind="::user.vat | setDecimal: user.company.noOfDecimalPoints"></td>
+							<td data-title="'AdditionalTax'" style="text-align:right" ng-bind="::user.additionalTax | setDecimal: user.company.noOfDecimalPoints"></td>
+						</tr>
+					</tbody>
+				</table>
+				<span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span> 
+			</div>
+		</tab>
+	</tabset>
+</div>
+<script type="text/ng-template" id="ng-table/headers/checkbox.html">
+       <div data-toggle="tooltip" data-title="Check All" class="checkbox c-checkbox" check-all="check-all">
+		  <label>
+			 <input type="checkbox" ng-model="parentCheckBox" ng-change="changeAllBox(parentCheckBox)" />
+			 <span class="fa fa-check"></span>
+		  </label>
+	   </div>
+ </script>
+ <!-- <script type="text/ng-template" id="ng-table/headers/checkboxIcon.html">
+      <center ng-if="selectedBoxArray.length > 0 || clientFlag == true">
+		<i ng-click="goToClientTransaction(user.clientId,'email','group')" class="fa fa-envelope" title="Email" style="font-size:17px;color:#43a8eb;cursor:pointer" > </i>
+		&nbsp;
+		<i ng-click="goToClientTransaction(user.clientId,'sms','group')" class="fa fa-commenting" title="SMS" style="font-size:17px;color:#43a8eb;cursor:pointer"  ></i>
+		&nbsp;
+	</center>
+ </script>
+ <script type="text/ng-template" id="ng-table/headers/stickerBox.html">
+       <input id="input-id-1"  name="quantity" ng-model="sticker.multiQty" ng-if="selectedBoxArray.length > 0 || clientFlag == true" type="text" placeholder="Qty." class="form-control input-sm" ng-pattern="/^[0-9]*$/"  min="1" only-number />
+ </script>
+ <script type="text/ng-template" id="ng-table/headers/stickerIcon.html">
+		<center>
+			<i  title="Print" ng-click="multiStickerPrint()" ng-if="sticker.multiQty > 0" class="fa fa-print" style="font-size:17px;cursor:pointer"> </i> 
+		</center>
+ </script> -->

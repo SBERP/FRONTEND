@@ -1,0 +1,237 @@
+<style>
+.openDropdownTop .chosen-container .chosen-drop {
+    border-bottom: 0;
+    border-top: 1px solid #aaa;
+    top: auto;
+    bottom: 40px;
+}
+</style>
+<h3>
+   <small>
+   <a ui-sref="app.dashboard"  ><i class="fa fa-home"></i>Home</a> >> 
+   <a ui-sref="app.Staff"  >Staff</a> >> 
+   Add New Staff</small>
+</h3>
+<!-- START panel-->
+<div data-ng-controller="AddStaffController as form" class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+   <div class="panel panel-default">
+	     <div class="panel-heading" data-ng-class="app.theme.brand" >
+			<div class="panel-title">
+				Basic Details
+			</div>
+		  </div>
+      <div class="panel-body">
+		<form action="#" name="formStaff" class="form-validate form-horizontal">
+			<div class="col-md-12">
+			<fieldset>
+               <div class="form-group">
+                  <label class="col-sm-2 control-label">*Company</label>
+                  <div class="col-sm-5">
+                     <select chosen="" tabindex="2" data-ng-model="addStaff.company" data-ng-options="s.companyName for s in form.companyDrop track by s.companyId" ng-change="changeCompany('companyId',addStaff.company.companyId)" class="form-control chosen-select" ng-required="true"  ></select>
+                  </div>
+               </div>
+			</fieldset>
+			<fieldset>
+               <div class="form-group">
+                  <label class="col-sm-2 control-label">*Branch</label>
+                  <div class="col-sm-5">
+                     <select chosen="" tabindex="2" data-ng-model="addStaff.branch" data-ng-options="s.branchName for s in form.branchDrop track by s.branchId" ng-change="changeStaffData('branchId',addStaff.branch.branchId)" class="form-control chosen-select" ng-required="true"   ></select>
+                  </div>
+               </div>
+			</fieldset>
+			
+			<fieldset >
+               <div class="form-group">
+                  <label class="col-sm-2 control-label"> *Type </label>
+                  <div class="col-sm-5">
+                     <select chosen="" data-ng-model="addStaff.userType" data-ng-options="s for s in form.userTypeDrop" ng-change="changeStaffData('userType',addStaff.userType)" class="form-control chosen-select" ng-required="true" tabindex="2" >
+						<option value=""></option>
+					 </select>
+                  </div>
+               </div>
+			</fieldset>	
+			
+            <fieldset>
+               <div class="form-group">
+                  <label  class="col-sm-2 control-label">*Name</label>
+                  <div class="col-sm-5">
+                     <input  tabindex="2" name="staffName" ng-model="addStaff.name" ng-change="changeStaffData('userName',addStaff.name)" type="text" placeholder="Staff Name" class="form-control" ng-required="true" ng-pattern="/^[a-zA-Z &_`#().\'-]*$/" ng-maxlength="50" auto-focus/>
+					 
+					<span ng-messages="formStaff.staffName.$error" ng-if="formStaff.staffName.$dirty || formStaff.staffName.$touched"  role="alert">
+						<span ng-messages-include="errorRequired"></span>
+						<span ng-messages-include="errorLonglength"></span>
+						<span ng-messages-include="errorPatternThisSpecial&Number"></span>
+					 </span>
+					
+                  </div>
+               </div>
+            </fieldset>
+			<fieldset >
+			   <div class="form-group">
+				  <label  class="col-sm-2 control-label">*Email ID</label>
+					<div class="col-sm-5">
+						<div class="input-group m-b">
+							<span class="input-group-addon">@</span>
+							<input type="email" tabindex="2" name="emailId" ng-model="addStaff.emailId" ng-change="changeStaffData('emailId',addStaff.emailId)" placeholder="Email ID" class="form-control" ng-required="true" ng-pattern="/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$/" />
+						</div>
+						
+						<span ng-messages="formStaff.emailId.$error" ng-if="formStaff.emailId.$dirty || formStaff.emailId.$touched"  role="alert">
+							<span ng-messages-include="errorRequired"></span>
+							<span ng-messages-include="errorEmail"></span>
+						</span>
+						
+					
+					</div>
+			   </div>
+			</fieldset>
+			<fieldset>
+				<div class="form-group">
+                  <label  class="col-sm-2 control-label">*Password</label>
+                  <div class="col-sm-5">
+                    <input  tabindex="2" name="staffPassword" ng-model="addStaff.password" ng-change="changeStaffData('password',addStaff.password)" type="password" placeholder="Password" class="form-control" ng-required="true"  ng-maxlength="24" ng-minlength="6" />
+					 
+					<span ng-messages="formStaff.staffPassword.$error" ng-if="formStaff.staffPassword.$dirty || formStaff.staffPassword.$touched"  role="alert">
+						<span ng-messages-include="errorRequired"></span>
+						<span ng-messages-include="errorLonglength"></span>
+						<span ng-messages-include="errorShortlength"></span>
+						
+					 </span>
+                  </div>
+               </div>
+			</fieldset>
+			<fieldset>
+				<div class="form-group">
+                  <label  class="col-sm-2 control-label">*Re-Enter Password</label>
+                  <div class="col-sm-5">
+                     <input  tabindex="2" ng-model="addStaff.repassword" ui-validate="'$value==addStaff.password'" ui-validate-watch="'validator.password'" name="repassword" type="password" placeholder="Re-Enter Password" class="form-control" ng-required="true" />
+					 
+					 <span class="text-danger" ng-show="formStaff.repassword.$error.validator">{{errorMessage.notMatch}}</span>
+					 
+                  </div>
+               </div>
+			</fieldset>
+			<fieldset >
+			   <div class="form-group">
+				  <label class="col-sm-2 control-label">*Contact#</label>
+				  <div class="col-sm-5">
+					 <input   tabindex="2" name="contactNo" ng-model="addStaff.contact" ng-change="changeStaffData('contactNo',addStaff.contact)" type="text" placeholder="Contact Number" class="form-control" ng-required="true" ng-pattern="/^[0-9]+$/" ng-maxlength="12" ng-minlength="10" only-number />
+					 
+					<span ng-messages="formStaff.contactNo.$error" ng-if="formStaff.contactNo.$dirty || formStaff.contactNo.$touched"  role="alert">
+						<span ng-messages-include="errorRequired"></span>
+						<span ng-messages-include="errorLonglength"></span>
+						<span ng-messages-include="errorShortlength"></span>
+						<span ng-messages-include="errorPatternNumber"></span>
+					</span>
+						
+				  </div>
+			   </div>
+			</fieldset >
+			<fieldset>
+				<div class="form-group">
+					<label  class="col-sm-2 control-label">*Address</label>
+					<div class="col-sm-5">
+						<textarea  tabindex="2" name="address" ng-model="addStaff.address" ng-change="changeStaffData('address',addStaff.address)" placeholder="Your Address"  class="form-control ng-pristine ng-valid ng-touched" ng-required="true" ng-pattern="/^[a-zA-Z0-9 *,-\/_`#\[\]().\']+$/" ng-minlength="1" ng-maxlength="50"  ></textarea>
+					
+						<span ng-messages="formStaff.address.$error" ng-if="formStaff.address.$dirty || formStaff.address.$touched"  role="alert">
+							<span ng-messages-include="errorRequired"></span>
+							<span ng-messages-include="errorPatternAlphaNumeric"></span>
+							<span ng-messages-include="errorLonglength"></span>
+							<span ng-messages-include="errorShortlength"></span>
+						</span>
+					
+					</div>
+				</div>
+			</fieldset>
+			<fieldset>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">*State</label>
+                  <div class="col-sm-5">
+                     <select chosen="" ng-model="addStaff.stateDropDown" tabindex="2" data-ng-options="s.stateName for s in form.statesDrop track by s.stateAbb" ng-change="ChangeState('stateAbb',addStaff.stateDropDown.stateAbb)"  class="form-control chosen-select" ng-required="true" ></select>
+                  </div>
+               </div>
+			</fieldset>
+			<fieldset>
+               <div class="form-group">
+                  <label class="col-sm-2 control-label">*City</label>
+                  <div class="col-sm-5">
+                     <select chosen=""  ng-model="addStaff.cityDropDown" tabindex="2" ng-change="changeStaffData('cityId',addStaff.cityDropDown.cityId)" data-ng-options="s.cityName for s in form.cityDrop track by s.cityId"  class="form-control chosen-select" ng-required="true" ></select>
+                  </div>
+               </div>
+			</fieldset>
+			<fieldset>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">*PIN Code</label>
+					<div class="col-sm-3">
+					   <input type="text" tabindex="2" name="pincode" ng-model="addStaff.pincode" ng-change="changeStaffData('pincode',addStaff.pincode)" placeholder="PIN Code" class="form-control" ng-required="true" ng-minlength="6" ng-maxlength="6" only-number />
+					   <span class="help-block">Masked="395001"</span>
+					   
+					    <span ng-messages="formStaff.pincode.$error" ng-if="formStaff.pincode.$dirty || formStaff.pincode.$touched" role="alert">
+							<span ng-messages-include="errorRequired"></span>
+							<span ng-messages-include="errorShortlength"></span>
+						</span>
+					
+					</div>
+				</div>
+			</fieldset>
+			<fieldset>
+               <div class="form-group">
+                  <label class="col-sm-2 control-label">*Default Company</label>
+                  <div class="col-sm-5 openDropdownTop">
+                     <select chosen="" tabindex="2" data-ng-model="addStaff.defaultCompany" data-ng-options="s.companyName for s in form.companyDrop track by s.companyId" ng-change="changeStaffData('defaultCompanyId',addStaff.defaultCompany.companyId)" class="form-control chosen-select" ng-required="true"  ></select>
+                  </div>
+               </div>
+			</fieldset>
+
+			 <button type="button" tabindex="3" class="mr mb-sm btn btn-danger pull-right" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id" ng-click="cancel()" ng-if="allowedType == 'admin' || allowedId == updatedId || allowedType == 'superadmin'">Cancel</button>
+			 <button type="button" tabindex="2" class="mr mb-sm btn btn-success pull-right" ng-click="addUpStaff()" ng-disabled="formStaff.$invalid" ng-if="allowedType == 'admin' || allowedId == updatedId || allowedType == 'superadmin'">Save</button>
+			</div>
+			
+        </form>
+      </div>
+   </div>
+   <!-- END panel-->
+</div>
+
+
+<script type="text/ng-template" id="errorRequired">
+	<span class="text-danger" ng-message="required">{{errorMessage.require}}</span>
+</script>
+
+<script type="text/ng-template" id="errorEmail">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.email}}</span>
+</script>
+
+<script type="text/ng-template" id="errorLonglength">
+	<span class="text-danger" ng-message="maxlength">{{errorMessage.longLength}}</span>
+</script>
+
+<script type="text/ng-template" id="errorShortlength">
+	<span class="text-danger" ng-message="minlength">{{errorMessage.shortLength}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternAlpha">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.Alphabets}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternNumber">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.Numbers}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternAlphaNumeric">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.AlphaNumeric}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternThisSpecial">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacter}}</span>
+</script>
+
+
+<script type="text/ng-template" id="errorPatternThisSpecial&Number">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacterAndNumber}}</span>
+</script>
+
+
+<script type="text/ng-template" id="errorNotMatch">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.notMatch}}</span>
+</script>

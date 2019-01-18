@@ -1,0 +1,64 @@
+<h3>
+   <small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> Branch</small>
+</h3>
+<div   class="container-fluid" >
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+	<div class="panel panel-default">
+		<div class="panel-body">
+		
+			<div class="col-md-8">
+				<label class="col-sm-2 control-label"> Company </label>
+				<div class="col-sm-10">
+					<select chosen=""  ng-model="stateCheck" ng-options="s.companyName for s in table.states track by s.companyId" class="form-control chosen-select hightlight-company" >
+					<option value=""> All </option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="col-md-1 myPaddingTop">
+				<div class="col-sm-12">
+					<button type="button" class="mb-sm btn btn-primary pull-right" data-ng-class="app.theme.brand" ng-click="showBranches()" >Go</button>
+				</div>
+			</div>
+			<div class="col-sm-3">
+			</div>
+		</div>
+	</div>
+</div>
+   <div class="panel panel-default">
+      <div class="panel-heading" >
+         <!--button data-ng-click="table.tableParams.sorting({})" class="pull-right btn btn-default btn-sm">Clear sorting</button-->
+		 <button class="btn btn-labeled btn-primary pull-right btn-sm" ng-click="GoToAddBranch()" data-ng-class="app.theme.brand" >
+			<span class="btn-label"><i class="fa fa-plus"></i></span>
+			Add Branch</button>
+         <div class="panel-title">All Branch</div>
+      </div>
+	    <div class="table-responsive">
+      <table data-ng-table="table.tableParams"  show-filter="true" class="table table-bordered table-striped">
+	  <!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
+         <tbody>
+            <tr data-ng-repeat="user in $data track by user.branchId">
+				<td data-title="'Company Name'" sortable="'companyName'" filter="{ 'companyName': 'text' }" ng-bind="::user.companyName"></td>
+				<td data-title="'Branch Name'" sortable="'branchName'" filter="{ 'branchName': 'text' }" ng-bind="::user.branchName"></td>
+				<td data-title="'Address1'" sortable="'address1'" filter="{ 'address1': 'text' }" ng-bind="::user.address1"></td>
+			    <td data-title="'Address2'" sortable="'address2'" filter="{ 'address2': 'text' }" ng-bind="::user.address2"></td>
+				<td data-title="'Pincode'" sortable="'pincode'" filter="{ 'pincode': 'text' }" ng-bind="::user.pincode"></td>
+				<td data-title="'City'" sortable="'cityName'" filter="{ 'cityName': 'text' }" ng-bind="::user.city.cityName"></td>
+				 
+               <td data-title="'Default'" ng-init="brandRadio='ok'">
+				<!--input type="radio" ng-checked="{{user.name=='Branch1'?true:false}}" ng-model="brandRadio" /-->
+				<input type="radio" name="brandRadio"  ng-model="brandRadio" ng-value="user.isDefault" ng-click="isDefault_branch(user.branchId)" />
+				</td>
+			   <td data-title="'Action'" sortable="'action'">
+					<center>
+						<i ng-click="editBranch(user)" class="fa fa-edit myCursorPointer" style="font-size:17px;color:#10709f"> </i> &nbsp; &nbsp;
+						<i ng-click="deleteBranch('sm',user.branchId)" class="fa fa-times-circle myCursorPointer" style="font-size:17px;color:red"></i>
+					</center>
+				</td>
+            </tr>
+         </tbody>
+      </table>
+	  </div>
+	   <pre style="margin-bottom:0px"> Page : {{pageNumber}} / {{totalPages}}  <span> Total Records: {{totalData}} </span> </pre>
+   </div>
+</div>

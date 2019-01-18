@@ -1,0 +1,50 @@
+[
+ {
+    "text": "Brand",
+    "sref": "app.InvCategory",
+    "icon": "icon-box",
+    "permission": "brand"
+  },
+  {
+    "text": "Category",
+    "sref": "app.InvGroup",
+    "icon": "icon-book",
+    "permission": "category"
+  },
+  {
+    "text": "Product",
+    "sref": "#",
+    "icon": "fa fa-product-hunt",
+    "subnav": [
+      { "text": "Add Product",  "sref": "app.AddInvProduct", "translate": "" },
+      { "text": "List Product", "sref": "app.InvProduct", "translate": "" }
+    ],
+    "permission": "product"
+  },
+  {
+    "type": "separator",
+    "permission": "barcodePrint"
+  },
+  {
+    "text": "Barcode Print",
+    "sref": "app.InvBarcodePrint",
+    "icon": "fa fa-barcode",
+    "permission": "barcodePrint"
+  },
+  {
+    "type": "separator",
+    "permission": "stockRegister"
+  },
+  {
+    "text": "Stock Register",
+    "sref": "app.AddInvStock",
+    "icon": "icon-stack",
+    "permission": "stockRegister"
+  },
+  {
+    "text": "Stock Summary",
+    "sref": "app.InvStockSummary",
+    "icon": "icon-stack",
+    "permission": "stockSummary"
+  }
+]
