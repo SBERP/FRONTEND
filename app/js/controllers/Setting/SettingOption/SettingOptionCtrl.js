@@ -19,6 +19,7 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
   	$scope.enableDisableFrameno=false;
   	$scope.enableDisableMRPRequire=false;
   	$scope.enableDisableMargin=false;
+  	$scope.enableDisableVariant=false;
   	
   	$scope.enableDisableWorkno=false;
   	$scope.enableDisableAddress=false;
@@ -108,6 +109,7 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 							$scope.enableDisableMRPRequire = arrayData1.productMrpRequireStatus=="enable" ? true : false;
 							$scope.enableDisableAdvanceMou = arrayData1.productAdvanceMouStatus=="enable" ? true : false;
 							$scope.enableDisableMargin = arrayData1.productMarginStatus=="enable" ? true : false;							
+							$scope.enableDisableVariant = arrayData1.productVariantStatus=="enable" ? true : false;
 						}
 						if(response2[arrayData].settingType=="client")
 						{
@@ -441,6 +443,14 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 				else if($scope.enableDisableMargin==false)
 				{
 					productData.append('productMarginStatus','disable');
+				}
+				if($scope.enableDisableVariant==true)
+				{
+					productData.append('productVariantStatus','enable');
+				}
+				else if($scope.enableDisableVariant==false)
+				{
+					productData.append('productVariantStatus','disable');
 				}
 				if($scope.insertUpdateProductLabel == "Update"){
 					var apiPostPatchCall = apiCall.patchCall;
