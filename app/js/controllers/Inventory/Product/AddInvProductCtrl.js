@@ -157,6 +157,7 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 	$scope.enableDisableMRPRequire = false;
 	$scope.enableDisableWebIntegration = false;
 	$scope.enableDisableMargin = false;
+	$scope.enableDisableVariant = false;
 	//get setting data
 	$scope.getOptionSettingData = function()
 	{
@@ -179,6 +180,7 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 						$scope.enableAdvanceMou = arrayData1.productAdvanceMouStatus=="enable" ? true : false;
 						$scope.enableDisableMRPRequire = arrayData1.productMrpRequireStatus=="enable" ? true : false;
 						$scope.enableDisableMargin = arrayData1.productMarginStatus=="enable" ? true : false;
+						$scope.enableDisableVariant = arrayData1.productVariantStatus=="enable" ? true : false;
 					}
 					if (response[arrayData].settingType == "webintegration") 
 					{
@@ -280,6 +282,7 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 			$scope.addInvProduct.productDescription = editProductData.productDescription;
 			$scope.addInvProduct.color = editProductData.color;
 			$scope.addInvProduct.size = editProductData.size;
+			$scope.addInvProduct.variant = editProductData.variant;
 			$scope.addInvProduct.barcodeNo = editProductData.productCode;
 			$scope.addInvProduct.highestUnitQty = editProductData.highestUnitQty;
 			$scope.addInvProduct.higherUnitQty = editProductData.higherUnitQty;
@@ -724,7 +727,6 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 			formdata.set('isDisplay','yes');
 			apiCall.postCall(apiPath.getAllProduct,formdata).then(function(response5) {
 				toaster.clear();
-				//console.log(response5);
 				if (apiResponse.ok == response5) {
 					toaster.pop('success', 'Title', 'SuccessFull');
 					productFactory.setNewProduct($scope.addInvProduct.company.companyId,$scope.addInvProduct.name,$scope.addInvProduct.color,$scope.addInvProduct.size).then(function(response){

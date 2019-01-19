@@ -100,19 +100,29 @@
 								
 							</div>
 						</div>
-					   
+						<div class="form-group" ng-if="enableDisableVariant">
+							<label class="col-sm-3 control-label">Variant</label>
+							<div class="col-sm-9">
+								 <input  name="productVariant" ng-model="addInvProduct.variant" ng-change="changeInvProductData('variant',addInvProduct.variant)" type="text" placeholder="Variant" class="form-control" tabindex="9" ng-pattern="/^[a-zA-Z0-9 &,\/_`#().\'-]+$/" ng-maxlength="30" auto-focus/>
+								
+								<span ng-messages="formProduct.productVariant.$error" ng-if="formProduct.productVariant.$dirty || formProduct.productVariant.$touched"  role="alert">
+									<span ng-messages-include="errorRequired"></span>
+									<span ng-messages-include="errorLonglength"></span>
+									<span ng-messages-include="errorPatternThisSpecial"></span>
+								 </span>
+							</div>
+						</div>
 				</div>
 				<div class="col-md-6" >
 					<div class="form-group">
 							<label  class="col-sm-3 control-label" ng-if="enableDisableColor">Color</label>
 							<div class="col-sm-4" ng-if="enableDisableColor">
 							 	<input id="input-id-1" name="productColor" ng-model="addInvProduct.color" ng-change="changeInvProductData('color',addInvProduct.color)" type="text" placeholder="Color" class="form-control" tabindex="7"  ng-maxlength="30" />
-							<span ng-messages="formProduct.productColor.$error" ng-if="formProduct.productColor.$dirty || formProduct.productColor.$touched"  role="alert">
-								<span ng-messages-include="errorRequired"></span>
-								<span ng-messages-include="errorLonglength"></span>
-								<span ng-messages-include="errorPatternThisSpecial"></span>
-							 </span>
-
+								<span ng-messages="formProduct.productColor.$error" ng-if="formProduct.productColor.$dirty || formProduct.productColor.$touched"  role="alert">
+									<span ng-messages-include="errorRequired"></span>
+									<span ng-messages-include="errorLonglength"></span>
+									<span ng-messages-include="errorPatternThisSpecial"></span>
+								</span>
 							</div>
 						  	<label  class="col-sm-2" ng-if="addDiv"></label>
 					  		<div ng-if="addDiv">
