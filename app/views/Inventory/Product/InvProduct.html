@@ -51,6 +51,7 @@
 				<th>Product Name</th>
 				<th ng-if="enableDisableColor">Color</th>
 				<th ng-if="enableDisableSize">Size</th>
+				<th ng-if="enableDisableVariant">Variant</th>
 				<!-- <th>Purchase-Price</th> -->
 				<th>Selling-Price</th>
 				<th>HSN/SAC</th>
@@ -78,6 +79,9 @@
 					</td>
 					<td  ng-if="enableDisableSize" >
 						<input type="text" class="input-filter form-control" ng-model="query.size"/>
+					</td>
+					<td  ng-if="enableDisableVariant" >
+						<input type="text" class="input-filter form-control" ng-model="query.variant"/>
 					</td>
 					<!-- <td>
 						<input type="text" class="input-filter form-control" ng-model="query.purchasePrice"  />
@@ -117,6 +121,7 @@
 					<td sortable="'productName'" filter="{ 'productName': 'text' }" ng-bind="::user.productName" ></td>
 					<td  filter="{ 'color': 'text' }" ng-bind="::user.color" ng-if="enableDisableColor"></td>
 					<td  filter="{ 'size': 'text' }" ng-bind="::user.size" ng-if="enableDisableSize"></td>
+					<td  filter="{ 'variant': 'text' }" ng-bind="::user.variant" ng-if="enableDisableVariant"></td>
 					<!-- <td   filter="{ 'purchasePrice': 'text' }" ng-bind="::user.purchasePrice" ></td> -->
 					<td filter="{ 'mrp': 'text' }"  ><span class="pull-right" ng-bind="::user.mrp"></span></td>
 

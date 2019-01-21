@@ -729,7 +729,7 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 				toaster.clear();
 				if (apiResponse.ok == response5) {
 					toaster.pop('success', 'Title', 'SuccessFull');
-					productFactory.setNewProduct($scope.addInvProduct.company.companyId,$scope.addInvProduct.name,$scope.addInvProduct.color,$scope.addInvProduct.size).then(function(response){
+					productFactory.setNewProduct($scope.addInvProduct.company.companyId,$scope.addInvProduct.name,$scope.addInvProduct.color,$scope.addInvProduct.size,$scope.addInvProduct.variant).then(function(response){
 						if(angular.isObject(response)){
 							$state.go('app.InvProduct');
 						}

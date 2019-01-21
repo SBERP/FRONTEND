@@ -129,6 +129,7 @@ function InvProductController($scope, $filter, ngTableParams,apiCall,apiPath,$st
 		productName: undefined,
 		color: undefined,
 		size: undefined,
+		variant: undefined,
 		hsn: undefined,
 		vat:undefined,
 		additionalTax:undefined,
@@ -170,6 +171,7 @@ function InvProductController($scope, $filter, ngTableParams,apiCall,apiPath,$st
 
 	$scope.enableDisableColor = true;
 	$scope.enableDisableSize = true;
+	$scope.enableDisableVariant = true;
 	// $scope.enableDisableBestBefore = true;
 	//get setting data
 	$scope.getOptionSettingData = function(){
@@ -186,6 +188,7 @@ function InvProductController($scope, $filter, ngTableParams,apiCall,apiPath,$st
 						var arrayData1 = response[arrayData];
 						$scope.enableDisableColor = arrayData1.productColorStatus=="enable" ? true : false;
 						$scope.enableDisableSize = arrayData1.productSizeStatus=="enable" ? true : false;
+						$scope.enableDisableVariant = arrayData1.productVariantStatus=="enable" ? true : false;
 						// $scope.enableDisableBestBefore = arrayData1.productBestBeforeStatus=="enable" ? true : false;
 					}
 				}

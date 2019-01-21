@@ -102,7 +102,6 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 					if (ledgerId != 0){
 						if (response3[t][k].ledgerId == ledgerId){
 							ledgerData = response3[t][k];
-							console.log("response3[t][k]...",response3[t][k]);
 						}
 					}
 					vm.bankLedgerDrop.push(response3[t][k]);
@@ -134,6 +133,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 
 	$scope.enableDisableAdvanceMou = false;
 	$scope.enableDisableColor = true;
+	$scope.enableDisableVariant = true;
 	$scope.enableDisableSize = true;
 	$scope.enableDisableFrameNo = true;
 	$scope.divTag = true;
@@ -142,6 +142,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 	$scope.colspanAdvanceValue = '9';
 	$scope.colspanExpenseValue = '7';
 	$scope.totalTd = '13';
+	$scope.ProductColorSizeVarDesign = 'productColorSizeWidth';
 	//get setting data
 	$scope.getOptionSettingData = function()
 	{
@@ -157,11 +158,20 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 					if(response[arrayData].settingType=="product")
 					{
 						var arrayData1 = response[arrayData];
-						$scope.enableDisableAdvanceMou = arrayData1.productAdvanceMouStatus=="enable" ? true : false;
+						$scope.divAdvanceMou = $scope.enableDisableAdvanceMou = arrayData1.productAdvanceMouStatus=="enable" ? true : false;
 						$scope.enableDisableColor = arrayData1.productColorStatus=="enable" ? true : false;
 						$scope.enableDisableSize = arrayData1.productSizeStatus=="enable" ? true : false;
+						$scope.enableDisableVariant = arrayData1.productVariantStatus=="enable" ? true : false;
 						$scope.enableDisableFrameNo = arrayData1.productFrameNoStatus=="enable" ? true : false;
 						$scope.divTag = $scope.enableDisableColor == false && $scope.enableDisableSize == false ? false : true;
+						if ($scope.enableDisableColor && $scope.enableDisableSize && $scope.enableDisableVariant)
+						{
+							$scope.ProductColorSizeVarDesign = 'productColorSizeVarDesign';
+						}else if (($scope.enableDisableColor && $scope.enableDisableSize) || 
+								($scope.enableDisableVariant && $scope.enableDisableColor) ||
+								($scope.enableDisableVariant && $scope.enableDisableSize)) {
+							$scope.ProductColorSizeVarDesign = 'productColorSizeDesign';
+						}
 						// $scope.colspanValue = $scope.divTag==false ? '5' : '6';
 						// $scope.totalTd = $scope.divTag==false ? '12' : '13';
 						// $scope.colspanAdvanceValue = $scope.divTag==false ? '8' : '9';
@@ -169,7 +179,6 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 						if($scope.divTag==false && $scope.enableDisableFrameNo==false)
 						{
 							if($scope.enableDisableAdvanceMou == true){
-								$scope.divAdvanceMou = true;
 								$scope.colspanAdvanceValue = '8';
 								$scope.colspanValue = '5';
 								$scope.totalTd = '12';
@@ -308,6 +317,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 		data.qty =1;
 		data.amount = '';
 		data.size = '';
+		data.variant = '';
 		//vm.AccBillTable.push(data);
 		vm.AccBillTable.splice(plusOne,0,data);
 		
@@ -366,6 +376,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 		/** Color/Size **/
 		vm.AccBillTable[index].color = item.color;
 		vm.AccBillTable[index].size = item.size;
+		vm.AccBillTable[index].variant = item.variant;
 		/** End **/
 
 		if ($scope.enableDisableAdvanceMou) 
@@ -899,7 +910,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 			});
 			
 			//vm.AccBillTable = [];
-			vm.AccBillTable = [{"productId":"","productName":"","color":"","frameNo":"","discountType":"flat","price":0,"discount":"","qty":1,"amount":"","size":""}];
+			vm.AccBillTable = [{"productId":"","productName":"","color":"","frameNo":"","discountType":"flat","price":0,"discount":"","qty":1,"amount":"","size":"","variant":""}];
 			vm.AccExpense = [];
 			vm.productHsn = [];
 
@@ -1016,7 +1027,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 				
 			});
 
-			vm.AccBillTable = [{"productId":"","productName":"","color":"","frameNo":"","discountType":"flat","price":0,"discount":"","qty":1,"amount":"","size":""}];
+			vm.AccBillTable = [{"productId":"","productName":"","color":"","frameNo":"","discountType":"flat","price":0,"discount":"","qty":1,"amount":"","size":"","variant":""}];
 			vm.productHsn = [];
 			$scope.purchaseBill.advance = 0;
 			
@@ -1241,7 +1252,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 				$scope.purchaseBill = [];
 				vm.dt1 = new Date();
 				$scope.openExpenseRawData=false;
-				vm.AccBillTable = [{"productId":"","productName":"","color":"","frameNo":"","discountType":"flat","price":0,"discount":"","qty":1,"amount":"","size":""}];
+				vm.AccBillTable = [{"productId":"","productName":"","color":"","frameNo":"","discountType":"flat","price":0,"discount":"","qty":1,"amount":"","size":"","variant":""}];
 				vm.AccExpense = [];
 				
 				vm.productHsn = [];
@@ -1325,7 +1336,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 		$scope.clearScannedResult();
 				
 		vm.dt1 = new Date();
-		vm.AccBillTable = [{"productId":"","productName":"","color":"","frameNo":"","discountType":"flat","price":0,"discount":"","qty":1,"amount":"","size":""}];
+		vm.AccBillTable = [{"productId":"","productName":"","color":"","frameNo":"","discountType":"flat","price":0,"discount":"","qty":1,"amount":"","size":"","variant":""}];
 		vm.AccExpense = [];
 		vm.productHsn = [];
 		$scope.purchaseBill.overallDiscountType = 'flat';
@@ -1774,8 +1785,9 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 				var productName = data.productId;
 				var color = data.color;
 				var size = data.size;
+				var variant = data.variant;
 				
-				productFactory.setNewProduct(companyID,productName,color,size).then(function(response){
+				productFactory.setNewProduct(companyID,productName,color,size,variant).then(function(response){
 					if(angular.isObject(response)){
 						productFactory.getProductByCompany(companyID).then(function(responseCompayWise){
 							vm.productNameDrop = responseCompayWise;

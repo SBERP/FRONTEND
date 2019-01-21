@@ -41,7 +41,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	vm.AccBillTable = [];
 	vm.AccExpense = [];
 	//vm.productTax = [];
-			
+
 	var defStateData = {};
 	var AllDefCityData = [];
 	var defCityData = {};
@@ -107,6 +107,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	$scope.enableDisableAdvanceMou = false;
 	$scope.enableDisableColor = false;
 	$scope.enableDisableSize = false;
+	$scope.enableDisableVariant = false;
 	$scope.enableDisableFrameNo = false;
 
 	$scope.enableDisableAddress = false;
@@ -124,6 +125,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	$scope.colspanAdvanceValue = '7';
 	$scope.totalTd = '13';
 	var settingResponse = [];
+	$scope.ProductColorSizeVarDesign = 'productColorSizeWidth';
 	//get setting data
 	$scope.getOptionSettingData = function(){
 		toaster.clear();
@@ -147,8 +149,18 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					$scope.divAdvanceMou = $scope.enableDisableAdvanceMou = arrayData1.productAdvanceMouStatus=="enable" ? true : false;
 					$scope.enableDisableColor = arrayData1.productColorStatus=="enable" ? true : false;
 					$scope.enableDisableSize = arrayData1.productSizeStatus=="enable" ? true : false;
+					$scope.enableDisableVariant = arrayData1.productVariantStatus=="enable" ? true : false;
 					$scope.enableDisableFrameNo = arrayData1.productFrameNoStatus=="enable" ? true : false;
 					$scope.divTag = $scope.enableDisableColor == false && $scope.enableDisableSize == false ? false : true;
+
+					if ($scope.enableDisableColor && $scope.enableDisableSize && $scope.enableDisableVariant)
+					{
+						$scope.ProductColorSizeVarDesign = 'productColorSizeVarDesign';
+					}else if (($scope.enableDisableColor && $scope.enableDisableSize) || 
+							($scope.enableDisableVariant && $scope.enableDisableColor) ||
+							($scope.enableDisableVariant && $scope.enableDisableSize)) {
+						$scope.ProductColorSizeVarDesign = 'productColorSizeDesign';
+					}
 					// $scope.colspanValue = $scope.divTag==false ? '5' : '6';
 					// $scope.totalTd = $scope.divTag==false ? '12' : '13';
 					if($scope.divTag==false && $scope.enableDisableFrameNo==false)
@@ -507,6 +519,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		data.qty =1;
 		data.amount = '';
 		data.size = '';
+		data.variant = '';
 		//vm.AccBillTable.push(data);
 		vm.AccBillTable.splice(plusOne,0,data);
 		
@@ -688,6 +701,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				/** Color/Size **/
 				vm.AccBillTable[index].color = item.color;
 				vm.AccBillTable[index].size = item.size;
+				vm.AccBillTable[index].variant = item.variant;
 				/** End **/
 				//vm.productTax[index].tax = tax; //Product Tax
 
@@ -1585,7 +1599,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					$scope.defaultComapny();
 			});
 			
-			vm.AccBillTable = [{"productId":"","productName":"","color":"","frameNo":"","discountType":"flat","price":0,"discount":"","qty":1,"amount":"","size":""}];
+			vm.AccBillTable = [{"productId":"","productName":"","color":"","frameNo":"","discountType":"flat","price":0,"discount":"","qty":1,"amount":"","size":"","variant":""}];
 			vm.AccExpense = [];
 			// vm.AccExpense = [{"expenseName":"hii"}];
 			//vm.productTax = [{"tax":0,"additionalTax":0}];
@@ -1605,7 +1619,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		$scope.changeProductArray = true;
 		$scope.changeProductAdvancePrice = true;
 		// $scope.quickBill.advance = $filter('setDecimal')(($scope.total) + ($scope.quickBill.extraCharge ? $scope.quickBill.extraCharge*1 : 0),$scope.noOfDecimalPoints);
-		
 	}
 	
 	//Change in Product Advance
@@ -1901,7 +1914,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 
 			//});
 			
-			vm.AccBillTable = [{"productId":"","productName":"","color":"","frameNo":"","discountType":"flat","price":0,"discount":"","qty":1,"amount":"","size":""}];
+			vm.AccBillTable = [{"productId":"","productName":"","color":"","frameNo":"","discountType":"flat","price":0,"discount":"","qty":1,"amount":"","size":"","variant":""}];
 			//vm.productTax = [{"tax":0,"additionalTax":0}];
 			vm.productHsn = [];
 			$scope.quickBill.advance = 0;
@@ -2339,7 +2352,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				$scope.quickBill = [];
 				vm.dt1 = new Date();
 				$scope.changeBillDate('entryDate');
-				vm.AccBillTable = [{"productId":"","productName":"","color":"","frameNo":"","discountType":"flat","price":0,"discount":"","qty":1,"amount":"","size":""}];
+				vm.AccBillTable = [{"productId":"","productName":"","color":"","frameNo":"","discountType":"flat","price":0,"discount":"","qty":1,"amount":"","size":"","variant":""}];
 				$scope.openExpenseRawData=false;
 				vm.AccExpense = [];
 				vm.productHsn = [];
@@ -2414,7 +2427,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		vm.dt1 = new Date();
 		$scope.changeBillDate('entryDate');
 		vm.AccExpense=[];
-		vm.AccBillTable = [{"productId":"","productName":"","color":"","frameNo":"","discountType":"flat","price":0,"discount":"","qty":1,"amount":"","size":""}];
+		vm.AccBillTable = [{"productId":"","productName":"","color":"","frameNo":"","discountType":"flat","price":0,"discount":"","qty":1,"amount":"","size":"","variant":""}];
 		
 		//vm.productTax = [{"tax":0,"additionalTax":0}];
 		vm.productHsn = [];
@@ -3218,7 +3231,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	toaster.pop('wait', 'Please Wait', 'popup opening....',600000);
 	
 	if($scope.quickBill.companyId){
-		
 		var modalInstance = $modal.open({
 		  templateUrl: 'app/views/PopupModal/Accounting/productModal.html',
 		  controller: 'AccProductModalController as form',
@@ -3270,13 +3282,15 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				var productName = data.productName;
 				var color = data.color;
 				var size = data.size;
+				var variant = data.variant;
 				
-				productFactory.setNewProduct(companyID,productName,color,size).then(function(response){
+				productFactory.setNewProduct(companyID,productName,color,size,variant).then(function(response){
 					if(angular.isObject(response))
 					{
 						productFactory.getProductByCompany(companyID).then(function(responseCompayWise){
 							// console.log('3204....',responseCompayWise);
 							vm.productNameDrop = responseCompayWise;
+
 							vm.AccBillTable[data.index].productName = response.productName;
 							$scope.setProductData(response,productIndex);
 							toaster.clear();

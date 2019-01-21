@@ -10,6 +10,12 @@
 .productColorSizeWidth{
 	width:100%;
 }
+.productColorSizeVarDesign{
+	width:33.33%;
+	padding-left: 6px;
+	padding-right: 6px;
+	float:left;
+}
 .tableTopCss{
 	border-top: #b8c1cf 1px solid !important;
 }
@@ -124,8 +130,10 @@
 					</th>
 					<th ng-if="divTag" class="header my-table-paddingTopBottom" style="width:11%;padding-top:5px !important;padding-bottom:5px !important;text-align:center">
 						<span  ng-if="enableDisableColor">Color  </span> 
-						<span ng-if="enableDisableColor && enableDisableSize"> | </span>
+						<span ng-if="(enableDisableColor && enableDisableSize)"> | </span>
 						<span ng-if="enableDisableSize">Size</span>
+						<span ng-if="(enableDisableColor && enableDisableVariant) || (enableDisableSize && enableDisableVariant) "> | </span>
+						<span ng-if="enableDisableVariant">Variant</span>
 					</th>
 					<th ng-if="enableDisableFrameNo" class="header my-table-paddingTopBottom" style="width:8%;padding-top:5px !important;padding-bottom:5px !important;">Frame#</th>
 					<th class="header my-table-paddingTopBottom" style="width:4%;padding-top:5px !important;padding-bottom:5px !important;" >Qty.</th>
@@ -139,7 +147,7 @@
 				</tr>
 			</thead>
 			<script type="text/ng-template" id="customTemplate.html">
-				<a><span ng-bind-html="match.label | typeaheadHighlight:query"></span> ({{match.model.color}} | {{match.model.size}})</a>
+				<a><span ng-bind-html="match.label | typeaheadHighlight:query"></span> ({{match.model.color}} | {{match.model.size}} | {{match.model.variant}})</a>
 			</script>
 			<tbody portlet="" >
 				<tr id="panelPortlet{{$index+1}}" ng-repeat="item in form.AccBillTable track by $index" class="myTable" data-ng-class="app.tableAnimation">
@@ -163,8 +171,11 @@
 						</select>
 					</td>
 					<td style="text-align:center;" ng-if="divTag">
-						<input ng-if="enableDisableColor" placeholder=""  type="text" ng-model="item.color"  class="form-control input-sm" ng-class="enableDisableSize && enableDisableColor ? 'productColorSizeDesign' : 'productColorSizeWidth'"  ng-change="changeProductTable()"  /> 
-						<input ng-if="enableDisableSize" placeholder="Size"  type="text" ng-model="item.size"  class="form-control input-sm" ng-class="enableDisableSize && enableDisableColor ? 'productColorSizeDesign' : 'productColorSizeWidth'"  ng-change="changeProductTable()"  />
+						<input  ng-if="enableDisableColor" placeholder="Color" type="text" ng-model="item.color"  class="form-control input-sm " ng-class="ProductColorSizeVarDesign"  ng-change="changeProductTable()" /> 
+						<input ng-if="enableDisableSize" placeholder="Size" type="text" ng-model="item.size"  class="form-control input-sm "
+						ng-class="ProductColorSizeVarDesign"  ng-change="changeProductTable()"  />
+						<input ng-if="enableDisableVariant" placeholder="Variant" type="text" ng-model="item.variant"  class="form-control input-sm "
+						ng-class="ProductColorSizeVarDesign"  ng-change="changeProductTable()"  />
 					</td>
 					<td ng-if="enableDisableFrameNo">
 						<input placeholder="Frame No"  type="text" ng-model="item.frameNo"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"   ng-pattern="/^[a-z-A-Z0-9 ]*$/" ng-change="changeProductTable()" /> 

@@ -20,10 +20,10 @@ App.factory('productFactory',['apiCall','apiPath','apiResponse','$q','fetchArray
 		});
 	}
  
-	function setNewProduct(companyId,productName,color,size,pushIt = true){
+	function setNewProduct(companyId,productName,color,size,variant,pushIt = true){
 		// companyId == '' || productName == '' || color == '' || size == '' ? return 'Parameters are Mising or Wrong' : '';
 		var searchPath = apiPath.getProductByCompany+companyId;
-		var headerSearch = {'Content-Type': undefined,'productName':productName,'color':color,'size':size};
+		var headerSearch = {'Content-Type': undefined,'productName':productName,'color':color,'size':size,'variant':variant};
 			return apiCall.getCallHeader(searchPath,headerSearch).then(function(response){
 				if(angular.isArray(response))
 				{
