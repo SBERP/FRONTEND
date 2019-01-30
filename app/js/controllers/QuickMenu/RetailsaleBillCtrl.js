@@ -1063,7 +1063,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			if (angular.isDefined(product.cessAmount)) {
 				cessAmount = product.cessAmount;
 			}
-			total += productArrayFactory.calculateTax(getAmount,totaltax,0) + cessAmount;
+			total += productArrayFactory.calculateTax(getAmount,totaltax,0) + parseFloat(cessAmount);
 		}
 
 		if($scope.quickBill.totalDiscounttype == 'flat') {
@@ -1081,7 +1081,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		$scope.quickBill.totalCgstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(getTotalAmount,$scope.quickBill.totalCgstPercentage,0),$scope.noOfDecimalPoints);
 		$scope.quickBill.totalSgstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(getTotalAmount,$scope.quickBill.totalSgstPercentage,0),$scope.noOfDecimalPoints);
 		$scope.quickBill.totalIgstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(getTotalAmount,$scope.quickBill.totalIgstPercentage,0),$scope.noOfDecimalPoints);
-
 		return total;
 	}
 	
@@ -1146,12 +1145,11 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			var amount = 0;
 			var getCess = checkGSTValue(item.cessPercentage);
 			var getFlatCess = 0;
-			if (item.hasOwnProperty('realQtyData') && angular.isDefined(item.realQtyData)) {
-				getFlatCess = parseFloat(item.realQtyData * item.cessFlat);
+			if (item.hasOwnProperty('realQtyData') && angular.isDefined(item.realQtyData) && item.realQtyData != 'undefined') {
+				getFlatCess = parseFloat(parseFloat(item.realQtyData) * parseFloat(item.cessFlat));
 			}else{
-				getFlatCess = item.qty * item.cessFlat;
+				getFlatCess = parseFloat(item.qty) * parseFloat(item.cessFlat);
 			}
-			console.log(item);
 			if(item.discountType == 'flat') {
 				
 				amount =  $filter('setDecimal')((item.price*item.qty) - item.discount,$scope.noOfDecimalPoints);
@@ -1193,7 +1191,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			var getIgst = checkGSTValue(igst);
 			var getCess = checkGSTValue(item.cessPercentage);
 			var getFlatCess = 0;
-			if (item.hasOwnProperty('realQtyData') && angular.isDefined(item.realQtyData)) {
+			if (item.hasOwnProperty('realQtyData') && angular.isDefined(item.realQtyData) && item.realQtyData != 'undefined') {
 				getFlatCess = parseFloat(item.realQtyData * item.cessFlat);
 			}else{
 				getFlatCess = item.qty * item.cessFlat;
