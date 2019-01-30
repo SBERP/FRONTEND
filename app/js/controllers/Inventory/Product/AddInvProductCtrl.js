@@ -950,7 +950,6 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 			for (var i = primaryIndex - 1; i >= 0; i--) {
 				$scope.addInvProduct[unitVariantArray[i]+'MouConv'] = parseFloat(($scope.addInvProduct[unitVariantArray[i + 1]+'MouConv'] * $scope.addInvProduct[unitVariantArray[i + 1]+'UnitQty']).toFixed($scope.noOfDecimalPoints));
 				$scope.changeInvProductData(unitVariantArray[i]+'MouConv',$scope.addInvProduct[unitVariantArray[i]+'MouConv']);
-			
 			}
 			for (var i = primaryIndex + 1; i < unitVariantArray.length; i++) {
 				$scope.addInvProduct[unitVariantArray[i]+'MouConv'] = parseFloat(($scope.addInvProduct[unitVariantArray[i - 1]+'MouConv'] / $scope.addInvProduct[unitVariantArray[i]+'UnitQty']).toFixed($scope.noOfDecimalPoints));

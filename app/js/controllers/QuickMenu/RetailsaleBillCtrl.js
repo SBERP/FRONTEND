@@ -41,7 +41,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	vm.AccBillTable = [];
 	vm.AccExpense = [];
 	//vm.productTax = [];
-
 	var defStateData = {};
 	var AllDefCityData = [];
 	var defCityData = {};
@@ -616,6 +615,8 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		}
 
 		vm.AccBillTable[index].productId = item.productId;
+		vm.AccBillTable[index].cessFlat = item.cessFlat;
+		vm.AccBillTable[index].cessPercentage = item.cessPercentage;
 		vm.productHsn[index] = item.hsn;
 		vm.productDesc[index] = item.productDescription;
 		if ($scope.enableDisableAdvanceMou) 
@@ -702,6 +703,12 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				vm.AccBillTable[index].color = item.color;
 				vm.AccBillTable[index].size = item.size;
 				vm.AccBillTable[index].variant = item.variant;
+				if (item.hasOwnProperty('realQtyData') && angular.isDefined(item.realQtyData)) {
+					vm.AccBillTable[index].realQtyData = item.realQtyData;
+				}else{
+					vm.AccBillTable[index].realQtyData = item.qty;
+				}
+				
 				/** End **/
 				//vm.productTax[index].tax = tax; //Product Tax
 
@@ -862,6 +869,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			if (check_default_and_selected_flag) {
 				loadQuantityPricing(item.productId,function (response)
 				{
+					vm.AccBillTable[index].realQtyData = parseFloat(item[selectedMeasure.measurementUnit+'MouConv']) * parseInt(vm.AccBillTable[index].qty);
 					if(angular.isArray(response))
 					{
 						var flagPricing = 0;
@@ -896,34 +904,8 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				{
 					var inpQty = parseInt(vm.AccBillTable[index].qty);
 					var userQtyConverted = 1;
-					userQtyConverted = item[selectedMeasure.measurementUnit+'MouConv'];
-					// if (item.primaryMeasureUnit == 'lowest') {
-					// 	user
-					// }
-					// if (selectedMeasure.measurementUnit == 'highest') {
-					// 	if (item.primaryMeasureUnit == 'lowest' && parseInt(item.lowestUnitQty) > 0 && parseInt(item.higherUnitQty)) {
-					// 		userQtyConverted = 1 * parseInt(item.lowestUnitQty) * parseInt(item.higherUnitQty);
-					// 	}
-					// 	if (item.primaryMeasureUnit == 'higher' && parseInt(item.higherUnitQty)) {
-					// 		userQtyConverted = 1 * parseInt(item.higherUnitQty) ;
-					// 	}
-					// }
-					// if (selectedMeasure.measurementUnit == 'higher') {
-					// 	if (item.primaryMeasureUnit == 'lowest' && parseInt(item.lowestUnitQty) > 0 ) {
-					// 		userQtyConverted = 1 * parseInt(item.lowestUnitQty);
-					// 	}
-					// 	if (item.primaryMeasureUnit == 'highest' && parseInt(item.higherUnitQty) > 0) {
-					// 		userQtyConverted = 1 / parseInt(item.higherUnitQty);
-					// 	}
-					// }
-					// if (selectedMeasure.measurementUnit == 'lowest') {
-					// 	if (item.primaryMeasureUnit == 'highest' && parseInt(item.lowestUnitQty) > 0 && parseInt(item.higherUnitQty) > 0) {
-					// 		userQtyConverted = 1 /(parseInt(item.lowestUnitQty) * parseInt(item.higherUnitQty));
-					// 	}
-					// 	if (item.primaryMeasureUnit == 'higher' && parseInt(item.lowestUnitQty) > 0) {
-					// 		userQtyConverted = 1 / parseInt(item.lowestUnitQty);
-					// 	}
-					// }
+					userQtyConverted = parseFloat(item[selectedMeasure.measurementUnit+'MouConv']);
+					vm.AccBillTable[index].realQtyData = userQtyConverted * inpQty;
 					if(angular.isArray(response))
 					{
 						var flagPricing = 0;
@@ -1061,8 +1043,10 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		var total = 0;
 		var count = vm.AccBillTable.length;
 		var getTotalAmount = 0;
+		var totalCessAmount = 0;
 		for(var i = 0; i < count; i++)
 		{
+			var cessAmount = 0;
 			var product = vm.AccBillTable[i];
 			// var vartax = vm.productTax[i];
 			var totaltax = checkGSTValue(product.cgstPercentage) + checkGSTValue(product.sgstPercentage) + checkGSTValue(product.igstPercentage);
@@ -1074,8 +1058,12 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			else{
 				var getAmount  =  $filter('setDecimal')((product.price*product.qty)-((product.price*product.qty)*product.discount/100),$scope.noOfDecimalPoints);
 			}
+
 			getTotalAmount += getAmount;
-			total += productArrayFactory.calculateTax(getAmount,totaltax,0);
+			if (angular.isDefined(product.cessAmount)) {
+				cessAmount = product.cessAmount;
+			}
+			total += productArrayFactory.calculateTax(getAmount,totaltax,0) + cessAmount;
 		}
 
 		if($scope.quickBill.totalDiscounttype == 'flat') {
@@ -1156,7 +1144,14 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			var getSgst = checkGSTValue(sgst);
 			var getIgst = checkGSTValue(igst);
 			var amount = 0;
-
+			var getCess = checkGSTValue(item.cessPercentage);
+			var getFlatCess = 0;
+			if (item.hasOwnProperty('realQtyData') && angular.isDefined(item.realQtyData)) {
+				getFlatCess = parseFloat(item.realQtyData * item.cessFlat);
+			}else{
+				getFlatCess = item.qty * item.cessFlat;
+			}
+			console.log(item);
 			if(item.discountType == 'flat') {
 				
 				amount =  $filter('setDecimal')((item.price*item.qty) - item.discount,$scope.noOfDecimalPoints);
@@ -1165,7 +1160,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				//item.amount = ((item.price*item.qty)-((item.price*item.qty)*item.discount/100) | setDecimal: noOfDecimalPoints);
 				amount  =  $filter('setDecimal')((item.price*item.qty)-((item.price*item.qty)*item.discount/100),$scope.noOfDecimalPoints);
 			}
-
+			item.cessAmount = $filter('setDecimal')((amount*getCess/100)+getFlatCess,$scope.noOfDecimalPoints);
 			if($scope.quickBill.companyId.state.stateAbb==$scope.quickBill.stateAbb.stateAbb)
 			{
 				item.cgstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(amount,getCgst,0),$scope.noOfDecimalPoints);
@@ -1179,7 +1174,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			}
 				
 				
-				item.amount = $filter('setDecimal')(amount+item.cgstAmount+item.sgstAmount+item.igstAmount,$scope.noOfDecimalPoints);
+				item.amount = $filter('setDecimal')(amount+item.cgstAmount+item.sgstAmount+item.igstAmount+item.cessAmount,$scope.noOfDecimalPoints);
 
 			if(!$scope.quickBill.EditBillData){
 				$scope.advanceValueUpdate();
@@ -1196,12 +1191,19 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			var getCgst = checkGSTValue(cgst);
 			var getSgst = checkGSTValue(sgst);
 			var getIgst = checkGSTValue(igst);
-			var TaxSum = getCgst+getSgst+getIgst;
-		
-			vm.AccBillTable[index].price = $filter('setDecimal')((item.amount/ (1+(TaxSum/100))) / parseInt(item.qty),$scope.noOfDecimalPoints);
+			var getCess = checkGSTValue(item.cessPercentage);
+			var getFlatCess = 0;
+			if (item.hasOwnProperty('realQtyData') && angular.isDefined(item.realQtyData)) {
+				getFlatCess = parseFloat(item.realQtyData * item.cessFlat);
+			}else{
+				getFlatCess = item.qty * item.cessFlat;
+			}
+			var TaxSum = getCgst+getSgst+getIgst+getCess;
+			vm.AccBillTable[index].price = $filter('setDecimal')(((item.amount-getFlatCess)/ (1+(TaxSum/100))) / parseInt(item.qty),$scope.noOfDecimalPoints);
 			vm.AccBillTable[index].cgstAmount = $filter('setDecimal')(vm.AccBillTable[index].price * getCgst/100,$scope.noOfDecimalPoints);
 			vm.AccBillTable[index].sgstAmount = $filter('setDecimal')(vm.AccBillTable[index].price * getSgst/100,$scope.noOfDecimalPoints);
 			vm.AccBillTable[index].igstAmount = $filter('setDecimal')(vm.AccBillTable[index].price * getIgst/100,$scope.noOfDecimalPoints);
+			vm.AccBillTable[index].cessAmount = $filter('setDecimal')((vm.AccBillTable[index].price * getCess/100)+getFlatCess,$scope.noOfDecimalPoints);
 			
 			if(!$scope.quickBill.EditBillData){
 				$scope.advanceValueUpdate();

@@ -655,16 +655,16 @@
 							 	</span>
 							</div>
 						  	<div class="col-sm-3">
-							    <input id="input-id-1" name="cess"  ng-model="addInvProduct.cess" ng-change="changeInvProductData('cessPercentage',addInvProduct.cess)" type="text" placeholder="(%)Per." class="form-control" tabindex="36"  ng-pattern="/^[0-9 .]*$/"  ng-maxlength="8" only-number />
+							    <input id="input-id-1" name="cessPercentage"  ng-model="addInvProduct.cessPercentage" ng-change="changeInvProductData('cessPercentage',addInvProduct.cessPercentage)" type="text" placeholder="(%)Per." class="form-control" tabindex="36"  ng-pattern="/^[0-9 .]*$/"  ng-maxlength="8" only-number />
 							 
-								<span ng-messages="formProduct.cess.$error" ng-if="formProduct.cess.$dirty || formProduct.cess.$touched"  role="alert">
+								<span ng-messages="formProduct.cessPercentage.$error" ng-if="formProduct.cessPercentage.$dirty || formProduct.cessPercentage.$touched"  role="alert">
 									<span ng-messages-include="errorLonglength"></span>
 									<span ng-messages-include="errorPatternThisSpecial"></span>
 								</span>
 							</div>
 						  	<div class="col-sm-3">
 								<p class="form-control-static">
-								{{ (displayParseFloat(addInvProduct.cessFlat) + ((displayParseFloat(addInvProduct.purchasePrice) * displayParseFloat(addInvProduct.cess)) / 100)) |  currency:"&#8377; "}}
+								{{ (displayParseFloat(addInvProduct.cessFlat) + ((displayParseFloat(addInvProduct.purchasePrice) * displayParseFloat(addInvProduct.cessPercentage)) / 100)) |  currency:"&#8377; "}}
 								</p>
 							</div>
 							<label class="col-sm-3 control-label-left" ></label>
