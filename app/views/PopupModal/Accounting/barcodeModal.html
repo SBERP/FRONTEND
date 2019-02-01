@@ -1,0 +1,73 @@
+<style>
+.imageAncher{position:relative;vertical-align:middle;display:inline-block}
+.myCrossDesign{position:absolute;top:0;right:0;height:20px;width:20px;color:#eb615f;font-size:20px}.myCrossDesign:hover{color:red}.documentRight{display:block;position:absolute;top:10%;right:60%;font-size:40px;color:#88bf57}.documentRight:hover{color:green}.documentCross{display:block;position:absolute;font-size:40px;color:#eb615f;top:10%;right:20%}.documentCross:hover{color:red}
+</style>
+<div class="modal-header" data-ng-class="app.theme.brand">
+	<button type="button" data-dismiss="modal" data-ng-click="closeButton()" aria-hidden="true" class="close text-md"><i class="fa fa-times" style="color:white"></i></button>  
+	  <h4 id="myModalLabel" class="modal-title">IMEI / Serial Form</h4>
+</div>
+	<div class="modal-body my-model-body">
+		<center>
+			<form action="#" name="formBarcode" class="form-validate form-horizontal" autocomplete="off">
+				<table  class="table table-bordered table-striped tableTopCss" >
+					<thead>
+						<tr>
+							<th class="header my-table-paddingTopBottom" width="2%">#</th>
+							<th class="header my-table-paddingTopBottom">IMEI / Serial</th>
+							<th class="header my-table-paddingTopBottom">Barcode No</th>
+							<th class="header my-table-paddingTopBottom" style="width: 8%">Qty</th>
+							<th class="header my-table-paddingTopBottom" style="width: 10%">Action
+								(<a href="javascript:void(0)" ng-click="addRow()" style="font-size:13px;">
+									<i  class="fa fa-plus myCursorPointer"></i>
+								</a>)
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="myTable" data-ng-class="app.tableAnimation" ng-repeat="item in ProductImeiArray track by $index">
+							<td>
+								<strong ng-bind="$index+1"></strong>
+							</td>
+							<td>
+								<input type="text" ng-model="item.imei_no" class="form-control input-sm">
+							</td>
+							<td>
+								<input type="text" ng-model="item.barcode_no" class="form-control input-sm">
+							</td>
+							<td>
+								<input type="text" ng-model="item.qty" class="form-control input-sm" ng-minlength="1" ng-pattern="/^[1-9]+[0-9]*$/" only-number>
+							</td>
+							<td class="text-center">
+								<a class="text-danger" href="javascript:void(0)" ng-click="deleteRow()" style="font-size:20px;">
+									<i class="fa fa-times myCursorPointer"></i>
+								</a>
+							</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td class="text-right">{{totalQty()}}</td>
+							<td></td>
+						</tr>
+					</tfoot>
+				</table>
+				<button type="button" class="mr mb-sm btn btn-success pull-right" data-ng-click="ok()" class="btn btn-primary" ng-disabled="formBarcode.$invalid">Save</button>
+				<button type="button" class="mr mb-sm btn btn-danger pull-right" data-ng-click="cancel()">Cancel</button>
+			</form>
+		</center>
+	</div>
+	
+<script type="text/ng-template" id="errorRequired">
+	<span class="text-danger" ng-message="required">{{errorMessage.require}}</span>
+</script>
+
+<script type="text/ng-template" id="errorLonglength">
+	<span class="text-danger" ng-message="maxlength">{{errorMessage.longLength}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternAlpha">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.Alphabets}}</span>
+</script>

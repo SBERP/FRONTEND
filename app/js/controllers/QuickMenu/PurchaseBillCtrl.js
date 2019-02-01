@@ -136,6 +136,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 	$scope.enableDisableVariant = true;
 	$scope.enableDisableSize = true;
 	$scope.enableDisableFrameNo = true;
+	$scope.enableItemizedPurchaseSales = false;
 	$scope.divTag = true;
 	$scope.divAdvanceMou = false;
 	$scope.colspanValue = '6';
@@ -204,6 +205,9 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 							$scope.totalTd = '13';
 							$scope.colspanExpenseValue='7';
 						}
+					}
+					if (response[arrayData].settingType=="inventory") {
+						$scope.enableItemizedPurchaseSales = response[arrayData].inventoryItemizeStatus=="enable" ? true : false;
 					}
 				}
 			}
@@ -1813,7 +1817,36 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 	}
   };
   /** Product Model End **/
-	
+/** Barcode Modal Start **/
+  $scope.openBarcodeModal = function(size,index){
+  	if (Modalopened) return;
+  	toaster.pop('wait', 'Please Wait', 'popup opening....',600000);
+  	var selectedProduct = vm.AccBillTable[index];
+  			var modalInstance = $modal.open({
+			  templateUrl: 'app/views/PopupModal/Accounting/barcodeModal.html',
+			  controller: 'AccBarcodeModalController as form',
+			  size: size,
+			  resolve:{
+				  productIndex: function(){
+					  return index;
+				  },
+				  productData: function(){
+					return selectedProduct;
+				  },
+				  companyId: function(){
+					return $scope.purchaseBill.companyDropDown;
+				  }
+			  }
+			});
+			Modalopened = true;
+			
+			modalInstance.opened.then(function() {
+				toaster.clear();
+			});
+  }
+  /**
+  Barcode Modal End
+  **/
 
 	$scope.openScanPopup = function(imageUrl){
 		
@@ -2149,6 +2182,5 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 		  }
 		  return fiscalyear
 	}
-		
 }
 PurchaseBillController.$inject = ["$rootScope","$scope","apiCall","apiPath","$http","$window","$modal","purchaseType","validationMessage","productArrayFactory","getSetFactory","toaster","apiResponse","$anchorScroll","maxImageSize","$sce","$templateCache","getLatestNumber","productFactory","$filter","$state","fetchArrayService","bankFactory"];

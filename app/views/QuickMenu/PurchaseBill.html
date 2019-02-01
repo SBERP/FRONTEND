@@ -160,6 +160,7 @@
 							<span class="input-group-btn">
 								 <button type="button" class="btn btn-default btn-sm" ng-if="item.productId" ng-click="editProductWithRedirect($index)"><i class="fa fa-edit" style="font-size:15px;color:#17A1E5;"></i></button>
 							   <button type="button" class="btn btn-default btn-sm" data-ng-click="openProduct('lg',$index)"><i class="fa fa-plus" style="font-size:15px;color:#17A1E5;"></i></button>
+							   <button ng-if="enableItemizedPurchaseSales && item.productId" type="button" class="btn btn-default btn-sm" tooltip="IMEI/Serial No"  tooltip-trigger="mouseenter" tooltip-placement="top" data-ng-click="openBarcodeModal('lg',$index)"><i class="fa fa-barcode" style="font-size:15px;color:#17A1E5;"></i></button>
 							</span>
 						</div>
 					</td>

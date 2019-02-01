@@ -501,6 +501,42 @@
 			</div>
 		</div >
 	</div>
+	<!-- inventory setting -->
+	<div class="col-md-6" >
+		<div class="panel panel-primary" >
+			<div class="panel-heading" data-ng-class="app.theme.brand">
+				<div class="panel-title">
+					<i class="fa fa-barcode" ></i> Inventory
+				</div>
+			</div>
+			<div class="panel-body">
+				<form  action="#" name="formInventory" class="form-validate form-horizontal">
+					<div class="col-sm-4">
+						<fieldset class="my-fieldset-paddingBottom">
+						   	<div class="form-group">
+						   		<label class="col-sm-2 col-xs-6 col-md-6 control-label pt-sm">Itemized Purchase/Sales</label>
+							    <div class="col-sm-2 col-xs-6 col-md-4">
+									<label class="switch switch-lg switch-success pull-right ph-lg">
+			                       		 <input type="checkbox" data-ng-model="enableItemizedPurchaseSales" ng-change="changeInInventory('enableItemizedPurchaseSales',enableItemizedPurchaseSales)"/>
+			                       		 <span></span>
+			                    	</label>
+								</div>
+						   	</div>
+						</fieldset>
+					</div>
+					<div class="col-sm-3">
+					</div>
+					<div class="col-sm-3" ng-if="enableDisableValue">
+						<fieldset class="my-fieldset-paddingBottom">
+						   	<div class="form-group">
+							  	<button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="AddUpdateInventorySetting()" ng-disabled="formInventory.$invalid"  data-ng-class="app.theme.brand" >{{insertUpdateInventoryLabel}}</button>
+						   	</div>
+						</fieldset>
+					</div>
+				</form>
+			</div>
+		</div >
+	</div>
 
 	<!-- Measurement of Unit -->
 	<div class="col-md-6">

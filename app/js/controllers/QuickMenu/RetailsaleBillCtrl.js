@@ -3206,7 +3206,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
   /**
 	Product Redirect Edit
   **/
-  
   /**
   Product Model Start
   **/
@@ -3312,7 +3311,15 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
   /**
   Product Model End
   **/
-
+  /**
+  Barcode Modal Start
+  **/
+  $scope.openBarcodeModal = function(size,index){
+  	console.log(index);
+  }
+  /**
+  Barcode Modal End
+  **/
   /**
   Client Model Start
   **/

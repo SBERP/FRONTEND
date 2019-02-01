@@ -18,7 +18,6 @@
 		            <div class="col-sm-4">
 		                <select chosen="" data-ng-model="addModelProduct.company" tabindex="2" data-ng-options="s.companyName for s in companyDrop track by s.companyId" ng-change="changeCompany(addModelProduct.company.companyId)" ng-disabled="disableCompany"  class="form-control chosen-select" ng-required="true"></select>
 		            </div>
-					  
 					<label class="col-sm-2 control-label">*Branch</label>
 		            <div class="col-sm-4">
 		                <select chosen="" data-ng-model="addModelProduct.branch" tabindex="2" data-ng-options="s.branchName for s in branchDrop track by s.branchId" ng-change="changeInvProductData('branchId',addModelProduct.branch.branchId)" class="form-control chosen-select" ng-required="true"></select>

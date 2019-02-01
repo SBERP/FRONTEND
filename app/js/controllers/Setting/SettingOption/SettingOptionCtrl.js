@@ -34,6 +34,8 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
   	$scope.enableDisableAdvanceSales = false;
   	$scope.enableDisableAdvancePurchase = false;
 
+  	$scope.enableItemizedPurchaseSales = false;
+
 	/* VALIDATION */
 		$scope.errorMessage = validationMessage; //Error Messages In Constant
 	/* VALIDATION END */
@@ -60,6 +62,7 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 				var productFlag=0;
 				var clientFlag=0;
 				var billFlag=0;
+				var inventoryFlag=0;
 				var advanceBillFlag=0;
 
 				for(var arrayData=0;arrayData<responseLength;arrayData++)
@@ -133,6 +136,14 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 							
 						}
 
+						if(response2[arrayData].settingType=="inventory")
+						{
+							inventoryFlag=1;
+							$scope.insertUpdateInventoryLabel = "Update";
+							var arrayData1 = response2[arrayData];
+							$scope.enableItemizedPurchaseSales = arrayData1.inventoryItemizeStatus=="enable" ? true : false;
+						}
+
 						if(response2[arrayData].settingType=="advance")
 						{
 							advanceBillFlag=1;
@@ -140,7 +151,6 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 							var arrayData1 = response2[arrayData];
 							$scope.enableDisableAdvanceSales = arrayData1.advanceSalesStatus=="enable" ? true : false;
 							$scope.enableDisableAdvancePurchase = arrayData1.advancePurchaseStatus=="enable" ? true : false;
-							
 						}
 					}
 				}
@@ -168,6 +178,10 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 				{
 					$scope.insertUpdateBillLabel = "Insert";
 				}
+				if(inventoryFlag==0)
+				{
+					$scope.insertUpdateInventoryLabel = "Insert";
+				}
 				if(advanceBillFlag==0)
 				{
 					$scope.insertUpdateAdvanceBillLabel = "Insert";
@@ -181,6 +195,7 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 		$scope.serviceDataflag = 0;
 		$scope.chequeNoflag = 0;
 		$scope.productFlag = 0;
+		$scope.inventoryFlag = 0;
 		$scope.clientFlag = 0;
 		$scope.billFlag = 0;
 		$scope.advanceBillFlag = 0;
@@ -228,6 +243,9 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 			// }
 
 			$scope.productFlag = 1;
+		}
+		$scope.changeInInventory = function(key,value){
+			$scope.inventoryFlag = 1;
 		}
 		$scope.changeInClient = function(key,value){
 			
@@ -480,7 +498,38 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 			}
 		}
 		/** End **/
-
+		$scope.AddUpdateInventorySetting = function() {
+			toaster.clear();
+			if($scope.inventoryFlag == 1){
+				var inventoryData = new FormData();
+				if($scope.enableItemizedPurchaseSales==true)
+				{
+					inventoryData.append('inventoryItemizeStatus','enable');
+				}else
+				{
+					inventoryData.append('inventoryItemizeStatus','disable');
+				}
+				if($scope.insertUpdateInventoryLabel == "Update"){
+					var apiPostPatchCall = apiCall.patchCall;
+				}
+				else{
+					var apiPostPatchCall = apiCall.postCall;
+				}
+				apiPostPatchCall(apiPath.settingOption,inventoryData).then(function(response){
+					if(apiResponse.ok == response){
+						
+						$scope.getOptionSettingData();
+						toaster.pop('success','inventory-Data',$scope.insertUpdateInventoryLabel+' Successfull');
+						$scope.inventoryFlag = 0;
+					}
+					else{
+						toaster.pop('warning','Opps!!',response);
+					}
+				});
+			}else{
+				toaster.pop('info','inventory-Data','Please Change Data');
+			}
+		}
 		//Add-Update client data
 		$scope.AddUpdateClientSetting = function(){
 			toaster.clear();
