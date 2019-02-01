@@ -3,7 +3,7 @@
 .myCrossDesign{position:absolute;top:0;right:0;height:20px;width:20px;color:#eb615f;font-size:20px}.myCrossDesign:hover{color:red}.documentRight{display:block;position:absolute;top:10%;right:60%;font-size:40px;color:#88bf57}.documentRight:hover{color:green}.documentCross{display:block;position:absolute;font-size:40px;color:#eb615f;top:10%;right:20%}.documentCross:hover{color:red}
 </style>
 <div class="modal-header" data-ng-class="app.theme.brand">
-	<button type="button" data-dismiss="modal" data-ng-click="closeButton()" aria-hidden="true" class="close text-md"><i class="fa fa-times" style="color:white"></i></button>  
+	<button type="button" data-dismiss="modal" data-ng-click="cancel()" aria-hidden="true" class="close text-md"><i class="fa fa-times" style="color:white"></i></button>  
 	  <h4 id="myModalLabel" class="modal-title">IMEI / Serial Form</h4>
 </div>
 	<div class="modal-body my-model-body">
@@ -29,16 +29,16 @@
 								<strong ng-bind="$index+1"></strong>
 							</td>
 							<td>
-								<input type="text" ng-model="item.imei_no" class="form-control input-sm">
+								<input type="text" ng-model="item.imei_no" class="form-control input-sm" required>
 							</td>
 							<td>
 								<input type="text" ng-model="item.barcode_no" class="form-control input-sm">
 							</td>
 							<td>
-								<input type="text" ng-model="item.qty" class="form-control input-sm" ng-minlength="1" ng-pattern="/^[1-9]+[0-9]*$/" only-number>
+								<input type="text" ng-model="item.qty" class="form-control input-sm" ng-minlength="1" ng-pattern="/^[1-9]+[0-9]*$/" only-number required>
 							</td>
 							<td class="text-center">
-								<a class="text-danger" href="javascript:void(0)" ng-click="deleteRow()" style="font-size:20px;">
+								<a class="text-danger" href="javascript:void(0)" ng-click="deleteRow($index)" style="font-size:20px;">
 									<i class="fa fa-times myCursorPointer"></i>
 								</a>
 							</td>

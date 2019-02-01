@@ -1843,6 +1843,13 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 			modalInstance.opened.then(function() {
 				toaster.clear();
 			});
+			modalInstance.result.then(function (data) {
+				vm.AccBillTable[index].itemizeDetail = data;
+				$scope.changeProductArray = true;
+				Modalopened = false;
+			},function(){
+				Modalopened = false;
+			});
   }
   /**
   Barcode Modal End
