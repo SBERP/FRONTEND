@@ -16,7 +16,7 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
 	 $scope.disableButton = false;
 	 
 	 var flag = 0;
-	 $scope.AllTransactionData;
+	 $scope.AllTransactionData = [];
 	 vm.tableParams;
 	$scope.getArray;
 	var data = [];
@@ -51,14 +51,14 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
 			toaster.clear();
 			toaster.pop('wait', 'Please Wait', 'Data Loading....',60000);
 			
-		//console.log(response);
-		vm.states.push(response);
-		$scope.allProductModel = response;
-		//console.log(vm.states);
-		$scope.displayCompany = response.company.companyName;
-		
-		$scope.apiCallStock();
-			
+			//console.log(response);
+			vm.states.push(response);
+			$scope.allProductModel = response;
+			apiCall.getCall(apiPath.getAllCompany+'/'+response.companyId).then(function(response2){
+				console.log(response2);
+				$scope.displayCompany = response2.companyName;
+				$scope.apiCallStock();
+			});
 		});
 		
 	}

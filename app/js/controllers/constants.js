@@ -186,7 +186,8 @@ App
   'getSetDraft'           : 'accounting/bills/draft-bill',
   'settingMeasurementUnit': 'settings/measurement-units',
   'multipleBillPrint'     : 'accounting/bills/bulk-print',
-  'getStaffCommission'    : 'users/commissions/'
+  'getStaffCommission'    : 'users/commissions/',
+  'getItemizeStockSummary' : 'products/itemize-summary/'
   })
   //Api Path
   .constant('apiResponse', {

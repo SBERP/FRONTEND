@@ -6,13 +6,15 @@
 
 App.controller('InvStockSummaryController', InvStockSummaryController);
 
-function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,apiCall,apiPath,$location,apiResponse,toaster,getSetFactory,fetchArrayService) {
+function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,apiCall,apiPath,$location,apiResponse,toaster,getSetFactory,fetchArrayService,$modal) {
   'use strict';
   var vm = this;
   $scope.filteredItems=[];
 	//$scope.brandradio="";
 	$scope.enableDisableColor = true;
 	$scope.enableDisableSize = true;
+	$scope.enableItemizedPurchaseSales = true;
+	var Modalopened = false;
 	// $scope.enableDisableBestBefore = true;
 	//get setting data
 	$scope.getOptionSettingData = function()
@@ -21,6 +23,8 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 		if ($rootScope.$storage.settingOptionArray.length > 0)
 		{
 			var product_setting = fetchArrayService.getfilteredSingleObject($rootScope.$storage.settingOptionArray,'product','settingType');
+			var inventory_setting = fetchArrayService.getfilteredSingleObject($rootScope.$storage.settingOptionArray,'inventory','settingType');
+			console.log(inventory_setting);
 			if (angular.isObject(product_setting))
 			{
 				if(product_setting.settingType=="product")
@@ -30,6 +34,10 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 					$scope.enableDisableSize = arrayData1.productSizeStatus=="enable" ? true : false;
 					// $scope.enableDisableBestBefore = arrayData1.productBestBeforeStatus=="enable" ? true : false;
 				}
+			}
+			if (angular.isObject(inventory_setting)) {
+				var arrayData1 = inventory_setting;
+				$scope.enableItemizedPurchaseSales = arrayData1.inventoryItemizeStatus=="enable" ? true : false;
 			}
 		}
 		else
@@ -47,6 +55,10 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 							$scope.enableDisableColor = arrayData1.productColorStatus=="enable" ? true : false;
 							$scope.enableDisableSize = arrayData1.productSizeStatus=="enable" ? true : false;
 							// $scope.enableDisableBestBefore = arrayData1.productBestBeforeStatus=="enable" ? true : false;
+						}
+						if (response[arrayData].settingType=="inventory") {
+							var arrayData1 = response[arrayData];
+							$scope.enableItemizedPurchaseSales = arrayData1.inventoryItemizeStatus=="enable" ? true : false;
 						}
 					}
 				}
@@ -259,5 +271,28 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 	  });
 		flag = 1;
 	}
+	$scope.itemizeTrnModal = function(productId,size){
+		if (Modalopened) return;
+  		toaster.pop('wait', 'Please Wait', 'popup opening....',600000);
+		var modalInstance = $modal.open({
+		  templateUrl: 'app/views/PopupModal/Accounting/ItemizeStockModal.html',
+		  controller: 'AccItemizeStockModalController as form',
+		  size: size,
+		  resolve:{
+			  productId: function(){
+				  return productId;
+			  }
+		  }
+		});
+		Modalopened = true;
+		modalInstance.opened.then(function() {
+			toaster.clear();
+		});
+		modalInstance.result.then(function () {
+			Modalopened = false;
+		},function(){
+			Modalopened = false;
+		});
+	}
 }
-InvStockSummaryController.$inject = ["$rootScope","$scope", "$filter", "ngTableParams","apiCall","apiPath","$location","apiResponse","toaster","getSetFactory","fetchArrayService"];
+InvStockSummaryController.$inject = ["$rootScope","$scope", "$filter", "ngTableParams","apiCall","apiPath","$location","apiResponse","toaster","getSetFactory","fetchArrayService","$modal"];

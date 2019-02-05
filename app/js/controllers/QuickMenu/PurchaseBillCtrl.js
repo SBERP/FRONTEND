@@ -1167,6 +1167,9 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 						setData = value.measurementUnitId;
 					}
 				}
+				if (key == 'itemizeDetail') {
+					setData = JSON.stringify(value);
+				}
 				formdata.set('inventory['+i+']['+key+']',setData);
 			});	
 		 }

@@ -36,7 +36,10 @@
 				<tr data-ng-repeat="user in ($parent.filteredItems = $data) track by user.productTrnSummaryId">
 					<td data-title="'Brand'" sortable="'productCategoryName'" filter="{ 'productCategoryName': 'text' }" ng-bind="user.productCategoryName"></td>
 					 <td data-title="'Category'" sortable="'productGroupName'" filter="{ 'productGroupName': 'text' }" ng-bind="user.productGroupName"></td>
-					<td data-title="'Product Name'" sortable="'productName'" filter="{ 'productName': 'text' }" ng-bind="::user.productName"></td>
+					<td data-title="'Product Name'" sortable="'productName'" filter="{ 'productName': 'text' }">
+						<span ng-if="!enableItemizedPurchaseSales" ng-bind="::user.productName"></span>
+						<a ng-if="enableItemizedPurchaseSales" href="javascript:void()" ng-click="itemizeTrnModal(user.product.productId,'lg')" ng-bind="::user.productName"></a>
+					</td>
 				   
 					<td ng-show="enableDisableColor" data-title="'Color'"  filter="{ 'color': 'text' }" ng-bind="::user.color"></td>
 					<td ng-show="enableDisableSize" data-title="'Size'"  filter="{ 'size': 'text' }" ng-bind="::user.size"></td>
