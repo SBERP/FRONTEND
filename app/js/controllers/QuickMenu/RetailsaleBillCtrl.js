@@ -117,7 +117,9 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	$scope.enableDisableProfession = false;
 	
 	$scope.enableDisableSalesman = false;
-	
+
+	$scope.enableItemizedPurchaseSales = false;
+
 	$scope.divTag = false;
 	$scope.divAdvanceMou = false;
 	$scope.colspanValue = '6';
@@ -213,6 +215,12 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				{
 					var arrayData1 = response[arrayData];
 					$scope.enableDisableSalesman = arrayData1.billSalesmanStatus=="enable" ? true : false;
+					
+				}
+				else if(response[arrayData].settingType=="inventory")
+				{
+					var arrayData1 = response[arrayData];
+					$scope.enableItemizedPurchaseSales = arrayData1.inventoryItemizeStatus=="enable" ? true : false;
 					
 				}
 			}
@@ -1995,6 +2003,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					formdata.set('totalCgstPercentage',checkGSTValue($scope.quickBill.totalCgstPercentage));
 					formdata.set('totalSgstPercentage',checkGSTValue($scope.quickBill.totalSgstPercentage));
 					formdata.set('totalIgstPercentage',checkGSTValue($scope.quickBill.totalIgstPercentage));
+
 				}
 				
 			if($scope.changeInClientData === true){
@@ -2185,9 +2194,11 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 						setData = value.measurementUnitId;
 					}
 				}
+				if (key == 'itemizeDetail') {
+					setData = JSON.stringify(value);
+				}
 				formdata.set('inventory['+i+']['+key+']',setData);
 			});
-					
 		 }
 		if(vm.AccExpense.length>0)
 		{
@@ -3311,11 +3322,42 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
   /**
   Product Model End
   **/
-  /**
-  Barcode Modal Start
-  **/
+/** Barcode Modal Start **/
   $scope.openBarcodeModal = function(size,index){
-  	console.log(index);
+  	if (Modalopened) return;
+  	toaster.pop('wait', 'Please Wait', 'popup opening....',600000);
+  	var selectedProduct = vm.AccBillTable[index];
+  			var modalInstance = $modal.open({
+			  templateUrl: 'app/views/PopupModal/Accounting/barcodeModal.html',
+			  controller: 'AccBarcodeModalController as form',
+			  size: size,
+			  resolve:{
+				  productIndex: function(){
+					  return index;
+				  },
+				  productData: function(){
+					return selectedProduct;
+				  },
+				  companyId: function(){
+					return $scope.quickBill.companyId;
+				  },
+				  transactionType: function(){
+				  	return 'sales';
+				  }
+			  }
+			});
+			Modalopened = true;
+			
+			modalInstance.opened.then(function() {
+				toaster.clear();
+			});
+			modalInstance.result.then(function (data) {
+				vm.AccBillTable[index].itemizeDetail = data;
+				$scope.changeProductArray = true;
+				Modalopened = false;
+			},function(){
+				Modalopened = false;
+			});
   }
   /**
   Barcode Modal End

@@ -24,7 +24,6 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 		{
 			var product_setting = fetchArrayService.getfilteredSingleObject($rootScope.$storage.settingOptionArray,'product','settingType');
 			var inventory_setting = fetchArrayService.getfilteredSingleObject($rootScope.$storage.settingOptionArray,'inventory','settingType');
-			console.log(inventory_setting);
 			if (angular.isObject(product_setting))
 			{
 				if(product_setting.settingType=="product")
@@ -44,7 +43,6 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 		{
 			apiCall.getCall(apiPath.settingOption).then(function(response){
 				var responseLength = response.length;
-				console.log(response);
 				for(var arrayData=0;arrayData<responseLength;arrayData++)
 				{
 					if(angular.isObject(response) || angular.isArray(response))
@@ -80,7 +78,6 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 		while(iIndex < count) 
 		{
 		  	var index = fetchArrayService.myIndexOfObject(vm.productCategoryData,data[iIndex].product.productCategoryId,'productCategoryId');
-			// console.log("prrrrrrrrrrrrrroooooooooooooodcut = ",data[iIndex].product);
 			data[iIndex].productCategoryName = ""; //initialization of new property 
 			data[iIndex].productCategoryName =	index.productCategoryName;  //set the data from nested obj into new property
 			
@@ -276,7 +273,7 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
   		toaster.pop('wait', 'Please Wait', 'popup opening....',600000);
 		var modalInstance = $modal.open({
 		  templateUrl: 'app/views/PopupModal/Accounting/ItemizeStockModal.html',
-		  controller: 'AccItemizeStockModalController as form',
+		  controller: 'AccItemizeStockModalController as table',
 		  size: size,
 		  resolve:{
 			  productId: function(){

@@ -8,33 +8,29 @@
 </div>
 	<div class="modal-body my-model-body">
 		<center>
-			<table  class="table table-bordered table-striped tableTopCss" >
-				<thead>
-					<tr>
-						<th class="header my-table-paddingTopBottom" width="2%">#</th>
-						<th class="header my-table-paddingTopBottom">IMEI / Serial</th>
-						<th class="header my-table-paddingTopBottom">Barcode No</th>
-						<th class="header my-table-paddingTopBottom" style="width: 10%">Qty</th>
-					</tr>
-				</thead>
+			<table data-ng-table="table.tableParams" class="table table-bordered table-striped tableTopCss"  show-filter="true">
 				<tbody>
-					<tr class="myTable" data-ng-class="app.tableAnimation" ng-repeat="item in ProductImeiArray track by $index">
-						<td>
-							<strong ng-bind="$index+1"></strong>
-						</td>
-						<td ng-bind="item.imeiNo">
-						</td>
-						<td ng-bind="item.barcodeNo">
-						</td>
-						<td class="text-right">
-							<span ng-bind="parsedStock(item.stock)"></span>
-						</td>
+					<tr class="myTable" ng-repeat="user in $data">
+						<td data-title="'IMEI No'" sortable="'imeiNo'" filter="{ 'imeiNo': 'text' }">{{user.imeiNo}}</td>
+						<td data-title="'Barcode No'" sortable="'barcodeNo'" filter="{ 'barcodeNo': 'text' }">{{user.barcodeNo}}</td>
+						<td class="text-right" data-title="'Qty'" sortable="'qty'" filter="{ 'qty': 'text' }">
+		                  	<span data-ng-class="{ 'plus': user.stock &gt;= 0,'minus': user.stock &lt; 0 }">{{parsedStock(user.stock)}}</span>
+		               	</td>
 					</tr>
 				</tbody>
 				<tfoot>
 					<tr>
+						<td><strong>Page Total</strong></td>
 						<td></td>
-						<td><strong>Total Qty</strong></td>
+						<td class="text-right">{{visibleQty()}}</td>
+					</tr>
+					<tr>
+						<td><strong>Search Total</strong></td>
+						<td></td>
+						<td class="text-right">{{filteredQty()}}</td>
+					</tr>
+					<tr>
+						<td><strong>Grand Total</strong></td>
 						<td></td>
 						<td class="text-right">{{totalQty()}}</td>
 					</tr>

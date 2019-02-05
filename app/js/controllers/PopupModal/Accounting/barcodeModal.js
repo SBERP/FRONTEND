@@ -1,10 +1,33 @@
 /** Modal to add IMEI/ Serial on bill **/
 App.controller('AccBarcodeModalController', AccBarcodeModalController);
 
-function AccBarcodeModalController($scope,toaster,$modalInstance,$rootScope,apiCall,apiPath,productIndex,productData,companyId,validationMessage,apiResponse){
+function AccBarcodeModalController($scope,toaster,$modalInstance,$rootScope,$filter,apiCall,apiPath,productIndex,productData,companyId,transactionType,validationMessage,apiResponse){
     'use strict';
-    console.log(productData);
     $scope.ProductImeiArray = [];
+    $scope.typeAheadData = [];
+    var data = [];
+    apiCall.getCall(apiPath.getItemizeStockSummary+productData.productId).then(function(response){
+        data = response;
+        $scope.getProductData();
+    });
+
+
+    // Filter IMEI numbers stockwise
+    $scope.getProductData = function(){
+        if (transactionType == 'sales') {
+            $scope.typeAheadData = $filter('filter')(data, function(item){
+                return parseFloat(item.stock) > 0;
+            });
+        }
+        else if (transactionType == 'purchase') {
+            $scope.typeAheadData = $filter('filter')(data, function(item){
+                return parseFloat(item.stock) < 0;
+            });
+        }
+    }
+    $scope.setProductData = function(item,index){
+        $scope.ProductImeiArray[index].barcode_no = item.barcodeNo;
+    }
     $scope.addRow = function(){
         var newInputLine = {
             "imei_no" : '',
@@ -23,7 +46,6 @@ function AccBarcodeModalController($scope,toaster,$modalInstance,$rootScope,apiC
     if ($scope.ProductImeiArray.length == 0) {
         $scope.addRow();
     }
-
     $scope.totalQty = function(){
         var total = 0;
         var count = $scope.ProductImeiArray.length;
@@ -41,4 +63,4 @@ function AccBarcodeModalController($scope,toaster,$modalInstance,$rootScope,apiC
       $modalInstance.dismiss('close');
     };
 }
-AccBarcodeModalController.$inject = ["$scope","toaster","$modalInstance","$rootScope","apiCall","apiPath","productIndex","productData","companyId","validationMessage","apiResponse"];
+AccBarcodeModalController.$inject = ["$scope","toaster","$modalInstance","$rootScope","$filter","apiCall","apiPath","productIndex","productData","companyId","transactionType","validationMessage","apiResponse"];

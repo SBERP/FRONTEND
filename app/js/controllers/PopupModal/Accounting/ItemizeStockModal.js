@@ -1,37 +1,66 @@
 /** Modal to add IMEI/ Serial on bill **/
 App.controller('AccItemizeStockModalController', AccItemizeStockModalController);
 
-function AccItemizeStockModalController($scope,toaster,$modalInstance,ngTableParams,$rootScope,apiCall,apiPath,productId,validationMessage,apiResponse){
+function AccItemizeStockModalController($scope,toaster,$modalInstance,$filter,ngTableParams,$rootScope,apiCall,apiPath,productId,validationMessage,apiResponse){
     'use strict';
     var vm = this;
-    $scope.ProductImeiArray = [];
-
+    var data = [];
+    var orderedData = [];
+    vm.users = [];
     apiCall.getCall(apiPath.getItemizeStockSummary+productId).then(function(response){
-        $scope.ProductImeiArray = response;
+        data = response;
+        $scope.TableData();
     });
-    // vm.tableParams = new ngTableParams({
-    //       page: 1,            // show first page
-    //       count: 10,          // count per page
-    //       sorting: {
-    //           name: 'asc'     // initial sorting
-    //       }
-    //     }, {
-    //         total: data.length, // length of data
-    //         getData: function($defer, params) {
-    //             // use build-in angular filter
-    //             var orderedData = params.sorting() ?
-    //                   $filter('orderBy')(data, params.orderBy()) :
-    //                       data;
-          
-    //               $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-    //           }
-    //   });
+    $scope.TableData = function(){
+        
+      vm.tableParams = new ngTableParams({
+          page: 1,
+          count: 10,
+          sorting: {
+              imeiNo: 'asc'
+          },
+          filter: {
+              imeiNo: '',
+              barcodeNo: '',
+              qty: ''
+            }
+        }, {
+          total: data.length,
+          getData: function($defer, params) {
+              orderedData = params.filter() ?
+                     $filter('filter')(data, params.filter()) :
+                     data;
+              vm.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
+            
+              params.total(orderedData.length);
+              $defer.resolve(vm.users);
+          }
+      });
+    }
     $scope.totalQty = function(){
         var total = 0;
-        var count = $scope.ProductImeiArray.length;
+        var count = data.length;
         for(var i = 0; i < count; i++)
         {
-            total += parseFloat($scope.ProductImeiArray[i].stock);
+            total += parseFloat(data[i].stock);
+        }
+        return isNaN(total) ? 0 : total;
+    }
+    $scope.visibleQty = function(){
+        var total = 0;
+        var count = vm.users.length;
+        for(var i = 0; i < count; i++)
+        {
+            total += parseFloat(vm.users[i].stock);
+        }
+        return isNaN(total) ? 0 : total;
+    }
+    $scope.filteredQty = function(){
+        var total = 0;
+        var count = orderedData.length;
+        for(var i = 0; i < count; i++)
+        {
+            total += parseFloat(orderedData[i].stock);
         }
         return isNaN(total) ? 0 : total;
     }
@@ -45,4 +74,4 @@ function AccItemizeStockModalController($scope,toaster,$modalInstance,ngTablePar
       $modalInstance.dismiss('close');
     };
 }
-AccItemizeStockModalController.$inject = ["$scope","toaster","$modalInstance","ngTableParams","$rootScope","apiCall","apiPath","productId","validationMessage","apiResponse"];
+AccItemizeStockModalController.$inject = ["$scope","toaster","$modalInstance","$filter","ngTableParams","$rootScope","apiCall","apiPath","productId","validationMessage","apiResponse"];
