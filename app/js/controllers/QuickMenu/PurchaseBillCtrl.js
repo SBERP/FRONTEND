@@ -1838,6 +1838,9 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 				  },
 				  companyId: function(){
 					return $scope.purchaseBill.companyDropDown;
+				  },
+				  transactionType: function(){
+				  	return 'purchase';
 				  }
 			  }
 			});

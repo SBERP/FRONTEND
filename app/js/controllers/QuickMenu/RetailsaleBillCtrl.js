@@ -44,7 +44,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	var defStateData = {};
 	var AllDefCityData = [];
 	var defCityData = {};
-	
+	$scope.openedItemizeTree = 0;
 	$scope.noOfDecimalPoints; // decimalPoints For Price,Tax Etc.....
 	
 	$scope.productArrayFactory = productArrayFactory;
@@ -622,6 +622,10 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			return false;
 		}
 
+		vm.AccBillTable[index].productId = item.productId;
+		if ($scope.enableItemizedPurchaseSales) {
+			vm.AccBillTable[index].itemizeDetail = [];
+		}
 		vm.AccBillTable[index].productId = item.productId;
 		vm.AccBillTable[index].cessFlat = item.cessFlat;
 		vm.AccBillTable[index].cessPercentage = item.cessPercentage;
@@ -3868,7 +3872,27 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			var convertedDate  = date.getDate()+'-'+(date.getMonth()+1)+'-'+date.getFullYear();
 			return convertedDate;
 		}
-
+		$scope.itemizeTreeIcon = function(index){
+			if (index == $scope.openedItemizeTree) {
+				return 'fa-minus-circle';
+			}else{
+				return 'fa-plus-circle';
+			}
+		}
+		$scope.openedItemizeTreeClass = function(index){
+			if (index == $scope.openedItemizeTree) {
+				return '';
+			}else{
+				return 'hidden';
+			}
+		}
+		$scope.expandItemizeTree = function(index){
+			if (index == $scope.openedItemizeTree) {
+				$scope.openedItemizeTree = 0;
+			}else{
+				$scope.openedItemizeTree = index;
+			}
+		}
         /** Get Set Draft **/
         	vm.setInDraft = function()
         	{
