@@ -259,7 +259,6 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 				  $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
 
 			  }
-			console.log("order data ",orderedData.slice((params.page() - 1) * params.count(), params.page()));
 			$scope.totalData = data.length;
 			$scope.pageNumber = params.page();
             $scope.itemsPerPage = params.count();
@@ -278,6 +277,9 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 		  resolve:{
 			  productId: function(){
 				  return productId;
+			  },
+			  stockType: function(){
+				  return 'stockSummary';
 			  }
 		  }
 		});

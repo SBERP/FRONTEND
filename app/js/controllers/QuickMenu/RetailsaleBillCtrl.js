@@ -1242,7 +1242,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	/** Check Update Or Insert Bill **/
 	
 	$scope.EditAddBill = function(copyData = "",draft = null){
-	
+	$scope.openedItemizeTree = 0;
 		//if(Object.keys(getSetFactory.get()).length){
 		if(Object.keys(getSetFactory.get()).length){
 			formdata = undefined;
@@ -2714,7 +2714,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	/** Next Previews **/
 		$scope.goToNextPrevious = function(nextPre){
 			formdata= undefined;
-				
+				$scope.openedItemizeTree = 0;
 				toaster.clear();
 				if($scope.quickBill.companyId){
 					

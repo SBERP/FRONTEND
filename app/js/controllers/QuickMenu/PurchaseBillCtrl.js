@@ -14,7 +14,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 
 	$scope.purchaseBill = [];
 	$scope.displayDefaultCompanyName = "";
-
+	$scope.openedItemizeTree = 0;
 	vm.AccExpense = [];
 
 	vm.disableCompany = false;
@@ -719,7 +719,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 
 	/** Check Update Or Insert Bill **/
 	$scope.EditAddBill = function(copyData = ""){
-	
+		$scope.openedItemizeTree = 0;
 		//if(Object.keys(getSetFactory.get()).length){
 		if(Object.keys(getSetFactory.get()).length){
 			
@@ -1404,7 +1404,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 	
 	/** Next Previews **/
 		$scope.goToNextPrevious = function(nextPre){
-			
+			$scope.openedItemizeTree = 0;
 				toaster.clear();
 				if($scope.purchaseBill.companyDropDown){
 					
@@ -1441,7 +1441,6 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 						}
 						
 						apiCall.getCallHeader(Path,preHeaderData).then(function(response){
-							
 							if(angular.isArray(response)){
 								$scope.purchaseBill = [];
 								getSetFactory.set(response[0]);
@@ -2184,6 +2183,27 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 			});
 		}
 
+	$scope.itemizeTreeIcon = function(index){
+		if (index == $scope.openedItemizeTree) {
+			return 'fa-minus-circle';
+		}else{
+			return 'fa-plus-circle';
+		}
+	}
+	$scope.openedItemizeTreeClass = function(index){
+		if (index == $scope.openedItemizeTree) {
+			return '';
+		}else{
+			return 'hidden';
+		}
+	}
+	$scope.expandItemizeTree = function(index){
+		if (index == $scope.openedItemizeTree) {
+			$scope.openedItemizeTree = 0;
+		}else{
+			$scope.openedItemizeTree = index;
+		}
+	}
 	$scope.getCurrentFinancialYear = function() 
 	{
 		  var fiscalyear = "";

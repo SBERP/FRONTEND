@@ -187,7 +187,8 @@ App
   'settingMeasurementUnit': 'settings/measurement-units',
   'multipleBillPrint'     : 'accounting/bills/bulk-print',
   'getStaffCommission'    : 'users/commissions/',
-  'getItemizeStockSummary' : 'products/itemize-summary/'
+  'getItemizeStockSummary' : 'products/itemize-summary/',
+  'getItemizeStockRegister' : 'products/itemize-register/'
   })
   //Api Path
   .constant('apiResponse', {
