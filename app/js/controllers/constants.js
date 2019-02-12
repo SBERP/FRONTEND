@@ -244,7 +244,8 @@ App
     'arnexim':  'http://api.prabandhak.co.in/',
     'arnknits':  'http://api.prabandhak.co.in/',
     'demoPrabandhak': 'http://api.prabandhak.co.in/',
-    'stageErp': 'http://stageapi.siliconbraintechnosoft.com/'
+    'stageErp': 'http://stageapi.siliconbraintechnosoft.com/',
+    'vastu':'http://api.vastuinteriorsolution.com/'
   })
   // front-end Url
   .constant('hostFrontUrl', {
@@ -261,7 +262,8 @@ App
   'arnexim':  'http://arnexim.prabandhak.co.in/',
   'arnknits':  'http://arnknits.prabandhak.co.in/',
   'demoPrabandhak': 'http://demo.prabandhak.co.in/',
-  'stageErp': 'http://stage.siliconbraintechnosoft.com/'
+  'stageErp': 'http://stage.siliconbraintechnosoft.com/',
+  'vastu':'http://erp.vastuinteriorsolution.com/'
   })
   // Google Captcha Site Key
   .constant('googleSiteKey', {
@@ -278,7 +280,8 @@ App
   'arnexim':  '6LdUHDAUAAAAAAVe8YkqlUm79uLJTtcXqEFLYdO0',
   'arnknits':  '6LcNHDAUAAAAAGSxm7_laHly5BVFrzNNDckUIBb9',
   'demoPrabandhak': '6LddYzAUAAAAAFby3EOjaHBvNDI9p4nVbq8R1MIi',
-  'stageErp': '6LfBqosUAAAAAOWfCStKdw3Nnjq5Nzq7ThfSglyF'
+  'stageErp': '6LfBqosUAAAAAOWfCStKdw3Nnjq5Nzq7ThfSglyF',
+  'vastu': '6Lczw3YUAAAAAOtoh04wnIew3yRbhx_wC6H4LOM2'
   })
   // front-end Url
   .constant('pusherKey', {

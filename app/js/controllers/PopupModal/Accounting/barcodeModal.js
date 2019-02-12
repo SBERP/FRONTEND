@@ -25,6 +25,27 @@ function AccBarcodeModalController($scope,toaster,$modalInstance,$rootScope,$fil
             });
         }
     }
+    $scope.itemizeTreeIcon = function(){
+        if (1 == $scope.openedItemizeTree) {
+            return 'fa-minus-circle';
+        }else{
+            return 'fa-plus-circle';
+        }
+    }
+    $scope.openedItemizeTreeClass = function(){
+        if (1 == $scope.openedItemizeTree) {
+            return '';
+        }else{
+            return 'hidden';
+        }
+    }
+    $scope.expandItemizeTree = function(){
+        if (1 == $scope.openedItemizeTree) {
+            $scope.openedItemizeTree = 0;
+        }else{
+            $scope.openedItemizeTree = 1;
+        }
+    }
     $scope.setProductData = function(item,index){
         $scope.ProductImeiArray[index].barcode_no = item.barcodeNo;
     }

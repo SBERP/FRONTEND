@@ -1,6 +1,50 @@
 <style>
 .imageAncher{position:relative;vertical-align:middle;display:inline-block}
 .myCrossDesign{position:absolute;top:0;right:0;height:20px;width:20px;color:#eb615f;font-size:20px}.myCrossDesign:hover{color:red}.documentRight{display:block;position:absolute;top:10%;right:60%;font-size:40px;color:#88bf57}.documentRight:hover{color:green}.documentCross{display:block;position:absolute;font-size:40px;color:#eb615f;top:10%;right:20%}.documentCross:hover{color:red}
+.itemize-expand-tree,.itemize-expand-tree ul{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.itemize-expand-tree ul{
+	margin-left: 1em;
+    position: relative;
+}
+.itemize-expand-tree ul:before{
+	content: "";
+    display: block;
+    width: 0;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    border-left: 1px solid;
+}
+.itemize-expand-tree li{
+	margin: 0;
+    padding: 0 1em;
+    line-height: 2em;
+    color: #369;
+    font-weight: 700;
+    position: relative;
+}
+.itemize-expand-tree ul li:before{
+	content: "";
+    display: block;
+    width: 10px;
+    height: 0;
+    border-top: 1px solid;
+    margin-top: -1px;
+    position: absolute;
+    top: 1em;
+    left: 0;
+}
+.itemize-expand-tree ul li:last-child:before{
+	background: #fff;
+    height: auto;
+    top: 1em;
+    bottom: 0;
+}
 </style>
 <div class="modal-header" data-ng-class="app.theme.brand">
 	<button type="button" data-dismiss="modal" data-ng-click="cancel()" aria-hidden="true" class="close text-md"><i class="fa fa-times" style="color:white"></i></button>  
@@ -54,6 +98,17 @@
 						</tr>
 					</tfoot>
 				</table>
+				<div class="pull-left">
+					<ul class="itemize-expand-tree text-left" ng-if="typeAheadData.length > 0">
+				 		<li><span ng-click="expandItemizeTree()"><i class="fa {{itemizeTreeIcon()}} fa-lg"></i> IMEI Info</span>
+				 			<ul class="{{openedItemizeTreeClass()}}">
+				 				<li ng-repeat="itemize in typeAheadData" class="clearfix text-left">
+						 			<span>{{itemize.imeiNo}}</span>
+						 		</li>
+				 			</ul>
+				 		</li>
+				 	</ul>
+				</div>
 				<button type="button" class="mr mb-sm btn btn-success pull-right" data-ng-click="ok()" class="btn btn-primary" ng-disabled="formBarcode.$invalid">Save</button>
 				<button type="button" class="mr mb-sm btn btn-danger pull-right" data-ng-click="cancel()">Cancel</button>
 			</form>

@@ -1,13 +1,9 @@
-
 /**=========================================================
  * Module: InvStockCtrl.js
  * Controller for ngTables
  =========================================================*/
-
-
 App.controller('InvStockController', InvStockController);
-
-function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFactory,apiCall,apiPath,$window,apiResponse,toaster,fetchArrayService,$modal) {
+function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFactory,apiCall,apiPath,$window,apiResponse,toaster,fetchArrayService,$modal,$state) {
   'use strict';
   var vm = this;
 	//$scope.brandradio="";
@@ -464,7 +460,6 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
  
 $scope.TableData = function(){
 	
-
   vm.tableParams = new ngTableParams({
       page: 1,            // show first page
       count: 10,          // count per page
@@ -477,9 +472,7 @@ $scope.TableData = function(){
       getData: function($defer, params) {
           
         var orderedData;
-
         if(params.sorting().date === 'asc'){
-
           data.sort(function (a, b) {
 			  var entDate = a.transactionDate.split("-").reverse().join("-");
 						var toDate = b.transactionDate.split("-").reverse().join("-");
@@ -488,9 +481,7 @@ $scope.TableData = function(){
             return dateA - dateB; //sort by date descending
           });
           orderedData = data;
-
         } else if(params.sorting().date === 'desc') {
-
           data.sort(function (a, b) {
 			  var entDate = a.transactionDate.split("-").reverse().join("-");
 						var toDate = b.transactionDate.split("-").reverse().join("-");
@@ -499,9 +490,7 @@ $scope.TableData = function(){
             return dateB - dateA; //sort by date descending
           });
           orderedData = data;
-
         } else if(!params.sorting().date){
-
           if (params.filter().term) {
             orderedData = params.filter() ? $filter('filter')(data, params.filter().term) : data;
           } else {
@@ -509,7 +498,6 @@ $scope.TableData = function(){
           }
           
         }
-
         $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
 		
 		 $scope.totalData = data.length;
@@ -519,11 +507,9 @@ $scope.TableData = function(){
         
       }
   });
-
   //$scope.getArray = data;
 }
-
-  $scope.itemizeTrnModal = function(item,type,balance,size)
+$scope.itemizeTrnModal = function(item,type,balance,size)
   {
   	if (Modalopened) return;
   	var productObject = {};
@@ -614,6 +600,22 @@ $scope.TableData = function(){
 		
 		});
 	}
-
+	$scope.goToBillPage = function(trnType,jfId,companyId)
+	{
+		var headerCr = {'Content-Type': undefined,'companyId':companyId};
+		var path;
+		var gotoUrl;
+		if (trnType == 'purchase') {
+			path = apiPath.postPurchaseBill+'/'+jfId;
+			gotoUrl = 'app.PurchaseBill';
+		}else if (trnType == 'sales') {
+			path = apiPath.postBill+'/'+jfId;
+			gotoUrl = 'app.WholesaleBill';
+		}
+		apiCall.getCallHeader(path,headerCr).then(function(response){
+          	getSetFactory.set(response[0]);
+          	$state.go(gotoUrl);
+        });
+	}
 }
-InvStockController.$inject = ["$rootScope","$scope", "$filter", "ngTableParams","getSetFactory","apiCall","apiPath","$window","apiResponse","toaster","fetchArrayService","$modal"];
+InvStockController.$inject = ["$rootScope","$scope", "$filter", "ngTableParams","getSetFactory","apiCall","apiPath","$window","apiResponse","toaster","fetchArrayService","$modal","$state"];

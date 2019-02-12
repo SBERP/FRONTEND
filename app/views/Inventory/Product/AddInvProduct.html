@@ -183,9 +183,18 @@
 					</div>
 				</div>
 			</div>
-			<h4 class="panel-heading bg-default myHeading" ng-if="enableAdvanceMou" >Measure of Unit</h4>
+			<h4 class="panel-heading bg-default myHeading" ng-if="enableAdvanceMou" >Measure of Unit
+				<span class="pull-right">
+					<a href="javascript:void" ng-if="displayMouCount < 6" ng-click="showHideMou('inc')" style="margin-left: 5px;">
+						<i class="fa fa-plus"></i>
+					</a>
+					<a href="javascript:void" ng-if="displayMouCount > 1" ng-click="showHideMou('dec')" class="text-danger">
+						<i class="fa fa-minus"></i>
+					</a>
+				</span>
+			</h4>
 				<div class="panel-body" ng-if="enableAdvanceMou">
-					<div class="col-md-4" >
+					<div class="col-md-4" ng-if="displayMouCount == 6">
 					   	<div class="form-group">
 						  	<label class="col-sm-3 control-label">Highest</label>
 						  	<div class="col-sm-9">
@@ -223,7 +232,7 @@
 							</div>
 					   </div>
 					</div>
-					<div class="col-md-4" >
+					<div class="col-md-4" ng-if="displayMouCount >= 5">
 					   <div class="form-group">
 						  <label class="col-sm-3 control-label">Higher</label>
 						  <div class="col-sm-9">
@@ -264,7 +273,7 @@
 							</div>
 					   </div>
 					</div>
-					<div class="col-md-4" >
+					<div class="col-md-4" ng-if="displayMouCount >= 4">
 					   <div class="form-group">
 						  <label class="col-sm-3 control-label">Medium</label>
 						  <div class="col-sm-9">
@@ -305,7 +314,7 @@
 							</div>
 					   </div>
 					</div>
-					<div class="col-md-4" >
+					<div class="col-md-4" ng-if="displayMouCount >= 3">
 					   <div class="form-group">
 						  <label class="col-sm-3 control-label">Medium Lower</label>
 						  <div class="col-sm-9">
@@ -346,7 +355,7 @@
 							</div>
 					   </div>
 					</div>
-					<div class="col-md-4" >
+					<div class="col-md-4" ng-if="displayMouCount >= 2">
 					   <div class="form-group">
 						  <label class="col-sm-3 control-label">Lower</label>
 						  <div class="col-sm-9">

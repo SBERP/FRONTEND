@@ -13,7 +13,7 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
   $scope.addInvProduct = [];
   var formdata = new FormData();
   var Modalopened = false;
-
+  $scope.displayMouCount = 1;
   var api_measurementUnit = apiPath.settingMeasurementUnit;
   var api_quantity_pricing = apiPath.getAllProduct+'/';
   var api_product_document = apiPath.getAllProduct;
@@ -1008,5 +1008,13 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 		// 	}
 		// }
 	/** End **/
+	$scope.showHideMou = function(arg)
+	{
+		if (arg == 'inc' && $scope.displayMouCount < 6) {
+			$scope.displayMouCount++;
+		}else if(arg == 'dec' && $scope.displayMouCount > 1){
+			$scope.displayMouCount--;
+		}
+	}
 }
 AddInvProductController.$inject = ["$scope","toaster","$filter","apiCall","apiPath","$stateParams","$state","apiResponse","validationMessage","getSetFactory","$modal","productFactory","fetchArrayService","maxImageSize"];

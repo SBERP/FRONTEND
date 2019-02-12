@@ -211,6 +211,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 					}
 				}
 			}
+			$scope.EditAddBill();
 		});
 	}
 	$scope.getOptionSettingData();
@@ -405,35 +406,6 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 			}else{
 				vm.AccBillTable[index].measurementUnit = item[item.primaryMeasureUnit+'MeasurementUnit'];
 			}
-			// vm.measurementUnitDrop[index] = [];
-			// if (angular.isObject(item.highestMeasurementUnit)) {
-			// 	item.highestMeasurementUnit['measurementUnit'] = 'highest';
-			// 	vm.measurementUnitDrop[index].push(item.highestMeasurementUnit);
-			// }
-
-			// if (angular.isObject(item.higherMeasurementUnit)) {
-			// 	item.higherMeasurementUnit['measurementUnit'] = 'higher';
-			// 	vm.measurementUnitDrop[index].push(item.higherMeasurementUnit);
-			// }
-
-			// if (angular.isObject(item.measurementUnit)) {
-			// 	item.measurementUnit['measurementUnit'] = 'lowest';
-			// 	vm.measurementUnitDrop[index].push(item.measurementUnit);
-			// }
-			// switch(item.primaryMeasureUnit)
-			// {
-			// 	case 'highest':
-			// 		vm.AccBillTable[index].measurementUnit = item.highestMeasurementUnit;
-			// 	break;
-			// 	case 'higher':
-			// 		vm.AccBillTable[index].measurementUnit = item.higherMeasurementUnit;
-			// 	break;
-			// 	case 'lowest':
-			// 		vm.AccBillTable[index].measurementUnit = item.measurementUnit;
-			// 	break;
-			// 	default:
-			// 		vm.AccBillTable[index].measurementUnit = item.measurementUnit;
-			// }
 			$scope.changeQuantity(index);
 		}else{
 			$scope.calculateTaxReverse(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage);
@@ -822,7 +794,16 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 				productFactory.getSingleProduct(EditProducArray[w].productId).then(function(resData){
 					/** Tax **/
 						vm.AccBillTable[d].productName = resData.productName;
+						if (angular.isArray(setData.itemizeDetail)) {
+							vm.AccBillTable[d].itemizeDetail = EditProducArray[w].itemizeDetail;
+						}else if(EditProducArray[w].itemizeDetail == ''){
+							vm.AccBillTable[d].itemizeDetail = [];
+						}else if (angular.isString(EditProducArray[w].itemizeDetail)) {
+							vm.AccBillTable[d].itemizeDetail = angular.fromJson(EditProducArray[w].itemizeDetail);
+						}
+
 						vm.productHsn[d] = resData.hsn;
+
 						if(!EditProducArray[d].hasOwnProperty('cgstPercentage')){
 							vm.AccBillTable[d].cgstPercentage = parseFloat(resData.vat);
 							vm.AccBillTable[d].sgstPercentage = parseFloat(resData.additionalTax); // Additional Tax
@@ -938,7 +919,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 	}	
 	/** End **/
 	
-	$scope.EditAddBill();
+	
   
 	//Change in Product Table
 	$scope.changeProductTable = function(){

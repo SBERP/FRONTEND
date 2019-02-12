@@ -133,6 +133,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		apiCall.getCall(apiPath.settingOption).then(function(response){
 			settingResponse = response;
 			getSettingData(response);
+			$scope.EditAddBill();
 		});
 	}
 	$scope.getOptionSettingData();
@@ -226,7 +227,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			}
 		}
 	}
-
 
 	$scope.getInvoiceAndJobcardNumber = function(id)
 	{
@@ -1484,6 +1484,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			//inventory
 			var EditProducArray = angular.copy(jsonProduct.inventory);
 			var count = EditProducArray.length;
+
 			for(var w=0;w<count;w++){
 				
 				var d = 0;
@@ -1493,6 +1494,13 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					
 					/** Tax **/
 					vm.AccBillTable[d].productName = resData.productName;
+					if (angular.isArray(setData.itemizeDetail)) {
+						vm.AccBillTable[d].itemizeDetail = setData.itemizeDetail;
+					}else if(setData.itemizeDetail == ''){
+						vm.AccBillTable[d].itemizeDetail = [];
+					}else if (angular.isString(setData.itemizeDetail)) {
+						vm.AccBillTable[d].itemizeDetail = angular.fromJson(setData.itemizeDetail);
+					}
 					vm.productHsn[d] = resData.hsn;
 					if(!EditProducArray[d].hasOwnProperty('cgstPercentage')){
 						vm.AccBillTable[d].cgstPercentage = parseFloat(resData.vat);
@@ -1545,39 +1553,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 								}
 							}
 						}
-						// if (vm.AccBillTable[d].measurementUnit)
-						// {
-						// 	var billObject = vm.AccBillTable[d];
-						// 	if (billObject.measurementUnit) {
-
-						// 		if (angular.isObject(resData.highestMeasurementUnit)){
-						// 			if(billObject.measurementUnit == resData.highestMeasurementUnit.measurementUnitId){
-						// 				billObject.measurementUnit = resData.highestMeasurementUnit;
-						// 			}
-						// 		}
-
-						// 		if (angular.isObject(resData.higherMeasurementUnit)){
-						// 			if (billObject.measurementUnit == resData.higherMeasurementUnit.measurementUnitId) {
-						// 				billObject.measurementUnit = resData.higherMeasurementUnit;
-						// 			}
-						// 		}
-
-						// 		if (angular.isObject(resData.measurementUnit)){
-						// 			if (billObject.measurementUnit == resData.measurementUnit.measurementUnitId) {
-						// 				billObject.measurementUnit = resData.measurementUnit;
-						// 			}
-						// 		}
-						// 	}
-							
-						// 	// var muoUpdate = vm.AccBillTable[d].measurementUnit;
-						// 	// var billObject = vm.AccBillTable[d];
-						// 	// apiCall.getCall(apiPath.settingMeasurementUnit+"/"+muoUpdate).then(function(response5)
-						// 	// {
-						// 	// 	if(angular.isObject(response5)){
-						// 	// 	 	billObject.measurementUnit = response5;
-						// 	// 	}
-						// 	// });
-						// }
 					}
 					d++;
 					/** End **/
@@ -1620,7 +1595,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	}	
 	/** End **/
 	
-	$scope.EditAddBill();
   
   
 	
