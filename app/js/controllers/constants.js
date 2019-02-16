@@ -139,6 +139,7 @@ App
   'getAllBank'            : 'banks',
   'getAllBankBranch'      : 'banks/branches',
   'postBill'              : 'accounting/bills',
+  'postSalesReturn'       : 'accounting/sales-returns/',
   'postQuotationBill'     : 'accounting/quotations',
   'getLatestInvoice1'     : 'settings/invoice-numbers/company/',
   'getLatestInvoice2'     : '/latest',

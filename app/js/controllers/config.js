@@ -815,6 +815,17 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
                     }
                 })
 			})
+            //WholeSale Bill Return
+            .state('app.AccSalesReturn', {
+                url: '/AccSalesReturn',
+                templateUrl: basepath('QuickMenu/salesReturnBill.html'), 
+                controller: 'SalesReturnBillController as form',
+                resolve: angular.extend(requireDeps('twain','toaster','angular-chosen','ngTable','uiCropper','moment','jquery-ui'),{
+                    saleType: function(){
+                        return 'SalesReturn';
+                    }
+                })
+            })
             //Purchase Order
             .state('app.PurchaseOrder', {
                 url: '/PurchaseOrder',

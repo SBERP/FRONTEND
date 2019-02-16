@@ -85,6 +85,11 @@ App.factory('productFactory',['apiCall','apiPath','apiResponse','$q','fetchArray
 						return filterData;
 					});
 				}
+				else if(angular.isObject(data)){
+					return getProductAPIObjects([data]).then(function(filterData) {
+						return filterData[0];
+					});
+				}
 				else{
 					return data;
 				}

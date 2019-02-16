@@ -20,6 +20,12 @@
     "permission":"purchase"
   },
   {
+    "text": "Sales Return",
+    "sref": "app.AccSalesReturn",
+    "icon": "fa fa-mail-forward",
+    "permission":"sales"
+  },
+  {
     "text": "Sales Order",
     "sref": "app.AccSalesOrder",
     "icon": "fa fa-credit-card",

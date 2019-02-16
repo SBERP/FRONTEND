@@ -648,24 +648,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					}
 				}
 			}
-			// if (angular.isObject(item.highestMeasurementUnit) && angular.isDefined(item.highestMeasurementUnit.measurementUnitId)) {
-			// 	item.highestMeasurementUnit['measurementUnit'] = 'highest';
-			// 	vm.measurementUnitDrop[index].push(item.highestMeasurementUnit);
-			// }
-
-			// if (angular.isObject(item.higherMeasurementUnit) && angular.isDefined(item.higherMeasurementUnit.measurementUnitId)) {
-			// 	item.higherMeasurementUnit['measurementUnit'] = 'higher';
-			// 	vm.measurementUnitDrop[index].push(item.higherMeasurementUnit);
-			// }
-
-			// if (angular.isObject(item.measurementUnit) && angular.isDefined(item.measurementUnit.measurementUnitId)) {
-			// 	item.measurementUnit['measurementUnit'] = 'lowest';
-			// 	vm.measurementUnitDrop[index].push(item.measurementUnit);
-			// }
-
-			// angular.isObject(item.highestMeasurementUnit) ? vm.measurementUnitDrop[index].push(item.highestMeasurementUnit) : '';
-			// angular.isObject(item.higherMeasurementUnit) ? vm.measurementUnitDrop[index].push(item.higherMeasurementUnit) : '';
-			// angular.isObject(item.measurementUnit) ? vm.measurementUnitDrop[index].push(item.measurementUnit) : '';
 		}
 
 		var grandPrice;
