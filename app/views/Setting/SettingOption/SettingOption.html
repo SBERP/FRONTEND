@@ -240,13 +240,14 @@
 						<div class="col-lg-2 col-sm-2">
 							<fieldset class="my-fieldset-paddingBottom">
 							   <div class="form-group">
-							   	<label class="col-sm-2 col-xs-6 col-md-5 control-label pt-sm">Advance Measurement</label>
+							   	<label class="col-sm-2 col-xs-6 col-md-4 control-label pt-sm">Variant</label>
 								    <div class="col-sm-2 col-xs-6 col-md-4">
 										<label class="switch switch-lg switch-success pull-right ph-lg">
-				                       		 <input type="checkbox" data-ng-model="enableDisableAdvanceMou" ng-change="changeInProduct('enableDisableAdvanceMou',enableDisableAdvanceMou);"/>
+				                       		 <input type="checkbox" data-ng-model="enableDisableVariant" ng-change="changeInProduct('enableDisableVariant',enableDisableVariant)"/>
 				                       		 <span></span>
-				                    	</label>
+				                    	 </label>
 									</div>
+								  
 							   </div>
 							</fieldset >
 						</div>
@@ -265,9 +266,21 @@
 							</fieldset >
 						</div>
 						<div class="clearfix"></div>
+						<div class="col-sm-4">
+							<fieldset class="my-fieldset-paddingBottom">
+							   	<div class="form-group">
+								   	<label class="col-sm-2 control-label pt-sm">Measurement</label>
+								   	<div class="col-sm-8">
+								   		<select chosen="" data-ng-model="measurementType" data-ng-options="s for s in form.measurementOptions" class="form-control chosen-select" ng-required="true" ng-change="changeInProduct('measurementType',measurementType)" name="height" id="height" tabIndex="2" auto-focus  >
+											<option value=""></option>
+										</select>
+								   	</div>
+							   	</div>
+							</fieldset >
+						</div>
 						<div class="col-lg-2 col-sm-2">
 							<fieldset class="my-fieldset-paddingBottom">
-							   <div class="form-group">
+							   <div class="form-group" ng-if="measurementType != 'Advance Measurement'">
 							   	<label class="col-sm-2 col-xs-6 col-md-4 control-label pt-sm">Margins</label>
 								    <div class="col-sm-2 col-xs-6 col-md-4">
 										<label class="switch switch-lg switch-success pull-right ph-lg">
@@ -279,20 +292,7 @@
 							   </div>
 							</fieldset >
 						</div>
-						<div class="col-lg-2 col-sm-2">
-							<fieldset class="my-fieldset-paddingBottom">
-							   <div class="form-group">
-							   	<label class="col-sm-2 col-xs-6 col-md-4 control-label pt-sm">Variant</label>
-								    <div class="col-sm-2 col-xs-6 col-md-4">
-										<label class="switch switch-lg switch-success pull-right ph-lg">
-				                       		 <input type="checkbox" data-ng-model="enableDisableVariant" ng-change="changeInProduct('enableDisableVariant',enableDisableVariant)"/>
-				                       		 <span></span>
-				                    	 </label>
-									</div>
-								  
-							   </div>
-							</fieldset >
-						</div>
+						
 						<div class="col-sm-1">
 							<fieldset class="my-fieldset-paddingBottom">
 							   <div class="form-group">

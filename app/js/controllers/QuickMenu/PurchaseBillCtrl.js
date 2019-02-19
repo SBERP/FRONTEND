@@ -16,7 +16,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 	$scope.displayDefaultCompanyName = "";
 	$scope.openedItemizeTree = 0;
 	vm.AccExpense = [];
-
+	$scope.companyState = '';
 	vm.disableCompany = false;
 	var Modalopened = false;
 	
@@ -42,6 +42,8 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 	$scope.totalTable;
 	$scope.grandTotalTable;
 	$scope.purchaseBill.balanceTable;
+	$scope.igstDisable = true;
+	$scope.csgstDisable = false;
 	
 	/* VALIDATION */
 	
@@ -267,6 +269,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 		
 		var id = response2.companyId;
 		$scope.displayDefaultCompanyName = response2.companyName;
+		$scope.companyState = response2.state.stateAbb;
 		
 		$scope.clientGetAllFunction(id);
 		
@@ -357,7 +360,6 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 	
 	$scope.setProductData = function(item,index)
 	{
-		
 		vm.AccBillTable[index].productId = item.productId;
 		vm.productHsn[index] = item.hsn;
 		
@@ -372,9 +374,16 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 		}
 
 		//Custom GST
-		vm.AccBillTable[index].cgstPercentage = checkGSTValue(item.vat);
-		vm.AccBillTable[index].sgstPercentage = checkGSTValue(item.additionalTax);
-		vm.AccBillTable[index].igstPercentage = checkGSTValue(item.igst);
+		
+		if ($scope.csgstDisable) {
+			vm.AccBillTable[index].cgstPercentage = 0;
+			vm.AccBillTable[index].sgstPercentage = 0;
+			vm.AccBillTable[index].igstPercentage = checkGSTValue(item.igst);
+		}else{
+			vm.AccBillTable[index].cgstPercentage = checkGSTValue(item.vat);
+			vm.AccBillTable[index].sgstPercentage = checkGSTValue(item.additionalTax);
+			vm.AccBillTable[index].igstPercentage = 0;
+		}
 	
 		vm.AccBillTable[index].price = grandPrice;
 		
@@ -556,11 +565,15 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 		var totalOverallTax = checkGSTValue($scope.purchaseBill.totalCgstPercentage) + checkGSTValue($scope.purchaseBill.totalSgstPercentage) + checkGSTValue($scope.purchaseBill.totalIgstPercentage);
 
 		total += $filter('setDecimal')(getTotalAmount*checkGSTValue(totalOverallTax)/100,$scope.noOfDecimalPoints);
-
-		$scope.purchaseBill.totalCgstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(getTotalAmount,$scope.purchaseBill.totalCgstPercentage,0),$scope.noOfDecimalPoints);
-		$scope.purchaseBill.totalSgstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(getTotalAmount,$scope.purchaseBill.totalSgstPercentage,0),$scope.noOfDecimalPoints);
-		$scope.purchaseBill.totalIgstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(getTotalAmount,$scope.purchaseBill.totalIgstPercentage,0),$scope.noOfDecimalPoints);
-
+		if ($scope.csgstDisable) {
+			$scope.purchaseBill.totalCgstAmount =  0;
+			$scope.purchaseBill.totalSgstAmount =  0;
+			$scope.purchaseBill.totalIgstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(getTotalAmount,$scope.purchaseBill.totalIgstPercentage,0),$scope.noOfDecimalPoints);
+		}else{
+			$scope.purchaseBill.totalCgstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(getTotalAmount,$scope.purchaseBill.totalCgstPercentage,0),$scope.noOfDecimalPoints);
+			$scope.purchaseBill.totalSgstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(getTotalAmount,$scope.purchaseBill.totalSgstPercentage,0),$scope.noOfDecimalPoints);
+			$scope.purchaseBill.totalIgstAmount =  0;
+		}
 		return total;
 	}
 	
@@ -584,10 +597,15 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 			var discount = $filter('setDecimal')(total*checkGSTValue($scope.purchaseBill.overallDiscount)/100,$scope.noOfDecimalPoints);
 			total =  total-discount;
 		}
-
-		var getCgst = checkGSTValue($scope.purchaseBill.totalCgstPercentage);
-		var getSgst = checkGSTValue($scope.purchaseBill.totalSgstPercentage);
-		var getIgst = checkGSTValue($scope.purchaseBill.totalIgstPercentage);
+		if ($scope.csgstDisable) {
+			var getCgst = 0;
+			var getSgst = 0;
+			var getIgst = checkGSTValue($scope.purchaseBill.totalIgstPercentage);
+		}else{
+			var getCgst = checkGSTValue($scope.purchaseBill.totalCgstPercentage);
+			var getSgst = checkGSTValue($scope.purchaseBill.totalSgstPercentage);
+			var getIgst = 0;
+		}
 		var TaxSum = getCgst+getSgst+getIgst;
 
 		var gst = $filter('setDecimal')(total*TaxSum/100,$scope.noOfDecimalPoints);
@@ -611,15 +629,18 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 			if(item.discountType == 'flat') 
 			{
 				var amount =  $filter('setDecimal')((item.price*item.qty) - item.discount,$scope.noOfDecimalPoints);
-				item.cgstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(amount,getCgst,0),$scope.noOfDecimalPoints);
-				item.sgstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(amount,getSgst,0),$scope.noOfDecimalPoints);
-				item.igstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(amount,getIgst,0),$scope.noOfDecimalPoints);
 			}
 			else{
 				var amount  =  $filter('setDecimal')((item.price*item.qty)-((item.price*item.qty)*item.discount/100),$scope.noOfDecimalPoints);
+			}
+			if ($scope.csgstDisable) {
+				item.cgstAmount =  0;
+				item.sgstAmount =  0;
+				item.igstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(amount,getIgst,0),$scope.noOfDecimalPoints);
+			}else{
 				item.cgstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(amount,getCgst,0),$scope.noOfDecimalPoints);
 				item.sgstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(amount,getSgst,0),$scope.noOfDecimalPoints);
-				item.igstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(amount,getIgst,0),$scope.noOfDecimalPoints);
+				item.igstAmount =  0;
 			}
 			
 			item.amount = $filter('setDecimal')(amount+item.cgstAmount+item.sgstAmount+item.igstAmount,$scope.noOfDecimalPoints);
@@ -641,15 +662,18 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 			var TaxSum = getCgst+getSgst+getIgst;
 			
 			vm.AccBillTable[index].price = $filter('setDecimal')(item.amount/ (1+(TaxSum/100)),$scope.noOfDecimalPoints) / parseInt(item.qty);
-			
-			vm.AccBillTable[index].cgstAmount = $filter('setDecimal')(vm.AccBillTable[index].price * getCgst/100,$scope.noOfDecimalPoints);
-			vm.AccBillTable[index].sgstAmount = $filter('setDecimal')(vm.AccBillTable[index].price * getSgst/100,$scope.noOfDecimalPoints);
-			vm.AccBillTable[index].igstAmount = $filter('setDecimal')(vm.AccBillTable[index].price * getIgst/100,$scope.noOfDecimalPoints);
-			
+			if ($scope.csgstDisable) {
+				vm.AccBillTable[index].cgstAmount = 0;
+				vm.AccBillTable[index].sgstAmount = 0;
+				vm.AccBillTable[index].igstAmount = $filter('setDecimal')(vm.AccBillTable[index].price * getIgst/100,$scope.noOfDecimalPoints);
+			}else{
+				vm.AccBillTable[index].cgstAmount = $filter('setDecimal')(vm.AccBillTable[index].price * getCgst/100,$scope.noOfDecimalPoints);
+				vm.AccBillTable[index].sgstAmount = $filter('setDecimal')(vm.AccBillTable[index].price * getSgst/100,$scope.noOfDecimalPoints);
+				vm.AccBillTable[index].igstAmount = 0;
+			}
 			if(!$scope.purchaseBill.EditBillData){
 				$scope.advanceValueUpdate();
 			}
-			// $scope.advanceValueUpdate();
 		}
 		
 	/** END **/
@@ -954,6 +978,13 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
   	}
 	
 	$scope.setVenderId = function(Fname,value){
+		if (value.state.stateAbb == $scope.companyState) {
+			$scope.csgstDisable = false;
+			$scope.igstDisable = true;
+		}else{
+			$scope.csgstDisable = true;
+			$scope.igstDisable = false;
+		}
 		$scope.purchaseBill.ledgerEditableData = {};
 		$scope.purchaseBill.ledgerEditableData = value;
 		if(formdata.has(Fname))
@@ -999,6 +1030,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 			//Get Vendors
 			$scope.clientGetAllFunction(item.companyId);
 			$scope.displayDefaultCompanyName = item.companyName;
+			$scope.companyState = item.state.stateAbb;
 			//Auto Suggest Product Dropdown data
 			vm.productNameDrop = [];
 			productFactory.getProductByCompany(item.companyId).then(function(data){
@@ -1070,7 +1102,6 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 			if(!formdata.has('companyId')){
 				formdata.set('companyId',$scope.purchaseBill.companyDropDown.companyId);
 			}
-			console.log($scope.purchaseBill.ledgerEditableData);
 			if(!formdata.has('vendorId')){
 				formdata.set('vendorId',$scope.purchaseBill.ledgerEditableData.ledgerId);
 			}

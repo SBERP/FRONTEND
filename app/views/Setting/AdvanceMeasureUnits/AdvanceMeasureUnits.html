@@ -1,77 +1,98 @@
 <h3>
-   <small> <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> Advance Meausurement Units</small>
+	<small> <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> Advance Meausurement Units</small>
 </h3>
 <!-- START panel-->
 <div data-ng-controller="SettingAdvanceMeasurementController as form" class="container-fluid">
 	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
-   <div class="panel panel-default">
-	  <div class="panel-heading" data-ng-class="app.theme.brand" >
-		 <div class="panel-title">Advance Measurement Setting</div>
-	  </div>
-      <div class="panel-body">
-         <form action="#" name="formExpense" class="form-validate form-horizontal">
-			<div class="col-md-6">
-				<fieldset class="my-fieldset-paddingBottom">
-				   <div class="form-group">
-					  <label for="input-id-1" class="col-sm-3 control-label">*Unit Name</label>
-					  <div class="col-sm-9">
-						 <input id="input-id-1" tabindex="2" name="unitName" ng-pattern="/^[a-zA-Z &_`#().\'-\/]*$/"  ng-maxlength="100" ng-model="measurementForm.unitName" type="text" placeholder="Unit Name" class="form-control" ng-required="true" auto-focus/>
-						 
-						 <span ng-messages="formExpense.unitName.$error" ng-if="formExpense.unitName.$dirty || formExpense.unitName.$touched"  role="alert">
-							<span ng-messages-include="errorRequired"></span>
-							<span ng-messages-include="errorLonglength"></span>
-							<span ng-messages-include="errorShortlength"></span>
-							<span ng-messages-include="errorPatternThisSpecial"></span>
-						</span>
-					  </div>
-				   </div>
-				</fieldset>
-			</div>
-			<div class="col-md-6">
-				<button type="button" class="mr mb-sm btn btn-success pull-left" ng-disabled="formExpense.$invalid" tabindex="3" ng-click="insertMeasurementData(measurementForm)">{{addUpdateLabel}}</button>
-				<button type="button" class="mr mb-sm btn btn-danger pull-left" tabindex="4" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="cancel()" >Cancel</button>
-			</div>
-         </form>
-      </div>
-   </div>
-   
-   <div class="panel panel-default" >
-      	<div class="panel-heading" data-ng-class="app.theme.brand" >
-        	<div class="panel-title">All Units</div>
-      	</div>
-	   	<div class="table-responsive">
-		  <table ng-table="tableParams"  show-filter="true" class="table table-bordered table-striped">
-		  <!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
-			 <tbody style="text-align:center">
-				<tr ng-repeat="user in $data track by user.measurementUnitId">
-					<td data-title="'Unit Name'" sortable="'unitName'" filter="{ 'unitName': 'text' }" ng-bind="::user.unitName" ></td>
-					<td data-title="'Action'" sortable="'action'">
-						<center>
-							<i ng-click="editMeasurement(user.measurementUnitId)" class="fa fa-edit myCursorPointer mr-sm" style="font-size:17px;color:#10709f"> </i>
-							<i ng-click="deleteMeasurement('sm',user.measurementUnitId)" class="fa fa-times-circle myCursorPointer mr-sm" style="font-size:17px;color:red"></i>
-						</center>
-					</td>
-				</tr>
-			 </tbody>
-		  </table>
+	<div class="panel panel-default">
+		<div class="panel-heading" data-ng-class="app.theme.brand" >
+			<div class="panel-title">Advance Measurement Setting</div>
 		</div>
-	   <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
-   </div>
-   <!-- END panel-->
+		<div class="panel-body">
+			<form action="#" name="formExpense" class="form-validate form-horizontal">
+				<div class="col-md-9">
+					<fieldset class="my-fieldset-paddingBottom">
+						<div class="form-group">
+							<label for="input-id-1" class="col-sm-3 control-label">*Unit Name</label>
+							<div class="col-sm-6">
+								<input id="input-id-1" tabindex="2" name="unitName" ng-pattern="/^[a-zA-Z &_`#().\'-\/]*$/"  ng-maxlength="100" ng-model="measurementForm.unitName" type="text" placeholder="Unit Name" class="form-control" ng-required="true" auto-focus/>
+
+								<span ng-messages="formExpense.unitName.$error" ng-if="formExpense.unitName.$dirty || formExpense.unitName.$touched"  role="alert">
+									<span ng-messages-include="errorRequired"></span>
+									<span ng-messages-include="errorLonglength"></span>
+									<span ng-messages-include="errorShortlength"></span>
+									<span ng-messages-include="errorPatternThisSpecial"></span>
+								</span>
+							</div>
+							<div class="checkbox c-checkbox text-left m0 col-sm-1">
+							<label>
+								<input type="checkbox" ng-model="measurementForm.lengthStatus"> <span class="fa fa-check pl-lg"></span>L</label>
+							</div>
+							<div class="checkbox c-checkbox text-left m0 col-sm-1">
+							<label>
+								<input type="checkbox" ng-model="measurementForm.widthStatus"> <span class="fa fa-check pl-lg"></span>W</label>
+							</div>
+							<div class="checkbox c-checkbox text-left m0 col-sm-1">
+							<label>
+								<input type="checkbox" ng-model="measurementForm.heightStatus"> <span class="fa fa-check pl-lg"></span>H</label>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+				<div class="col-md-3">
+					<button type="button" class="mr mb-sm btn btn-success pull-left" ng-disabled="formExpense.$invalid" tabindex="3" ng-click="insertMeasurementData(measurementForm)">{{addUpdateLabel}}</button>
+					<button type="button" class="mr mb-sm btn btn-danger pull-left" tabindex="4" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="cancel()" >Cancel</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div class="panel panel-default" >
+		<div class="panel-heading" data-ng-class="app.theme.brand" >
+			<div class="panel-title">All Units</div>
+		</div>
+		<div class="table-responsive">
+			<table ng-table="tableParams"  show-filter="true" class="table table-bordered table-striped">
+				<!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
+				<tbody style="text-align:center">
+					<tr ng-repeat="user in $data track by user.measurementUnitId">
+						<td data-title="'Unit Name'" sortable="'unitName'" filter="{ 'unitName': 'text' }">
+							<span>{{user.unitName}}</span>
+							<span ng-if="user.heightStatus || user.lengthStatus || user.widthStatus">
+								&nbsp;(<span ng-if="user.lengthStatus">&nbsp;L</span>
+								<span ng-if="user.lengthStatus && (user.widthStatus || user.heightStatus)">x</span>
+								<span ng-if="user.widthStatus">W</span>
+								<span ng-if="user.widthStatus && user.heightStatus">x</span>
+								<span ng-if="user.heightStatus">H&nbsp;</span>)
+							</span>
+						</td>
+						<td data-title="'Action'" sortable="'action'">
+							<center>
+								<i ng-click="editMeasurement(user.measurementUnitId)" class="fa fa-edit myCursorPointer mr-sm" style="font-size:17px;color:#10709f"> </i>
+								<i ng-click="deleteMeasurement('sm',user.measurementUnitId)" class="fa fa-times-circle myCursorPointer mr-sm" style="font-size:17px;color:red"></i>
+							</center>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
+	</div>
+		<!-- END panel-->
 </div>
 
-<script type="text/ng-template" id="errorRequired">
-	<span class="text-danger" ng-message="required">{{errorMessage.require}}</span>
-</script>
-<script type="text/ng-template" id="errorLonglength">
-	<span class="text-danger" ng-message="maxlength">{{errorMessage.longLength}}</span>
-</script>
-<script type="text/ng-template" id="errorShortlength">
-	<span class="text-danger" ng-message="minlength">{{errorMessage.shortLength}}</span>
-</script>
-<script type="text/ng-template" id="errorPatternNumber">
-	<span class="text-danger" ng-message="pattern">{{errorMessage.Numbers}}</span>
-</script>
-<script type="text/ng-template" id="errorPatternThisSpecial">
-	<span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacter}}</span>
-</script>
+	<script type="text/ng-template" id="errorRequired">
+		<span class="text-danger" ng-message="required">{{errorMessage.require}}</span>
+	</script>
+	<script type="text/ng-template" id="errorLonglength">
+		<span class="text-danger" ng-message="maxlength">{{errorMessage.longLength}}</span>
+	</script>
+	<script type="text/ng-template" id="errorShortlength">
+		<span class="text-danger" ng-message="minlength">{{errorMessage.shortLength}}</span>
+	</script>
+	<script type="text/ng-template" id="errorPatternNumber">
+		<span class="text-danger" ng-message="pattern">{{errorMessage.Numbers}}</span>
+	</script>
+	<script type="text/ng-template" id="errorPatternThisSpecial">
+		<span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacter}}</span>
+	</script>

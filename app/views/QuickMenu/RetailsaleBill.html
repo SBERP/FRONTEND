@@ -34,7 +34,6 @@
 }
 .col-md-3{
 	    min-height: 55px !important;
-	    
 }
 .itemize-expand-tree,.itemize-expand-tree ul{
     margin: 0;
@@ -342,6 +341,7 @@
 					<th class="header" style="width:3%;padding-top:5px !important;padding-bottom:5px !important;">HSN</th>
 					<th ng-if="divAdvanceMou" class="header" style="width:6%;padding-top:5px !important;padding-bottom:5px !important;">	Unit
 					</th>
+					<th ng-if="enableDisableLWHSetting" class="header" style="width:11%;padding-top:5px !important;padding-bottom:5px !important;">L | W | H</th>
 					<th ng-if="divTag" class="header" style="width:11%;padding-top:5px !important;padding-bottom:5px !important;text-align:center">
 						<span  ng-if="enableDisableColor">Color  </span> 
 						<span ng-if="(enableDisableColor && enableDisableSize)"> | </span>
@@ -376,11 +376,6 @@
 							   <button type="button" class="btn btn-default btn-sm" data-ng-click="openProduct('lg',$index)" ng-if="!item.productId"><i class="fa fa-plus fa-lg" style="color:#17A1E5;"></i></button>
 							   	<button ng-if="enableItemizedPurchaseSales && item.productId" type="button" class="btn btn-default btn-sm" tooltip="IMEI/Serial No"  tooltip-trigger="mouseenter" tooltip-placement="top" data-ng-click="openBarcodeModal('lg',$index)"><i class="fa fa-barcode" style="font-size:15px;color:#17A1E5;"></i></button>
 							</span>
-							<!-- <span class="input-group-btn">
-							   	<button type="button" class="btn btn-default btn-sm" tooltip="{{form.productDesc[$index]}}"  tooltip-trigger="mouseenter" tooltip-placement="top" >
-							   		<i class="fa fa-cube"></i>
-							   	</button>
-							</span> -->
 						</div>
 					 	<ul class="itemize-expand-tree" ng-if="item.itemizeDetail.length > 0">
 					 		<li ng-click="expandItemizeTree($index+1)"><i class="fa {{itemizeTreeIcon($index+1)}} fa-lg"></i> IMEI Info
@@ -398,6 +393,11 @@
 					<td ng-if="divAdvanceMou">
 						<select  ng-model="item.measurementUnit" data-ng-options="s.unitName for s in form.measurementUnitDrop[$index] track by ($index+s.measurementUnitId+s.unitName)" class="form-control input-sm" style="padding-left: 3px;padding-right: 3px;float:left;" ng-change="changeProductTable();changeQuantity($index);" >
 						</select>
+					</td>
+					<td ng-if="enableDisableLWHSetting" class="header" style="text-align:center;">
+						<input ng-if="enableDisableLWHArray[$index].lengthStatus" ng-required="true" ng-minlength="1" ng-pattern="/^[1-9]+[0-9]*$/" ng-model="item.lengthValue" ng-style="enableDisableLWHArray[$index].styleObj" type="text" class="form-control input-sm" only-number/>
+						<input ng-if="enableDisableLWHArray[$index].widthStatus" ng-required="true" ng-minlength="1" ng-pattern="/^[1-9]+[0-9]*$/" ng-model="item.widthValue" ng-style="enableDisableLWHArray[$index].styleObj" type="text" class="form-control input-sm" only-number/>
+						<input ng-if="enableDisableLWHArray[$index].heightStatus" ng-required="true" ng-minlength="1" ng-pattern="/^[1-9]+[0-9]*$/" ng-model="item.heightValue" ng-style="enableDisableLWHArray[$index].styleObj" type="text" class="form-control input-sm" only-number/>
 					</td>
 					<td style="text-align:center;" ng-if="divTag">
 						<input  ng-if="enableDisableColor" placeholder="Color" type="text" ng-model="item.color"  class="form-control input-sm " ng-class="ProductColorSizeVarDesign"  ng-change="changeProductTable()" /> 

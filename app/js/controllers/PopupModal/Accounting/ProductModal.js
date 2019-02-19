@@ -13,12 +13,26 @@ function AccProductModalController($scope,toaster, $modalInstance,$rootScope,api
 			
 	var vm = this;
 	$scope.addModelProduct = [];
-	var formdata = new FormData();
-	
+	var formdata = new FormData();	
+	$scope.displayMouCount = 1;
 	var api_measurementUnit = apiPath.settingMeasurementUnit;
 	var api_quantity_pricing = apiPath.getAllProduct+'/';
 	var api_product_document = apiPath.getAllProduct;
-
+	$scope.defaultHighestPrice = 0;
+	$scope.defaultHigherPrice = 0;
+	$scope.defaultLowestPrice = 0;
+	$scope.noOfDecimalPoints = 2;
+	$scope.addModelProduct.purchasePrice = 0;
+	$scope.addModelProduct.lowerPurchasePrice = 0;
+	$scope.addModelProduct.mediumLowerPurchasePrice = 0;
+	$scope.addModelProduct.mediumPurchasePrice = 0;
+	$scope.addModelProduct.higherPurchasePrice = 0;
+	$scope.addModelProduct.highestPurchasePrice = 0;
+	$scope.addModelProduct.lowestUnitQty = 1;
+	$scope.addModelProduct.lowerUnitQty = 1;
+	$scope.addModelProduct.mediumLowerUnitQty = 1;
+	$scope.addModelProduct.mediumUnitQty = 1;
+	$scope.addModelProduct.higherUnitQty = 1;
 	vm.measureUnitTable = [];
   	$scope.changeMeasureUnitTableArray = false;
 
@@ -115,10 +129,21 @@ function AccProductModalController($scope,toaster, $modalInstance,$rootScope,api
 		$scope.addModelProduct.productDescription = editProductData.productDescription;
 		$scope.addModelProduct.color = editProductData.color;
 		$scope.addModelProduct.size = editProductData.size;
-
+		$scope.addModelProduct.variant = editProductData.variant;
+		$scope.addModelProduct.barcodeNo = editProductData.productCode;
 		$scope.addModelProduct.highestUnitQty = editProductData.highestUnitQty;
 		$scope.addModelProduct.higherUnitQty = editProductData.higherUnitQty;
 		$scope.addModelProduct.lowestUnitQty = editProductData.lowestUnitQty;
+		$scope.addModelProduct.lowerUnitQty = editProductData.lowerUnitQty;
+		$scope.addModelProduct.mediumUnitQty = editProductData.mediumUnitQty;
+		$scope.addModelProduct.mediumLowerUnitQty = editProductData.mediumLowerUnitQty;
+
+		$scope.addModelProduct.highestMouConv = editProductData.highestMouConv;
+		$scope.addModelProduct.higherMouConv = editProductData.higherMouConv;
+		$scope.addModelProduct.lowestMouConv = editProductData.lowestMouConv;
+		$scope.addModelProduct.lowerMouConv = editProductData.lowerMouConv;
+		$scope.addModelProduct.mediumMouConv = editProductData.mediumMouConv;
+		$scope.addModelProduct.mediumLowerMouConv = editProductData.mediumLowerMouConv;
 		
 		loadCompanyData(editProductData.companyId,function(companyData){
 			$scope.addModelProduct.company = companyData;
@@ -130,9 +155,6 @@ function AccProductModalController($scope,toaster, $modalInstance,$rootScope,api
 		apiCall.getCall(getAllBranch).then( function(response4) {
 			$scope.branchDrop = response4;
 			$scope.addModelProduct.branch = fetchArrayService.getfilteredSingleObject(response4,editProductData.branchId,'branchId');
-			// console.log('response4..',response4);
-			// console.log('editProductData.branchId..',editProductData.branchId);
-			// console.log('$scope.addModelProduct.branch..',$scope.addModelProduct.branch);
 		});
 		
 		$scope.addModelProduct.category = editProductData.productCategory;
@@ -148,14 +170,6 @@ function AccProductModalController($scope,toaster, $modalInstance,$rootScope,api
 			else{
 				$scope.addModelProduct.document = [];
 				$scope.addModelProduct.document = response;
-				// var documentLength = response.length;
-				// for(var productIndex=0;productIndex<documentLength;productIndex++)
-				// {
-				// 	$scope.addModelProduct.document[productIndex] = [];
-				// 	$scope.addModelProduct.document[productIndex]['documentName'] = response[productIndex].documentName;
-				// 	$scope.addModelProduct.document[productIndex]['documentPath'] = response[productIndex].documentPath;
-				// 	$scope.addModelProduct.document[productIndex]['documentType'] = response[productIndex].documentType;
-				// }
 			}
 		});
 
@@ -163,10 +177,23 @@ function AccProductModalController($scope,toaster, $modalInstance,$rootScope,api
 		loadAdvanceMeasurementUnit( function (response)
 		{
 			vm.advanceMeasureUnitDrop = response;
-			$scope.addModelProduct.highestMeasureUnit = angular.isObject(editProductData.highestMeasurementUnit) ? editProductData.highestMeasurementUnit : {};
-			$scope.addModelProduct.higherMeasureUnit = angular.isObject(editProductData.higherMeasurementUnit) ? editProductData.higherMeasurementUnit : {};
-			$scope.addModelProduct.measureUnit = angular.isObject(editProductData.measurementUnit) ? editProductData.measurementUnit : {};
-			// $scope.addModelProduct.measureUnit = editProductData.measurementUnit;
+			var unitParams = ['highest','higher','medium','mediumLower','lower','lowest'];
+			for (var i = 0; i < unitParams.length; i++) {
+				if (i < unitParams.length - 1) {
+					if (angular.isObject(editProductData[unitParams[i]+'MeasurementUnit']) && angular.isDefined(editProductData[unitParams[i]+'MeasurementUnit'].measurementUnitId)) {
+						$scope.addModelProduct[unitParams[i]+'MeasureUnit'] = editProductData[unitParams[i]+'MeasurementUnit'];
+						$scope.displayMouCount++;
+					}else{
+						$scope.addModelProduct[unitParams[i]+'MeasureUnit'] = {}
+					}
+				}else{
+					if (angular.isObject(editProductData.measurementUnit) && angular.isDefined(editProductData.measurementUnit.measurementUnitId)) {
+						$scope.addModelProduct.measureUnit = editProductData.measurementUnit;
+					}else{
+						$scope.addModelProduct.measureUnit = {};
+					}
+				}
+			}
 		});
 		
 		$scope.addModelProduct.primaryMeasureUnit = editProductData.primaryMeasureUnit;
@@ -182,10 +209,15 @@ function AccProductModalController($scope,toaster, $modalInstance,$rootScope,api
 			}
 		});
 		// $scope.addModelProduct.measureUnit = editProductData.measurementUnit;
-		
 		$scope.addModelProduct.higherPurchasePrice = editProductData.higherPurchasePrice;
 		$scope.addModelProduct.highestPurchasePrice = editProductData.highestPurchasePrice;
+		$scope.addModelProduct.mediumPurchasePrice = editProductData.mediumPurchasePrice;
+		$scope.addModelProduct.mediumLowerPurchasePrice = editProductData.mediumLowerPurchasePrice;
+		$scope.addModelProduct.lowerPurchasePrice = editProductData.lowerPurchasePrice;
 		$scope.addModelProduct.purchasePrice = editProductData.purchasePrice;
+		$scope.defaultHigherPrice = editProductData.higherPurchasePrice;
+		$scope.defaultHighestPrice = editProductData.highestPurchasePrice;
+		$scope.defaultLowestPrice = editProductData.purchasePrice;
 		$scope.addModelProduct.wholesaleMarginFlat = editProductData.wholesaleMarginFlat;
 		$scope.addModelProduct.wholesaleMargin = editProductData.wholesaleMargin;
 		$scope.addModelProduct.semiWholesaleMargin = editProductData.semiWholesaleMargin;
@@ -271,6 +303,7 @@ function AccProductModalController($scope,toaster, $modalInstance,$rootScope,api
 	$scope.enableDisableMRPRequire = false;
 	$scope.enableDisableWebIntegration = false;
 	$scope.enableDisableMargin = false;
+	$scope.enableDisableVariant = false;
 	//get setting data
 	$scope.getOptionSettingData = function()
 	{
@@ -291,6 +324,7 @@ function AccProductModalController($scope,toaster, $modalInstance,$rootScope,api
 						$scope.enableDisableBestBefore = arrayData1.productBestBeforeStatus=="enable" ? true : false;
 						$scope.enableDisableMRPRequire = arrayData1.productMrpRequireStatus=="enable" ? true : false;
 						$scope.enableDisableMargin = arrayData1.productMarginStatus=="enable" ? true : false;
+						$scope.enableDisableVariant = arrayData1.productVariantStatus=="enable" ? true : false;
 					}
 					if (response[arrayData].settingType=="webintegration") {
 						var arrayData1 = response[arrayData];
@@ -505,64 +539,6 @@ function AccProductModalController($scope,toaster, $modalInstance,$rootScope,api
 		
 		var filterArray = {};
 		
-		// formdata.set('companyId',$scope.addModelProduct.company.companyId);
-		// formdata.set('branchId',$scope.addModelProduct.branch.branchId);
-		// formdata.set('productName',$scope.addModelProduct.productName);
-		// formdata.set('color',$scope.addModelProduct.color);
-		// formdata.set('size',$scope.addModelProduct.size);
-		// if($scope.addModelProduct.productDescription){
-			
-			// formdata.set('productDescription',$scope.addModelProduct.productDescription);
-		// }
-		
-		// formdata.set('productCategoryId',$scope.addModelProduct.category.productCategoryId);
-		// formdata.set('productGroupId',$scope.addModelProduct.group.productGroupId);
-		// formdata.set('measurementUnit',$scope.addModelProduct.measureUnit);
-		// formdata.set('purchasePrice',$scope.addModelProduct.purchasePrice);
-		
-		// if($scope.addModelProduct.wholesaleMarginFlat){
-			// formdata.set('wholesaleMarginFlat',$scope.addModelProduct.wholesaleMarginFlat);
-		// }
-		
-		// if($scope.addModelProduct.wholesaleMargin){
-			// formdata.set('wholesaleMargin',$scope.addModelProduct.wholesaleMargin);
-		// }
-		// if($scope.addModelProduct.semiWholesaleMargin){
-			// formdata.set('semiWholesaleMargin',$scope.addModelProduct.semiWholesaleMargin);
-		// }
-		
-		// if($scope.addModelProduct.vat){
-			// formdata.set('vat',$scope.addModelProduct.vat);
-		// }
-		// if($scope.addModelProduct.additionalTax){
-			// formdata.set('additionalTax',$scope.addModelProduct.additionalTax);
-		// }
-		// if($scope.addModelProduct.marginFlat){
-			// formdata.set('marginFlat',$scope.addModelProduct.marginFlat);
-		// }
-		// if($scope.addModelProduct.margin){
-			// formdata.set('margin',$scope.addModelProduct.margin);
-		// }
-		// if($scope.addModelProduct.mrp){
-			// formdata.set('mrp',$scope.addModelProduct.mrp);
-		// }
-		
-		// if($scope.addModelProduct.minimumStockLevel){
-			// formdata.set('minimumStockLevel',$scope.addModelProduct.minimumStockLevel);
-		// }
-		
-		// if($scope.addModelProduct.hsn){
-			// formdata.set('hsn',$scope.addModelProduct.hsn);
-		// }
-		
-		// if($scope.addModelProduct.igst){
-			// formdata.set('igst',$scope.addModelProduct.igst);
-		// }
-		
-		// $scope.addModelProduct.purchaseCgst ? formdata.set('purchaseCgst',$scope.addModelProduct.purchaseCgst) : 0;
-		// $scope.addModelProduct.purchaseSgst ? formdata.set('purchaseSgst',$scope.addModelProduct.purchaseSgst) : 0;
-		// $scope.addModelProduct.purchaseIgst ? formdata.set('purchaseIgst',$scope.addModelProduct.purchaseIgst) : 0;
-		
 		// formdata.set('isDisplay','yes');
 		apiCall.postCall(productPath,formdata).then(function(response5){
 		
@@ -652,7 +628,47 @@ function AccProductModalController($scope,toaster, $modalInstance,$rootScope,api
 				}
 			});
 		}
+
 	/** End **/
+
+	$scope.changePurchasePrice = function(fname,value){
+		var unitVariantArray = ['highest','higher','medium','mediumLower','lower','lowest'];
+		if (fname.search('UnitQty') >= 0) {
+			var currentUnitQty = fname.replace('UnitQty','');
+			var i = unitVariantArray.indexOf(currentUnitQty);
+			if (i == unitVariantArray.length - 1) {
+				$scope.addModelProduct.purchasePrice = parseFloat(($scope.addModelProduct[unitVariantArray[i-1]+'PurchasePrice'] / value).toFixed($scope.noOfDecimalPoints));
+				$scope.changeInvProductData('purchasePrice',$scope.addModelProduct.purchasePrice);
+			}else{
+				$scope.addModelProduct[unitVariantArray[i]+'PurchasePrice'] = parseFloat(($scope.addModelProduct[unitVariantArray[i-1]+'PurchasePrice'] / value).toFixed($scope.noOfDecimalPoints));
+				$scope.changeInvProductData(unitVariantArray[i]+'PurchasePrice',$scope.addModelProduct[unitVariantArray[i]+'PurchasePrice']);
+			}
+			$scope.calculateConvRatio();
+		}
+	}
+	$scope.calculateConvRatio = function(){
+		var unitVariantArray = ['highest','higher','medium','mediumLower','lower','lowest'];
+		var primaryIndex = unitVariantArray.indexOf($scope.addModelProduct.primaryMeasureUnit);
+		$scope.addModelProduct[$scope.addModelProduct.primaryMeasureUnit+'MouConv'] = 1;
+		$scope.changeInvProductData($scope.addModelProduct.primaryMeasureUnit+'MouConv',$scope.addModelProduct[$scope.addModelProduct.primaryMeasureUnit+'MouConv']);
+		for (var i = primaryIndex - 1; i >= 0; i--) {
+			$scope.addModelProduct[unitVariantArray[i]+'MouConv'] = parseFloat(($scope.addModelProduct[unitVariantArray[i + 1]+'MouConv'] * $scope.addModelProduct[unitVariantArray[i + 1]+'UnitQty']).toFixed($scope.noOfDecimalPoints));
+			$scope.changeInvProductData(unitVariantArray[i]+'MouConv',$scope.addModelProduct[unitVariantArray[i]+'MouConv']);
+		}
+		for (var i = primaryIndex + 1; i < unitVariantArray.length; i++) {
+			$scope.addModelProduct[unitVariantArray[i]+'MouConv'] = parseFloat(($scope.addModelProduct[unitVariantArray[i - 1]+'MouConv'] / $scope.addModelProduct[unitVariantArray[i]+'UnitQty']).toFixed($scope.noOfDecimalPoints));
+			$scope.changeInvProductData(unitVariantArray[i]+'MouConv',$scope.addModelProduct[unitVariantArray[i]+'MouConv']);
+		}
+	}
+	$scope.calculateConvRatio();
+	$scope.showHideMou = function(arg)
+	{
+		if (arg == 'inc' && $scope.displayMouCount < 6) {
+			$scope.displayMouCount++;
+		}else if(arg == 'dec' && $scope.displayMouCount > 1){
+			$scope.displayMouCount--;
+		}
+	}
 
 }
 AccProductModalController.$inject = ["$scope","toaster","$modalInstance","$rootScope","apiCall","apiPath","productIndex","companyId","validationMessage","apiResponse","getSetFactory","maxImageSize","fetchArrayService"];

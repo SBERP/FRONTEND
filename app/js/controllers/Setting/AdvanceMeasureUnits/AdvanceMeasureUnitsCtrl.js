@@ -18,8 +18,7 @@ function SettingAdvanceMeasurementController($rootScope,$scope,$filter,$modal,ng
 	{
 		var count = data.length;
 		while(count--) {
-		  data[count].companyName = ""; //initialization of new property 
-		  console.log("data",data);
+		  data[count].companyName = ""; //initialization of new property
 		  data[count].companyName = data[count].company.companyName;  //set the data from nested obj into new property
 		}
 	}
@@ -61,7 +60,6 @@ function SettingAdvanceMeasurementController($rootScope,$scope,$filter,$modal,ng
 				$scope.pageNumber = params.page();
 		        $scope.itemsPerPage = params.count();
 		        $scope.totalPages = Math.ceil($scope.totalData/params.count());
-					
 			}
 		});
 	}
@@ -82,8 +80,13 @@ function SettingAdvanceMeasurementController($rootScope,$scope,$filter,$modal,ng
 	// Get All Expense Call 
 	apiCall.getCall(measurementGetApiPath).then( function(response) {
 		// console.log(response);
+		response = response.map(function(res1){
+			res1.lengthStatus = res1.lengthStatus == 'enable' ? true : false;
+			res1.widthStatus = res1.widthStatus == 'enable' ? true : false;
+			res1.heightStatus = res1.heightStatus == 'enable' ? true : false;
+			return res1;
+		});
 		data = response;
-		// filterDataForTable();
 		 $scope.TableData();
 	});
 
@@ -93,6 +96,9 @@ function SettingAdvanceMeasurementController($rootScope,$scope,$filter,$modal,ng
 		var formdata = new FormData();
 		
 		formdata.append('unitName',measurementForm.unitName);
+		formdata.set('lengthStatus',measurementForm.lengthStatus ? 'enable' : 'disable');
+		formdata.set('widthStatus',measurementForm.widthStatus ? 'enable' : 'disable');
+		formdata.set('heightStatus',measurementForm.heightStatus ? 'enable' : 'disable');
 		var newMeasurementGetApiPath = measurementGetApiPath;
 		if($scope.addUpdateLabel=="Update")
 		{
@@ -112,20 +118,23 @@ function SettingAdvanceMeasurementController($rootScope,$scope,$filter,$modal,ng
 				apiCall.getCall(measurementGetApiPath).then(function(response){
 					// console.log(response);
 					data= [];
+					response = response.map(function(res1){
+						res1.lengthStatus = res1.lengthStatus == 'enable' ? true : false;
+						res1.widthStatus = res1.widthStatus == 'enable' ? true : false;
+						res1.heightStatus = res1.heightStatus == 'enable' ? true : false;
+						return res1;
+					});
 					data = angular.copy(response);
-					// filterDataForTable();
-					// $scope.tableParams = {reload:function(){},settings:function(){return {}}};
-					// setTimeout(function() {
-					// 	$scope.TableData();
-					// }, 100);
-					// $scope.TableData();
-					// $scope.tableParams.total(data.length);
 					$scope.tableParams.data = angular.copy(data);
-					$scope.tableParams.reload();	
+					$scope.tableParams.reload();
 					$scope.tableParams.page(1);
 					// $scope.tableParams.sorting({});
 				});
 				$scope.measurementForm.unitName = '';
+				$scope.measurementForm.lengthStatus = false;
+				$scope.measurementForm.widthStatus = false;
+				$scope.measurementForm.heightStatus = false;
+				$scope.measurementForm.measurementUnitId = '';
 			}
 			else
 			{
@@ -133,12 +142,22 @@ function SettingAdvanceMeasurementController($rootScope,$scope,$filter,$modal,ng
 			}
 			// toaster.pop('success', 'Title', 'Message');
 			formdata.delete('unitName');
+			formdata.delete('lengthStatus');
+			formdata.delete('widthStatus');
+			formdata.delete('heightStatus');
 		});
 	}
 	$scope.cancel = function(){
 		$scope.measurementForm.unitName = '';
+		$scope.measurementForm.lengthStatus = false;
+		$scope.measurementForm.widthStatus = false;
+		$scope.measurementForm.heightStatus = false;
+		$scope.measurementForm.measurementUnitId = '';
 		// defaultCompany();
 		formdata.delete('unitName');
+		formdata.delete('lengthStatus');
+		formdata.delete('widthStatus');
+		formdata.delete('heightStatus');
 	}
 
 	//Edit Measurement
@@ -146,17 +165,19 @@ function SettingAdvanceMeasurementController($rootScope,$scope,$filter,$modal,ng
 	{
 		var editPath = measurementGetApiPath+"/"+id;
 		apiCall.getCall(editPath).then(function(response)
-		{	
+		{
 			if(angular.isObject(response))
 			{
 				if(Object.keys(response).length!=0)
 				{
 					$scope.addUpdateLabel = "Update";
 					$scope.measurementForm.unitName = response.unitName;
+					$scope.measurementForm.lengthStatus = response.lengthStatus == 'enable' ? true : false;
+					$scope.measurementForm.heightStatus = response.heightStatus == 'enable' ? true : false;
+					$scope.measurementForm.widthStatus = response.widthStatus == 'enable' ? true : false;
 					$scope.measurementForm.measurementUnitId = response.measurementUnitId;
 				}
 			}
-			
 		});
 	}
 

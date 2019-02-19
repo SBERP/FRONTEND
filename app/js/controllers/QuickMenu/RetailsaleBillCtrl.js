@@ -51,7 +51,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	
 	$scope.changeProductArray = false; // Change When Update in Product Table Array
 	$scope.changeProductAdvancePrice = false;  // Change Advance Price of Product
-	
+	$scope.enableDisableLWHArray = [];
 	$scope.quickBill.tax = 0; //Tax
 	
 	$scope.total_without_expense;
@@ -115,6 +115,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	$scope.enableDisableCity = false;
 	$scope.enableDisableEmailId = false;
 	$scope.enableDisableProfession = false;
+	$scope.enableDisableLWHSetting = false;
 	
 	$scope.enableDisableSalesman = false;
 
@@ -154,7 +155,9 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					$scope.enableDisableVariant = arrayData1.productVariantStatus=="enable" ? true : false;
 					$scope.enableDisableFrameNo = arrayData1.productFrameNoStatus=="enable" ? true : false;
 					$scope.divTag = $scope.enableDisableColor == false && $scope.enableDisableSize == false ? false : true;
-
+					if (arrayData1.productMeasurementType == 'Unit Measurement') {
+						$scope.enableDisableLWHSetting = true;
+					}
 					if ($scope.enableDisableColor && $scope.enableDisableSize && $scope.enableDisableVariant)
 					{
 						$scope.ProductColorSizeVarDesign = 'productColorSizeVarDesign';
@@ -648,6 +651,43 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					}
 				}
 			}
+		}else if ($scope.enableDisableLWHSetting) {
+			if (angular.isObject(item.measurementUnit) && angular.isDefined(item.measurementUnit.measurementUnitId)) {
+				vm.AccBillTable[index].lengthValue = 1;
+				vm.AccBillTable[index].widthValue = 1;
+				vm.AccBillTable[index].heightValue = 1;
+				$scope.enableDisableLWHArray[index] = {};
+				item.measurementUnit.lengthStatus == 'enable' ? 
+				$scope.enableDisableLWHArray[index].lengthStatus = true : $scope.enableDisableLWHArray[index].lengthStatus = false;
+				$scope.enableDisableLWHArray[index].widthStatus = item.measurementUnit.widthStatus == 'enable' ? true : false;
+				$scope.enableDisableLWHArray[index].heightStatus = item.measurementUnit.heightStatus == 'enable' ? true : false;
+				if ($scope.enableDisableLWHArray[index].lengthStatus &&
+					$scope.enableDisableLWHArray[index].widthStatus &&
+					$scope.enableDisableLWHArray[index].heightStatus) 
+				{
+					$scope.enableDisableLWHArray[index].styleObj = {
+						"width" : "33.33%",
+						"padding-left": "6px",
+						"padding-right": "6px",
+						"float":"left"
+					};
+				}else if ($scope.enableDisableLWHArray[index].lengthStatus && $scope.enableDisableLWHArray[index].widthStatus ||
+					$scope.enableDisableLWHArray[index].lengthStatus && $scope.enableDisableLWHArray[index].heightStatus ||
+					$scope.enableDisableLWHArray[index].heightStatus && $scope.enableDisableLWHArray[index].widthStatus) 
+				{
+					$scope.enableDisableLWHArray[index].styleObj = {
+						"width" : "50%",
+						"padding-left": "6px",
+						"padding-right": "6px",
+						"float":"left"
+					};
+				}else{
+					$scope.enableDisableLWHArray[index].styleObj = {"width" : "100%"};
+				}
+				
+			}else{
+				$scope.enableDisableLWHArray[index] = {};
+			}
 		}
 
 		var grandPrice;
@@ -736,7 +776,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 
 	$scope.getAdvanceMouCalculationPrice = function(item,index,callback)
 	{
-		// console.log('726.....',vm.AccBillTable[index].measurementUnit);
 		var grandPrice = 0;
 		// IF Adavande MOU
 		if ($scope.enableDisableAdvanceMou) 

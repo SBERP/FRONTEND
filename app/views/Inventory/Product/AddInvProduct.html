@@ -243,7 +243,7 @@
 					   </div>
 					   	<div class="form-group">
 					   		<label class="col-sm-3 control-label">
-					   			<span ng-if="!addInvProduct.highestMeasureUnit || addInvProduct.highestMeasureUnit == 0">Units</span>
+					   			<span ng-if="!addInvProduct.highestMeasureUnit.measurementUnitId">Units</span>
 					   			<span ng-if="addInvProduct.highestMeasureUnit.measurementUnitId > 0">1x {{ addInvProduct.highestMeasureUnit.unitName }} = </span></label>
 					   		<div class="col-sm-9">
 					   			<input name="higherUnitQty"  ng-model="addInvProduct.higherUnitQty" ng-change="changeInvProductData('higherUnitQty',addInvProduct.higherUnitQty);changePurchasePrice('higherUnitQty',addInvProduct.higherUnitQty);" type="text" placeholder="Qty" class="form-control" tabindex="15"  ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
@@ -284,7 +284,7 @@
 					   </div>
 					   	<div class="form-group">
 					   		<label class="col-sm-3 control-label">
-					   			<span ng-if="!addInvProduct.higherMeasureUnit || addInvProduct.higherMeasureUnit == 0">Units</span>
+					   			<span ng-if="!addInvProduct.higherMeasureUnit.measurementUnitId">Units</span>
 					   			<span ng-if="addInvProduct.higherMeasureUnit.measurementUnitId > 0">1x {{ addInvProduct.higherMeasureUnit.unitName }} = </span></label>
 					   		<div class="col-sm-9">
 					   			<input name="mediumUnitQty"  ng-model="addInvProduct.mediumUnitQty" ng-change="changeInvProductData('mediumUnitQty',addInvProduct.mediumUnitQty);changePurchasePrice('mediumUnitQty',addInvProduct.mediumUnitQty);" type="text" placeholder="Qty" class="form-control" tabindex="16"  ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
@@ -325,7 +325,7 @@
 					   </div>
 					   	<div class="form-group">
 					   		<label class="col-sm-3 control-label">
-					   			<span ng-if="!addInvProduct.mediumMeasureUnit">Units</span>
+					   			<span ng-if="!addInvProduct.mediumMeasureUnit.measurementUnitId">Units</span>
 					   			<span ng-if="addInvProduct.mediumMeasureUnit.measurementUnitId > 0">1x {{ addInvProduct.mediumMeasureUnit.unitName }} = </span></label>
 					   		<div class="col-sm-9">
 					   			<input name="mediumLowerUnitQty"  ng-model="addInvProduct.mediumLowerUnitQty" ng-change="changeInvProductData('mediumLowerUnitQty',addInvProduct.mediumLowerUnitQty);changePurchasePrice('mediumLowerUnitQty',addInvProduct.mediumLowerUnitQty);" type="text" placeholder="Qty" class="form-control" tabindex="17"  ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
@@ -366,7 +366,7 @@
 					   </div>
 					   	<div class="form-group">
 					   		<label class="col-sm-3 control-label">
-					   			<span ng-if="!addInvProduct.mediumLowerMeasureUnit">Units</span>
+					   			<span ng-if="!addInvProduct.mediumLowerMeasureUnit.measurementUnitId">Units</span>
 					   			<span ng-if="addInvProduct.mediumLowerMeasureUnit.measurementUnitId > 0">1x {{ addInvProduct.mediumLowerMeasureUnit.unitName }} = </span></label>
 					   		<div class="col-sm-9">
 					   			<input name="lowerUnitQty"  ng-model="addInvProduct.lowerUnitQty" ng-change="changeInvProductData('lowerUnitQty',addInvProduct.lowerUnitQty);changePurchasePrice('lowerUnitQty',addInvProduct.lowerUnitQty);" type="text" placeholder="Qty" class="form-control" tabindex="18"  ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
@@ -407,7 +407,7 @@
 					   	</div>
 					   	<div class="form-group">
 					   		<label class="col-sm-3 control-label">
-					   			<span ng-if="!addInvProduct.lowerMeasureUnit">Units</span>
+					   			<span ng-if="!addInvProduct.lowerMeasureUnit.measurementUnitId">Units</span>
 					   			<span ng-if="addInvProduct.lowerMeasureUnit.measurementUnitId > 0">1x {{ addInvProduct.lowerMeasureUnit.unitName }} = </span>
 					   		</label>
 					   		<div class="col-sm-9">
