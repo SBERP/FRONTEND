@@ -34,6 +34,8 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
   	$scope.enableDisableAdvanceSales = false;
   	$scope.enableDisableAdvancePurchase = false;
 
+  	$scope.enableItemizedPurchaseSales = false;
+
 	/* VALIDATION */
 		$scope.errorMessage = validationMessage; //Error Messages In Constant
 	/* VALIDATION END */
@@ -49,6 +51,8 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 		$scope.insertUpdateBillLabel;
 		vm.barcodeWidthDrop = ["0.5","0.6","0.7","0.8","0.9","1.0","1.5","2.0"];  // Default-> 1.5
 		vm.barcodeHeightDrop = ["40","50","60","70","80","90","100"];          // Default-> 40
+		vm.measurementOptions = ['Normal','Advance Measurement','Unit Measurement'];
+		$scope.measurementType = 'Normal';
 		$scope.getOptionSettingData = function()
 		{
 			toaster.clear();
@@ -60,8 +64,8 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 				var productFlag=0;
 				var clientFlag=0;
 				var billFlag=0;
+				var inventoryFlag=0;
 				var advanceBillFlag=0;
-
 				for(var arrayData=0;arrayData<responseLength;arrayData++)
 				{
 					if(angular.isObject(response2) || angular.isArray(response2))
@@ -110,6 +114,10 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 							$scope.enableDisableAdvanceMou = arrayData1.productAdvanceMouStatus=="enable" ? true : false;
 							$scope.enableDisableMargin = arrayData1.productMarginStatus=="enable" ? true : false;							
 							$scope.enableDisableVariant = arrayData1.productVariantStatus=="enable" ? true : false;
+							$scope.measurementType = arrayData1.productMeasurementType;
+							if ($scope.enableDisableAdvanceMou) {
+								$scope.measurementType = 'Advance Measurement';
+							}
 						}
 						if(response2[arrayData].settingType=="client")
 						{
@@ -133,6 +141,14 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 							
 						}
 
+						if(response2[arrayData].settingType=="inventory")
+						{
+							inventoryFlag=1;
+							$scope.insertUpdateInventoryLabel = "Update";
+							var arrayData1 = response2[arrayData];
+							$scope.enableItemizedPurchaseSales = arrayData1.inventoryItemizeStatus=="enable" ? true : false;
+						}
+
 						if(response2[arrayData].settingType=="advance")
 						{
 							advanceBillFlag=1;
@@ -140,7 +156,6 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 							var arrayData1 = response2[arrayData];
 							$scope.enableDisableAdvanceSales = arrayData1.advanceSalesStatus=="enable" ? true : false;
 							$scope.enableDisableAdvancePurchase = arrayData1.advancePurchaseStatus=="enable" ? true : false;
-							
 						}
 					}
 				}
@@ -168,6 +183,10 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 				{
 					$scope.insertUpdateBillLabel = "Insert";
 				}
+				if(inventoryFlag==0)
+				{
+					$scope.insertUpdateInventoryLabel = "Insert";
+				}
 				if(advanceBillFlag==0)
 				{
 					$scope.insertUpdateAdvanceBillLabel = "Insert";
@@ -181,6 +200,7 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 		$scope.serviceDataflag = 0;
 		$scope.chequeNoflag = 0;
 		$scope.productFlag = 0;
+		$scope.inventoryFlag = 0;
 		$scope.clientFlag = 0;
 		$scope.billFlag = 0;
 		$scope.advanceBillFlag = 0;
@@ -216,18 +236,19 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 			// barcodeFormData.append(key,value);
 		}
 		$scope.changeInProduct = function(key,value){
-			
-			// if(key == 'enableDisableAdvanceMou' && value == true){
-			// 	$scope.enableDisableColor = false;
-			// 	$scope.enableDisableSize = false;
-			// 	$scope.enableDisableFrameno = false;
-			// }
-
-			// if((key == 'enableDisableColor' || key == 'enableDisableSize' || key == 'enableDisableFrameno') && value == true){
-			// 	$scope.enableDisableAdvanceMou = false;
-			// }
+			if (key == 'measurementType') {
+				if (value == 'Advance Measurement') {
+					$scope.enableDisableAdvanceMou = true;
+					$scope.productMarginStatus = false;
+				}else{
+					$scope.enableDisableAdvanceMou = false;
+				}
+			}
 
 			$scope.productFlag = 1;
+		}
+		$scope.changeInInventory = function(key,value){
+			$scope.inventoryFlag = 1;
 		}
 		$scope.changeInClient = function(key,value){
 			
@@ -452,6 +473,7 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 				{
 					productData.append('productVariantStatus','disable');
 				}
+				productData.append('productMeasurementType',$scope.measurementType);
 				if($scope.insertUpdateProductLabel == "Update"){
 					var apiPostPatchCall = apiCall.patchCall;
 				}
@@ -480,7 +502,38 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 			}
 		}
 		/** End **/
-
+		$scope.AddUpdateInventorySetting = function() {
+			toaster.clear();
+			if($scope.inventoryFlag == 1){
+				var inventoryData = new FormData();
+				if($scope.enableItemizedPurchaseSales==true)
+				{
+					inventoryData.append('inventoryItemizeStatus','enable');
+				}else
+				{
+					inventoryData.append('inventoryItemizeStatus','disable');
+				}
+				if($scope.insertUpdateInventoryLabel == "Update"){
+					var apiPostPatchCall = apiCall.patchCall;
+				}
+				else{
+					var apiPostPatchCall = apiCall.postCall;
+				}
+				apiPostPatchCall(apiPath.settingOption,inventoryData).then(function(response){
+					if(apiResponse.ok == response){
+						
+						$scope.getOptionSettingData();
+						toaster.pop('success','inventory-Data',$scope.insertUpdateInventoryLabel+' Successfull');
+						$scope.inventoryFlag = 0;
+					}
+					else{
+						toaster.pop('warning','Opps!!',response);
+					}
+				});
+			}else{
+				toaster.pop('info','inventory-Data','Please Change Data');
+			}
+		}
 		//Add-Update client data
 		$scope.AddUpdateClientSetting = function(){
 			toaster.clear();

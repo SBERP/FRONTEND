@@ -6,14 +6,15 @@
 
 App.controller('AddInvProductController', AddInvProductController);
 
-function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$stateParams,$state,apiResponse,validationMessage,getSetFactory,$modal,productFactory,fetchArrayService,maxImageSize) {
+function AddInvProductController($scope,$rootScope,toaster,$filter,apiCall,apiPath,$stateParams,$state,apiResponse,validationMessage,getSetFactory,$modal,productFactory,fetchArrayService,maxImageSize) {
   'use strict';
   
   var vm = this;
   $scope.addInvProduct = [];
+  $scope.mergeProduct = false;
   var formdata = new FormData();
   var Modalopened = false;
-
+  $scope.displayMouCount = 1;
   var api_measurementUnit = apiPath.settingMeasurementUnit;
   var api_quantity_pricing = apiPath.getAllProduct+'/';
   var api_product_document = apiPath.getAllProduct;
@@ -164,14 +165,12 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 		toaster.clear();
 		apiCall.getCall(apiPath.settingOption).then(function(response){
 			var responseLength = response.length;
-			console.log(response);
 			for(var arrayData=0;arrayData<responseLength;arrayData++)
 			{
 				if(angular.isObject(response) || angular.isArray(response))
 				{
 					if(response[arrayData].settingType=="product")
 					{
-						// console.log('product: ',response[arrayData]);
 						var arrayData1 = response[arrayData];
 						$scope.enableDisableColor = arrayData1.productColorStatus=="enable" ? true : false;
 						$scope.addDiv = $scope.enableDisableColor==false? true :false;
@@ -215,8 +214,10 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 		var editProductData = getSetFactory.get();
 		getSetFactory.blank();
 		editProductData = angular.copy(editProductData);
-		// console.log("editProductData..",editProductData);
 		/* Set Modified Date */
+			if (angular.isDefined(editProductData.mergeProduct) && editProductData.mergeProduct) {
+				$scope.mergeProduct = true;
+			}
 			$scope.dateTimeFlag=true;
 			if(editProductData.updatedAt!='00-00-0000')
 			{
@@ -317,13 +318,23 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 			loadAdvanceMeasurementUnit( function (response)
 			{
 				vm.advanceMeasureUnitDrop = response;
-				$scope.addInvProduct.highestMeasureUnit = angular.isObject(editProductData.highestMeasurementUnit) ? editProductData.highestMeasurementUnit : {};
-				$scope.addInvProduct.higherMeasureUnit = angular.isObject(editProductData.higherMeasurementUnit) ? editProductData.higherMeasurementUnit : {};
-				$scope.addInvProduct.measureUnit = angular.isObject(editProductData.measurementUnit) ? editProductData.measurementUnit : {};
-				$scope.addInvProduct.mediumMeasureUnit = angular.isObject(editProductData.mediumMeasurementUnit) ? editProductData.mediumMeasurementUnit : {};
-				$scope.addInvProduct.mediumLowerMeasureUnit = angular.isObject(editProductData.mediumLowerMeasurementUnit) ? editProductData.mediumLowerMeasurementUnit : {};
-				$scope.addInvProduct.lowerMeasureUnit = angular.isObject(editProductData.lowerMeasurementUnit) ? editProductData.lowerMeasurementUnit : {};
-				// $scope.addInvProduct.measureUnit = editProductData.measurementUnit;
+				var unitParams = ['highest','higher','medium','mediumLower','lower','lowest'];
+				for (var i = 0; i < unitParams.length; i++) {
+					if (i < unitParams.length - 1) {
+						if (angular.isObject(editProductData[unitParams[i]+'MeasurementUnit']) && angular.isDefined(editProductData[unitParams[i]+'MeasurementUnit'].measurementUnitId)) {
+							$scope.addInvProduct[unitParams[i]+'MeasureUnit'] = editProductData[unitParams[i]+'MeasurementUnit'];
+							$scope.displayMouCount++;
+						}else{
+							$scope.addInvProduct[unitParams[i]+'MeasureUnit'] = {}
+						}
+					}else{
+						if (angular.isObject(editProductData.measurementUnit) && angular.isDefined(editProductData.measurementUnit.measurementUnitId)) {
+							$scope.addInvProduct.measureUnit = editProductData.measurementUnit;
+						}else{
+							$scope.addInvProduct.measureUnit = {};
+						}
+					}
+				}
 			});
 			
 			$scope.addInvProduct.primaryMeasureUnit = editProductData.primaryMeasureUnit;
@@ -381,7 +392,6 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 				}
 				else{
 					$scope.addInvProduct.document = [];
-					// console.log("response..doc..",response);
 					$scope.addInvProduct.document = response;
 					// var documentLength = response.length;
 					// for(var productIndex=0;productIndex<documentLength;productIndex++)
@@ -394,7 +404,6 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 				}
 			});
 
-			// console.log("add product = ",$scope.addInvProduct);
 			$scope.addInvProduct.purchaseCgst = editProductData.purchaseCgst == null ? '' : editProductData.purchaseCgst;
 			$scope.addInvProduct.purchaseSgst = editProductData.purchaseSgst == null ? '' : editProductData.purchaseSgst;
 			$scope.addInvProduct.purchaseIgst = editProductData.purchaseIgst == null ? '' : editProductData.purchaseIgst;
@@ -440,7 +449,6 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 		formdata.set('bestBeforeTime',$scope.addInvProduct.bestBeforeTime);
 		$scope.addInvProduct.highestUnitQty = 1.00;
 		formdata.set('highestUnitQty',$scope.addInvProduct.highestUnitQty);
-
 		productFactory.getProduct();
 	}
 
@@ -620,7 +628,6 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 	//Changed Data When Update
 	$scope.changeInvProductData = function(Fname,value)
 	{
-		// console.log(Fname+'..',value);
 		if(formdata.has(Fname))
 		{
 			formdata.delete(Fname);
@@ -688,10 +695,13 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 
 			//formdata.append('branchId',1);
 			formdata.set('isDisplay','yes');
+			if ($scope.mergeProduct) {
+				$rootScope.mergingPop(2,formdata);
+				return false;
+			}
 			var editProduct = apiPath.getAllProduct+'/'+$scope.addInvProduct.getSetProductId;
 			apiCall.postCall(editProduct,formdata).then(function(response5)
 			{
-				console.log("response5...:))",response5);
 				toaster.clear();
 				if (apiResponse.ok == response5) {
 					
@@ -721,10 +731,10 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 				});
 			 }
 
-			// console.log("product   == ",$scope.addInvProduct);
 			// formdata.append('productType',$scope.addInvProduct.productType);
 			// formdata.append('bestBeforeType',$scope.addInvProduct.bestBeforeType);
 			formdata.set('isDisplay','yes');
+			if (true) {}
 			apiCall.postCall(apiPath.getAllProduct,formdata).then(function(response5) {
 				toaster.clear();
 				if (apiResponse.ok == response5) {
@@ -746,7 +756,10 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
   $scope.cancel = function() {
 	  
 		$scope.addInvProduct = [];
-		
+		if ($scope.mergeProduct) {
+			$rootScope.mergingPop(1,'reset');
+			return false;
+		}
 		
 		// Delete formdata  keys
 		// for (var key of formdata.keys()) {
@@ -792,8 +805,6 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 	  	if(parseInt(files[0].size) <= maxImageSize){
 			
 			angular.element("img.showImg").css("display","block");
-			
-			console.log('Small File');
 			formdata.delete('coverImage[]');
 			
 			formdata.append("coverImage[]", files[0]);
@@ -804,10 +815,8 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 				$scope.$digest();
 
 			}
-			// console.log('Small File vv');
 			// when the file is read it triggers the onload event above.
 			reader.readAsDataURL(files[0]);
-			// console.log('Small File aa');
 		
 		}
 		else{
@@ -902,7 +911,6 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 		}
 		
 		$scope.documentDeleteConfirm = function(item,index){
-			// console.log("item...",item);
 			var documentID = item.documentId;
 			
 			if(documentID == '' || documentID == null || documentID == undefined)
@@ -950,7 +958,6 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 			for (var i = primaryIndex - 1; i >= 0; i--) {
 				$scope.addInvProduct[unitVariantArray[i]+'MouConv'] = parseFloat(($scope.addInvProduct[unitVariantArray[i + 1]+'MouConv'] * $scope.addInvProduct[unitVariantArray[i + 1]+'UnitQty']).toFixed($scope.noOfDecimalPoints));
 				$scope.changeInvProductData(unitVariantArray[i]+'MouConv',$scope.addInvProduct[unitVariantArray[i]+'MouConv']);
-			
 			}
 			for (var i = primaryIndex + 1; i < unitVariantArray.length; i++) {
 				$scope.addInvProduct[unitVariantArray[i]+'MouConv'] = parseFloat(($scope.addInvProduct[unitVariantArray[i - 1]+'MouConv'] / $scope.addInvProduct[unitVariantArray[i]+'UnitQty']).toFixed($scope.noOfDecimalPoints));
@@ -958,56 +965,13 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 			}
 		}
 		$scope.calculateConvRatio();
-		// $scope.changePurchasePrice = function(fname,value){
-		// 	var highestPrice = $scope.addInvProduct.highestPurchasePrice;
-		// 	var higherPrice = $scope.addInvProduct.higherPurchasePrice;
-		// 	var lowestPrice = $scope.addInvProduct.purchasePrice;
-		// 	var highestUnitQty = $scope.addInvProduct.highestUnitQty;
-		// 	var higherUnitQty = $scope.addInvProduct.higherUnitQty;
-		// 	var lowestUnitQty = $scope.addInvProduct.lowestUnitQty;
-		// 	var defaultHighest = $scope.defaultHighestPrice;
-		// 	var defaultHigher = $scope.defaultHigherPrice;
-		// 	var defaultLowest = $scope.defaultLowestPrice;
-		// 	if (fname == 'highestPurchasePrice') {
-		// 		$scope.defaultHighestPrice = value;
-		// 		if (higherUnitQty > 0) {
-					
-		// 			$scope.addInvProduct.higherPurchasePrice = parseFloat(Math.round(value / higherUnitQty ,$scope.noOfDecimalPoints));
-		// 		}
-		// 		if (lowestUnitQty > 0 && higherUnitQty > 0) {
-		// 			$scope.addInvProduct.purchasePrice = parseFloat(Math.round(value / (higherUnitQty*lowestUnitQty),$scope.noOfDecimalPoints));
-		// 		}
-		// 	}
-		// 	if (fname == 'higherUnitQty' && value > 0) {
-		// 		if (highestPrice != null && highestPrice != undefined && highestPrice != 0) {
-		// 			$scope.addInvProduct.higherPurchasePrice = parseFloat(Math.round(highestPrice / value,$scope.noOfDecimalPoints));
-		// 		}
-		// 	}
-		// 	if (fname == 'higherPurchasePrice' && value > 0 && higherUnitQty > 0) {
-		// 		$scope.defaultHigherPrice = value;
-		// 		if (defaultHighest == null || defaultHighest == undefined || defaultHighest == 0) {
-		// 			$scope.addInvProduct.highestPurchasePrice = parseFloat(Math.round(value * higherUnitQty,$scope.noOfDecimalPoints));
-		// 		}
-		// 		if (lowestUnitQty > 0) {
-		// 			$scope.addInvProduct.purchasePrice = parseFloat(Math.round(value / lowestUnitQty,$scope.noOfDecimalPoints));
-		// 		}
-		// 	}
-		// 	if (fname == 'lowestUnitQty' && value > 0) {
-		// 		if (higherPrice != null && higherPrice != undefined && higherPrice != 0) {
-		// 			$scope.addInvProduct.purchasePrice = parseFloat(Math.round(higherPrice / value,$scope.noOfDecimalPoints));
-		// 		}
-		// 	}
-		// 	if (fname == 'purchasePrice') {
-		// 		if (lowestUnitQty > 0) {
-		// 			if (defaultHigher == null || defaultHigher == undefined || defaultHigher == 0) {
-		// 				$scope.addInvProduct.higherPurchasePrice = parseFloat(Math.round(value * lowestUnitQty,$scope.noOfDecimalPoints));
-		// 			}	
-		// 			if (higherUnitQty > 0) {
-		// 				$scope.addInvProduct.highestPurchasePrice = parseFloat(Math.round(value * lowestUnitQty * higherUnitQty,$scope.noOfDecimalPoints));
-		// 			}
-		// 		}
-		// 	}
-		// }
-	/** End **/
+	$scope.showHideMou = function(arg)
+	{
+		if (arg == 'inc' && $scope.displayMouCount < 6) {
+			$scope.displayMouCount++;
+		}else if(arg == 'dec' && $scope.displayMouCount > 1){
+			$scope.displayMouCount--;
+		}
+	}
 }
-AddInvProductController.$inject = ["$scope","toaster","$filter","apiCall","apiPath","$stateParams","$state","apiResponse","validationMessage","getSetFactory","$modal","productFactory","fetchArrayService","maxImageSize"];
+AddInvProductController.$inject = ["$scope","$rootScope","toaster","$filter","apiCall","apiPath","$stateParams","$state","apiResponse","validationMessage","getSetFactory","$modal","productFactory","fetchArrayService","maxImageSize"];

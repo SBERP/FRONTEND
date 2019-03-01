@@ -8,7 +8,7 @@
 .imageAncher{position:relative;vertical-align:middle;display:inline-block}
 .myCrossDesign{position:absolute;top:0;right:0;height:20px;width:20px;color:#eb615f;font-size:20px}.myCrossDesign:hover{color:red}.documentRight{display:block;position:absolute;top:10%;right:60%;font-size:40px;color:#88bf57}.documentRight:hover{color:green}.documentCross{display:block;position:absolute;font-size:40px;color:#eb615f;top:10%;right:20%}.documentCross:hover{color:red}
 </style>
-<h3>
+<h3 ng-if="!mergeProduct">
    <small>
    <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
    Inventory >> 
@@ -23,7 +23,7 @@
    <div class="panel panel-default">
 
 		<div class="panel-heading" data-ng-class="app.theme.brand">
-			<button type="button" class="btn btn-default pull-right btn-sm" ng-click="openProductBatchModal()"  data-ng-class="app.theme.brand" > Mass Insertion </button>
+			<button type="button" class="btn btn-default pull-right btn-sm" ng-if="!mergeProduct" ng-click="openProductBatchModal()"  data-ng-class="app.theme.brand" > Mass Insertion </button>
 			<div class=" panel-title pull-right" ng-if="dateTimeFlag">
 				Last Updated By : <span class="text-capitalize">{{userName}}</span> &nbsp; {{updateDate}} &nbsp;&nbsp;&nbsp;
 			</div>
@@ -183,9 +183,18 @@
 					</div>
 				</div>
 			</div>
-			<h4 class="panel-heading bg-default myHeading" ng-if="enableAdvanceMou" >Measure of Unit</h4>
+			<h4 class="panel-heading bg-default myHeading" ng-if="enableAdvanceMou" >Measure of Unit
+				<span class="pull-right">
+					<a href="javascript:void" ng-if="displayMouCount < 6" ng-click="showHideMou('inc')" style="margin-left: 5px;">
+						<i class="fa fa-plus"></i>
+					</a>
+					<a href="javascript:void" ng-if="displayMouCount > 1" ng-click="showHideMou('dec')" class="text-danger">
+						<i class="fa fa-minus"></i>
+					</a>
+				</span>
+			</h4>
 				<div class="panel-body" ng-if="enableAdvanceMou">
-					<div class="col-md-4" >
+					<div class="col-md-4" ng-if="displayMouCount == 6">
 					   	<div class="form-group">
 						  	<label class="col-sm-3 control-label">Highest</label>
 						  	<div class="col-sm-9">
@@ -223,7 +232,7 @@
 							</div>
 					   </div>
 					</div>
-					<div class="col-md-4" >
+					<div class="col-md-4" ng-if="displayMouCount >= 5">
 					   <div class="form-group">
 						  <label class="col-sm-3 control-label">Higher</label>
 						  <div class="col-sm-9">
@@ -234,7 +243,7 @@
 					   </div>
 					   	<div class="form-group">
 					   		<label class="col-sm-3 control-label">
-					   			<span ng-if="!addInvProduct.highestMeasureUnit || addInvProduct.highestMeasureUnit == 0">Units</span>
+					   			<span ng-if="!addInvProduct.highestMeasureUnit.measurementUnitId">Units</span>
 					   			<span ng-if="addInvProduct.highestMeasureUnit.measurementUnitId > 0">1x {{ addInvProduct.highestMeasureUnit.unitName }} = </span></label>
 					   		<div class="col-sm-9">
 					   			<input name="higherUnitQty"  ng-model="addInvProduct.higherUnitQty" ng-change="changeInvProductData('higherUnitQty',addInvProduct.higherUnitQty);changePurchasePrice('higherUnitQty',addInvProduct.higherUnitQty);" type="text" placeholder="Qty" class="form-control" tabindex="15"  ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
@@ -264,7 +273,7 @@
 							</div>
 					   </div>
 					</div>
-					<div class="col-md-4" >
+					<div class="col-md-4" ng-if="displayMouCount >= 4">
 					   <div class="form-group">
 						  <label class="col-sm-3 control-label">Medium</label>
 						  <div class="col-sm-9">
@@ -275,7 +284,7 @@
 					   </div>
 					   	<div class="form-group">
 					   		<label class="col-sm-3 control-label">
-					   			<span ng-if="!addInvProduct.higherMeasureUnit || addInvProduct.higherMeasureUnit == 0">Units</span>
+					   			<span ng-if="!addInvProduct.higherMeasureUnit.measurementUnitId">Units</span>
 					   			<span ng-if="addInvProduct.higherMeasureUnit.measurementUnitId > 0">1x {{ addInvProduct.higherMeasureUnit.unitName }} = </span></label>
 					   		<div class="col-sm-9">
 					   			<input name="mediumUnitQty"  ng-model="addInvProduct.mediumUnitQty" ng-change="changeInvProductData('mediumUnitQty',addInvProduct.mediumUnitQty);changePurchasePrice('mediumUnitQty',addInvProduct.mediumUnitQty);" type="text" placeholder="Qty" class="form-control" tabindex="16"  ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
@@ -305,7 +314,7 @@
 							</div>
 					   </div>
 					</div>
-					<div class="col-md-4" >
+					<div class="col-md-4" ng-if="displayMouCount >= 3">
 					   <div class="form-group">
 						  <label class="col-sm-3 control-label">Medium Lower</label>
 						  <div class="col-sm-9">
@@ -316,7 +325,7 @@
 					   </div>
 					   	<div class="form-group">
 					   		<label class="col-sm-3 control-label">
-					   			<span ng-if="!addInvProduct.mediumMeasureUnit">Units</span>
+					   			<span ng-if="!addInvProduct.mediumMeasureUnit.measurementUnitId">Units</span>
 					   			<span ng-if="addInvProduct.mediumMeasureUnit.measurementUnitId > 0">1x {{ addInvProduct.mediumMeasureUnit.unitName }} = </span></label>
 					   		<div class="col-sm-9">
 					   			<input name="mediumLowerUnitQty"  ng-model="addInvProduct.mediumLowerUnitQty" ng-change="changeInvProductData('mediumLowerUnitQty',addInvProduct.mediumLowerUnitQty);changePurchasePrice('mediumLowerUnitQty',addInvProduct.mediumLowerUnitQty);" type="text" placeholder="Qty" class="form-control" tabindex="17"  ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
@@ -346,7 +355,7 @@
 							</div>
 					   </div>
 					</div>
-					<div class="col-md-4" >
+					<div class="col-md-4" ng-if="displayMouCount >= 2">
 					   <div class="form-group">
 						  <label class="col-sm-3 control-label">Lower</label>
 						  <div class="col-sm-9">
@@ -357,7 +366,7 @@
 					   </div>
 					   	<div class="form-group">
 					   		<label class="col-sm-3 control-label">
-					   			<span ng-if="!addInvProduct.mediumLowerMeasureUnit">Units</span>
+					   			<span ng-if="!addInvProduct.mediumLowerMeasureUnit.measurementUnitId">Units</span>
 					   			<span ng-if="addInvProduct.mediumLowerMeasureUnit.measurementUnitId > 0">1x {{ addInvProduct.mediumLowerMeasureUnit.unitName }} = </span></label>
 					   		<div class="col-sm-9">
 					   			<input name="lowerUnitQty"  ng-model="addInvProduct.lowerUnitQty" ng-change="changeInvProductData('lowerUnitQty',addInvProduct.lowerUnitQty);changePurchasePrice('lowerUnitQty',addInvProduct.lowerUnitQty);" type="text" placeholder="Qty" class="form-control" tabindex="18"  ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
@@ -398,7 +407,7 @@
 					   	</div>
 					   	<div class="form-group">
 					   		<label class="col-sm-3 control-label">
-					   			<span ng-if="!addInvProduct.lowerMeasureUnit">Units</span>
+					   			<span ng-if="!addInvProduct.lowerMeasureUnit.measurementUnitId">Units</span>
 					   			<span ng-if="addInvProduct.lowerMeasureUnit.measurementUnitId > 0">1x {{ addInvProduct.lowerMeasureUnit.unitName }} = </span>
 					   		</label>
 					   		<div class="col-sm-9">
@@ -655,16 +664,16 @@
 							 	</span>
 							</div>
 						  	<div class="col-sm-3">
-							    <input id="input-id-1" name="cess"  ng-model="addInvProduct.cess" ng-change="changeInvProductData('cessPercentage',addInvProduct.cess)" type="text" placeholder="(%)Per." class="form-control" tabindex="36"  ng-pattern="/^[0-9 .]*$/"  ng-maxlength="8" only-number />
+							    <input id="input-id-1" name="cessPercentage"  ng-model="addInvProduct.cessPercentage" ng-change="changeInvProductData('cessPercentage',addInvProduct.cessPercentage)" type="text" placeholder="(%)Per." class="form-control" tabindex="36"  ng-pattern="/^[0-9 .]*$/"  ng-maxlength="8" only-number />
 							 
-								<span ng-messages="formProduct.cess.$error" ng-if="formProduct.cess.$dirty || formProduct.cess.$touched"  role="alert">
+								<span ng-messages="formProduct.cessPercentage.$error" ng-if="formProduct.cessPercentage.$dirty || formProduct.cessPercentage.$touched"  role="alert">
 									<span ng-messages-include="errorLonglength"></span>
 									<span ng-messages-include="errorPatternThisSpecial"></span>
 								</span>
 							</div>
 						  	<div class="col-sm-3">
 								<p class="form-control-static">
-								{{ (displayParseFloat(addInvProduct.cessFlat) + ((displayParseFloat(addInvProduct.purchasePrice) * displayParseFloat(addInvProduct.cess)) / 100)) |  currency:"&#8377; "}}
+								{{ (displayParseFloat(addInvProduct.cessFlat) + ((displayParseFloat(addInvProduct.purchasePrice) * displayParseFloat(addInvProduct.cessPercentage)) / 100)) |  currency:"&#8377; "}}
 								</p>
 							</div>
 							<label class="col-sm-3 control-label-left" ></label>
@@ -885,10 +894,10 @@
 					</div>
 			 <button type="button" class="mr mb-sm btn btn-danger pull-right" data-ng-click="cancel()" tabindex="46" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id" >Cancel</button>
 			 <button type="button" class="mr mb-sm btn btn-success pull-right" data-ng-click="pop()" ng-disabled="formProduct.$invalid" tabindex="45" >
-				 <span ng-if="!addInvProduct.getSetProductId" >Insert</span> 
-				 <span ng-if="addInvProduct.getSetProductId" >Update</span>
+				 <span ng-if="!addInvProduct.getSetProductId" >Insert</span>
+				 <span ng-if="addInvProduct.getSetProductId && mergeProduct" >Next</span>
+				 <span ng-if="addInvProduct.getSetProductId && !mergeProduct" >Update</span>
 			 </button>
-			 
 			</div>
          </form>
       </div>

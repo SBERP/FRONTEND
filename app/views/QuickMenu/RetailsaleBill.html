@@ -34,7 +34,53 @@
 }
 .col-md-3{
 	    min-height: 55px !important;
-	    
+}
+.itemize-expand-tree,.itemize-expand-tree ul{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.itemize-expand-tree ul{
+	margin-left: 1em;
+    position: relative;
+}
+.itemize-expand-tree ul:before{
+	content: "";
+    display: block;
+    width: 0;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    border-left: 1px solid;
+}
+.itemize-expand-tree li{
+	margin: 0;
+    padding: 0 1em;
+    line-height: 2em;
+    color: #369;
+    font-weight: 700;
+    position: relative;
+}
+.itemize-expand-tree ul li:before{
+	content: "";
+    display: block;
+    width: 10px;
+    height: 0;
+    border-top: 1px solid;
+    margin-top: -1px;
+    position: absolute;
+    top: 1em;
+    left: 0;
+}
+.itemize-expand-tree ul li:last-child:before{
+	background: #fff;
+    height: auto;
+    top: 1em;
+    bottom: 0;
+}
+.myTable td{
+	vertical-align: top !important;
 }
 </style>
 <!-- START panel-->
@@ -276,7 +322,7 @@
       </div>
   
      <!-- <div class="table-responsive"> -->
-     <div >
+    <div>
 		<table  class="table table-bordered table-striped tableTopCss" >
 			<thead>
 				<tr>
@@ -295,6 +341,7 @@
 					<th class="header" style="width:3%;padding-top:5px !important;padding-bottom:5px !important;">HSN</th>
 					<th ng-if="divAdvanceMou" class="header" style="width:6%;padding-top:5px !important;padding-bottom:5px !important;">	Unit
 					</th>
+					<th ng-if="enableDisableLWHSetting" class="header" style="text-align:center;width:11%;padding-top:5px !important;padding-bottom:5px !important;">L | W | H</th>
 					<th ng-if="divTag" class="header" style="width:11%;padding-top:5px !important;padding-bottom:5px !important;text-align:center">
 						<span  ng-if="enableDisableColor">Color  </span> 
 						<span ng-if="(enableDisableColor && enableDisableSize)"> | </span>
@@ -327,13 +374,18 @@
 							<span class="input-group-btn">
 								 <button type="button" class="btn btn-default btn-sm" ng-if="item.productId" ng-click="editProductWithRedirect($index)"><i class="fa fa-edit fa-lg" style="color:#17A1E5;"></i></button>
 							   <button type="button" class="btn btn-default btn-sm" data-ng-click="openProduct('lg',$index)" ng-if="!item.productId"><i class="fa fa-plus fa-lg" style="color:#17A1E5;"></i></button>
-							</span>
-							<span class="input-group-btn">
-							   	<button type="button" class="btn btn-default btn-sm" tooltip="{{form.productDesc[$index]}}"  tooltip-trigger="mouseenter" tooltip-placement="top" >
-							   		<i class="fa fa-cube"></i>
-							   	</button>
+							   	<button ng-if="enableItemizedPurchaseSales && item.productId" type="button" class="btn btn-default btn-sm" tooltip="IMEI/Serial No"  tooltip-trigger="mouseenter" tooltip-placement="top" data-ng-click="openBarcodeModal('lg',$index)"><i class="fa fa-barcode" style="font-size:15px;color:#17A1E5;"></i></button>
 							</span>
 						</div>
+					 	<ul class="itemize-expand-tree" ng-if="item.itemizeDetail.length > 0">
+					 		<li ng-click="expandItemizeTree($index+1)"><i class="fa {{itemizeTreeIcon($index+1)}} fa-lg"></i> IMEI Info
+					 			<ul class="{{openedItemizeTreeClass($index+1)}}">
+					 				<li ng-repeat="itemize in item.itemizeDetail" class="clearfix">
+							 			<span>{{itemize.qty}}x&nbsp;&nbsp;{{itemize.imei_no}}</span>
+							 		</li>
+					 			</ul>
+					 		</li>
+					 	</ul>
 					</td>
 					<td>
 						<h6 ng-bind="form.productHsn[$index]"></h6>
@@ -342,13 +394,17 @@
 						<select  ng-model="item.measurementUnit" data-ng-options="s.unitName for s in form.measurementUnitDrop[$index] track by ($index+s.measurementUnitId+s.unitName)" class="form-control input-sm" style="padding-left: 3px;padding-right: 3px;float:left;" ng-change="changeProductTable();changeQuantity($index);" >
 						</select>
 					</td>
+					<td ng-if="enableDisableLWHSetting" class="header" style="text-align:center;">
+						<input ng-if="enableDisableLWHArray[$index].lengthStatus" ng-required="true" ng-minlength="1" ng-pattern="/^(0*[1-9][0-9]*([\.][0-9]+)?|0+[\.][0-9]*[1-9][0-9]*)$/" ng-model="item.lengthValue" placeholder="Length" ng-change="changeProductTable();changeQuantity($index);" ng-style="enableDisableLWHArray[$index].styleObj" type="text" class="form-control input-sm" only-number/>
+						<input ng-if="enableDisableLWHArray[$index].widthStatus" ng-required="true" ng-minlength="1" ng-pattern="/^(0*[1-9][0-9]*([\.][0-9]+)?|0+[\.][0-9]*[1-9][0-9]*)$/" ng-model="item.widthValue" ng-change="changeProductTable();changeQuantity($index);" ng-style="enableDisableLWHArray[$index].styleObj" type="text" class="form-control input-sm" placeholder="Width" only-number/>
+						<input ng-if="enableDisableLWHArray[$index].heightStatus" ng-required="true" ng-minlength="1" ng-pattern="/^(0*[1-9][0-9]*([\.][0-9]+)?|0+[\.][0-9]*[1-9][0-9]*)$/" ng-model="item.heightValue" ng-change="changeProductTable();changeQuantity($index);" ng-style="enableDisableLWHArray[$index].styleObj" type="text" class="form-control input-sm" placeholder="Height" only-number/>
+					</td>
 					<td style="text-align:center;" ng-if="divTag">
 						<input  ng-if="enableDisableColor" placeholder="Color" type="text" ng-model="item.color"  class="form-control input-sm " ng-class="ProductColorSizeVarDesign"  ng-change="changeProductTable()" /> 
 						<input ng-if="enableDisableSize" placeholder="Size" type="text" ng-model="item.size"  class="form-control input-sm "
 						ng-class="ProductColorSizeVarDesign"  ng-change="changeProductTable()"  />
 						<input ng-if="enableDisableVariant" placeholder="Variant" type="text" ng-model="item.variant"  class="form-control input-sm "
 						ng-class="ProductColorSizeVarDesign"  ng-change="changeProductTable()"  />
-						<!--input  type="text" ng-model="item.color"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"    ng-pattern="/^[a-z-A-Z]*$/" ng-change="changeProductTable()"  /--> 
 					</td>
 					<td ng-if="enableDisableFrameNo">
 						<input placeholder="Frame No" type="text" ng-model="item.frameNo"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"   ng-pattern="/^[a-z-A-Z0-9 ]*$/" ng-change="changeProductTable()" /> 

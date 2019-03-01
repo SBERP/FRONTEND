@@ -1,13 +1,9 @@
-
 /**=========================================================
  * Module: InvStockCtrl.js
  * Controller for ngTables
  =========================================================*/
-
-
 App.controller('InvStockController', InvStockController);
-
-function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFactory,apiCall,apiPath,$window,apiResponse,toaster) {
+function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFactory,apiCall,apiPath,$window,apiResponse,toaster,fetchArrayService,$modal,$state) {
   'use strict';
   var vm = this;
 	//$scope.brandradio="";
@@ -16,12 +12,14 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
 	 $scope.disableButton = false;
 	 
 	 var flag = 0;
-	 $scope.AllTransactionData;
+	 $scope.AllTransactionData = [];
 	 vm.tableParams;
 	$scope.getArray;
+	$scope.enableItemizedPurchaseSales = false;
 	var data = [];
 	var getData = getSetFactory.get();
 	getSetFactory.blank();
+	var Modalopened = false;
 	//console.log(getData);
 	//return false;
 	
@@ -51,14 +49,14 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
 			toaster.clear();
 			toaster.pop('wait', 'Please Wait', 'Data Loading....',60000);
 			
-		//console.log(response);
-		vm.states.push(response);
-		$scope.allProductModel = response;
-		//console.log(vm.states);
-		$scope.displayCompany = response.company.companyName;
-		
-		$scope.apiCallStock();
-			
+			//console.log(response);
+			vm.states.push(response);
+			$scope.allProductModel = response;
+			apiCall.getCall(apiPath.getAllCompany+'/'+response.companyId).then(function(response2){
+				console.log(response2);
+				$scope.displayCompany = response2.companyName;
+				$scope.apiCallStock();
+			});
 		});
 		
 	}
@@ -91,8 +89,35 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
 			
 		});
 	}
-	 
-	 
+	$scope.getOptionSettingData = function()
+	{
+		toaster.clear();
+		if ($rootScope.$storage.settingOptionArray.length > 0)
+		{
+			var inventory_setting = fetchArrayService.getfilteredSingleObject($rootScope.$storage.settingOptionArray,'inventory','settingType');
+			if (angular.isObject(inventory_setting)) {
+				var arrayData1 = inventory_setting;
+				$scope.enableItemizedPurchaseSales = arrayData1.inventoryItemizeStatus=="enable" ? true : false;
+			}
+		}
+		else
+		{
+			apiCall.getCall(apiPath.settingOption).then(function(response){
+				var responseLength = response.length;
+				for(var arrayData=0;arrayData<responseLength;arrayData++)
+				{
+					if(angular.isObject(response) || angular.isArray(response))
+					{
+						if (response[arrayData].settingType=="inventory") {
+							var arrayData1 = response[arrayData];
+							$scope.enableItemizedPurchaseSales = arrayData1.inventoryItemizeStatus=="enable" ? true : false;
+						}
+					}
+				}
+			});
+		}
+	}
+	$scope.getOptionSettingData();
 	$scope.showProduct = function(){
 		
 		toaster.clear();
@@ -199,7 +224,6 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
 	
  
 	$scope.calculation = function(responseDrop){
-		
 		$scope.disableButton = true;
 		
 		var balance = [];
@@ -220,6 +244,7 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
 					inward.qty = parseInt(transData.qty);
 					inward.price = transData.price * transData.qty;
 					inward.date = transData.transactionDate;
+					inward.jfId = transData.jfId;
 					
 					balanceArray.push(inward);
 				}
@@ -230,11 +255,12 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
 						var outward1 = {};
 						outward1.qty = 0;  //4
 						outward1.date = transData.transactionDate;
+						outward1.jfId = transData.jfId;
 				
 						inward.qty = parseInt(transData.qty);
 						
 						inward.date = transData.transactionDate;
-						
+						inward.jfId = transData.jfId;
 						var balanceLength = balanceArray.length;
 						var index=0;
 						for(var j=0;j<balanceLength;j++)
@@ -280,6 +306,7 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
 						inward.qty = parseInt(transData.qty);
 						inward.price = transData.price * transData.qty;
 						inward.date = transData.transactionDate;
+						inward.jfId = transData.jfId;
 						
 						balanceArray.push(inward);
 					}
@@ -292,6 +319,7 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
 				outward1.qty = 0;  //4
 				outward1.price = transData.price;
 				outward1.date = transData.transactionDate;
+				outward1.jfId = transData.jfId;
 				
 				//console.log(transData.qty);
 				//console.log(balanceArray);
@@ -299,6 +327,7 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
 				outward.qty = parseInt(transData.qty);  //4
 				outward.price = transData.price;
 				outward.date = transData.transactionDate;
+				outward.jfId = transData.jfId;
 				
 				//console.log(balanceArray);
 				if(balanceArray.length == 0){
@@ -308,9 +337,8 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
 					minusObject.qty = -Math.abs(transData.qty);  //4
 					minusObject.price = transData.price;
 					minusObject.date = transData.transactionDate;
-				
+					minusObject.jfId = transData.jfId;
 					balanceArray.push(minusObject);
-				
 				}
 				else{
 					
@@ -335,6 +363,7 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
 							minusObject.qty = -Math.abs(outward.qty);  //4
 							minusObject.price = outward.price;
 							minusObject.date = transData.transactionDate;
+							minusObject.jfId = transData.jfId;
 						
 							balanceArray.push(minusObject);
 							
@@ -431,7 +460,6 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
  
 $scope.TableData = function(){
 	
-
   vm.tableParams = new ngTableParams({
       page: 1,            // show first page
       count: 10,          // count per page
@@ -444,9 +472,7 @@ $scope.TableData = function(){
       getData: function($defer, params) {
           
         var orderedData;
-
         if(params.sorting().date === 'asc'){
-
           data.sort(function (a, b) {
 			  var entDate = a.transactionDate.split("-").reverse().join("-");
 						var toDate = b.transactionDate.split("-").reverse().join("-");
@@ -455,9 +481,7 @@ $scope.TableData = function(){
             return dateA - dateB; //sort by date descending
           });
           orderedData = data;
-
         } else if(params.sorting().date === 'desc') {
-
           data.sort(function (a, b) {
 			  var entDate = a.transactionDate.split("-").reverse().join("-");
 						var toDate = b.transactionDate.split("-").reverse().join("-");
@@ -466,9 +490,7 @@ $scope.TableData = function(){
             return dateB - dateA; //sort by date descending
           });
           orderedData = data;
-
         } else if(!params.sorting().date){
-
           if (params.filter().term) {
             orderedData = params.filter() ? $filter('filter')(data, params.filter().term) : data;
           } else {
@@ -476,7 +498,6 @@ $scope.TableData = function(){
           }
           
         }
-
         $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
 		
 		 $scope.totalData = data.length;
@@ -486,11 +507,47 @@ $scope.TableData = function(){
         
       }
   });
-
   //$scope.getArray = data;
 }
-
-  
+$scope.itemizeTrnModal = function(item,type,balance,size)
+  {
+  	if (Modalopened) return;
+  	var productObject = {};
+  	productObject.productId = item.product.productId;
+	toaster.pop('wait', 'Please Wait', 'popup opening....',600000);
+	if (type == 'register') {
+		productObject.jfId = item.jfId;
+		var stockType = 'stockRegister';
+	}else if (type == 'balance') {
+		
+		productObject.jfId = balance.jfId;
+		productObject.fromDate = $scope.displayFromDate;
+		productObject.toDate = item.createdAt;
+		var stockType = 'stockBalance';
+	}
+	var modalInstance = $modal.open({
+	  templateUrl: 'app/views/PopupModal/Accounting/ItemizeStockModal.html',
+	  controller: 'AccItemizeStockModalController as table',
+	  size: size,
+	  resolve:{
+		  productId: function(){
+			  return productObject;
+		  },
+		  stockType: function(){
+			  return stockType;
+		  }
+	  }
+	});
+	Modalopened = true;
+	modalInstance.opened.then(function() {
+		toaster.clear();
+	});
+	modalInstance.result.then(function () {
+		Modalopened = false;
+	},function(){
+		Modalopened = false;
+	});
+  }
   
   $scope.edit_comp = function()
   {
@@ -543,6 +600,22 @@ $scope.TableData = function(){
 		
 		});
 	}
-
+	$scope.goToBillPage = function(trnType,jfId,companyId)
+	{
+		var headerCr = {'Content-Type': undefined,'companyId':companyId};
+		var path;
+		var gotoUrl;
+		if (trnType == 'purchase') {
+			path = apiPath.postPurchaseBill+'/'+jfId;
+			gotoUrl = 'app.PurchaseBill';
+		}else if (trnType == 'sales') {
+			path = apiPath.postBill+'/'+jfId;
+			gotoUrl = 'app.WholesaleBill';
+		}
+		apiCall.getCallHeader(path,headerCr).then(function(response){
+          	getSetFactory.set(response[0]);
+          	$state.go(gotoUrl);
+        });
+	}
 }
-InvStockController.$inject = ["$rootScope","$scope", "$filter", "ngTableParams","getSetFactory","apiCall","apiPath","$window","apiResponse","toaster"];
+InvStockController.$inject = ["$rootScope","$scope", "$filter", "ngTableParams","getSetFactory","apiCall","apiPath","$window","apiResponse","toaster","fetchArrayService","$modal","$state"];

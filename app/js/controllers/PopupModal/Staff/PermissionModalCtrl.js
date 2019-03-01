@@ -67,7 +67,6 @@ function permissionModalController($rootScope,$scope,$modalInstance,apiCall,apiP
 			$scope.commissionArray.commissionType = responseDrop.commissionType;
 			$scope.commissionArray.commissionRateType = responseDrop.commissionRateType.charAt(0).toUpperCase() + responseDrop.commissionRateType.substr(1).toLowerCase();
 			$scope.commissionArray.commissionRate = responseDrop.commissionRate;
-			// $scope.commissionArray.commissionFor = JSON.parse(responseDrop.commissionFor);
 			$scope.commissionArray.commissionCalcOn = responseDrop.commissionCalcOn;
 			if (responseDrop.commissionType == 'categoryWise') {
 				$scope.commissionArray.category = JSON.parse(responseDrop.commissionFor);
@@ -101,6 +100,12 @@ function permissionModalController($rootScope,$scope,$modalInstance,apiCall,apiP
 					break;
 					case 'brandWise':
 						commissionFormData.set('commissionFor',angular.toJson($scope.commissionArray.brand));
+					break;
+					case 'itemWise':
+						commissionFormData.set('commissionFor',angular.toJson([]));
+						commissionFormData.set('commissionRate','1');
+						commissionFormData.set('commissionRateType','Percentage');
+						commissionFormData.set('commissionCalcOn','Sales Price');
 					break;
 					default:
 						commissionFormData.set('commissionFor',angular.toJson([]));
@@ -146,7 +151,6 @@ function permissionModalController($rootScope,$scope,$modalInstance,apiCall,apiP
 					// toaster.clear();
 					// toaster.pop('warning', response);
 				}
-				console.log(response);
 				// }
 			});
 		}

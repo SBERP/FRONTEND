@@ -1,0 +1,238 @@
+<style type="text/css">.tab-content{padding: 0}</style>
+<h3>
+   <small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> >> Inventory >> Merge Product</small>
+</h3>
+<div data-ng-controller="MergeProductController as table" class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true,'time-out': 10000}"></toaster-container>
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div class="col-md-8">
+				<label class="col-sm-2 control-label"> Company </label>
+				<div class="col-sm-10">
+					<select chosen=""  ng-model="stateCheck" ng-options="s.companyName for s in table.states track by s.companyId" class="form-control chosen-select hightlight-company">
+					</select>
+				</div>
+			</div>
+			<div class="col-md-1 myPaddingTop">
+				<div class="col-sm-12">
+					<button type="button" class="mb-sm btn btn-primary pull-right"  ng-click="showProduct()"  data-ng-class="app.theme.brand">Go</button>
+				</div>
+			</div>
+			<div class="col-sm-3">
+			</div>
+		</div>
+	</div>
+	<div class="panel panel-default">
+	    <div class="panel-heading myHeading" >
+	      	<div class="panel-title">Merge Products</div>
+	    </div>
+	    <div class="panel-body">
+	    	<form action="#" name="formBill" class="form-validate form-horizontal" autocomplete="off" novalidate>
+	    		<div class="form-group" ng-hide="mergingStep > 1">
+    				<label class="control-label col-md-2">Merge Products</label>
+					<div class="col-md-3">
+						<input type="text" class="form-control" ng-model="productFrom.productName" typeahead="state.productName for state in productData | filter:$viewValue | limitTo:8"  typeahead-on-select="setProductData($item,'from');"  typeahead-template-url="customTemplate.html" ng-disabled="table.loadData" placeholder="Product Name" ng-required="true">
+						 <script type="text/ng-template" id="customTemplate.html">
+		                    <a><span ng-bind-html="match.label | typeaheadHighlight:query"></span> ({{match.model.color}} | {{match.model.size}} | {{match.model.variant}})</a>
+		                </script>
+					</div>
+					<label class="pull-left control-label"><i class="fa fa-arrow-right"></i></label>
+					<div class="col-md-3">
+						<input type="text" class="form-control" ng-model="productTo.productName" typeahead="state.productName for state in productData | filter:$viewValue | limitTo:8"  typeahead-on-select="setProductData($item,'to');"  typeahead-template-url="customTemplate.html" ng-disabled="table.loadData" placeholder="Product Name" ng-required="true">
+						 <script type="text/ng-template" id="customTemplate.html">
+		                    <a><span ng-bind-html="match.label | typeaheadHighlight:query"></span> ({{match.model.color}} | {{match.model.size}} | {{match.model.variant}})</a>
+		                </script>
+					</div>
+					<div class="col-md-2 text-left">
+			    		<button type="button" class="mb-sm btn btn-primary" ng-click="pop()" ng-disabled="formBill.$invalid || disableButton">Next</button>
+			    		<button type="button" ng-click="cancel()" class="mb-sm btn btn-danger">Reset</button>
+			    	</div>
+				</div>
+	    	</form>
+	    </div>
+	    <div class="panel-body" ng-if="mergingStep == 3">
+	    	<div class="col-md-2"></div>
+	    	<div class="col-md-8">
+	    		<h3 class="text-center">
+	    			<b>Are you sure that you want to merge?</b>
+	    		</h3>
+	    		<h4 class="text-center"> {{productFrom.productName}} will be merged Into {{productTo.productName}}, All transaction / stock data of {{productFrom.productName}} will be moved to {{productTo.productName}} and {{productFrom.productName}} will be deleted.</h4>
+	    		<br>
+		    	<center>
+					<button data-ng-click="mergingPop(3,'')" class="btn btn-primary">Go Ahead</button>
+					<button data-ng-click="cancel()" class="btn btn-warning">Cancel</button>
+				</center>
+				<h4 class="text-danger text-center"><b>Note :</b> Once Merging starts, It won't be able to rollback.</h4>
+	    	</div>
+	    </div>
+	    <div class="panel-body" ng-if="mergingStep == 4">
+	    	<div class="col-md-12">
+	    		<h3><b>Please Wait While merging data....</b></h3>
+	    		<h5 ng-repeat="x in finishedRequests">{{x}} Done</h5>
+	    		<div class="col-md-4 col-sm-8 col-xs-12">
+	    			<h5>Updating {{currentProgress.name}} Data</h5>
+	    			<progressbar value="currentProgress.progress" type="info" class="progress-striped active">Processing..
+            		</progressbar>
+	    		</div>
+	    	</div>
+	    </div>
+	    <div class="panel-body" ng-if="mergeTemplate == '' && mergingStep == 1">
+	    	<table ng-if="productFrom.productId || productTo.productId" class="table table-bordered">
+	    		<colgroup>
+	    			<col width="20%"></col>
+	    			<col width="40%"></col>
+	    			<col width="40%"></col>
+	    		</colgroup>
+	    		<tr>
+	    			<th></th>
+	    			<th>Merge This Product</th>
+	    			<th>To This Product</th>
+	    		</tr>
+	    		<tr>
+	    			<th>Product Name</th>
+	    			<td>{{productFrom.productName}}</td>
+	    			<td>{{productTo.productName}}</td>
+	    		</tr>
+	    		<tr>
+	    			<th>Category</th>
+	    			<td>{{productFrom.productCategory.productCategoryName}}</td>
+	    			<td>{{productTo.productCategory.productCategoryName}}</td>
+	    		</tr>
+	    		<tr>
+	    			<th>Brand</th>
+	    			<td>{{productFrom.productGroup.productGroupName}}</td>
+	    			<td>{{productTo.productGroup.productGroupName}}</td>
+	    		</tr>
+	    		<tr>
+	    			<th>Product Code</th>
+	    			<td>{{productFrom.productCode}}</td>
+	    			<td>{{productTo.productCode}}</td>
+	    		</tr>
+	    		<tr>
+	    			<th>HSN</th>
+	    			<td>{{productFrom.hsn}}</td>
+	    			<td>{{productTo.hsn}}</td>
+	    		</tr>
+	    		<tr>
+	    			<th>Product Type</th>
+	    			<td>{{productFrom.productType}}</td>
+	    			<td>{{productTo.productType}}</td>
+	    		</tr>
+	    		<tr ng-if="enableDisableColor">
+	    			<th>Color</th>
+	    			<td>{{productFrom.color}}</td>
+	    			<td>{{productTo.color}}</td>
+	    		</tr>
+	    		<tr ng-if="enableDisableSize">
+	    			<th>Size</th>
+	    			<td>{{productFrom.size}}</td>
+	    			<td>{{productTo.size}}</td>
+	    		</tr>
+	    		<tr ng-if="enableDisableVariant">
+	    			<th>Variant</th>
+	    			<td>{{productFrom.variant}}</td>
+	    			<td>{{productTo.variant}}</td>
+	    		</tr>
+	    		<tr>
+	    			<th>For Sale ?</th>
+	    			<td>{{productFrom.forSaleStatus}}</td>
+	    			<td>{{productTo.forSaleStatus}}</td>
+	    		</tr>
+	    		<tr>
+	    			<th>MRP</th>
+	    			<td>{{productFrom.forSaleStatus}}</td>
+	    			<td>{{productTo.forSaleStatus}}</td>
+	    		</tr>
+	    		<tr>
+	    			<th>Purchase Price(s)</th>
+	    			<td>
+	    				<div ng-if="!enableDisableAdvanceMou && productFrom.measurementUnit.measurementUnitId">
+	    					<span ng-bind="productFrom.purchasePrice"></span>&nbsp;/&nbsp;<span ng-bind="productFrom.measurementUnit.unitName"></span>
+	    				</div>
+	    				<div ng-if="enableDisableAdvanceMou">
+	    					<div ng-if="productFrom.highestMeasurementUnit.measurementUnitId">
+	    						<span ng-bind="productFrom.highestPurchasePrice"></span>&nbsp;/&nbsp;<span ng-bind="productFrom.highestMeasurementUnit.unitName"></span>
+	    					</div>
+	    					<div ng-if="productFrom.higherMeasurementUnit.measurementUnitId">
+	    						<span ng-bind="productFrom.higherPurchasePrice"></span>&nbsp;/&nbsp;<span ng-bind="productFrom.higherMeasurementUnit.unitName"></span>
+	    					</div>
+	    					<div ng-if="productFrom.mediumMeasurementUnit.measurementUnitId">
+	    						<span ng-bind="productFrom.mediumPurchasePrice"></span>&nbsp;/&nbsp;<span ng-bind="productFrom.mediumMeasurementUnit.unitName"></span>
+	    					</div>
+	    					<div ng-if="productFrom.mediumLowerMeasurementUnit.measurementUnitId">
+	    						<span ng-bind="productFrom.mediumLowerPurchasePrice"></span>&nbsp;/&nbsp;<span ng-bind="productFrom.mediumLowerMeasurementUnit.unitName"></span>
+	    					</div>
+	    					<div ng-if="productFrom.lowerMeasurementUnit.measurementUnitId">
+	    						<span ng-bind="productFrom.lowerPurchasePrice"></span>&nbsp;/&nbsp;<span ng-bind="productFrom.lowerMeasurementUnit.unitName"></span>
+	    					</div>
+	    					<div ng-if="productFrom.measurementUnit.measurementUnitId">
+	    						<span ng-bind="productFrom.purchasePrice"></span>&nbsp;/&nbsp;<span ng-bind="productFrom.measurementUnit.unitName"></span>
+	    					</div>
+	    				</div>
+	    			</td>
+	    			<td>
+	    				<div ng-if="!enableDisableAdvanceMou && productTo.measurementUnit.measurementUnitId">
+	    					<span ng-bind="productTo.purchasePrice"></span>&nbsp;/&nbsp;<span ng-bind="productTo.measurementUnit.unitName"></span>
+	    				</div>
+	    				<div ng-if="enableDisableAdvanceMou">
+	    					<div ng-if="productTo.highestMeasurementUnit.measurementUnitId">
+	    						<span ng-bind="productTo.highestPurchasePrice"></span>&nbsp;/&nbsp;<span ng-bind="productTo.highestMeasurementUnit.unitName"></span>
+	    					</div>
+	    					<div ng-if="productTo.higherMeasurementUnit.measurementUnitId">
+	    						<span ng-bind="productTo.higherPurchasePrice"></span>&nbsp;/&nbsp;<span ng-bind="productTo.higherMeasurementUnit.unitName"></span>
+	    					</div>
+	    					<div ng-if="productTo.mediumMeasurementUnit.measurementUnitId">
+	    						<span ng-bind="productTo.mediumPurchasePrice"></span>&nbsp;/&nbsp;<span ng-bind="productTo.mediumMeasurementUnit.unitName"></span>
+	    					</div>
+	    					<div ng-if="productTo.mediumLowerMeasurementUnit.measurementUnitId">
+	    						<span ng-bind="productTo.mediumLowerPurchasePrice"></span>&nbsp;/&nbsp;<span ng-bind="productTo.mediumLowerMeasurementUnit.unitName"></span>
+	    					</div>
+	    					<div ng-if="productTo.lowerMeasurementUnit.measurementUnitId">
+	    						<span ng-bind="productTo.lowerPurchasePrice"></span>&nbsp;/&nbsp;<span ng-bind="productTo.lowerMeasurementUnit.unitName"></span>
+	    					</div>
+	    					<div ng-if="productTo.measurementUnit.measurementUnitId">
+	    						<span ng-bind="productTo.purchasePrice"></span>&nbsp;/&nbsp;<span ng-bind="productTo.measurementUnit.unitName"></span>
+	    					</div>
+	    				</div>
+	    			</td>
+	    		</tr>
+	    		<tr ng-if="enableDisableAdvanceMou">
+	    			<th>Primary Unit</th>
+	    			<td ng-bind="productFrom.primaryMeasure"></td>
+	    			<td ng-bind="productTo.primaryMeasure"></td>
+	    		</tr>
+	    		<tr>
+	    			<th>GST</th>
+	    			<td>{{productFrom.igst | number : 2}}<span ng-if="productFrom.productId"> % </span>{{productFrom.taxInclusive}}</td>
+	    			<td>{{productTo.igst | number : 2}}<span ng-if="productTo.productId"> % </span>{{productTo.taxInclusive}}</td>
+	    		</tr>
+	    		<tr>
+	    			<th>CESS</th>
+	    			<td>{{productFrom.cessPercentage | number : 2}}<span ng-if="productFrom.productId"> % + </span>{{productFrom.cessFlat | number : 2}}</td>
+	    			<td>{{productTo.cessPercentage | number : 2}}<span ng-if="productTo.productId"> % + </span>{{productTo.cessFlat | number : 2}}</td>
+	    		</tr>
+	    		<tr>
+	    			<th>Minimum Stock Level</th>
+	    			<td>{{productFrom.minimumStockLevel}}</td>
+	    			<td>{{productTo.minimumStockLevel}}</td>
+	    		</tr>
+	    		<tr>
+	    			<th>Opening Stock</th>
+	    			<td>{{productFrom.opening}}</td>
+	    			<td>{{productTo.opening}}</td>
+	    		</tr>
+	    		<tr>
+	    			<th>Current Stock</th>
+	    			<td>{{productFrom.quantity}}</td>
+	    			<td>{{productTo.quantity}}</td>
+	    		</tr>
+	    		<tr ng-if="enableDisableBestBefore">
+	    			<th>Best Before</th>
+	    			<td>{{productFrom.bestBeforeTime}} {{productFrom.bestBeforeType}}</td>
+	    			<td>{{productTo.bestBeforeTime}} {{productTo.bestBeforeType}}</td>
+	    		</tr>
+	    	</table>
+	    </div>
+  	</div>
+  	<ng-include src="mergeTemplate"></ng-include>
+</div>

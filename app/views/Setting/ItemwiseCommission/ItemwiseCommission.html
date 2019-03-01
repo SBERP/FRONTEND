@@ -1,0 +1,86 @@
+<style type="text/css">.tab-content{padding: 0}</style>
+<h3>
+   <small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> Itemwise Commission</small>
+</h3>
+<div data-ng-controller="ItemwiseCommissionController as form" class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true,'time-out': 10000}"></toaster-container>
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div class="col-md-8">
+				<label class="col-sm-2 control-label"> Company </label>
+				<div class="col-sm-10">
+					<select chosen=""  ng-model="stateCheck" ng-options="s.companyName for s in form.states track by s.companyId" class="form-control chosen-select hightlight-company">
+					</select>
+				</div>
+			</div>
+			<div class="col-md-1 myPaddingTop">
+				<div class="col-sm-12">
+					<button type="button" class="mb-sm btn btn-primary pull-right"  ng-click="showProduct()"  data-ng-class="app.theme.brand">Go</button>
+				</div>
+			</div>
+			<div class="col-sm-3">
+			</div>
+		</div>
+	</div>
+	<div class="panel panel-default">
+	    <div class="panel-heading myHeading" >
+	      	<div class="panel-title">Itemwise</div>
+	    </div>
+	    <div class="panel-body">
+	    	<form action="#" name="formBill" class="form-validate form-horizontal" autocomplete="off" novalidate>
+	    		<div class="form-group">
+					<div class="col-md-3">
+						<input type="text" class="form-control" ng-model="commissionArray.productName" typeahead="state.productName for state in productData | filter:$viewValue | limitTo:8"  typeahead-on-select="setProductData($item);"  typeahead-template-url="customTemplate.html" ng-disabled="form.loadData" placeholder="Product Name" ng-required="true">
+						 <script type="text/ng-template" id="customTemplate.html">
+		                    <a><span ng-bind-html="match.label | typeaheadHighlight:query"></span> ({{match.model.color}} | {{match.model.size}} | {{match.model.variant}})</a>
+		                </script>
+					</div>
+					<div class="col-md-1">
+						<input type="text" class="form-control" ng-model="commissionArray.fromQty" placeholder="From Qty" only-number>
+					</div>
+					<div class="col-md-1">
+						<input type="text" class="form-control" ng-model="commissionArray.toQty" placeholder="To Qty" only-number>
+					</div>
+					<div class="col-md-1">
+						<input type="text" class="form-control" ng-model="commissionArray.commissionRate" placeholder="Rate" ng-pattern="/^[0-9 \.]+$/" only-number ng-required="true">
+					</div>
+					<div class="col-md-1">
+						<select chosen="" data-placeholder="Rate Type" ng-model="commissionArray.commissionRateType" data-ng-options="s as s for s in commissionRateTypeDrop track by s" ng-change="changeRateType('commissionRateType')" class="form-control chosen-select" ng-required="true">
+							<option value=""></option>
+						</select>
+					</div>
+					<div class="col-md-2">
+						<select chosen="" data-placeholder="Calc On" ng-model="commissionArray.commissionCalcOn" ng-change="changeRateType('commissionCalcOn')" data-ng-options="f as f for f in commissionCalcDrop track by f" class="form-control chosen-select" ng-required="true">
+							<option value=""></option>
+						</select>
+					</div>
+					<div class="col-md-2 text-left">
+			    		<button type="button" class="mb-sm btn btn-success" ng-click="pop()" ng-disabled="formBill.$invalid || disableButton">Save</button>
+			    		<button type="button" ng-click="cancel()" class="mb-sm btn btn-danger">Reset</button>
+			    	</div>
+				</div>
+	    	</form>
+	    	
+	    </div>
+	    <div class="table-responsive">
+			<table ng-table="form.tableParams" show-filter="true" class="table table-bordered table-striped">
+				<tbody>
+					<tr data-ng-repeat="user in ($parent.filteredItems = $data) track by user.productCommissionId">
+						<td data-title="'Product Name'" sortable="'productName'" filter="{ 'productName': 'text' }" ng-bind="user.productName"></td>
+						 <td data-title="'From Qty'" sortable="'commissionFromQty'" filter="{ 'commissionFromQty': 'text' }" ng-bind="user.commissionFromQty | setDecimal: user.company.noOfDecimalPoints"></td>
+						 <td data-title="'To Qty'" sortable="'commissionToQty'" filter="{ 'commissionToQty': 'text' }" ng-bind="user.commissionToQty | setDecimal: user.company.noOfDecimalPoints"></td>
+						 <td data-title="'Amount'" sortable="'commissionRate'" filter="{ 'commissionRate': 'text' }" ng-bind="user.commissionRate | setDecimal: user.company.noOfDecimalPoints"></td>
+						 <td data-title="'Amount Type'" sortable="'commissionRateType'" filter="{ 'commissionRateType': 'text' }" ng-bind="user.commissionRateType"></td>
+						 <td data-title="'Calc On'" sortable="'commissionCalcOn'" filter="{ 'commissionCalcOn': 'text' }" ng-bind="user.commissionCalcOn"></td>
+						 <td class="text-center" data-title="'Action'">
+							<center>
+								<i  title="Edit" ng-click="editProduct(user)" class="fa fa-edit myCursorPointer" style="font-size:17px;color:#10709f"> </i>
+								<i title="Delete" ng-click="deleteProduct('sm',user.productCommissionId)" class="fa fa-times-circle myCursorPointer" style="font-size:17px;color:red"></i>
+							</center>
+						 </td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+  	</div>
+</div>

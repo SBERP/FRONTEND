@@ -18,7 +18,6 @@
 		            <div class="col-sm-4">
 		                <select chosen="" data-ng-model="addModelProduct.company" tabindex="2" data-ng-options="s.companyName for s in companyDrop track by s.companyId" ng-change="changeCompany(addModelProduct.company.companyId)" ng-disabled="disableCompany"  class="form-control chosen-select" ng-required="true"></select>
 		            </div>
-					  
 					<label class="col-sm-2 control-label">*Branch</label>
 		            <div class="col-sm-4">
 		                <select chosen="" data-ng-model="addModelProduct.branch" tabindex="2" data-ng-options="s.branchName for s in branchDrop track by s.branchId" ng-change="changeInvProductData('branchId',addModelProduct.branch.branchId)" class="form-control chosen-select" ng-required="true"></select>
@@ -135,76 +134,213 @@
 	              	</div>
               	</div>
            	</div>
-        
-        <h4 class="panel-heading bg-default myHeading" ng-if="enableAdvanceMou" >Measurement of Unit</h4>
+	        <h4 class="panel-heading bg-default myHeading" ng-if="enableAdvanceMou" >Measure of Unit
+				<span class="pull-right">
+					<a href="javascript:void" ng-if="displayMouCount < 6" ng-click="showHideMou('inc')" style="margin-left: 5px;">
+						<i class="fa fa-plus"></i>
+					</a>
+					<a href="javascript:void" ng-if="displayMouCount > 1" ng-click="showHideMou('dec')" class="text-danger">
+						<i class="fa fa-minus"></i>
+					</a>
+				</span>
+			</h4>
 			<div class="form-group" ng-if="enableAdvanceMou">
-				<div class="col-sm-4">
-                  	<label class="col-sm-3 control-label ">Highest</label>
-                  	<div class="col-sm-9">
-                     	<select chosen="" data-ng-model="addModelProduct.highestMeasureUnit" data-ng-options="s.unitName for s in form.advanceMeasureUnitDrop track by s.measurementUnitId" ng-change="changeInvProductData('highestMeasurementUnitId',addModelProduct.highestMeasureUnit.measurementUnitId)" class="form-control chosen-select" tabindex="2" >
-							<option value=""></option>
+				<div class="col-md-4" ng-if="displayMouCount == 6">
+				  	<label class="col-sm-3 control-label">Highest</label>
+				  	<div class="col-sm-9">
+						<select chosen="" data-ng-model="addModelProduct.highestMeasureUnit" data-ng-options="s.unitName for s in form.advanceMeasureUnitDrop track by s.measurementUnitId" ng-change="changeInvProductData('highestMeasurementUnitId',addModelProduct.highestMeasureUnit.measurementUnitId)" class="form-control chosen-select" tabindex="2" >
+						<option value=""></option>
 						</select>
-                  	</div>
-                  	<label class="col-sm-3 control-label my-padding-textbox">Units</label>
+				  	</div>
+			   		<label class="col-sm-3 control-label">Units</label>
 			   		<div class="col-sm-9 mt-sm">
-			   			<input name="highestUnitQty"  ng-model="addModelProduct.highestUnitQty" ng-change="changeInvProductData('highestUnitQty',addModelProduct.highestUnitQty)" type="text" placeholder="Qty" class="form-control" tabindex="2"  ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
+			   			<input name="highestUnitQty"  ng-model="addModelProduct.highestUnitQty" ng-change="changeInvProductData('highestUnitQty',addModelProduct.highestUnitQty);changePurchasePrice('highestUnitQty',addModelProduct.highestUnitQty);" type="text" placeholder="Qty" class="form-control" readonly tabindex="2"  ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
 			   		</div>
-                  	<label class="col-sm-3 control-label mt-sm" title="Purchase Price">P.Price</label>
-                  	<div class="col-sm-9 mt-sm">
-                     	<input name="highestPurchasePrice"  ng-model="addModelProduct.highestPurchasePrice" ng-change="changeInvProductData('highestPurchasePrice',addModelProduct.highestPurchasePrice)" type="text" placeholder="Purchase Price" class="form-control" tabindex="2"  ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
-							 
+				  	<label  class="col-sm-3 control-label mt-sm">Pur. Price</label>
+				  	<div class="col-sm-9 mt-sm">
+						<input name="highestPurchasePrice"  ng-model="addModelProduct.highestPurchasePrice" ng-change="changeInvProductData('highestPurchasePrice',addModelProduct.highestPurchasePrice);changePurchasePrice('highestPurchasePrice',addModelProduct.highestPurchasePrice);" type="text" placeholder="Purchase Price" class="form-control" tabindex="2"  ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
+						 
 						<span ng-messages="formProduct.highestPurchasePrice.$error" ng-if="formProduct.highestPurchasePrice.$dirty || formProduct.highestPurchasePrice.$touched"  role="alert">
 							<span ng-messages-include="errorRequired"></span>
 							<span ng-messages-include="errorLonglength"></span>
 							<span ng-messages-include="errorPatternThisSpecial"></span>
 						 </span>
-                  	</div>
-
-                  	<label class="col-sm-3 control-label mt-sm"></label>
-                  	<div class="col-sm-9 text-center mt-sm">
-                     	<div class="radio-inline c-radio">
-							<label>
-							   <input  name="i-radio-measure-unit" value="highest" ng-model="addModelProduct.primaryMeasureUnit" ng-click="changeInvProductData('primaryMeasureUnit',addModelProduct.primaryMeasureUnit)" type="radio" tabindex="2" >
-							   <span class="fa fa-check"></span>Primary</label>
+				  	</div>
+				    <div class="form-group">
+						<label class="col-sm-3 control-label mt-sm"></label>
+						<div class="col-sm-9 text-center mt-sm">
+							<div class="radio-inline c-radio">
+								<label>
+								   <input  name="i-radio-measure-unit" value="highest" ng-model="addModelProduct.primaryMeasureUnit" ng-click="changeInvProductData('primaryMeasureUnit',addModelProduct.primaryMeasureUnit);calculateConvRatio()" type="radio" tabindex="2" >
+								   <span class="fa fa-check"></span>Primary</label>
+							</div>
 						</div>
-                  	</div>
+				   </div>
 				</div>
-
-				<div class="col-sm-4">
-				   	<label class="col-sm-3 control-label my-padding-textbox">Higher</label>
-                  	<div class="col-sm-9">
-	                    <select chosen="" data-ng-model="addModelProduct.higherMeasureUnit" data-ng-options="s.unitName for s in form.advanceMeasureUnitDrop track by s.measurementUnitId" ng-change="changeInvProductData('higherMeasurementUnitId',addModelProduct.higherMeasureUnit.measurementUnitId)" class="form-control chosen-select" tabindex="2" >
+				<div class="col-md-4" ng-if="displayMouCount >= 5">
+				   <div class="form-group">
+					  <label class="col-sm-3 control-label">Higher</label>
+					  <div class="col-sm-9">
+							<select chosen="" data-ng-model="addModelProduct.higherMeasureUnit" data-ng-options="s.unitName for s in form.advanceMeasureUnitDrop track by s.measurementUnitId" ng-change="changeInvProductData('higherMeasurementUnitId',addModelProduct.higherMeasureUnit.measurementUnitId)" class="form-control chosen-select" tabindex="2" >
 							<option value=""></option>
-						</select>
-                  	</div>
-                  	<label class="col-sm-3 control-label my-padding-textbox">
-			   			<span ng-if="!addModelProduct.highestMeasureUnit">Units</span>
-			   			<span ng-if="addModelProduct.highestMeasureUnit">1x {{ addModelProduct.highestMeasureUnit.unitName }} = </span>
-			   		</label>
-			   		<div class="col-sm-9 mt-sm">
-			   			<input name="higherUnitQty"  ng-model="addModelProduct.higherUnitQty" ng-change="changeInvProductData('higherUnitQty',addModelProduct.higherUnitQty)" type="text" placeholder="Qty" class="form-control" tabindex="2"  ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
-			   		</div>
-                  	<label class="col-sm-3 control-label my-padding-textbox mt-sm" title="Purchase Price">P.Price</label>
-                  	<div class="col-sm-9 mt-sm">
-	                    <input name="higherPurchasePrice"  ng-model="addModelProduct.higherPurchasePrice" ng-change="changeInvProductData('higherPurchasePrice',addModelProduct.higherPurchasePrice)" type="text" placeholder="Purchase Price" class="form-control" tabindex="2"  ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
+							</select>
+					  </div>
+				   </div>
+				   	<div class="form-group">
+				   		<label class="col-sm-3 control-label mt-sm">
+				   			<span ng-if="!addModelProduct.highestMeasureUnit || addModelProduct.highestMeasureUnit == 0">Units</span>
+				   			<span ng-if="addModelProduct.highestMeasureUnit.measurementUnitId > 0">1x {{ addModelProduct.highestMeasureUnit.unitName }} = </span></label>
+				   		<div class="col-sm-9 mt-sm">
+				   			<input name="higherUnitQty"  ng-model="addModelProduct.higherUnitQty" ng-change="changeInvProductData('higherUnitQty',addModelProduct.higherUnitQty);changePurchasePrice('higherUnitQty',addModelProduct.higherUnitQty);" type="text" placeholder="Qty" class="form-control" tabindex="2"  ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
+				   		</div>
+				   	</div>
+				   <div class="form-group">
+					  <label  class="col-sm-3 control-label mt-sm">Pur. Price</label>
+					  <div class="col-sm-9 mt-sm">
+						 <input name="higherPurchasePrice"  ng-model="addModelProduct.higherPurchasePrice" ng-change="changeInvProductData('higherPurchasePrice',addModelProduct.higherPurchasePrice);changePurchasePrice('higherPurchasePrice',addModelProduct.higherPurchasePrice);" type="text" placeholder="Purchase Price" class="form-control" tabindex="2"  ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
 						 
 						<span ng-messages="formProduct.higherPurchasePrice.$error" ng-if="formProduct.higherPurchasePrice.$dirty || formProduct.higherPurchasePrice.$touched"  role="alert">
 							<span ng-messages-include="errorRequired"></span>
 							<span ng-messages-include="errorLonglength"></span>
 							<span ng-messages-include="errorPatternThisSpecial"></span>
 						 </span>
-                  	</div>
-
-                  	<label class="col-sm-3 control-label mt-sm"></label>
-                  	<div class="col-sm-9 text-center mt-sm">
-                     	<div class="radio-inline c-radio">
-							<label>
-							   <input  name="i-radio-measure-unit" value="higher" ng-model="addModelProduct.primaryMeasureUnit" ng-click="changeInvProductData('primaryMeasureUnit',addModelProduct.primaryMeasureUnit)" type="radio" tabindex="2" >
-							   <span class="fa fa-check"></span>Primary</label>
+						
+					  </div>
+				   </div>
+				   <div class="form-group">
+						<label class="col-sm-3 control-label mt-sm"></label>
+						<div class="col-sm-9 text-center mt-sm">
+							<div class="radio-inline c-radio">
+								<label>
+								   <input  name="i-radio-measure-unit" value="higher" ng-model="addModelProduct.primaryMeasureUnit" ng-click="changeInvProductData('primaryMeasureUnit',addModelProduct.primaryMeasureUnit);calculateConvRatio();calculateConvRatio()" type="radio" tabindex="2" >
+								   <span class="fa fa-check"></span> Primary</label>
+							</div>
 						</div>
-                  	</div>
+				   </div>
 				</div>
-
+				<div class="col-md-4" ng-if="displayMouCount >= 4">
+				   <div class="form-group">
+					  <label class="col-sm-3 control-label">Medium</label>
+					  <div class="col-sm-9">
+							<select chosen="" data-ng-model="addModelProduct.mediumMeasureUnit" data-ng-options="s.unitName for s in form.advanceMeasureUnitDrop track by s.measurementUnitId" ng-change="changeInvProductData('mediumMeasurementUnitId',addModelProduct.mediumMeasureUnit.measurementUnitId)" class="form-control chosen-select" tabindex="2" >
+							<option value=""></option>
+							</select>
+					  </div>
+				   </div>
+				   	<div class="form-group">
+				   		<label class="col-sm-3 control-label mt-sm">
+				   			<span ng-if="!addModelProduct.higherMeasureUnit || addModelProduct.higherMeasureUnit == 0">Units</span>
+				   			<span ng-if="addModelProduct.higherMeasureUnit.measurementUnitId > 0">1x {{ addModelProduct.higherMeasureUnit.unitName }} = </span></label>
+				   		<div class="col-sm-9 mt-sm">
+				   			<input name="mediumUnitQty"  ng-model="addModelProduct.mediumUnitQty" ng-change="changeInvProductData('mediumUnitQty',addModelProduct.mediumUnitQty);changePurchasePrice('mediumUnitQty',addModelProduct.mediumUnitQty);" type="text" placeholder="Qty" class="form-control" tabindex="2"  ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
+				   		</div>
+				   	</div>
+				   <div class="form-group">
+					  <label  class="col-sm-3 control-label mt-sm">Pur. Price</label>
+					  <div class="col-sm-9 mt-sm">
+						 <input name="mediumPurchasePrice"  ng-model="addModelProduct.mediumPurchasePrice" ng-change="changeInvProductData('mediumPurchasePrice',addModelProduct.mediumPurchasePrice);changePurchasePrice('mediumPurchasePrice',addModelProduct.mediumPurchasePrice);" type="text" placeholder="Purchase Price" class="form-control" tabindex="2"  ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
+						 
+						<span ng-messages="formProduct.mediumPurchasePrice.$error" ng-if="formProduct.mediumPurchasePrice.$dirty || formProduct.mediumPurchasePrice.$touched"  role="alert">
+							<span ng-messages-include="errorRequired"></span>
+							<span ng-messages-include="errorLonglength"></span>
+							<span ng-messages-include="errorPatternThisSpecial"></span>
+						 </span>
+						
+					  </div>
+				   </div>
+				   <div class="form-group">
+						<label class="col-sm-3 control-label mt-sm"></label>
+						<div class="col-sm-9 text-center mt-sm">
+							<div class="radio-inline c-radio">
+								<label>
+								   <input  name="i-radio-measure-unit" value="medium" ng-model="addModelProduct.primaryMeasureUnit" ng-click="changeInvProductData('primaryMeasureUnit',addModelProduct.primaryMeasureUnit);calculateConvRatio()" type="radio" tabindex="2" >
+								   <span class="fa fa-check"></span> Primary</label>
+							</div>
+						</div>
+				   </div>
+				</div>
+				<div class="col-md-4" ng-if="displayMouCount >= 3">
+				   <div class="form-group">
+					  <label class="col-sm-3 control-label">Medium Lower</label>
+					  <div class="col-sm-9">
+							<select chosen="" data-ng-model="addModelProduct.mediumLowerMeasureUnit" data-ng-options="s.unitName for s in form.advanceMeasureUnitDrop track by s.measurementUnitId" ng-change="changeInvProductData('mediumLowerMeasurementUnitId',addModelProduct.mediumLowerMeasureUnit.measurementUnitId)" class="form-control chosen-select" tabindex="2" >
+							<option value=""></option>
+							</select>
+					  </div>
+				   </div>
+				   	<div class="form-group">
+				   		<label class="col-sm-3 control-label mt-sm">
+				   			<span ng-if="!addModelProduct.mediumMeasureUnit">Units</span>
+				   			<span ng-if="addModelProduct.mediumMeasureUnit.measurementUnitId > 0">1x {{ addModelProduct.mediumMeasureUnit.unitName }} = </span></label>
+				   		<div class="col-sm-9 mt-sm">
+				   			<input name="mediumLowerUnitQty"  ng-model="addModelProduct.mediumLowerUnitQty" ng-change="changeInvProductData('mediumLowerUnitQty',addModelProduct.mediumLowerUnitQty);changePurchasePrice('mediumLowerUnitQty',addModelProduct.mediumLowerUnitQty);" type="text" placeholder="Qty" class="form-control" tabindex="2"  ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
+				   		</div>
+				   	</div>
+				   <div class="form-group">
+					  <label  class="col-sm-3 control-label mt-sm">Pur. Price</label>
+					  <div class="col-sm-9 mt-sm">
+						 <input name="mediumLowerPurchasePrice"  ng-model="addModelProduct.mediumLowerPurchasePrice" ng-change="changeInvProductData('mediumLowerPurchasePrice',addModelProduct.mediumLowerPurchasePrice);changePurchasePrice('mediumLowerPurchasePrice',addModelProduct.mediumLowerPurchasePrice);" type="text" placeholder="Purchase Price" class="form-control" tabindex="2"  ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
+						 
+						<span ng-messages="formProduct.mediumLowerPurchasePrice.$error" ng-if="formProduct.mediumLowerPurchasePrice.$dirty || formProduct.mediumLowerPurchasePrice.$touched"  role="alert">
+							<span ng-messages-include="errorRequired"></span>
+							<span ng-messages-include="errorLonglength"></span>
+							<span ng-messages-include="errorPatternThisSpecial"></span>
+						 </span>
+						
+					  </div>
+				   </div>
+				   <div class="form-group">
+						<label class="col-sm-3 control-label mt-sm"></label>
+						<div class="col-sm-9 text-center mt-sm">
+							<div class="radio-inline c-radio">
+								<label>
+								   <input  name="i-radio-measure-unit" value="mediumLower" ng-model="addModelProduct.primaryMeasureUnit" ng-click="changeInvProductData('primaryMeasureUnit',addModelProduct.primaryMeasureUnit);calculateConvRatio()" type="radio" tabindex="2" >
+								   <span class="fa fa-check"></span> Primary</label>
+							</div>
+						</div>
+				   </div>
+				</div>
+				<div class="col-md-4" ng-if="displayMouCount >= 2">
+				   <div class="form-group">
+					  <label class="col-sm-3 control-label">Lower</label>
+					  <div class="col-sm-9">
+							<select chosen="" data-ng-model="addModelProduct.lowerMeasureUnit" data-ng-options="s.unitName for s in form.advanceMeasureUnitDrop track by s.measurementUnitId" ng-change="changeInvProductData('lowerMeasurementUnitId',addModelProduct.lowerMeasureUnit.measurementUnitId)" class="form-control chosen-select" tabindex="2" >
+							<option value=""></option>
+							</select>
+					  </div>
+				   </div>
+				   	<div class="form-group">
+				   		<label class="col-sm-3 control-label mt-sm">
+				   			<span ng-if="!addModelProduct.mediumLowerMeasureUnit.length">Units</span>
+				   			<span ng-if="addModelProduct.mediumLowerMeasureUnit.measurementUnitId > 0">1x {{ addModelProduct.mediumLowerMeasureUnit.unitName }} = </span></label>
+				   		<div class="col-sm-9 mt-sm">
+				   			<input name="lowerUnitQty"  ng-model="addModelProduct.lowerUnitQty" ng-change="changeInvProductData('lowerUnitQty',addModelProduct.lowerUnitQty);changePurchasePrice('lowerUnitQty',addModelProduct.lowerUnitQty);" type="text" placeholder="Qty" class="form-control" tabindex="2"  ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
+				   		</div>
+				   	</div>
+				   <div class="form-group">
+					  <label  class="col-sm-3 control-label mt-sm">Pur. Price</label>
+					  <div class="col-sm-9 mt-sm">
+						 <input name="lowerPurchasePrice"  ng-model="addModelProduct.lowerPurchasePrice" ng-change="changeInvProductData('lowerPurchasePrice',addModelProduct.lowerPurchasePrice);changePurchasePrice('lowerPurchasePrice',addModelProduct.lowerPurchasePrice);" type="text" placeholder="Purchase Price" class="form-control" tabindex="2"  ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
+						 
+						<span ng-messages="formProduct.lowerPurchasePrice.$error" ng-if="formProduct.lowerPurchasePrice.$dirty || formProduct.lowerPurchasePrice.$touched"  role="alert">
+							<span ng-messages-include="errorRequired"></span>
+							<span ng-messages-include="errorLonglength"></span>
+							<span ng-messages-include="errorPatternThisSpecial"></span>
+						 </span>
+						
+					  </div>
+				   </div>
+				   <div class="form-group">
+						<label class="col-sm-3 control-label mt-sm"></label>
+						<div class="col-sm-9 text-center mt-sm">
+							<div class="radio-inline c-radio">
+								<label>
+								   <input  name="i-radio-measure-unit" value="lower" ng-model="addModelProduct.primaryMeasureUnit" ng-click="changeInvProductData('primaryMeasureUnit',addModelProduct.primaryMeasureUnit);calculateConvRatio()" type="radio" tabindex="2" >
+								   <span class="fa fa-check"></span> Primary</label>
+							</div>
+						</div>
+				   </div>
+				</div>
 				<div class="col-sm-4">
 				   	<label class="col-sm-3 control-label my-padding-textbox">*Lowest</label>
                   	<div class="col-sm-9">
@@ -213,15 +349,15 @@
 						</select>
                   	</div>
                   	<label class="col-sm-3 control-label my-padding-textbox">
-			   			<span ng-if="!addModelProduct.higherMeasureUnit">Units</span>
-			   			<span ng-if="addModelProduct.higherMeasureUnit">1x {{ addModelProduct.higherMeasureUnit.unitName }} = </span>
+			   			<span ng-if="!addModelProduct.lowerMeasureUnit">Units</span>
+			   			<span ng-if="addModelProduct.lowerMeasureUnit">1x {{ addModelProduct.lowerMeasureUnit.unitName }} = </span>
 			   		</label>
 			   		<div class="col-sm-9 mt-sm">
-			   			<input name="lowestUnitQty"  ng-model="addModelProduct.lowestUnitQty" ng-change="changeInvProductData('lowestUnitQty',addModelProduct.lowestUnitQty)" type="text" placeholder="Qty" class="form-control" tabindex="2"  ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
+			   			<input name="lowestUnitQty"  ng-model="addModelProduct.lowestUnitQty" ng-change="changeInvProductData('lowestUnitQty',addModelProduct.lowestUnitQty);changePurchasePrice('lowestUnitQty',addModelProduct.lowestUnitQty);" type="text" placeholder="Qty" class="form-control" tabindex="2"  ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
 			   		</div>
                   	<label class="col-sm-3 control-label my-padding-textbox mt-sm" title="Purchase Price">*P.Price</label>
                   	<div class="col-sm-9 mt-sm">
-                     	<input  name="purchasePrice"  ng-model="addModelProduct.purchasePrice" ng-change="changeInvProductData('purchasePrice',addModelProduct.purchasePrice)" type="text" placeholder="Purchase Price" class="form-control" tabindex="2" ng-required="true" ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
+                     	<input  name="purchasePrice"  ng-model="addModelProduct.purchasePrice" ng-change="changeInvProductData('purchasePrice',addModelProduct.purchasePrice);changePurchasePrice('purchasePrice',addModelProduct.purchasePrice);" type="text" placeholder="Purchase Price" class="form-control" tabindex="2" ng-required="true" ng-pattern="/^[0-9 \.]+$/" ng-maxlength="20" only-number />
 							 
 						<span ng-messages="formProduct.purchasePrice.$error" ng-if="formProduct.purchasePrice.$dirty || formProduct.purchasePrice.$touched"  role="alert">
 							<span ng-messages-include="errorRequired"></span>
@@ -234,7 +370,7 @@
                   	<div class="col-sm-9 text-center mt-sm">
                      	<div class="radio-inline c-radio">
 							<label>
-							   <input  name="i-radio-measure-unit" value="lowest" ng-model="addModelProduct.primaryMeasureUnit" ng-click="changeInvProductData('primaryMeasureUnit',addModelProduct.primaryMeasureUnit)" type="radio" tabindex="2" >
+							   <input  name="i-radio-measure-unit" value="lowest" ng-model="addModelProduct.primaryMeasureUnit" ng-click="changeInvProductData('primaryMeasureUnit',addModelProduct.primaryMeasureUnit);calculateConvRatio()" type="radio" tabindex="2" >
 							   <span class="fa fa-check"></span>Primary</label>
 						</div>
                   	</div>

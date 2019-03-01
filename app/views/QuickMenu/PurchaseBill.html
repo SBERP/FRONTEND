@@ -19,6 +19,53 @@
 .tableTopCss{
 	border-top: #b8c1cf 1px solid !important;
 }
+.itemize-expand-tree,.itemize-expand-tree ul{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.itemize-expand-tree ul{
+	margin-left: 1em;
+    position: relative;
+}
+.itemize-expand-tree ul:before{
+	content: "";
+    display: block;
+    width: 0;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    border-left: 1px solid;
+}
+.itemize-expand-tree li{
+	margin: 0;
+    padding: 0 1em;
+    line-height: 2em;
+    color: #369;
+    font-weight: 700;
+    position: relative;
+}
+.itemize-expand-tree ul li:before{
+	content: "";
+    display: block;
+    width: 10px;
+    height: 0;
+    border-top: 1px solid;
+    margin-top: -1px;
+    position: absolute;
+    top: 1em;
+    left: 0;
+}
+.itemize-expand-tree ul li:last-child:before{
+	background: #fff;
+    height: auto;
+    top: 1em;
+    bottom: 0;
+}
+.myTable td{
+	vertical-align: top !important;
+}
 </style>
 <!-- START panel-->
 <div class="container-fluid"   >
@@ -160,8 +207,18 @@
 							<span class="input-group-btn">
 								 <button type="button" class="btn btn-default btn-sm" ng-if="item.productId" ng-click="editProductWithRedirect($index)"><i class="fa fa-edit" style="font-size:15px;color:#17A1E5;"></i></button>
 							   <button type="button" class="btn btn-default btn-sm" data-ng-click="openProduct('lg',$index)"><i class="fa fa-plus" style="font-size:15px;color:#17A1E5;"></i></button>
+							   <button ng-if="enableItemizedPurchaseSales && item.productId" type="button" class="btn btn-default btn-sm" tooltip="IMEI/Serial No"  tooltip-trigger="mouseenter" tooltip-placement="top" data-ng-click="openBarcodeModal('lg',$index)"><i class="fa fa-barcode" style="font-size:15px;color:#17A1E5;"></i></button>
 							</span>
 						</div>
+						<ul class="itemize-expand-tree" ng-if="item.itemizeDetail.length > 0">
+					 		<li ng-click="expandItemizeTree($index+1)"><i class="fa {{itemizeTreeIcon($index+1)}} fa-lg"></i> IMEI Info
+					 			<ul class="{{openedItemizeTreeClass($index+1)}}">
+					 				<li ng-repeat="itemize in item.itemizeDetail" class="clearfix">
+							 			<span>{{itemize.qty}}x&nbsp;&nbsp;{{itemize.imei_no}}</span>
+							 		</li>
+					 			</ul>
+					 		</li>
+					 	</ul>
 					</td>
 					<td>
 						<h6>{{form.productHsn[$index]}}</h6>
@@ -195,15 +252,15 @@
 						<input  type="text" ng-model="item.discount"  class="form-control input-sm" style="padding-left: 5px;padding-right: 5px;width:40%;" ng-pattern="/^[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage)"  ng-attr-max="{{item.discountType == 'percentage' && '100' || ''}}" only-number /> 
 					</td>
 					<td style="text-align:right">
-						<input id="price" type="text" ng-model="item.cgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%"  ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage);zeroSingleGst()" only-number /> 
+						<input id="price" type="text" ng-model="item.cgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%"  ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage);zeroSingleGst()" only-number ng-disabled="csgstDisable" /> 
 						<span ng-if="item.cgstAmount > 0" > {{item.cgstAmount}} </span>
 					</td>
 					<td style="text-align:right">
-						<input id="price" type="text" ng-model="item.sgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%"  ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage);zeroSingleGst()" only-number /> 
+						<input id="price" type="text" ng-model="item.sgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%"  ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage);zeroSingleGst()" only-number ng-disabled="csgstDisable" /> 
 						<span ng-if="item.sgstAmount > 0" >{{item.sgstAmount}}</span>
 					</td>
 					<td style="text-align:right">
-						<input id="price" type="text" ng-model="item.igstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%" ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage);zeroSingleGst()" only-number /> 
+						<input id="price" type="text" ng-model="item.igstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%" ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage);zeroSingleGst()" only-number ng-disabled="igstDisable" /> 
 						<span ng-if="item.igstAmount > 0" >{{item.igstAmount}}</span>
 					</td>
 					<td>

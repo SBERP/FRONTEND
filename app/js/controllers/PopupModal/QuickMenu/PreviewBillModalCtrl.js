@@ -261,7 +261,8 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
 	var gstSummaryArray = [];
 	var trClose = "</td></tr>";
 	var totalAmount = 0;
-
+	var cessSummaryArray = [];
+	var totalCessAmount = 0;
 	for(var productArray=0;productArray<inventoryCount;productArray++){
 		
 		var productData = $scope.inventoryData[productArray];
@@ -272,7 +273,9 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
 			{
 			 output = output+trClose;
 			}
-			
+			cessSummaryArray[productArray] = {};
+			cessSummaryArray[productArray].cessAmt = productData.cessAmount;
+			totalCessAmount += parseFloat(productData.cessAmount);
 			var mainPrice = parseFloat(productData.price)*parseInt(productData.qty);
 
 			totalAmount = totalAmount + parseFloat(productData.amount);
@@ -360,6 +363,7 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
 							  gstSummaryArray[summaryIndex].sgstAmt = (gstSummaryArray[summaryIndex].taxableValue * gstSummaryArray[summaryIndex].sgstPercentage)/100;
 							  //gstSummaryArray[summaryIndex].igstPercentage += productData.igstPercentage;
 							  gstSummaryArray[summaryIndex].igstAmt =  (gstSummaryArray[summaryIndex].taxableValue * gstSummaryArray[summaryIndex].igstPercentage)/100;
+
 							  break;
 			  			}
 			  			summaryIndex++;
@@ -437,7 +441,6 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
 		summaryTempObject.sgstAmt = $scope.billData.totalSgstAmount;
 		summaryTempObject.igstPercentage = $scope.billData.totalIgstPercentage;
 		summaryTempObject.igstAmt = $scope.billData.totalIgstAmount;
-
 		totalOverallGSTAmount = summaryTempObject.cgstAmt + summaryTempObject.sgstAmt + summaryTempObject.igstAmt;
 		displayTotalOverallGSTAmount = totalOverallGSTAmount;
 		gstSummaryArray.push(summaryTempObject);
@@ -480,7 +483,7 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
 			+singleGstData.igstPercentage+
 			'</td><td colspan=2 align="right" valign=bottom style="border-right: 1px solid rgba(0, 0, 0, .3); font-size:12px" >'
 			+ $filter('number')(singleGstData.igstAmt,$scope.noOfDecimalPoints)+
-			'&nbsp;</td><td align="center" valign=bottom style="border-right: 1px solid rgba(0, 0, 0, .3); font-size:12px" ></td><td colspan=2 align="right" valign=bottom  >&nbsp;</td>';
+			'&nbsp;</td><td align="center" valign=bottom style="border-right: 1px solid rgba(0, 0, 0, .3); font-size:12px" ></td><td colspan=2 align="right" valign=bottom  >'+$filter('number')(cessSummaryArray[gstIndex].cessAmt,$scope.noOfDecimalPoints)+'</td>';
 
 		//End
 
@@ -520,6 +523,7 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
 	var billArrayTag = {};
 	
 	billArrayTag.CMPLOGO = $scope.companyLogo;
+	billArrayTag.TotalCessAmount = $filter('setDecimal')(totalCessAmount,$scope.noOfDecimalPoints);
 	billArrayTag.Company = $scope.companyData.companyName;
 	billArrayTag.CompanyWebsite = $scope.companyData.websiteName == undefined || $scope.companyData.websiteName == '' ? '' : $scope.companyData.websiteName;
 	billArrayTag.CompanyContact = $scope.companyData.customerCare == undefined || $scope.companyData.customerCare == '' ? '' : $scope.companyData.customerCare;

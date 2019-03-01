@@ -41,18 +41,17 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	vm.AccBillTable = [];
 	vm.AccExpense = [];
 	//vm.productTax = [];
-
 	var defStateData = {};
 	var AllDefCityData = [];
 	var defCityData = {};
-	
+	$scope.openedItemizeTree = 0;
 	$scope.noOfDecimalPoints; // decimalPoints For Price,Tax Etc.....
 	
 	$scope.productArrayFactory = productArrayFactory;
 	
 	$scope.changeProductArray = false; // Change When Update in Product Table Array
 	$scope.changeProductAdvancePrice = false;  // Change Advance Price of Product
-	
+	$scope.enableDisableLWHArray = [];
 	$scope.quickBill.tax = 0; //Tax
 	
 	$scope.total_without_expense;
@@ -116,9 +115,12 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	$scope.enableDisableCity = false;
 	$scope.enableDisableEmailId = false;
 	$scope.enableDisableProfession = false;
+	$scope.enableDisableLWHSetting = false;
 	
 	$scope.enableDisableSalesman = false;
-	
+
+	$scope.enableItemizedPurchaseSales = false;
+
 	$scope.divTag = false;
 	$scope.divAdvanceMou = false;
 	$scope.colspanValue = '6';
@@ -132,6 +134,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		apiCall.getCall(apiPath.settingOption).then(function(response){
 			settingResponse = response;
 			getSettingData(response);
+			$scope.EditAddBill();
 		});
 	}
 	$scope.getOptionSettingData();
@@ -152,7 +155,9 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					$scope.enableDisableVariant = arrayData1.productVariantStatus=="enable" ? true : false;
 					$scope.enableDisableFrameNo = arrayData1.productFrameNoStatus=="enable" ? true : false;
 					$scope.divTag = $scope.enableDisableColor == false && $scope.enableDisableSize == false ? false : true;
-
+					if (arrayData1.productMeasurementType == 'Unit Measurement') {
+						$scope.enableDisableLWHSetting = true;
+					}
 					if ($scope.enableDisableColor && $scope.enableDisableSize && $scope.enableDisableVariant)
 					{
 						$scope.ProductColorSizeVarDesign = 'productColorSizeVarDesign';
@@ -216,10 +221,15 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					$scope.enableDisableSalesman = arrayData1.billSalesmanStatus=="enable" ? true : false;
 					
 				}
+				else if(response[arrayData].settingType=="inventory")
+				{
+					var arrayData1 = response[arrayData];
+					$scope.enableItemizedPurchaseSales = arrayData1.inventoryItemizeStatus=="enable" ? true : false;
+					
+				}
 			}
 		}
 	}
-
 
 	$scope.getInvoiceAndJobcardNumber = function(id)
 	{
@@ -616,6 +626,12 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		}
 
 		vm.AccBillTable[index].productId = item.productId;
+		if ($scope.enableItemizedPurchaseSales) {
+			vm.AccBillTable[index].itemizeDetail = [];
+		}
+		vm.AccBillTable[index].productId = item.productId;
+		vm.AccBillTable[index].cessFlat = item.cessFlat;
+		vm.AccBillTable[index].cessPercentage = item.cessPercentage;
 		vm.productHsn[index] = item.hsn;
 		vm.productDesc[index] = item.productDescription;
 		if ($scope.enableDisableAdvanceMou) 
@@ -635,24 +651,51 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					}
 				}
 			}
-			// if (angular.isObject(item.highestMeasurementUnit) && angular.isDefined(item.highestMeasurementUnit.measurementUnitId)) {
-			// 	item.highestMeasurementUnit['measurementUnit'] = 'highest';
-			// 	vm.measurementUnitDrop[index].push(item.highestMeasurementUnit);
-			// }
-
-			// if (angular.isObject(item.higherMeasurementUnit) && angular.isDefined(item.higherMeasurementUnit.measurementUnitId)) {
-			// 	item.higherMeasurementUnit['measurementUnit'] = 'higher';
-			// 	vm.measurementUnitDrop[index].push(item.higherMeasurementUnit);
-			// }
-
-			// if (angular.isObject(item.measurementUnit) && angular.isDefined(item.measurementUnit.measurementUnitId)) {
-			// 	item.measurementUnit['measurementUnit'] = 'lowest';
-			// 	vm.measurementUnitDrop[index].push(item.measurementUnit);
-			// }
-
-			// angular.isObject(item.highestMeasurementUnit) ? vm.measurementUnitDrop[index].push(item.highestMeasurementUnit) : '';
-			// angular.isObject(item.higherMeasurementUnit) ? vm.measurementUnitDrop[index].push(item.higherMeasurementUnit) : '';
-			// angular.isObject(item.measurementUnit) ? vm.measurementUnitDrop[index].push(item.measurementUnit) : '';
+		}else if ($scope.enableDisableLWHSetting) {
+			if (angular.isObject(item.measurementUnit) && angular.isDefined(item.measurementUnit.measurementUnitId)) {
+				vm.AccBillTable[index].lengthValue = 1;
+				vm.AccBillTable[index].widthValue = 1;
+				vm.AccBillTable[index].heightValue = 1;
+				vm.AccBillTable[index].measurementUnit = item.measurementUnit;
+				if (angular.isDefined(item.measurementUnit.devideFactor) && 
+					!isNaN(parseFloat(item.measurementUnit.devideFactor)) && 
+					parseFloat(item.measurementUnit.devideFactor) > 0) {
+					vm.AccBillTable[index].devideFactor = parseFloat(item.measurementUnit.devideFactor);
+				}else{
+					vm.AccBillTable[index].devideFactor = 1;
+				}
+				$scope.enableDisableLWHArray[index] = {};
+				item.measurementUnit.lengthStatus == 'enable' ? 
+				$scope.enableDisableLWHArray[index].lengthStatus = true : $scope.enableDisableLWHArray[index].lengthStatus = false;
+				$scope.enableDisableLWHArray[index].widthStatus = item.measurementUnit.widthStatus == 'enable' ? true : false;
+				$scope.enableDisableLWHArray[index].heightStatus = item.measurementUnit.heightStatus == 'enable' ? true : false;
+				if ($scope.enableDisableLWHArray[index].lengthStatus &&
+					$scope.enableDisableLWHArray[index].widthStatus &&
+					$scope.enableDisableLWHArray[index].heightStatus) 
+				{
+					$scope.enableDisableLWHArray[index].styleObj = {
+						"width" : "33.33%",
+						"padding-left": "6px",
+						"padding-right": "6px",
+						"float":"left"
+					};
+				}else if ($scope.enableDisableLWHArray[index].lengthStatus && $scope.enableDisableLWHArray[index].widthStatus ||
+					$scope.enableDisableLWHArray[index].lengthStatus && $scope.enableDisableLWHArray[index].heightStatus ||
+					$scope.enableDisableLWHArray[index].heightStatus && $scope.enableDisableLWHArray[index].widthStatus) 
+				{
+					$scope.enableDisableLWHArray[index].styleObj = {
+						"width" : "50%",
+						"padding-left": "6px",
+						"padding-right": "6px",
+						"float":"left"
+					};
+				}else{
+					$scope.enableDisableLWHArray[index].styleObj = {"width" : "100%"};
+				}
+				
+			}else{
+				$scope.enableDisableLWHArray[index] = {};
+			}
 		}
 
 		var grandPrice;
@@ -702,6 +745,12 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				vm.AccBillTable[index].color = item.color;
 				vm.AccBillTable[index].size = item.size;
 				vm.AccBillTable[index].variant = item.variant;
+				if (item.hasOwnProperty('realQtyData') && angular.isDefined(item.realQtyData)) {
+					vm.AccBillTable[index].realQtyData = item.realQtyData;
+				}else{
+					vm.AccBillTable[index].realQtyData = item.qty;
+				}
+				
 				/** End **/
 				//vm.productTax[index].tax = tax; //Product Tax
 
@@ -735,7 +784,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 
 	$scope.getAdvanceMouCalculationPrice = function(item,index,callback)
 	{
-		// console.log('726.....',vm.AccBillTable[index].measurementUnit);
 		var grandPrice = 0;
 		// IF Adavande MOU
 		if ($scope.enableDisableAdvanceMou) 
@@ -862,6 +910,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			if (check_default_and_selected_flag) {
 				loadQuantityPricing(item.productId,function (response)
 				{
+					vm.AccBillTable[index].realQtyData = parseFloat(item[selectedMeasure.measurementUnit+'MouConv']) * parseInt(vm.AccBillTable[index].qty);
 					if(angular.isArray(response))
 					{
 						var flagPricing = 0;
@@ -896,34 +945,8 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				{
 					var inpQty = parseInt(vm.AccBillTable[index].qty);
 					var userQtyConverted = 1;
-					userQtyConverted = item[selectedMeasure.measurementUnit+'MouConv'];
-					// if (item.primaryMeasureUnit == 'lowest') {
-					// 	user
-					// }
-					// if (selectedMeasure.measurementUnit == 'highest') {
-					// 	if (item.primaryMeasureUnit == 'lowest' && parseInt(item.lowestUnitQty) > 0 && parseInt(item.higherUnitQty)) {
-					// 		userQtyConverted = 1 * parseInt(item.lowestUnitQty) * parseInt(item.higherUnitQty);
-					// 	}
-					// 	if (item.primaryMeasureUnit == 'higher' && parseInt(item.higherUnitQty)) {
-					// 		userQtyConverted = 1 * parseInt(item.higherUnitQty) ;
-					// 	}
-					// }
-					// if (selectedMeasure.measurementUnit == 'higher') {
-					// 	if (item.primaryMeasureUnit == 'lowest' && parseInt(item.lowestUnitQty) > 0 ) {
-					// 		userQtyConverted = 1 * parseInt(item.lowestUnitQty);
-					// 	}
-					// 	if (item.primaryMeasureUnit == 'highest' && parseInt(item.higherUnitQty) > 0) {
-					// 		userQtyConverted = 1 / parseInt(item.higherUnitQty);
-					// 	}
-					// }
-					// if (selectedMeasure.measurementUnit == 'lowest') {
-					// 	if (item.primaryMeasureUnit == 'highest' && parseInt(item.lowestUnitQty) > 0 && parseInt(item.higherUnitQty) > 0) {
-					// 		userQtyConverted = 1 /(parseInt(item.lowestUnitQty) * parseInt(item.higherUnitQty));
-					// 	}
-					// 	if (item.primaryMeasureUnit == 'higher' && parseInt(item.lowestUnitQty) > 0) {
-					// 		userQtyConverted = 1 / parseInt(item.lowestUnitQty);
-					// 	}
-					// }
+					userQtyConverted = parseFloat(item[selectedMeasure.measurementUnit+'MouConv']);
+					vm.AccBillTable[index].realQtyData = userQtyConverted * inpQty;
 					if(angular.isArray(response))
 					{
 						var flagPricing = 0;
@@ -991,6 +1014,19 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 						$scope.calculateTaxReverse(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage);
 					});
 				}
+			}
+			else if ($scope.enableDisableLWHSetting) {
+				if (response.taxInclusive == 'inclusive')
+				{
+					var calQty = vm.AccBillTable[index].qty * vm.AccBillTable[index].lengthValue * vm.AccBillTable[index].heightValue * vm.AccBillTable[index].widthValue / vm.AccBillTable[index].devideFactor;
+					vm.AccBillTable[index].amount = $filter('setDecimal')(response.purchasePrice * calQty ,$scope.noOfDecimalPoints);
+					if(vm.AccBillTable[index].amount == 0){
+						vm.AccBillTable[index].amount = $filter('setDecimal')(response.mrp * calQty,$scope.noOfDecimalPoints);
+					}
+					$scope.calculateTaxReverseTwo(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage,index);
+				}else{
+					$scope.calculateTaxReverse(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage);
+				}	
 			}
 			else
 			{
@@ -1061,21 +1097,25 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		var total = 0;
 		var count = vm.AccBillTable.length;
 		var getTotalAmount = 0;
+		var totalCessAmount = 0;
 		for(var i = 0; i < count; i++)
 		{
+			var cessAmount = 0;
 			var product = vm.AccBillTable[i];
 			// var vartax = vm.productTax[i];
 			var totaltax = checkGSTValue(product.cgstPercentage) + checkGSTValue(product.sgstPercentage) + checkGSTValue(product.igstPercentage);
 			if(product.discountType == 'flat') {
-				
 				var getAmount = $filter('setDecimal')((product.price*product.qty) - product.discount,$scope.noOfDecimalPoints);
-				
 			}
 			else{
 				var getAmount  =  $filter('setDecimal')((product.price*product.qty)-((product.price*product.qty)*product.discount/100),$scope.noOfDecimalPoints);
 			}
+
 			getTotalAmount += getAmount;
-			total += productArrayFactory.calculateTax(getAmount,totaltax,0);
+			if (angular.isDefined(product.cessAmount)) {
+				cessAmount = product.cessAmount;
+			}
+			total += productArrayFactory.calculateTax(getAmount,totaltax,0) + parseFloat(cessAmount);
 		}
 
 		if($scope.quickBill.totalDiscounttype == 'flat') {
@@ -1093,7 +1133,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		$scope.quickBill.totalCgstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(getTotalAmount,$scope.quickBill.totalCgstPercentage,0),$scope.noOfDecimalPoints);
 		$scope.quickBill.totalSgstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(getTotalAmount,$scope.quickBill.totalSgstPercentage,0),$scope.noOfDecimalPoints);
 		$scope.quickBill.totalIgstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(getTotalAmount,$scope.quickBill.totalIgstPercentage,0),$scope.noOfDecimalPoints);
-
 		return total;
 	}
 	
@@ -1156,16 +1195,27 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			var getSgst = checkGSTValue(sgst);
 			var getIgst = checkGSTValue(igst);
 			var amount = 0;
-
+			var getCess = checkGSTValue(item.cessPercentage);
+			var getFlatCess = 0;
+			if ($scope.enableDisableLWHSetting) {
+				var calcQty = $filter('setDecimal')(parseFloat(item.qty)*parseFloat(item.lengthValue)*parseFloat(item.heightValue)*parseFloat(item.widthValue)/parseFloat(item.devideFactor),$scope.noOfDecimalPoints);
+			}else{
+				var calcQty = item.qty;
+			}
+			if (item.hasOwnProperty('realQtyData') && angular.isDefined(item.realQtyData) && item.realQtyData != 'undefined') {
+				getFlatCess = parseFloat(parseFloat(item.realQtyData) * parseFloat(item.cessFlat));
+			}else{
+				getFlatCess = parseFloat(calcQty) * parseFloat(item.cessFlat);
+			}
 			if(item.discountType == 'flat') {
 				
-				amount =  $filter('setDecimal')((item.price*item.qty) - item.discount,$scope.noOfDecimalPoints);
+				amount =  $filter('setDecimal')((item.price*calcQty) - item.discount,$scope.noOfDecimalPoints);
 			}
 			else{
-				//item.amount = ((item.price*item.qty)-((item.price*item.qty)*item.discount/100) | setDecimal: noOfDecimalPoints);
-				amount  =  $filter('setDecimal')((item.price*item.qty)-((item.price*item.qty)*item.discount/100),$scope.noOfDecimalPoints);
+				//item.amount = ((item.price*calcQty)-((item.price*calcQty)*item.discount/100) | setDecimal: noOfDecimalPoints);
+				amount  =  $filter('setDecimal')((item.price*calcQty)-((item.price*calcQty)*item.discount/100),$scope.noOfDecimalPoints);
 			}
-
+			item.cessAmount = $filter('setDecimal')((amount*getCess/100)+getFlatCess,$scope.noOfDecimalPoints);
 			if($scope.quickBill.companyId.state.stateAbb==$scope.quickBill.stateAbb.stateAbb)
 			{
 				item.cgstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(amount,getCgst,0),$scope.noOfDecimalPoints);
@@ -1179,7 +1229,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			}
 				
 				
-				item.amount = $filter('setDecimal')(amount+item.cgstAmount+item.sgstAmount+item.igstAmount,$scope.noOfDecimalPoints);
+				item.amount = $filter('setDecimal')(amount+item.cgstAmount+item.sgstAmount+item.igstAmount+item.cessAmount,$scope.noOfDecimalPoints);
 
 			if(!$scope.quickBill.EditBillData){
 				$scope.advanceValueUpdate();
@@ -1196,12 +1246,24 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			var getCgst = checkGSTValue(cgst);
 			var getSgst = checkGSTValue(sgst);
 			var getIgst = checkGSTValue(igst);
-			var TaxSum = getCgst+getSgst+getIgst;
-		
-			vm.AccBillTable[index].price = $filter('setDecimal')((item.amount/ (1+(TaxSum/100))) / parseInt(item.qty),$scope.noOfDecimalPoints);
+			var getCess = checkGSTValue(item.cessPercentage);
+			var getFlatCess = 0;
+			if ($scope.enableDisableLWHSetting) {
+				var calcQty = $filter('setDecimal')(parseFloat(item.qty)*parseFloat(item.lengthValue)*parseFloat(item.heightValue)*parseFloat(item.widthValue)/parseFloat(item.devideFactor),$scope.noOfDecimalPoints);
+			}else{
+				var calcQty = item.qty;
+			}
+			if (item.hasOwnProperty('realQtyData') && angular.isDefined(item.realQtyData) && item.realQtyData != 'undefined') {
+				getFlatCess = parseFloat(item.realQtyData * item.cessFlat);
+			}else{
+				getFlatCess = calcQty * item.cessFlat;
+			}
+			var TaxSum = getCgst+getSgst+getIgst+getCess;
+			vm.AccBillTable[index].price = $filter('setDecimal')(((item.amount-getFlatCess)/ (1+(TaxSum/100))) / parseFloat(calcQty),$scope.noOfDecimalPoints);
 			vm.AccBillTable[index].cgstAmount = $filter('setDecimal')(vm.AccBillTable[index].price * getCgst/100,$scope.noOfDecimalPoints);
 			vm.AccBillTable[index].sgstAmount = $filter('setDecimal')(vm.AccBillTable[index].price * getSgst/100,$scope.noOfDecimalPoints);
 			vm.AccBillTable[index].igstAmount = $filter('setDecimal')(vm.AccBillTable[index].price * getIgst/100,$scope.noOfDecimalPoints);
+			vm.AccBillTable[index].cessAmount = $filter('setDecimal')((vm.AccBillTable[index].price * getCess/100)+getFlatCess,$scope.noOfDecimalPoints);
 			
 			if(!$scope.quickBill.EditBillData){
 				$scope.advanceValueUpdate();
@@ -1232,7 +1294,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	/** Check Update Or Insert Bill **/
 	
 	$scope.EditAddBill = function(copyData = "",draft = null){
-	
+	$scope.openedItemizeTree = 0;
 		//if(Object.keys(getSetFactory.get()).length){
 		if(Object.keys(getSetFactory.get()).length){
 			formdata = undefined;
@@ -1274,11 +1336,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			clientFactory.getSingleClient($scope.quickBill.EditBillData.client.clientId).then(function(docData){
 					clientDataIndex = docData;
 			});
-			// var clientDataIndex = vm.clientSuggest.findIndex(x => x.clientId==$scope.quickBill.EditBillData.client.clientId);
-			// var clientAllData = vm.clientSuggest;
-			// var clientDataIndex = clientAllData.filter(function(options){
-					// return options.clientId == $scope.quickBill.EditBillData.client.clientId;
-				// });
 			$scope.quickBill.EditBillData.lastPdf = {};
 			if($scope.quickBill.EditBillData.hasOwnProperty('file'))
 			{
@@ -1474,6 +1531,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			//inventory
 			var EditProducArray = angular.copy(jsonProduct.inventory);
 			var count = EditProducArray.length;
+
 			for(var w=0;w<count;w++){
 				
 				var d = 0;
@@ -1483,6 +1541,13 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					
 					/** Tax **/
 					vm.AccBillTable[d].productName = resData.productName;
+					if (angular.isArray(setData.itemizeDetail)) {
+						vm.AccBillTable[d].itemizeDetail = setData.itemizeDetail;
+					}else if(setData.itemizeDetail == ''){
+						vm.AccBillTable[d].itemizeDetail = [];
+					}else if (angular.isString(setData.itemizeDetail)) {
+						vm.AccBillTable[d].itemizeDetail = angular.fromJson(setData.itemizeDetail);
+					}
 					vm.productHsn[d] = resData.hsn;
 					if(!EditProducArray[d].hasOwnProperty('cgstPercentage')){
 						vm.AccBillTable[d].cgstPercentage = parseFloat(resData.vat);
@@ -1512,9 +1577,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 								}
 							}
 						}
-						// angular.isObject(resData.highestMeasurementUnit) ? vm.measurementUnitDrop[d].push(resData.highestMeasurementUnit) : '';
-						// angular.isObject(resData.higherMeasurementUnit) ? vm.measurementUnitDrop[d].push(resData.higherMeasurementUnit) : '';
-						// angular.isObject(resData.measurementUnit) ? vm.measurementUnitDrop[d].push(resData.measurementUnit) : '';
 						if (vm.AccBillTable[d].measurementUnit) {
 							var billObject = vm.AccBillTable[d];
 
@@ -1535,39 +1597,56 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 								}
 							}
 						}
-						// if (vm.AccBillTable[d].measurementUnit)
-						// {
-						// 	var billObject = vm.AccBillTable[d];
-						// 	if (billObject.measurementUnit) {
-
-						// 		if (angular.isObject(resData.highestMeasurementUnit)){
-						// 			if(billObject.measurementUnit == resData.highestMeasurementUnit.measurementUnitId){
-						// 				billObject.measurementUnit = resData.highestMeasurementUnit;
-						// 			}
-						// 		}
-
-						// 		if (angular.isObject(resData.higherMeasurementUnit)){
-						// 			if (billObject.measurementUnit == resData.higherMeasurementUnit.measurementUnitId) {
-						// 				billObject.measurementUnit = resData.higherMeasurementUnit;
-						// 			}
-						// 		}
-
-						// 		if (angular.isObject(resData.measurementUnit)){
-						// 			if (billObject.measurementUnit == resData.measurementUnit.measurementUnitId) {
-						// 				billObject.measurementUnit = resData.measurementUnit;
-						// 			}
-						// 		}
-						// 	}
+					}
+					else if ($scope.enableDisableLWHSetting) {
+						if (angular.isObject(resData.measurementUnit) && angular.isDefined(resData.measurementUnit.measurementUnitId)) {
+							vm.AccBillTable[d].lengthValue = setData.lengthValue;
+							vm.AccBillTable[d].widthValue = setData.widthValue;
+							vm.AccBillTable[d].heightValue = setData.heightValue;
+							vm.AccBillTable[d].devideFactor = setData.devideFactor;
+							if (angular.isDefined(setData.devideFactor) && 
+								!isNaN(parseFloat(setData.devideFactor)) && 
+								parseFloat(setData.devideFactor) > 0) {
+								vm.AccBillTable[d].devideFactor = parseFloat(setData.devideFactor);
+							}else if (angular.isDefined(resData.measurementUnit.devideFactor) && 
+								!isNaN(parseFloat(resData.measurementUnit.devideFactor)) && 
+								parseFloat(resData.measurementUnit.devideFactor) > 0) {
+								vm.AccBillTable[d].devideFactor = parseFloat(resData.measurementUnit.devideFactor);
+							}else{
+								vm.AccBillTable[d].devideFactor = 1;
+							}
+							$scope.enableDisableLWHArray[d] = {};
+							resData.measurementUnit.lengthStatus == 'enable' ? 
+							$scope.enableDisableLWHArray[d].lengthStatus = true : $scope.enableDisableLWHArray[d].lengthStatus = false;
+							$scope.enableDisableLWHArray[d].widthStatus = resData.measurementUnit.widthStatus == 'enable' ? true : false;
+							$scope.enableDisableLWHArray[d].heightStatus = resData.measurementUnit.heightStatus == 'enable' ? true : false;
+							if ($scope.enableDisableLWHArray[d].lengthStatus &&
+								$scope.enableDisableLWHArray[d].widthStatus &&
+								$scope.enableDisableLWHArray[d].heightStatus) 
+							{
+								$scope.enableDisableLWHArray[d].styleObj = {
+									"width" : "33.33%",
+									"padding-left": "6px",
+									"padding-right": "6px",
+									"float":"left"
+								};
+							}else if ($scope.enableDisableLWHArray[d].lengthStatus && $scope.enableDisableLWHArray[d].widthStatus ||
+								$scope.enableDisableLWHArray[d].lengthStatus && $scope.enableDisableLWHArray[d].heightStatus ||
+								$scope.enableDisableLWHArray[d].heightStatus && $scope.enableDisableLWHArray[d].widthStatus) 
+							{
+								$scope.enableDisableLWHArray[d].styleObj = {
+									"width" : "50%",
+									"padding-left": "6px",
+									"padding-right": "6px",
+									"float":"left"
+								};
+							}else{
+								$scope.enableDisableLWHArray[d].styleObj = {"width" : "100%"};
+							}
 							
-						// 	// var muoUpdate = vm.AccBillTable[d].measurementUnit;
-						// 	// var billObject = vm.AccBillTable[d];
-						// 	// apiCall.getCall(apiPath.settingMeasurementUnit+"/"+muoUpdate).then(function(response5)
-						// 	// {
-						// 	// 	if(angular.isObject(response5)){
-						// 	// 	 	billObject.measurementUnit = response5;
-						// 	// 	}
-						// 	// });
-						// }
+						}else{
+							$scope.enableDisableLWHArray[d] = {};
+						}
 					}
 					d++;
 					/** End **/
@@ -1610,7 +1689,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	}	
 	/** End **/
 	
-	$scope.EditAddBill();
   
   
 	
@@ -1997,6 +2075,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					formdata.set('totalCgstPercentage',checkGSTValue($scope.quickBill.totalCgstPercentage));
 					formdata.set('totalSgstPercentage',checkGSTValue($scope.quickBill.totalSgstPercentage));
 					formdata.set('totalIgstPercentage',checkGSTValue($scope.quickBill.totalIgstPercentage));
+
 				}
 				
 			if($scope.changeInClientData === true){
@@ -2187,9 +2266,11 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 						setData = value.measurementUnitId;
 					}
 				}
+				if (key == 'itemizeDetail') {
+					setData = JSON.stringify(value);
+				}
 				formdata.set('inventory['+i+']['+key+']',setData);
 			});
-					
 		 }
 		if(vm.AccExpense.length>0)
 		{
@@ -2412,6 +2493,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		var CopyBillData = $scope.quickBill.EditBillData;
 		
 		$scope.quickBill = [];
+		$scope.enableDisableLWHArray = [];
 		
 		$scope.disableButton = false; 
 		$scope.changeInClientData = false; //Client Data Give All in Update
@@ -2701,7 +2783,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	/** Next Previews **/
 		$scope.goToNextPrevious = function(nextPre){
 			formdata= undefined;
-				
+				$scope.openedItemizeTree = 0;
 				toaster.clear();
 				if($scope.quickBill.companyId){
 					
@@ -2909,6 +2991,10 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					 
 					return $scope.quickBill;
 				  },
+				  lwhSettings: function(){
+					 
+					return $scope.enableDisableLWHArray;
+				  },
 				  inventoryData: function(){
 					  
 					 return vm.AccBillTable;
@@ -2963,10 +3049,8 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				});
 			}
 			else{
-				
 				toaster.pop('info', 'please Select Company', '');
 			}
-			
 		}
 		
 	/** End **/
@@ -3208,7 +3292,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
   /**
 	Product Redirect Edit
   **/
-  
   /**
   Product Model Start
   **/
@@ -3314,7 +3397,46 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
   /**
   Product Model End
   **/
-
+/** Barcode Modal Start **/
+  $scope.openBarcodeModal = function(size,index){
+  	if (Modalopened) return;
+  	toaster.pop('wait', 'Please Wait', 'popup opening....',600000);
+  	var selectedProduct = vm.AccBillTable[index];
+  			var modalInstance = $modal.open({
+			  templateUrl: 'app/views/PopupModal/Accounting/barcodeModal.html',
+			  controller: 'AccBarcodeModalController as form',
+			  size: size,
+			  resolve:{
+				  productIndex: function(){
+					  return index;
+				  },
+				  productData: function(){
+					return selectedProduct;
+				  },
+				  companyId: function(){
+					return $scope.quickBill.companyId;
+				  },
+				  transactionType: function(){
+				  	return 'sales';
+				  }
+			  }
+			});
+			Modalopened = true;
+			
+			modalInstance.opened.then(function() {
+				toaster.clear();
+			});
+			modalInstance.result.then(function (data) {
+				vm.AccBillTable[index].itemizeDetail = data;
+				$scope.changeProductArray = true;
+				Modalopened = false;
+			},function(){
+				Modalopened = false;
+			});
+  }
+  /**
+  Barcode Modal End
+  **/
   /**
   Client Model Start
   **/
@@ -3821,7 +3943,27 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			var convertedDate  = date.getDate()+'-'+(date.getMonth()+1)+'-'+date.getFullYear();
 			return convertedDate;
 		}
-
+		$scope.itemizeTreeIcon = function(index){
+			if (index == $scope.openedItemizeTree) {
+				return 'fa-minus-circle';
+			}else{
+				return 'fa-plus-circle';
+			}
+		}
+		$scope.openedItemizeTreeClass = function(index){
+			if (index == $scope.openedItemizeTree) {
+				return '';
+			}else{
+				return 'hidden';
+			}
+		}
+		$scope.expandItemizeTree = function(index){
+			if (index == $scope.openedItemizeTree) {
+				$scope.openedItemizeTree = 0;
+			}else{
+				$scope.openedItemizeTree = index;
+			}
+		}
         /** Get Set Draft **/
         	vm.setInDraft = function()
         	{
@@ -4075,15 +4217,15 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 							
 			   setTimeout(function () { // wait until all resources loaded 
 					mywindow.focus(); // necessary for IE >= 10
-					// mywindow.print();  // change window to mywindow
-					// mywindow.close();// change window to mywindow
+					mywindow.print();  // change window to mywindow
+					mywindow.close();// change window to mywindow
 				 }, 2000);
 			}
 			else {
 				mywindow.document.close(); // necessary for IE >= 10
 				mywindow.focus(); // necessary for IE >= 10
-				// mywindow.print();
-				// mywindow.close();
+				mywindow.print();
+				mywindow.close();
 			}
 			return true;
 		});
