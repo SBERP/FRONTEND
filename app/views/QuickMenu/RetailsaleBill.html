@@ -341,7 +341,7 @@
 					<th class="header" style="width:3%;padding-top:5px !important;padding-bottom:5px !important;">HSN</th>
 					<th ng-if="divAdvanceMou" class="header" style="width:6%;padding-top:5px !important;padding-bottom:5px !important;">	Unit
 					</th>
-					<th ng-if="enableDisableLWHSetting" class="header" style="width:11%;padding-top:5px !important;padding-bottom:5px !important;">L | W | H</th>
+					<th ng-if="enableDisableLWHSetting" class="header" style="text-align:center;width:11%;padding-top:5px !important;padding-bottom:5px !important;">L | W | H</th>
 					<th ng-if="divTag" class="header" style="width:11%;padding-top:5px !important;padding-bottom:5px !important;text-align:center">
 						<span  ng-if="enableDisableColor">Color  </span> 
 						<span ng-if="(enableDisableColor && enableDisableSize)"> | </span>
@@ -395,9 +395,9 @@
 						</select>
 					</td>
 					<td ng-if="enableDisableLWHSetting" class="header" style="text-align:center;">
-						<input ng-if="enableDisableLWHArray[$index].lengthStatus" ng-required="true" ng-minlength="1" ng-pattern="/^[1-9]+[0-9]*$/" ng-model="item.lengthValue" ng-style="enableDisableLWHArray[$index].styleObj" type="text" class="form-control input-sm" only-number/>
-						<input ng-if="enableDisableLWHArray[$index].widthStatus" ng-required="true" ng-minlength="1" ng-pattern="/^[1-9]+[0-9]*$/" ng-model="item.widthValue" ng-style="enableDisableLWHArray[$index].styleObj" type="text" class="form-control input-sm" only-number/>
-						<input ng-if="enableDisableLWHArray[$index].heightStatus" ng-required="true" ng-minlength="1" ng-pattern="/^[1-9]+[0-9]*$/" ng-model="item.heightValue" ng-style="enableDisableLWHArray[$index].styleObj" type="text" class="form-control input-sm" only-number/>
+						<input ng-if="enableDisableLWHArray[$index].lengthStatus" ng-required="true" ng-minlength="1" ng-pattern="/^(0*[1-9][0-9]*([\.][0-9]+)?|0+[\.][0-9]*[1-9][0-9]*)$/" ng-model="item.lengthValue" placeholder="Length" ng-change="changeProductTable();changeQuantity($index);" ng-style="enableDisableLWHArray[$index].styleObj" type="text" class="form-control input-sm" only-number/>
+						<input ng-if="enableDisableLWHArray[$index].widthStatus" ng-required="true" ng-minlength="1" ng-pattern="/^(0*[1-9][0-9]*([\.][0-9]+)?|0+[\.][0-9]*[1-9][0-9]*)$/" ng-model="item.widthValue" ng-change="changeProductTable();changeQuantity($index);" ng-style="enableDisableLWHArray[$index].styleObj" type="text" class="form-control input-sm" placeholder="Width" only-number/>
+						<input ng-if="enableDisableLWHArray[$index].heightStatus" ng-required="true" ng-minlength="1" ng-pattern="/^(0*[1-9][0-9]*([\.][0-9]+)?|0+[\.][0-9]*[1-9][0-9]*)$/" ng-model="item.heightValue" ng-change="changeProductTable();changeQuantity($index);" ng-style="enableDisableLWHArray[$index].styleObj" type="text" class="form-control input-sm" placeholder="Height" only-number/>
 					</td>
 					<td style="text-align:center;" ng-if="divTag">
 						<input  ng-if="enableDisableColor" placeholder="Color" type="text" ng-model="item.color"  class="form-control input-sm " ng-class="ProductColorSizeVarDesign"  ng-change="changeProductTable()" /> 
@@ -405,7 +405,6 @@
 						ng-class="ProductColorSizeVarDesign"  ng-change="changeProductTable()"  />
 						<input ng-if="enableDisableVariant" placeholder="Variant" type="text" ng-model="item.variant"  class="form-control input-sm "
 						ng-class="ProductColorSizeVarDesign"  ng-change="changeProductTable()"  />
-						<!--input  type="text" ng-model="item.color"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"    ng-pattern="/^[a-z-A-Z]*$/" ng-change="changeProductTable()"  /--> 
 					</td>
 					<td ng-if="enableDisableFrameNo">
 						<input placeholder="Frame No" type="text" ng-model="item.frameNo"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"   ng-pattern="/^[a-z-A-Z0-9 ]*$/" ng-change="changeProductTable()" /> 

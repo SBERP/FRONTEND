@@ -17,7 +17,8 @@
     "icon": "fa fa-product-hunt",
     "subnav": [
       { "text": "Add Product",  "sref": "app.AddInvProduct", "translate": "" },
-      { "text": "List Product", "sref": "app.InvProduct", "translate": "" }
+      { "text": "List Product", "sref": "app.InvProduct", "translate": "" },
+      { "text": "Merge Products", "sref": "app.MergeProduct", "translate": "" }
     ],
     "permission": "product"
   },

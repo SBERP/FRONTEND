@@ -8,7 +8,7 @@
 .imageAncher{position:relative;vertical-align:middle;display:inline-block}
 .myCrossDesign{position:absolute;top:0;right:0;height:20px;width:20px;color:#eb615f;font-size:20px}.myCrossDesign:hover{color:red}.documentRight{display:block;position:absolute;top:10%;right:60%;font-size:40px;color:#88bf57}.documentRight:hover{color:green}.documentCross{display:block;position:absolute;font-size:40px;color:#eb615f;top:10%;right:20%}.documentCross:hover{color:red}
 </style>
-<h3>
+<h3 ng-if="!mergeProduct">
    <small>
    <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
    Inventory >> 
@@ -23,7 +23,7 @@
    <div class="panel panel-default">
 
 		<div class="panel-heading" data-ng-class="app.theme.brand">
-			<button type="button" class="btn btn-default pull-right btn-sm" ng-click="openProductBatchModal()"  data-ng-class="app.theme.brand" > Mass Insertion </button>
+			<button type="button" class="btn btn-default pull-right btn-sm" ng-if="!mergeProduct" ng-click="openProductBatchModal()"  data-ng-class="app.theme.brand" > Mass Insertion </button>
 			<div class=" panel-title pull-right" ng-if="dateTimeFlag">
 				Last Updated By : <span class="text-capitalize">{{userName}}</span> &nbsp; {{updateDate}} &nbsp;&nbsp;&nbsp;
 			</div>
@@ -894,10 +894,10 @@
 					</div>
 			 <button type="button" class="mr mb-sm btn btn-danger pull-right" data-ng-click="cancel()" tabindex="46" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id" >Cancel</button>
 			 <button type="button" class="mr mb-sm btn btn-success pull-right" data-ng-click="pop()" ng-disabled="formProduct.$invalid" tabindex="45" >
-				 <span ng-if="!addInvProduct.getSetProductId" >Insert</span> 
-				 <span ng-if="addInvProduct.getSetProductId" >Update</span>
+				 <span ng-if="!addInvProduct.getSetProductId" >Insert</span>
+				 <span ng-if="addInvProduct.getSetProductId && mergeProduct" >Next</span>
+				 <span ng-if="addInvProduct.getSetProductId && !mergeProduct" >Update</span>
 			 </button>
-			 
 			</div>
          </form>
       </div>

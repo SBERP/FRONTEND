@@ -84,6 +84,7 @@ function SettingAdvanceMeasurementController($rootScope,$scope,$filter,$modal,ng
 			res1.lengthStatus = res1.lengthStatus == 'enable' ? true : false;
 			res1.widthStatus = res1.widthStatus == 'enable' ? true : false;
 			res1.heightStatus = res1.heightStatus == 'enable' ? true : false;
+			res1.devideFactor = $filter('number')(res1.devideFactor, 2);
 			return res1;
 		});
 		data = response;
@@ -99,6 +100,7 @@ function SettingAdvanceMeasurementController($rootScope,$scope,$filter,$modal,ng
 		formdata.set('lengthStatus',measurementForm.lengthStatus ? 'enable' : 'disable');
 		formdata.set('widthStatus',measurementForm.widthStatus ? 'enable' : 'disable');
 		formdata.set('heightStatus',measurementForm.heightStatus ? 'enable' : 'disable');
+		formdata.set('devideFactor',measurementForm.devideFactor);
 		var newMeasurementGetApiPath = measurementGetApiPath;
 		if($scope.addUpdateLabel=="Update")
 		{
@@ -116,25 +118,20 @@ function SettingAdvanceMeasurementController($rootScope,$scope,$filter,$modal,ng
 					$scope.addUpdateLabel="Save";
 				}
 				apiCall.getCall(measurementGetApiPath).then(function(response){
-					// console.log(response);
 					data= [];
 					response = response.map(function(res1){
 						res1.lengthStatus = res1.lengthStatus == 'enable' ? true : false;
 						res1.widthStatus = res1.widthStatus == 'enable' ? true : false;
 						res1.heightStatus = res1.heightStatus == 'enable' ? true : false;
+						res1.devideFactor = $filter('number')(res1.devideFactor, 2);
 						return res1;
 					});
 					data = angular.copy(response);
 					$scope.tableParams.data = angular.copy(data);
 					$scope.tableParams.reload();
 					$scope.tableParams.page(1);
-					// $scope.tableParams.sorting({});
 				});
-				$scope.measurementForm.unitName = '';
-				$scope.measurementForm.lengthStatus = false;
-				$scope.measurementForm.widthStatus = false;
-				$scope.measurementForm.heightStatus = false;
-				$scope.measurementForm.measurementUnitId = '';
+				$scope.cancel();
 			}
 			else
 			{
@@ -145,6 +142,7 @@ function SettingAdvanceMeasurementController($rootScope,$scope,$filter,$modal,ng
 			formdata.delete('lengthStatus');
 			formdata.delete('widthStatus');
 			formdata.delete('heightStatus');
+			formdata.delete('devideFactor');
 		});
 	}
 	$scope.cancel = function(){
@@ -153,11 +151,7 @@ function SettingAdvanceMeasurementController($rootScope,$scope,$filter,$modal,ng
 		$scope.measurementForm.widthStatus = false;
 		$scope.measurementForm.heightStatus = false;
 		$scope.measurementForm.measurementUnitId = '';
-		// defaultCompany();
-		formdata.delete('unitName');
-		formdata.delete('lengthStatus');
-		formdata.delete('widthStatus');
-		formdata.delete('heightStatus');
+		$scope.measurementForm.devideFactor = 1;
 	}
 
 	//Edit Measurement
@@ -175,6 +169,7 @@ function SettingAdvanceMeasurementController($rootScope,$scope,$filter,$modal,ng
 					$scope.measurementForm.lengthStatus = response.lengthStatus == 'enable' ? true : false;
 					$scope.measurementForm.heightStatus = response.heightStatus == 'enable' ? true : false;
 					$scope.measurementForm.widthStatus = response.widthStatus == 'enable' ? true : false;
+					$scope.measurementForm.devideFactor = $filter('number')(response.devideFactor, 2);
 					$scope.measurementForm.measurementUnitId = response.measurementUnitId;
 				}
 			}

@@ -6,11 +6,12 @@
 
 App.controller('AddInvProductController', AddInvProductController);
 
-function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$stateParams,$state,apiResponse,validationMessage,getSetFactory,$modal,productFactory,fetchArrayService,maxImageSize) {
+function AddInvProductController($scope,$rootScope,toaster,$filter,apiCall,apiPath,$stateParams,$state,apiResponse,validationMessage,getSetFactory,$modal,productFactory,fetchArrayService,maxImageSize) {
   'use strict';
   
   var vm = this;
   $scope.addInvProduct = [];
+  $scope.mergeProduct = false;
   var formdata = new FormData();
   var Modalopened = false;
   $scope.displayMouCount = 1;
@@ -213,8 +214,10 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 		var editProductData = getSetFactory.get();
 		getSetFactory.blank();
 		editProductData = angular.copy(editProductData);
-		console.log("editProductData..",editProductData);
 		/* Set Modified Date */
+			if (angular.isDefined(editProductData.mergeProduct) && editProductData.mergeProduct) {
+				$scope.mergeProduct = true;
+			}
 			$scope.dateTimeFlag=true;
 			if(editProductData.updatedAt!='00-00-0000')
 			{
@@ -692,6 +695,10 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 
 			//formdata.append('branchId',1);
 			formdata.set('isDisplay','yes');
+			if ($scope.mergeProduct) {
+				$rootScope.mergingPop(2,formdata);
+				return false;
+			}
 			var editProduct = apiPath.getAllProduct+'/'+$scope.addInvProduct.getSetProductId;
 			apiCall.postCall(editProduct,formdata).then(function(response5)
 			{
@@ -727,6 +734,7 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 			// formdata.append('productType',$scope.addInvProduct.productType);
 			// formdata.append('bestBeforeType',$scope.addInvProduct.bestBeforeType);
 			formdata.set('isDisplay','yes');
+			if (true) {}
 			apiCall.postCall(apiPath.getAllProduct,formdata).then(function(response5) {
 				toaster.clear();
 				if (apiResponse.ok == response5) {
@@ -748,7 +756,10 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
   $scope.cancel = function() {
 	  
 		$scope.addInvProduct = [];
-		
+		if ($scope.mergeProduct) {
+			$rootScope.mergingPop(1,'reset');
+			return false;
+		}
 		
 		// Delete formdata  keys
 		// for (var key of formdata.keys()) {
@@ -794,8 +805,6 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 	  	if(parseInt(files[0].size) <= maxImageSize){
 			
 			angular.element("img.showImg").css("display","block");
-			
-			console.log('Small File');
 			formdata.delete('coverImage[]');
 			
 			formdata.append("coverImage[]", files[0]);
@@ -965,4 +974,4 @@ function AddInvProductController($scope,toaster,$filter,apiCall,apiPath,$statePa
 		}
 	}
 }
-AddInvProductController.$inject = ["$scope","toaster","$filter","apiCall","apiPath","$stateParams","$state","apiResponse","validationMessage","getSetFactory","$modal","productFactory","fetchArrayService","maxImageSize"];
+AddInvProductController.$inject = ["$scope","$rootScope","toaster","$filter","apiCall","apiPath","$stateParams","$state","apiResponse","validationMessage","getSetFactory","$modal","productFactory","fetchArrayService","maxImageSize"];

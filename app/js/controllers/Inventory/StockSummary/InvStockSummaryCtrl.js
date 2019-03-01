@@ -239,9 +239,6 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 						{
 							$scope.searchQty = $scope.searchQty+orderedData[index].qty;
 						}
-
-					  // $scope.searchQty = $scope.searchQty+orderedData
-					  console.log("vm user = ",orderedData, " search=",$scope.searchQty);
 			  }
 			else
 			{

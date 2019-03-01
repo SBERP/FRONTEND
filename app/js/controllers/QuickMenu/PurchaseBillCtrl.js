@@ -818,7 +818,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 				productFactory.getSingleProduct(EditProducArray[w].productId).then(function(resData){
 					/** Tax **/
 						vm.AccBillTable[d].productName = resData.productName;
-						if (angular.isArray(setData.itemizeDetail)) {
+						if (angular.isArray(EditProducArray[w].itemizeDetail)) {
 							vm.AccBillTable[d].itemizeDetail = EditProducArray[w].itemizeDetail;
 						}else if(EditProducArray[w].itemizeDetail == ''){
 							vm.AccBillTable[d].itemizeDetail = [];

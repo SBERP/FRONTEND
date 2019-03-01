@@ -189,7 +189,8 @@ App
   'multipleBillPrint'     : 'accounting/bills/bulk-print',
   'getStaffCommission'    : 'users/commissions/',
   'getItemizeStockSummary' : 'products/itemize-summary/',
-  'getItemizeStockRegister' : 'products/itemize-register/'
+  'getItemizeStockRegister' : 'products/itemize-register/',
+  'postItemwiseCommission' : 'users/commissions/item-wise',
   })
   //Api Path
   .constant('apiResponse', {

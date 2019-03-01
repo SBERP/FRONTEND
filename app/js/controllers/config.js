@@ -228,11 +228,17 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
         // })
 		/*** End Template ***/
 		/*** Setting ***/
-			//Option
-			.state('app.SettingOption', {
-				url: '/SettingOption',
-				templateUrl: basepath('Setting/SettingOption/SettingOption.html'),
-				resolve: requireDeps('angular-chosen','toaster')
+            //Option
+            .state('app.SettingOption', {
+                url: '/SettingOption',
+                templateUrl: basepath('Setting/SettingOption/SettingOption.html'),
+                resolve: requireDeps('angular-chosen','toaster')
+            })
+			//Itemwise Commission
+			.state('app.ItemwiseCommission', {
+				url: '/ItemwiseCommission',
+				templateUrl: basepath('Setting/ItemwiseCommission/ItemwiseCommission.html'),
+				resolve: requireDeps('ngTable', 'ngTableExport','angular-chosen','toaster')
 			})
             //Integration
             .state('app.SettingIntegration', {
@@ -277,11 +283,23 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
             templateUrl: basepath('Inventory/Product/AddInvProduct.html'),
             resolve: requireDeps('angular-chosen','toaster','ngTableToCsv','importExcel','exportExcel')
         })
-		//Show Inventory Product
-		.state('app.InvProduct', {
+        //Show Inventory Product
+        .state('app.InvProduct', {
             url: '/InvProduct',
             templateUrl: basepath('Inventory/Product/InvProduct.html'),
             resolve: angular.extend(requireDeps('toaster','ngTable','angular-chosen','ngTableToCsv','importExcel','exportExcel'),{
+                 ProductLoad: function(productFactory){
+                    return productFactory.getProduct().then(function(response){
+                        return response;
+                    });
+                }
+            })
+        })
+		//Show Inventory Product
+		.state('app.MergeProduct', {
+            url: '/MergeProduct',
+            templateUrl: basepath('Inventory/Product/MergeProduct.html'),
+            resolve: angular.extend(requireDeps('toaster','ngTable','angular-chosen'),{
                  ProductLoad: function(productFactory){
                     return productFactory.getProduct().then(function(response){
                         return response;

@@ -13,8 +13,8 @@
 				<div class="col-md-9">
 					<fieldset class="my-fieldset-paddingBottom">
 						<div class="form-group">
-							<label for="input-id-1" class="col-sm-3 control-label">*Unit Name</label>
-							<div class="col-sm-6">
+							<label for="input-id-1" class="col-sm-2 control-label">*Unit Name</label>
+							<div class="col-sm-5">
 								<input id="input-id-1" tabindex="2" name="unitName" ng-pattern="/^[a-zA-Z &_`#().\'-\/]*$/"  ng-maxlength="100" ng-model="measurementForm.unitName" type="text" placeholder="Unit Name" class="form-control" ng-required="true" auto-focus/>
 
 								<span ng-messages="formExpense.unitName.$error" ng-if="formExpense.unitName.$dirty || formExpense.unitName.$touched"  role="alert">
@@ -36,10 +36,14 @@
 							<label>
 								<input type="checkbox" ng-model="measurementForm.heightStatus"> <span class="fa fa-check pl-lg"></span>H</label>
 							</div>
+							<label class="control-label pull-left" ng-if="measurementForm.lengthStatus || measurementForm.widthStatus || measurementForm.heightStatus">/</label>
+							<div class="col-sm-1" ng-if="measurementForm.lengthStatus || measurementForm.widthStatus || measurementForm.heightStatus">
+								<input id="input-id-2" tabindex="2" name="devide" ng-pattern="/^(0*[1-9][0-9]*([\.][0-9]+)?|0+[\.][0-9]*[1-9][0-9]*)$/"  ng-maxlength="100" ng-model="measurementForm.devideFactor" type="text" placeholder="Devide By" class="form-control" ng-required="true" only-number/>
+							</div>
 						</div>
 					</fieldset>
 				</div>
-				<div class="col-md-3">
+				<div class="col-md-2">
 					<button type="button" class="mr mb-sm btn btn-success pull-left" ng-disabled="formExpense.$invalid" tabindex="3" ng-click="insertMeasurementData(measurementForm)">{{addUpdateLabel}}</button>
 					<button type="button" class="mr mb-sm btn btn-danger pull-left" tabindex="4" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="cancel()" >Cancel</button>
 				</div>
@@ -64,6 +68,7 @@
 								<span ng-if="user.widthStatus">W</span>
 								<span ng-if="user.widthStatus && user.heightStatus">x</span>
 								<span ng-if="user.heightStatus">H&nbsp;</span>)
+								<span ng-if="user.devideFactor > 0">/ {{user.devideFactor}}</span>
 							</span>
 						</td>
 						<td data-title="'Action'" sortable="'action'">
