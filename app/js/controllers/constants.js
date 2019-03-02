@@ -50,7 +50,8 @@ App
                              'app/js/customeJS/excel/ods.js',
                              'app/js/customeJS/excel/ui-grid.min.js',
                              'app/js/customeJS/excel/ui-grid.min.css'],
-      'exportExcel':        ['https://cdn.jsdelivr.net/alasql/0.3/alasql.min.js']
+      'exportExcel':        ['https://cdn.jsdelivr.net/alasql/0.3/alasql.min.js'],
+      'googleKeyboard':     ['app/js/customeJS/googleKeyboard.js']
     },
     // Angular based script (use the right module name)
     modules: [

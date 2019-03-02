@@ -66,6 +66,7 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 				var billFlag=0;
 				var inventoryFlag=0;
 				var advanceBillFlag=0;
+				var languageFlag=0;
 				for(var arrayData=0;arrayData<responseLength;arrayData++)
 				{
 					if(angular.isObject(response2) || angular.isArray(response2))
@@ -149,6 +150,14 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 							$scope.enableItemizedPurchaseSales = arrayData1.inventoryItemizeStatus=="enable" ? true : false;
 						}
 
+						if(response2[arrayData].settingType=="language")
+						{
+							languageFlag=1;
+							$scope.insertUpdateLanguageLabel = "Update";
+							var arrayData1 = response2[arrayData];
+							$scope.enableLanguageHindi = arrayData1.languageSettingType=="hindi" ? true : false;
+						}
+
 						if(response2[arrayData].settingType=="advance")
 						{
 							advanceBillFlag=1;
@@ -187,6 +196,10 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 				{
 					$scope.insertUpdateInventoryLabel = "Insert";
 				}
+				if(languageFlag==0)
+				{
+					$scope.insertUpdateLanguageLabel = "Insert";
+				}
 				if(advanceBillFlag==0)
 				{
 					$scope.insertUpdateAdvanceBillLabel = "Insert";
@@ -201,6 +214,7 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 		$scope.chequeNoflag = 0;
 		$scope.productFlag = 0;
 		$scope.inventoryFlag = 0;
+		$scope.languageFlag = 0;
 		$scope.clientFlag = 0;
 		$scope.billFlag = 0;
 		$scope.advanceBillFlag = 0;
@@ -249,6 +263,9 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 		}
 		$scope.changeInInventory = function(key,value){
 			$scope.inventoryFlag = 1;
+		}
+		$scope.changeInLanguage = function(key,value){
+			$scope.languageFlag = 1;
 		}
 		$scope.changeInClient = function(key,value){
 			
@@ -532,6 +549,38 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 				});
 			}else{
 				toaster.pop('info','inventory-Data','Please Change Data');
+			}
+		}
+
+		$scope.AddUpdateLanguageSetting = function() {
+			toaster.clear();
+			if($scope.languageFlag == 1){
+				var languageData = new FormData();
+				if($scope.enableLanguageHindi==true)
+				{
+					languageData.append('languageSettingType','hindi');
+				} else {
+					languageData.append('languageSettingType','english');
+				}
+				if ($scope.insertUpdateLanguageLabel == "Update") {
+					var apiPostPatchCall = apiCall.patchCall;
+				}
+				else{
+					var apiPostPatchCall = apiCall.postCall;
+				}
+				apiPostPatchCall(apiPath.settingOption,languageData).then(function(response){
+					if(apiResponse.ok == response){
+						
+						$scope.getOptionSettingData();
+						toaster.pop('success','Language-Data',$scope.insertUpdateLanguageLabel+' Successfull');
+						$scope.languageFlag = 0;
+					}
+					else{
+						toaster.pop('warning','Opps!!',response);
+					}
+				});
+			}else{
+				toaster.pop('info','language-Data','Please Change Data');
 			}
 		}
 		//Add-Update client data

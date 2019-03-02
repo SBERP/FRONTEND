@@ -973,5 +973,7 @@ function AddInvProductController($scope,$rootScope,toaster,$filter,apiCall,apiPa
 			$scope.displayMouCount--;
 		}
 	}
+	
+
 }
 AddInvProductController.$inject = ["$scope","$rootScope","toaster","$filter","apiCall","apiPath","$stateParams","$state","apiResponse","validationMessage","getSetFactory","$modal","productFactory","fetchArrayService","maxImageSize"];

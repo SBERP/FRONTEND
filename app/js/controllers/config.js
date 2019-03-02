@@ -281,7 +281,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
 		.state('app.AddInvProduct', {
             url: '/AddInvProduct',
             templateUrl: basepath('Inventory/Product/AddInvProduct.html'),
-            resolve: requireDeps('angular-chosen','toaster','ngTableToCsv','importExcel','exportExcel')
+            resolve: requireDeps('angular-chosen','toaster','ngTableToCsv','importExcel','exportExcel','googleKeyboard')
         })
         //Show Inventory Product
         .state('app.InvProduct', {

@@ -7,6 +7,9 @@
 }
 .imageAncher{position:relative;vertical-align:middle;display:inline-block}
 .myCrossDesign{position:absolute;top:0;right:0;height:20px;width:20px;color:#eb615f;font-size:20px}.myCrossDesign:hover{color:red}.documentRight{display:block;position:absolute;top:10%;right:60%;font-size:40px;color:#88bf57}.documentRight:hover{color:green}.documentCross{display:block;position:absolute;font-size:40px;color:#eb615f;top:10%;right:20%}.documentCross:hover{color:red}
+.inputapi-transliterate-indic-suggestion-menu{
+	z-index: 9999999999 !important;
+}
 </style>
 <h3 ng-if="!mergeProduct">
    <small>
@@ -33,7 +36,7 @@
 		</div>
       <div class="panel-body">
 	  
-         <form action="#" name="formProduct" class="form-validate form-horizontal" autocomplete="off">
+         <form action="#" name="formProduct" class="form-validate form-horizontal">
 		
 			<div class="col-md-12" >
 			<h4 class="panel-heading bg-default myHeading">Basic Details</h4>
@@ -73,24 +76,29 @@
 				</div>
 			<h4 class="panel-heading bg-default myHeading">Product Information</h4>
 			<div class="panel-body">
-				<div class="col-md-6" >
+				<div class="col-md-6" id="translControl" >
 					   <div class="form-group">
 						  <label  class="col-sm-3 control-label">*Product Name</label>
-						  <div class="col-sm-9">
-							 <input id="input-id-1" name="productName" ng-model="addInvProduct.name" ng-change="changeInvProductData('productName',addInvProduct.name)" type="text" placeholder="Product Name" class="form-control" ng-required="true" ng-pattern="/^[a-zA-Z0-9 &,\/_`#().\'-]+$/" ng-maxlength="100" tabindex="6" auto-focus/>
+						  <div class="col-sm-9" >
+							 <input name="productName" ng-model="addInvProduct.name" ng-change="changeInvProductData('productName',addInvProduct.name)" type="text" placeholder="Product Name" class="form-control" ng-required="true" ng-pattern="/^[a-zA-Z0-9 &,\/_`#().\'-]+$/" ng-maxlength="100" tabindex="6" auto-focus/>
 							 
 							<span ng-messages="formProduct.productName.$error" ng-if="formProduct.productName.$dirty || formProduct.productName.$touched"  role="alert">
 								<span ng-messages-include="errorRequired"></span>
 								<span ng-messages-include="errorLonglength"></span>
 								<span ng-messages-include="errorPatternThisSpecial"></span>
-							 </span>
-							
+							</span>
 						  </div>
 					    </div>
 						<div class="form-group">
-							<label  class="col-sm-3 control-label">Product Description</label>
+							<label class="col-sm-3 control-label">उत्पाद का नाम</label>
 							<div class="col-sm-9">
-								 <textarea rows="1"  name="productDescription" ng-model="addInvProduct.productDescription" ng-change="changeInvProductData('productDescription',addInvProduct.productDescription)" placeholder="Product Description" class="form-control" tabindex="9" ng-pattern="/^[a-zA-Z0-9 &,\/_`#().\'-]+$/" ng-maxlength="50" ></textarea>
+								<input id="hindiProduct" name="productNameHindi" ng-model="addInvProduct.nameHindi" ng-change="changeInvProductData('productNameHindi',addInvProduct.namehindi)" type="text" placeholder="उत्पाद का नाम" class="form-control" ng-required="true" ng-maxlength="100" tabindex="6" auto-focus/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label  class="col-sm-3 control-label">Product Description</label>
+							<div class="col-sm-9" >
+								 <textarea rows="1"  name="productDescription" ng-model="addInvProduct.productDescription" ng-change="changeInvProductData('productDescription',addInvProduct.productDescription)" placeholder="Product Description" class="form-control editor-box" tabindex="6" ng-pattern="/^[a-zA-Z0-9 &,\/_`#().\'-]+$/" ng-maxlength="50" ></textarea>
 								 
 								<span ng-messages="formProduct.productDescription.$error" ng-if="formProduct.productDescription.$dirty || formProduct.productDescription.$touched"  role="alert">
 									<span ng-messages-include="errorRequired"></span>
@@ -103,7 +111,7 @@
 						<div class="form-group" ng-if="enableDisableVariant">
 							<label class="col-sm-3 control-label">Variant</label>
 							<div class="col-sm-9">
-								 <input  name="productVariant" ng-model="addInvProduct.variant" ng-change="changeInvProductData('variant',addInvProduct.variant)" type="text" placeholder="Variant" class="form-control" tabindex="9" ng-pattern="/^[a-zA-Z0-9 &,\/_`#().\'-]+$/" ng-maxlength="30" auto-focus/>
+								 <input  name="productVariant" ng-model="addInvProduct.variant" ng-change="changeInvProductData('variant',addInvProduct.variant)" type="text" placeholder="Variant" class="form-control" tabindex="6" ng-pattern="/^[a-zA-Z0-9 &,\/_`#().\'-]+$/" ng-maxlength="30" auto-focus/>
 								
 								<span ng-messages="formProduct.productVariant.$error" ng-if="formProduct.productVariant.$dirty || formProduct.productVariant.$touched"  role="alert">
 									<span ng-messages-include="errorRequired"></span>
@@ -921,4 +929,34 @@
 
 <script type="text/ng-template" id="errorPatternThisSpecial">
 	<span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacter}}</span>
+</script>
+<script>
+	 // Load the Google Transliteration API
+	  	google.load("elements", "1", {
+		    packages: "transliteration",
+		    callback: onLoad 
+		    // "nocss" : true
+		  });
+
+	  function onLoad() {
+	    var options = {
+	      sourceLanguage: google.elements.transliteration.LanguageCode.ENGLISH,
+	      destinationLanguage: google.elements.transliteration.LanguageCode.HINDI,
+	      // shortcutKey: 'ctrl+m',
+	      transliterationEnabled: true
+	    };
+	    // Create an instance on TransliterationControl with the required options.
+	    var control = new google.elements.transliteration.TransliterationControl(options);
+	    // Enable transliteration in the textfields with the given ids.
+	    var ids = ["hindiProduct"];
+	    control.makeTransliteratable(ids);
+
+	    // Show the transliteration control which can be used to toggle between English and Hindi and also choose other destination language.
+	    // control.showControl('translControl');
+	  }
+	  
+	  // setTimeout(function() {
+	  // 	google.setOnLoadCallback(onLoad);
+	  // 	onLoad();
+	  // }, 5000);
 </script>
