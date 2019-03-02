@@ -18,8 +18,7 @@ App.directive('checkAll', function() {
             table = $this.parents('table');
         // Make sure to affect only the correct checkbox column
         table.find('tbody > tr > td:nth-child('+index+') input[type="checkbox"]')
-          .prop('checked', checkbox[0].checked);
-
+          .prop('checked', false).click();
       });
     }]
   };
