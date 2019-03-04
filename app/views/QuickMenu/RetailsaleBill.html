@@ -415,26 +415,26 @@
 					
 					<td>
 						<!--span style="float:right">{{item.price}}</span-->
-						<input placeholder="(&#x20b9;)Rate" id="price" type="text" ng-model="item.price"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"  ng-required="true" ng-minlength="1" ng-pattern="/^[1-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage)" only-number /> 
+						<input placeholder="(&#x20b9;)Rate" id="price" type="text" ng-model="item.price"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"  ng-required="true" ng-minlength="1" ng-pattern="/^[1-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage,$index)" only-number /> 
 					</td>
 					<td>
 						<select  ng-model="item.discountType"  class="form-control input-sm" style="padding-left: 3px;padding-right: 3px;width:60%;float:left;" ng-change="changeProductTable();" >
 							<option value="flat" selected="selected">Flat</option>
 							<option value="percentage">%</option>
 						</select>
-						<input  type="text" ng-model="item.discount"  class="form-control input-sm" style="padding-left: 5px;padding-right: 5px;width:40%;" ng-pattern="/^[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage)"  ng-attr-max="{{item.discountType == 'percentage' && '100' || ''}}" only-number /> 
+						<input  type="text" ng-model="item.discount"  class="form-control input-sm" style="padding-left: 5px;padding-right: 5px;width:40%;" ng-pattern="/^[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage,$index)"  ng-attr-max="{{item.discountType == 'percentage' && '100' || ''}}" only-number /> 
 						
 					</td>
 					<td style="text-align:right">
-						<input id="price" type="text" ng-disabled="csgstDisable" ng-model="item.cgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%"  ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage);zeroSingleGst()" only-number /> 
+						<input id="price" type="text" ng-disabled="csgstDisable" ng-model="item.cgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%"  ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage,$index);zeroSingleGst()" only-number /> 
 						<span ng-if="item.cgstAmount > 0 && !csgstDisable" ng-disabled="csgstDisable" ng-bind="item.cgstAmount"></span>
 					</td>
 					<td style="text-align:right">
-						<input id="price" type="text" ng-disabled="csgstDisable" ng-model="item.sgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%"  ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage);zeroSingleGst()" only-number /> 
+						<input id="price" type="text" ng-disabled="csgstDisable" ng-model="item.sgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%"  ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage,$index);zeroSingleGst()" only-number /> 
 						<span ng-if="item.sgstAmount > 0 && !csgstDisable" ng-disabled="csgstDisable" ng-bind="item.sgstAmount" ></span>
 					</td>
 					<td style="text-align:right">
-						<input id="price" type="text" ng-disabled="igstDisable" ng-model="item.igstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%" ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage);zeroSingleGst()" only-number /> 
+						<input id="price" type="text" ng-disabled="igstDisable" ng-model="item.igstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%" ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage,$index);zeroSingleGst()" only-number /> 
 						<span ng-if="item.igstAmount > 0" ng-disabled="igstDisable" ng-bind="item.igstAmount"></span>
 					</td>
 					<td>
