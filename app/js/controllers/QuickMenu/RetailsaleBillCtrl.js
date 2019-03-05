@@ -1159,6 +1159,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					calcWidth = parseFloat(item.widthValue);
 					calcHeight = parseFloat(item.heightValue);
 				}
+				$scope.enableDisableLWHArray[index].totalFt = $filter('setDecimal')(parseFloat(item.qty)*item.lengthValue*item.widthValue*item.heightValue/parseFloat(item.devideFactor),$scope.noOfDecimalPoints);
 				var calcQty = $filter('setDecimal')(parseFloat(item.qty)*calcLength*calcWidth*calcHeight/parseFloat(item.devideFactor),$scope.noOfDecimalPoints);
 			}else{
 				var calcQty = item.qty;
@@ -1235,6 +1236,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					calcWidth = parseFloat(item.widthValue);
 					calcHeight = parseFloat(item.heightValue);
 				}
+				$scope.enableDisableLWHArray[index].totalFt = $filter('setDecimal')(parseFloat(item.qty)*item.lengthValue*item.widthValue*item.heightValue/parseFloat(item.devideFactor),$scope.noOfDecimalPoints);
 				var calcQty = $filter('setDecimal')(parseFloat(item.qty)*calcLength*calcWidth*calcHeight/parseFloat(item.devideFactor),$scope.noOfDecimalPoints);
 			}else{
 				var calcQty = item.qty;
