@@ -79,7 +79,7 @@
 				<div class="col-md-6" id="translControl" >
 					   <div class="form-group">
 						  <label  class="col-sm-3 control-label">*Product Name</label>
-						  <div class="col-sm-9" >
+						  <div class="col-sm-9" > 
 							 <input name="productName" ng-model="addInvProduct.name" ng-change="changeInvProductData('productName',addInvProduct.name)" type="text" placeholder="Product Name" class="form-control" ng-required="true" ng-pattern="/^[a-zA-Z0-9 &,\/_`#().\'-]+$/" ng-maxlength="100" tabindex="6" auto-focus/>
 							 
 							<span ng-messages="formProduct.productName.$error" ng-if="formProduct.productName.$dirty || formProduct.productName.$touched"  role="alert">

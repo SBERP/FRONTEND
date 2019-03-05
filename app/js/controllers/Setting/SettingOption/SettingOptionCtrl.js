@@ -160,7 +160,7 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 
 						if(response2[arrayData].settingType=="advance")
 						{
-							advanceBillFlag=1;
+							advanceBillFlag=1; 
 							$scope.insertUpdateAdvanceBillLabel = "Update";
 							var arrayData1 = response2[arrayData];
 							$scope.enableDisableAdvanceSales = arrayData1.advanceSalesStatus=="enable" ? true : false;

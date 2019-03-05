@@ -290,7 +290,7 @@ function AddInvProductController($scope,$rootScope,toaster,$filter,apiCall,apiPa
 			$scope.addInvProduct.name = editProductData.productName;
 			$scope.addInvProduct.altProductName = editProductData.altProductName;
 			$scope.addInvProduct.productDescription = editProductData.productDescription;
-			$scope.addInvProduct.color = editProductData.color;
+			$scope.addInvProduct.color = editProductData.color; 
 			$scope.addInvProduct.size = editProductData.size;
 			$scope.addInvProduct.variant = editProductData.variant;
 			$scope.addInvProduct.barcodeNo = editProductData.productCode;
