@@ -161,59 +161,6 @@ function AccProductListModalController($scope,toaster,productFactory,fetchArrayS
 		  }
 	  });
 
-	// vm.tableParams1 = new ngTableParams({
-	// 	  page: 1,            // show first page
-	// 	  count: 10        // count per page
-		  
-	//   }, {
-	// 	  counts: [],
-	// 	  total: data.length, // length of data
-	// 	  getData: function($defer, params) {
-			 
-	// 		var filteredData = params.filter() ?
-	// 		  $filter('filter')(data, params.filter()) :
-	// 		  data;
-	// 		var orderedData = params.sorting() ?
-	// 		  $filter('orderBy')(filteredData, params.orderBy()) :
-	// 		  data;
-
-	// 		params.total(orderedData.length); // set total for recalc pagination
-	// 		$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-
-	// 		$scope.totalData = data.length;
-	// 		$scope.pageNumber = params.page();
-	// 		$scope.itemsPerPage = params.count();
-	// 		$scope.totalPages = Math.ceil($scope.totalData/params.count());
-			
-	// 	  }
-	//   });
-
-	// vm.tableParams2 = new ngTableParams({
-	// 	  page: 1,            // show first page
-	// 	  count: 10        // count per page
-		  
-	//   }, {
-	// 	  counts: [],
-	// 	  total: data.length, // length of data
-	// 	  getData: function($defer, params) {
-			 
-	// 		var filteredData = params.filter() ?
-	// 		  $filter('filter')(data, params.filter()) :
-	// 		  data;
-	// 		var orderedData = params.sorting() ?
-	// 		  $filter('orderBy')(filteredData, params.orderBy()) :
-	// 		  data;
-
-	// 		params.total(orderedData.length); // set total for recalc pagination
-	// 		$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-
-	// 		$scope.totalData = data.length;
-	// 		$scope.pageNumber = params.page();
-	// 		$scope.itemsPerPage = params.count();
-	// 		$scope.totalPages = Math.ceil($scope.totalData/params.count());
-			
-	// 	  }
-	//   });
 	
 	$scope.displayParseFloat=function(val) {
 		
@@ -224,12 +171,6 @@ function AccProductListModalController($scope,toaster,productFactory,fetchArrayS
 	$scope.allProductData = function(){
 		
 		var filterArray = {};
-		// console.log("selected data = ",$scope.selectedBoxArray);
-		// filterArray.index = $scope.productIndex;
-		// filterArray.companyId = $scope.addModelProduct.company.companyId;
-		// filterArray.productName = $scope.addModelProduct.productName;
-		// filterArray.color = $scope.addModelProduct.color;
-		// filterArray.size = $scope.addModelProduct.size;
 				
 		$modalInstance.close($scope.selectedBoxArray);
 			
@@ -285,45 +226,15 @@ function AccProductListModalController($scope,toaster,productFactory,fetchArrayS
 			}
 		}
 		else{
-			// console.log("vvv");
-			$scope.clientFlag=1;
-			$scope.selectedBoxArray = [];
-
-			// console.log("selected box=",$scope.selectedBoxArray);
-			var cnt  = $scope.selectedBoxArray.length;
-			for(var k=0;k<cnt;k++){
-				$scope.selectedBoxArray[k].selected = true;
-			}
-			
-			// console.log("filter =",productArray);
-			$scope.selectedBoxArray = productArray;	
+			// $scope.clientFlag=1;
+			// console.log($scope.selectedBoxArray);	
+			// $scope.selectedBoxArray = [];
+			// var cnt  = $scope.selectedBoxArray.length;
+			// for(var k=0;k<cnt;k++){
+				// $scope.selectedBoxArray[k] = data[k];
+				// $scope.selectedBoxArray[k].selected = true;
+			// }
 		}
 	}
-
-	// $scope.changeAllBox1 = function(box){
-		
-	// 	if(box == false){
-	// 		$scope.clientFlag=0;
-	// 		$scope.selectedBoxArray = [];
-	// 		var cnt  = data.length;
-	// 		for(var k=0;k<cnt;k++){
-	// 			data[k].selected = false;
-	// 		}
-	// 	}
-	// 	else{
-	// 		console.log("vvv");
-	// 		$scope.clientFlag=1;
-	// 		$scope.selectedBoxArray = [];
-
-	// 		// console.log("selected box=",$scope.selectedBoxArray);
-	// 		var cnt  = $scope.selectedBoxArray.length;
-	// 		for(var k=0;k<cnt;k++){
-	// 			$scope.selectedBoxArray[k].selected = true;
-	// 		}
-			
-	// 		console.log("filter =",accArray);
-	// 		$scope.selectedBoxArray = accArray;	
-	// 	}
-	// }
 }
 AccProductListModalController.$inject = ["$scope","toaster","productFactory","fetchArrayService","$modalInstance","$rootScope","$filter","ngTableParams","apiCall","apiPath","companyId","validationMessage","apiResponse","getSetFactory","maxImageSize"];

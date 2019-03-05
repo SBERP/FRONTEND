@@ -14,7 +14,7 @@
 					<fieldset class="my-fieldset-paddingBottom">
 						<div class="form-group">
 							<label for="input-id-1" class="col-sm-2 control-label">*Unit Name</label>
-							<div class="col-sm-5">
+							<div class="col-sm-4">
 								<input id="input-id-1" tabindex="2" name="unitName" ng-pattern="/^[a-zA-Z &_`#().\'-\/]*$/"  ng-maxlength="100" ng-model="measurementForm.unitName" type="text" placeholder="Unit Name" class="form-control" ng-required="true" auto-focus/>
 
 								<span ng-messages="formExpense.unitName.$error" ng-if="formExpense.unitName.$dirty || formExpense.unitName.$touched"  role="alert">
@@ -39,6 +39,9 @@
 							<label class="control-label pull-left" ng-if="measurementForm.lengthStatus || measurementForm.widthStatus || measurementForm.heightStatus">/</label>
 							<div class="col-sm-1" ng-if="measurementForm.lengthStatus || measurementForm.widthStatus || measurementForm.heightStatus">
 								<input id="input-id-2" tabindex="2" name="devide" ng-pattern="/^(0*[1-9][0-9]*([\.][0-9]+)?|0+[\.][0-9]*[1-9][0-9]*)$/"  ng-maxlength="100" ng-model="measurementForm.devideFactor" type="text" placeholder="Devide By" class="form-control" ng-required="true" only-number/>
+							</div>
+							<div class="col-sm-1" ng-if="measurementForm.lengthStatus || measurementForm.widthStatus || measurementForm.heightStatus">
+								<input id="input-id-3" tabindex="2" name="devide" ng-pattern="/^([0-9]*)$/"  ng-maxlength="100" ng-model="measurementForm.moduloFactor" type="text" placeholder="Modulo By" class="form-control" ng-required="true" only-number/>
 							</div>
 						</div>
 					</fieldset>
