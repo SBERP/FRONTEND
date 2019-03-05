@@ -89,10 +89,10 @@
 							</span>
 						  </div>
 					    </div>
-						<div class="form-group">
+						<div class="form-group" ng-if="languageSettingType == 'hindi'">
 							<label class="col-sm-3 control-label">उत्पाद का नाम</label>
 							<div class="col-sm-9">
-								<input id="hindiProduct" name="productNameHindi" ng-model="addInvProduct.nameHindi" ng-change="changeInvProductData('productNameHindi',addInvProduct.namehindi)" type="text" placeholder="उत्पाद का नाम" class="form-control" ng-required="true" ng-maxlength="100" tabindex="6" auto-focus/>
+								<input id="hindiProduct" name="altProductName" ng-model="addInvProduct.altProductName" ng-change="changeInvProductData('altProductName',addInvProduct.altProductName)" type="text" placeholder="उत्पाद का नाम" class="form-control" ng-required="true" ng-maxlength="100" tabindex="6"/>
 							</div>
 						</div>
 						<div class="form-group">
@@ -111,7 +111,7 @@
 						<div class="form-group" ng-if="enableDisableVariant">
 							<label class="col-sm-3 control-label">Variant</label>
 							<div class="col-sm-9">
-								 <input  name="productVariant" ng-model="addInvProduct.variant" ng-change="changeInvProductData('variant',addInvProduct.variant)" type="text" placeholder="Variant" class="form-control" tabindex="6" ng-pattern="/^[a-zA-Z0-9 &,\/_`#().\'-]+$/" ng-maxlength="30" auto-focus/>
+								 <input  name="productVariant" ng-model="addInvProduct.variant" ng-change="changeInvProductData('variant',addInvProduct.variant)" type="text" placeholder="Variant" class="form-control" tabindex="6" ng-pattern="/^[a-zA-Z0-9 &,\/_`#().\'-]+$/" ng-maxlength="30"/>
 								
 								<span ng-messages="formProduct.productVariant.$error" ng-if="formProduct.productVariant.$dirty || formProduct.productVariant.$touched"  role="alert">
 									<span ng-messages-include="errorRequired"></span>
@@ -929,34 +929,4 @@
 
 <script type="text/ng-template" id="errorPatternThisSpecial">
 	<span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacter}}</span>
-</script>
-<script>
-	 // Load the Google Transliteration API
-	  	google.load("elements", "1", {
-		    packages: "transliteration",
-		    callback: onLoad 
-		    // "nocss" : true
-		  });
-
-	  function onLoad() {
-	    var options = {
-	      sourceLanguage: google.elements.transliteration.LanguageCode.ENGLISH,
-	      destinationLanguage: google.elements.transliteration.LanguageCode.HINDI,
-	      // shortcutKey: 'ctrl+m',
-	      transliterationEnabled: true
-	    };
-	    // Create an instance on TransliterationControl with the required options.
-	    var control = new google.elements.transliteration.TransliterationControl(options);
-	    // Enable transliteration in the textfields with the given ids.
-	    var ids = ["hindiProduct"];
-	    control.makeTransliteratable(ids);
-
-	    // Show the transliteration control which can be used to toggle between English and Hindi and also choose other destination language.
-	    // control.showControl('translControl');
-	  }
-	  
-	  // setTimeout(function() {
-	  // 	google.setOnLoadCallback(onLoad);
-	  // 	onLoad();
-	  // }, 5000);
 </script>

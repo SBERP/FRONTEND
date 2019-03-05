@@ -56,7 +56,7 @@ background-color: white;
 			</tr>
 			<tr>
 				<th sortable="'date'" >Dt.</th>
-				<th >Sale/purchase</th>
+				<th >Sale/purchase/Sales Return/Purchase Return</th>
 				<th>Qty</th>
 				<th >Amount</th>
 				
@@ -73,8 +73,14 @@ background-color: white;
 					<td rowspan="{{::user.balance.length == 0?1:user.balance.length}}" ng-if="user.transactionType == 'Inward' && $index != 0">
 						<a href="javascript:void(0)" ng-click="goToBillPage('purchase',user.jfId,user.company.companyId)">Purchase</a>
 					</td>
+					<td rowspan="{{::user.balance.length == 0?1:user.balance.length}}" ng-if="user.transactionType == 'Outward' && $index != 0 && user.invoiceNumber == ''">
+						<a href="javascript:void(0)" >Purchase Return</a>
+					</td>
 					<td rowspan="{{::user.balance.length == 0?1:user.balance.length}}" ng-if="user.transactionType == 'Outward' && $index != 0">
 						<a href="javascript:void(0)" ng-click="goToBillPage('sales',user.jfId,user.company.companyId)">Sales</a>
+					</td>
+					<td rowspan="{{::user.balance.length == 0?1:user.balance.length}}" ng-if="user.transactionType == 'Inward' && $index != 0 && user.billNumber == ''" >
+						<a href="javascript:void(0)" >Sales Return</a>
 					</td>
 					<td rowspan="{{::user.balance.length == 0?1:user.balance.length}}" ng-if="$index != 0">
 						<span ng-if="!enableItemizedPurchaseSales" ng-bind="::user.qty"></span>
@@ -86,8 +92,14 @@ background-color: white;
 					<td rowspan="{{::user.balance.length}}" ng-if="user.transactionType == 'Inward' && $index == 0">
 						<a href="javascript:void(0)" ng-click="goToBillPage('purchase',user.jfId,user.company.companyId)">Purchase</a>
 					</td>
+					<td rowspan="{{::user.balance.length}}" ng-if="user.transactionType == 'Outward' && $index == 0 && user.invoiceNumber == ''" >
+						<a href="javascript:void(0)" >Purchase Return</a>
+					</td>
 					<td rowspan="{{::user.balance.length}}" ng-if="user.transactionType == 'Outward' && $index == 0">
 						<a href="javascript:void(0)" ng-click="goToBillPage('sales',user.jfId,user.company.companyId)">Sales</a>
+					</td>
+					<td rowspan="{{::user.balance.length}}" ng-if="user.transactionType == 'Inward' && $index == 0 && user.billNumber == ''">
+						<a href="javascript:void(0)" >Sales Return</a>
 					</td>
 					<td rowspan="{{::user.balance.length}}" ng-if="$index == 0">
 						<span ng-if="!enableItemizedPurchaseSales" ng-bind="::user.qty"></span>

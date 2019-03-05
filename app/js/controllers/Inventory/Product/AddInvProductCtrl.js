@@ -157,6 +157,7 @@ function AddInvProductController($scope,$rootScope,toaster,$filter,apiCall,apiPa
 	$scope.enableAdvanceMou = false;
 	$scope.enableDisableMRPRequire = false;
 	$scope.enableDisableWebIntegration = false;
+	$scope.languageSettingType = "english";
 	$scope.enableDisableMargin = false;
 	$scope.enableDisableVariant = false;
 	//get setting data
@@ -164,6 +165,7 @@ function AddInvProductController($scope,$rootScope,toaster,$filter,apiCall,apiPa
 	{
 		toaster.clear();
 		apiCall.getCall(apiPath.settingOption).then(function(response){
+			console.log("response..setting..",response);
 			var responseLength = response.length;
 			for(var arrayData=0;arrayData<responseLength;arrayData++)
 			{
@@ -185,6 +187,12 @@ function AddInvProductController($scope,$rootScope,toaster,$filter,apiCall,apiPa
 					{
 						var arrayData1 = response[arrayData];
 						$scope.enableDisableWebIntegration = arrayData1.webintegrationStatus=="on" ? true : false;
+					}
+					if (response[arrayData].settingType == "language") 
+					{
+						var arrayData1 = response[arrayData];
+						$scope.languageSettingType = arrayData1.languageSettingType=="hindi" ? "hindi" : "english";
+						onGoogleInit();
 					}
 				}
 			}
@@ -280,6 +288,7 @@ function AddInvProductController($scope,$rootScope,toaster,$filter,apiCall,apiPa
 	
 		//apiCall.getCall(editProduct).then(function(res){
 			$scope.addInvProduct.name = editProductData.productName;
+			$scope.addInvProduct.altProductName = editProductData.altProductName;
 			$scope.addInvProduct.productDescription = editProductData.productDescription;
 			$scope.addInvProduct.color = editProductData.color;
 			$scope.addInvProduct.size = editProductData.size;
@@ -974,6 +983,37 @@ function AddInvProductController($scope,$rootScope,toaster,$filter,apiCall,apiPa
 		}
 	}
 	
+	function onGoogleInit() {
+		 // Load the Google Transliteration API
+		  	google.load("elements", "1", {
+			    packages: "transliteration",
+			    callback: onLoad 
+			    // "nocss" : true
+			  });
+	}
+	
+
+	  function onLoad() {
+	    var options = {
+	      sourceLanguage: google.elements.transliteration.LanguageCode.ENGLISH,
+	      destinationLanguage: google.elements.transliteration.LanguageCode.HINDI,
+	      // shortcutKey: 'ctrl+m',
+	      transliterationEnabled: true
+	    };
+	    // Create an instance on TransliterationControl with the required options.
+	    var control = new google.elements.transliteration.TransliterationControl(options);
+	    // Enable transliteration in the textfields with the given ids.
+	    var ids = ["hindiProduct"];
+	    control.makeTransliteratable(ids);
+
+	    // Show the transliteration control which can be used to toggle between English and Hindi and also choose other destination language.
+	    // control.showControl('translControl');
+	  }
+	  
+	  // setTimeout(function() {
+	  // 	google.setOnLoadCallback(onLoad);
+	  // 	onLoad();
+	  // }, 5000);
 
 }
 AddInvProductController.$inject = ["$scope","$rootScope","toaster","$filter","apiCall","apiPath","$stateParams","$state","apiResponse","validationMessage","getSetFactory","$modal","productFactory","fetchArrayService","maxImageSize"];
