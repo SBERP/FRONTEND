@@ -230,7 +230,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					var arrayData1 = response[arrayData];
 					$scope.displayProductName = arrayData1.languageSettingType=="hindi" ? "altProductName" : "productName";
 					if ($scope.displayProductName == "altProductName") {
-						// onGoogleInit();
+						onGoogleInit();
 					}
 				}
 			}
@@ -2300,12 +2300,12 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			// 	headerData.isSalesOrderUpdate = 'ok';
 			// 	formdata.delete('isSalesOrderUpdate');
 			// }
-			else if($scope.saleType == 'WholesaleBill'){
+			else if ($scope.saleType == 'WholesaleBill') {
 				headerData.salesType = 'whole_sales';
 			}
 		}
 		
-		apiCall.postCallHeader(BillPath,headerData,formdata).then(function(data){
+		apiCall.postCallHeader(BillPath,headerData,formdata).then(function(data) {
 			toaster.clear();
 			// Delete formdata  keys
 			// for (var key of formdata.keys()) {
@@ -2313,27 +2313,26 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			// }
 			//Delete Inventory Data From Formdata Object
 			var json3 = angular.copy(vm.AccBillTable);
-			$scope.enableDisableLWHArray = [];
-			for(var i=0;i<json3.length;i++){
-					angular.forEach(json3[i], function (value,key) {
+			for (var i=0;i<json3.length;i++) {
+				angular.forEach(json3[i], function (value,key) {
 					formdata.delete('inventory['+i+']['+key+']');
 				});
 			}
 
 			var json4 = angular.copy(vm.AccExpense);
 
-			for(var i=0;i<json4.length;i++){
+			for (var i=0;i<json4.length;i++) {
 					angular.forEach(json4[i], function (value,key) {
 					formdata.delete('expense['+i+']['+key+']');
 				});
 			}
 			
 
-			if(!$scope.quickBill.EditBillData){
-				
+			if (!$scope.quickBill.EditBillData) {
 				formdata.delete('entryDate');
 				formdata.delete('serviceDate');
 			}
+
 			formdata.delete('invoiceNumber');
 			formdata.delete('quotationNumber');
 			formdata.delete('transactionDate');
@@ -2348,7 +2347,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			formdata.delete('isDisplay');
 			
 			
-			if(angular.isObject(data) && data.hasOwnProperty('documentPath')){
+			if(angular.isObject(data) && data.hasOwnProperty('documentPath')) {
 				
 				if($scope.quickBill.EditBillData){
 					
@@ -2427,6 +2426,8 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				vm.AccExpense = [];
 				vm.productHsn = [];
 				
+				$scope.enableDisableLWHArray = [];
+
 				$scope.changeProductArray = false;
 				$scope.changeProductAdvancePrice = false;
 				vm.disableCompany = false; 
@@ -4221,13 +4222,12 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	}
 
 	function onGoogleInit() {
-		 // Load the Google Transliteration API
-		  	google.load("elements", "1", {
-			    packages: "transliteration",
-			    callback: onLoad 
-			    // "nocss" : true
-			  });
-		  	console.log("google In");
+		// Load the Google Transliteration API
+	  	google.load("elements", "1", {
+		    packages: "transliteration",
+		    callback: onLoad 
+		    // "nocss" : true
+		});
 	}
 	
 
