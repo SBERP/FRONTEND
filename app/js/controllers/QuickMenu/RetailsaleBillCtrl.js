@@ -102,7 +102,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	});
 
 	
-
+	$scope.displayProductName = "productName";
 	$scope.enableDisableAdvanceMou = false;
 	$scope.enableDisableColor = false;
 	$scope.enableDisableSize = false;
@@ -219,13 +219,19 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				{
 					var arrayData1 = response[arrayData];
 					$scope.enableDisableSalesman = arrayData1.billSalesmanStatus=="enable" ? true : false;
-					
 				}
 				else if(response[arrayData].settingType=="inventory")
 				{
 					var arrayData1 = response[arrayData];
 					$scope.enableItemizedPurchaseSales = arrayData1.inventoryItemizeStatus=="enable" ? true : false;
-					
+				}
+				else if (response[arrayData].settingType=="language") 
+				{
+					var arrayData1 = response[arrayData];
+					$scope.displayProductName = arrayData1.languageSettingType=="hindi" ? "altProductName" : "productName";
+					if ($scope.displayProductName == "altProductName") {
+						// onGoogleInit();
+					}
 				}
 			}
 		}
@@ -1597,6 +1603,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 								vm.AccBillTable[d].devideFactor = 1;
 							}
 							$scope.enableDisableLWHArray[d] = {};
+							$scope.enableDisableLWHArray[d].totalFt = $filter('setDecimal')(parseFloat(setData.lengthValue)*parseFloat(setData.widthValue)*parseFloat(setData.heightValue)*parseFloat(setData.qty)/parseFloat(vm.AccBillTable[d].devideFactor),$scope.noOfDecimalPoints);
 							resData.measurementUnit.lengthStatus == 'enable' ? 
 							$scope.enableDisableLWHArray[d].lengthStatus = true : $scope.enableDisableLWHArray[d].lengthStatus = false;
 							$scope.enableDisableLWHArray[d].widthStatus = resData.measurementUnit.widthStatus == 'enable' ? true : false;
@@ -3995,7 +4002,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				 	var breakForeach = true;
 					angular.forEach(productJson[jsonIndex], function (value,key) {
 						if(breakForeach){
-							if(key == 'productId' && value==''){
+							if(key == 'productId' && value=='') {
 								breakForeach = false;
 							}
 							if(breakForeach)
@@ -4212,6 +4219,39 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			return true;
 		});
 	}
+
+	function onGoogleInit() {
+		 // Load the Google Transliteration API
+		  	google.load("elements", "1", {
+			    packages: "transliteration",
+			    callback: onLoad 
+			    // "nocss" : true
+			  });
+		  	console.log("google In");
+	}
+	
+
+	  function onLoad() {
+	    var options = {
+	      sourceLanguage: google.elements.transliteration.LanguageCode.ENGLISH,
+	      destinationLanguage: google.elements.transliteration.LanguageCode.HINDI,
+	      // shortcutKey: 'ctrl+m',
+	      transliterationEnabled: true
+	    };
+	    // Create an instance on TransliterationControl with the required options.
+	    var control = new google.elements.transliteration.TransliterationControl(options);
+	    // Enable transliteration in the textfields with the given ids.
+	    var ids = ["productNameId"];
+	    control.makeTransliteratable(ids);
+
+	    // Show the transliteration control which can be used to toggle between English and Hindi and also choose other destination language.
+	    // control.showControl('translControl');
+	  }
+	  
+	  // setTimeout(function() {
+	  // 	google.setOnLoadCallback(onLoad);
+	  // 	onLoad();
+	  // }, 5000);
 
 }
 RetailsaleBillController.$inject = ["$rootScope","$scope","apiCall","apiPath","$http","$window","$modal","validationMessage","saleType","productArrayFactory","getSetFactory","toaster","apiResponse","$anchorScroll","maxImageSize","$sce","$templateCache","getLatestNumber","productFactory","stateCityFactory","$filter","$state","clientFactory","fetchArrayService","bankFactory"];

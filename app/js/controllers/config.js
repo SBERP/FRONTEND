@@ -816,7 +816,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
 				url: '/WholesaleBill',
 				templateUrl: basepath('QuickMenu/RetailsaleBill.html'), 
 				controller: 'RetailsaleBillController as form',
-				resolve: angular.extend(requireDeps('taxInvoice','twain','toaster','angular-chosen','ngTable','uiCropper','moment','jquery-ui'),{
+				resolve: angular.extend(requireDeps('taxInvoice','twain','toaster','angular-chosen','ngTable','uiCropper','moment','jquery-ui','googleKeyboard'),{
 					saleType: function(){
 						return 'WholesaleBill';
 					}

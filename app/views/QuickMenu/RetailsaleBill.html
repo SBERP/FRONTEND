@@ -361,7 +361,9 @@
 				</tr>
 			</thead>
 			<script type="text/ng-template" id="customTemplate.html">
-				<a><span ng-bind-html="match.label | typeaheadHighlight:query"></span> ({{match.model.color}} | {{match.model.size}} | {{match.model.variant}})</a>
+				<a>
+					<span ng-bind-html="match.label | typeaheadHighlight:query"></span> ({{match.model.color}} | {{match.model.size}} | {{match.model.variant}})
+				</a>
 			</script>
 			<tbody portlet="" >
 				<tr id="panelPortlet{{$index+1}}" ng-repeat="item in form.AccBillTable track by $index" class="myTable" data-ng-class="app.tableAnimation">
@@ -370,10 +372,10 @@
 					</td>
 					<td>
 						<div class="input-group mytypeDrop">
-							<input typeahead="item.productName for item in form.productNameDrop | filter:$viewValue | limitTo:10" ng-model="item.productName" typeahead-on-select="setProductData($item,$index);quickBill.advance = ((total) + (quickBill.extraCharge ? quickBill.extraCharge*1 : 0) | setDecimal: noOfDecimalPoints)" type="text" class="form-control input-sm" autocomplete="off" placeholder="*Enter Product Name"  typeahead-editable="false" ng-required="true" style="padding-left: 6px;padding-right: 6px;" typeahead-template-url="customTemplate.html" ng-disabled="form.loadData" ng-keypress="presssuburb($event)"/>
+							<input ng-attr-id="{{displayProductName=='hindi' && 'productNameId' || ''}}" typeahead="item[displayProductName] for item in form.productNameDrop | filter:$viewValue | limitTo:10" ng-model="item.productName" typeahead-on-select="setProductData($item,$index);quickBill.advance = ((total) + (quickBill.extraCharge ? quickBill.extraCharge*1 : 0) | setDecimal: noOfDecimalPoints)" type="text" class="form-control input-sm" autocomplete="off" placeholder="*Enter Product Name"  typeahead-editable="false" ng-required="true" style="padding-left: 6px;padding-right: 6px;" typeahead-template-url="customTemplate.html" ng-disabled="form.loadData" ng-keypress="presssuburb($event)"/>
 							<span class="input-group-btn">
-								 <button type="button" class="btn btn-default btn-sm" ng-if="item.productId" ng-click="editProductWithRedirect($index)"><i class="fa fa-edit fa-lg" style="color:#17A1E5;"></i></button>
-							   <button type="button" class="btn btn-default btn-sm" data-ng-click="openProduct('lg',$index)" ng-if="!item.productId"><i class="fa fa-plus fa-lg" style="color:#17A1E5;"></i></button>
+								<button type="button" class="btn btn-default btn-sm" ng-if="item.productId" ng-click="editProductWithRedirect($index)"><i class="fa fa-edit fa-lg" style="color:#17A1E5;"></i></button>
+							   	<button type="button" class="btn btn-default btn-sm" data-ng-click="openProduct('lg',$index)" ng-if="!item.productId"><i class="fa fa-plus fa-lg" style="color:#17A1E5;"></i></button>
 							   	<button ng-if="enableItemizedPurchaseSales && item.productId" type="button" class="btn btn-default btn-sm" tooltip="IMEI/Serial No"  tooltip-trigger="mouseenter" tooltip-placement="top" data-ng-click="openBarcodeModal('lg',$index)"><i class="fa fa-barcode" style="font-size:15px;color:#17A1E5;"></i></button>
 							</span>
 						</div>
@@ -398,7 +400,7 @@
 						<input ng-if="enableDisableLWHArray[$index].lengthStatus" ng-required="true" ng-minlength="1" ng-pattern="/^(0*[1-9][0-9]*([\.][0-9]+)?|0+[\.][0-9]*[1-9][0-9]*)$/" ng-model="item.lengthValue" placeholder="Length" ng-change="changeProductTable();changeQuantity($index);" ng-style="enableDisableLWHArray[$index].styleObj" type="text" class="form-control input-sm" only-number/>
 						<input ng-if="enableDisableLWHArray[$index].widthStatus" ng-required="true" ng-minlength="1" ng-pattern="/^(0*[1-9][0-9]*([\.][0-9]+)?|0+[\.][0-9]*[1-9][0-9]*)$/" ng-model="item.widthValue" ng-change="changeProductTable();changeQuantity($index);" ng-style="enableDisableLWHArray[$index].styleObj" type="text" class="form-control input-sm" placeholder="Width" only-number/>
 						<input ng-if="enableDisableLWHArray[$index].heightStatus" ng-required="true" ng-minlength="1" ng-pattern="/^(0*[1-9][0-9]*([\.][0-9]+)?|0+[\.][0-9]*[1-9][0-9]*)$/" ng-model="item.heightValue" ng-change="changeProductTable();changeQuantity($index);" ng-style="enableDisableLWHArray[$index].styleObj" type="text" class="form-control input-sm" placeholder="Height" only-number/>
-						<span class="pull-right" ng-show="enableDisableLWHArray[$index].lengthStatus || enableDisableLWHArray[$index].heightStatus || enableDisableLWHArray[$index].widthStatus">{{enableDisableLWHArray[$index].totalFt}}</span>
+						<span class="pull-right" ng-show="enableDisableLWHArray[$index].lengthStatus || enableDisableLWHArray[$index].heightStatus || enableDisableLWHArray[$index].widthStatus">{{enableDisableLWHArray[$index].totalFt}} Ft</span>
 
 					</td>
 					<td style="text-align:center;" ng-if="divTag">
