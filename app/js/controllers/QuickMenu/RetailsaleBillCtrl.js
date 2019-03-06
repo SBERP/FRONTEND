@@ -1057,41 +1057,23 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		var count = vm.AccBillTable.length;
 		var getTotalAmount = 0;
 		var totalCessAmount = 0;
+		var gst = {
+			sgst:0,
+			cgst:0,
+			igst:0
+		};
+
 		for(var i = 0; i < count; i++)
 		{
-			var cessAmount = 0;
 			var product = vm.AccBillTable[i];
 			// var vartax = vm.productTax[i];
-			var totaltax = checkGSTValue(product.cgstPercentage) + checkGSTValue(product.sgstPercentage) + checkGSTValue(product.igstPercentage);
-			if(product.discountType == 'flat') {
-				var getAmount = $filter('setDecimal')((product.price*product.qty) - product.discount,$scope.noOfDecimalPoints);
-			}
-			else{
-				var getAmount  =  $filter('setDecimal')((product.price*product.qty)-((product.price*product.qty)*product.discount/100),$scope.noOfDecimalPoints);
-			}
-
-			getTotalAmount += getAmount;
-			if (angular.isDefined(product.cessAmount)) {
-				cessAmount = product.cessAmount;
-			}
-			total += productArrayFactory.calculateTax(getAmount,totaltax,0) + parseFloat(cessAmount);
+			gst.cgst += product.cgstAmount;
+			gst.sgst += product.sgstAmount;
+			gst.igst += product.igstAmount;
 		}
 
-		if($scope.quickBill.totalDiscounttype == 'flat') {
-			getTotalAmount =  $filter('setDecimal')(getTotalAmount - checkGSTValue($scope.quickBill.totalDiscount),$scope.noOfDecimalPoints);
-		}
-		else{
-			var discount = $filter('setDecimal')(getTotalAmount*checkGSTValue($scope.quickBill.totalDiscount)/100,$scope.noOfDecimalPoints);
-			getTotalAmount =  getTotalAmount-discount;
-		}
+		total = $filter('setDecimal')(gst.cgst+gst.sgst+gst.igst,$scope.noOfDecimalPoints);
 
-		var totalOverallTax = checkGSTValue($scope.quickBill.totalCgstPercentage) + checkGSTValue($scope.quickBill.totalSgstPercentage) + checkGSTValue($scope.quickBill.totalIgstPercentage);
-
-		total += $filter('setDecimal')(getTotalAmount*checkGSTValue(totalOverallTax)/100,$scope.noOfDecimalPoints);
-
-		$scope.quickBill.totalCgstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(getTotalAmount,$scope.quickBill.totalCgstPercentage,0),$scope.noOfDecimalPoints);
-		$scope.quickBill.totalSgstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(getTotalAmount,$scope.quickBill.totalSgstPercentage,0),$scope.noOfDecimalPoints);
-		$scope.quickBill.totalIgstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(getTotalAmount,$scope.quickBill.totalIgstPercentage,0),$scope.noOfDecimalPoints);
 		return total;
 	}
 	
@@ -2954,7 +2936,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	
 	/** Preview Bill **/
 	
-		$scope.previewBill = function(size){
+		$scope.previewBill = function(size) {
 			
 			toaster.clear();
 			
@@ -2962,11 +2944,11 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			{
 				console.log('opened');
 				return;
-			} 
+			}
 			
-			 toaster.pop('wait', 'Please Wait', 'popup opening....',600000);
+			toaster.pop('wait', 'Please Wait', 'popup opening....',600000);
 			 
-			if($scope.quickBill.companyId){
+			if($scope.quickBill.companyId) {
 		
 			var modalInstance = $modal.open({
 			  templateUrl: 'app/views/PopupModal/QuickMenu/PreviewBillModal.html',
@@ -3046,7 +3028,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	/** End **/
 
 	/** Invoice **/
-		$scope.goInvoiceNumber = function(){
+		$scope.goInvoiceNumber = function() {
 			
 			toaster.clear();
 			if($scope.quickBill.searchInvoiceNumber == '' || angular.isUndefined($scope.quickBill.searchInvoiceNumber)){
@@ -3059,7 +3041,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				
 				var BillPath = apiPath.getBill+$scope.quickBill.companyId.companyId;
 				var preHeaderData = {'Content-Type': undefined,'invoiceNumber':$scope.quickBill.searchInvoiceNumber};
-				if($scope.saleType == 'SalesOrder'){
+				if($scope.saleType == 'SalesOrder') {
 					preHeaderData.isSalesOrder = 'ok';
 				}
 				preHeaderData.salesType = 'whole_sales';
