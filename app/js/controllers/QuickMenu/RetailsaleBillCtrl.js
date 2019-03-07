@@ -1037,17 +1037,17 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	}
 
 	/* Zero GST when Overall is Arive */
-		$scope.zeroGstApply = function()
+	$scope.zeroGstApply = function()
+	{
+		var count = vm.AccBillTable.length;
+		for(var i = 0; i < count; i++)
 		{
-			var count = vm.AccBillTable.length;
-			for(var i = 0; i < count; i++)
-			{
-				vm.AccBillTable[i].cgstPercentage = 0;
-				vm.AccBillTable[i].sgstPercentage = 0;
-				vm.AccBillTable[i].igstPercentage = 0;
-				$scope.calculateTaxReverse(vm.AccBillTable[i],0,0,0,i);
-			}
+			vm.AccBillTable[i].cgstPercentage = 0;
+			vm.AccBillTable[i].sgstPercentage = 0;
+			vm.AccBillTable[i].igstPercentage = 0;
+			$scope.calculateTaxReverse(vm.AccBillTable[i],0,0,0,i);
 		}
+	}
 	/* End */
 
 	//Total Tax For Product Table
@@ -1501,15 +1501,15 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			var EditProducArray = angular.copy(jsonProduct.inventory);
 			var count = EditProducArray.length;
 
-			for(var w=0;w<count;w++){
+			var d = 0;
+			for(var w=0;w<count;w++) {
 				
-				var d = 0;
 				var setData = EditProducArray[w];
 				//apiCall.getCall(apiPath.getAllProduct+'/'+setData.productId).then(function(resData){
 				productFactory.getSingleProduct(setData.productId).then(function(resData){
 					
 					/** Tax **/
-					vm.AccBillTable[d].productName = resData.productName;
+					vm.AccBillTable[d].productName = resData[$scope.displayProductName];
 					if (angular.isArray(setData.itemizeDetail)) {
 						vm.AccBillTable[d].itemizeDetail = setData.itemizeDetail;
 					}else if(setData.itemizeDetail == ''){
@@ -4118,12 +4118,12 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			var itemTable = '';
 			angular.forEach($scope.form.AccBillTable, function(value,key){
 				itemTable += value.productName+`</td>
-							<td style="font-size: .5em;color: #666;line-height: 1.2em;">`+value.qty+`</td>
-							<td style="font-size: .5em;color: #666;line-height: 1.2em;">`+value.price+`</td>
-							<td style="font-size: .5em;color: #666;line-height: 1.2em;">`+value.amount+`</td>
+							<td style="font-size: 1.1em;line-height: 1.2em;">`+value.qty+`</td>
+							<td style="font-size: 1.1em;line-height: 1.2em;">`+value.price+`</td>
+							<td style="font-size: 1.1em;line-height: 1.2em;text-align: center;">`+value.amount+`</td>
 							`;
 				if (key < $scope.form.AccBillTable.length - 1) {
-					itemTable += `</tr><tr style="border-bottom: 1px solid #EEE;"><td style="font-size: .5em;color: #666;line-height: 1.2em;">`;
+					itemTable += `</tr><tr style="border-bottom: 1px solid #000;"><td style="font-size: 1.1em;line-height: 1.2em;">`;
 				}
 			});
 
@@ -4132,7 +4132,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			billArrayTag.CompanyWebsite = $scope.quickBill.companyId.websiteName == undefined || $scope.quickBill.companyId.websiteName == '' ? '' : $scope.quickBill.companyId.websiteName;
 			billArrayTag.CompanyContact = $scope.quickBill.companyId.customerCare == undefined || $scope.quickBill.companyId.customerCare == '' ? '' : $scope.quickBill.companyId.customerCare;
 			billArrayTag.CompanyEmail = $scope.quickBill.companyId.emailId == 'undefined' || $scope.quickBill.companyId.emailId == '' ? '' : $scope.quickBill.companyId.emailId;
-			billArrayTag.CompanyAdd = $scope.quickBill.companyId.address1 == 'undefined' ? '' : $scope.quickBill.companyId.address1 +' '+ $scope.quickBill.companyId.address2 == 'undefined' ? '' : ', '+$scope.quickBill.companyId.address2;
+			billArrayTag.CompanyAdd = $scope.quickBill.companyId.address1 == 'undefined' ? '' : $scope.quickBill.companyId.address1 +' '+ ($scope.quickBill.companyId.address2 == 'undefined' ? '' : ', '+$scope.quickBill.companyId.address2);
 			billArrayTag.CreditCashMemo = "CASH";
 			
 			billArrayTag.BILLLABEL = 'Tax Invoice';
@@ -4151,7 +4151,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			billArrayTag.TotalRoundableAmount = $filter('number')($scope.total_without_expense,$scope.noOfDecimalPoints);
 
 			billArrayTag.RoundTotal = $filter('number')(Math.round($scope.total_without_expense),$scope.noOfDecimalPoints);
-			billArrayTag.RoundFigure = Math.round($scope.total_without_expense) - $scope.total_without_expense;
+			billArrayTag.RoundFigure =  $filter('number')(Math.round($scope.total_without_expense) - $scope.total_without_expense,$scope.noOfDecimalPoints);
 
 			billArrayTag.TotalTax = $scope.quickBill.tax;
 
