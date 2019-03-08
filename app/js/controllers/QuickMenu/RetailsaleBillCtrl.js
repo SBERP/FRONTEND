@@ -170,7 +170,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					// $scope.totalTd = $scope.divTag==false ? '12' : '13';
 					if($scope.divTag==false && $scope.enableDisableFrameNo==false)
 					{
-						if($scope.enableDisableAdvanceMou == true){
+						if($scope.enableDisableAdvanceMou == true) {
 							$scope.colspanAdvanceValue = '6';
 							$scope.colspanValue = '5';
 							$scope.totalTd = '12';
@@ -185,13 +185,13 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					else if($scope.divTag==false || $scope.enableDisableFrameNo==false)
 					{
 						$scope.colspanAdvanceValue = '6';
-						$scope.colspanValue = '5';
+						$scope.colspanValue = '6';
 						$scope.totalTd = '12';
 					}
 					else
 					{
 						$scope.colspanAdvanceValue = '7';
-						$scope.colspanValue = '6';
+						$scope.colspanValue = '7';
 						$scope.totalTd = '13';
 					}
 					// $scope.colspanAdvanceValue = $scope.divTag==false ? '6' : '7';
