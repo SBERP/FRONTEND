@@ -1060,19 +1060,21 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		var gst = {
 			sgst:0,
 			cgst:0,
-			igst:0
+			igst:0,
+			cess:0
 		};
 
 		for(var i = 0; i < count; i++)
 		{
 			var product = vm.AccBillTable[i];
 			// var vartax = vm.productTax[i];
-			gst.cgst += product.cgstAmount;
-			gst.sgst += product.sgstAmount;
-			gst.igst += product.igstAmount;
+			gst.cgst += parseFloat(product.cgstAmount);
+			gst.sgst += parseFloat(product.sgstAmount);
+			gst.igst += parseFloat(product.igstAmount);
+			gst.cess += parseFloat(product.cessAmount);
 		}
 
-		total = $filter('setDecimal')(gst.cgst+gst.sgst+gst.igst,$scope.noOfDecimalPoints);
+		total = $filter('setDecimal')(gst.cgst+gst.sgst+gst.igst+gst.cess,$scope.noOfDecimalPoints);
 
 		return total;
 	}
