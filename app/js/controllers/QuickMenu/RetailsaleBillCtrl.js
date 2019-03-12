@@ -156,7 +156,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					$scope.enableDisableSize = arrayData1.productSizeStatus=="enable" ? true : false;
 					$scope.enableDisableVariant = arrayData1.productVariantStatus=="enable" ? true : false;
 					$scope.enableDisableFrameNo = arrayData1.productFrameNoStatus=="enable" ? true : false;
-					$scope.divTag = $scope.enableDisableColor == false && $scope.enableDisableSize == false ? false : true;
+					$scope.divTag = $scope.enableDisableColor == false && $scope.enableDisableSize == false && $scope.enableDisableVariant == false ? false : true;
 					if (arrayData1.productMeasurementType == 'Unit Measurement') {
 						$scope.enableDisableLWHSetting = true;
 					}
@@ -1156,7 +1156,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					calcWidth = parseFloat(item.widthValue);
 					calcHeight = parseFloat(item.heightValue);
 				}
-				$scope.enableDisableLWHArray[index].totalFt = $filter('setDecimal')(parseFloat(item.qty)*item.lengthValue*item.widthValue*item.heightValue/parseFloat(item.devideFactor),$scope.noOfDecimalPoints);
+				vm.AccBillTable[index].totalFt = $filter('setDecimal')(parseFloat(item.qty)*item.lengthValue*item.widthValue*item.heightValue/parseFloat(item.devideFactor),$scope.noOfDecimalPoints);
 				var calcQty = $filter('setDecimal')(parseFloat(item.qty)*calcLength*calcWidth*calcHeight/parseFloat(item.devideFactor),$scope.noOfDecimalPoints);
 			}else{
 				var calcQty = item.qty;
@@ -1233,7 +1233,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					calcWidth = parseFloat(item.widthValue);
 					calcHeight = parseFloat(item.heightValue);
 				}
-				$scope.enableDisableLWHArray[index].totalFt = $filter('setDecimal')(parseFloat(item.qty)*item.lengthValue*item.widthValue*item.heightValue/parseFloat(item.devideFactor),$scope.noOfDecimalPoints);
+				vm.AccBillTable[index].totalFt = $filter('setDecimal')(parseFloat(item.qty)*item.lengthValue*item.widthValue*item.heightValue/parseFloat(item.devideFactor),$scope.noOfDecimalPoints);
 				var calcQty = $filter('setDecimal')(parseFloat(item.qty)*calcLength*calcWidth*calcHeight/parseFloat(item.devideFactor),$scope.noOfDecimalPoints);
 			}else{
 				var calcQty = item.qty;
