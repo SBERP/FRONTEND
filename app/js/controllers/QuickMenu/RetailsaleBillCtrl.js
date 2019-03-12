@@ -2029,7 +2029,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	$scope.pop = function(generate)
 	{
 		// $scope.disableButton = true;
-		if ($scope.enableQuotationWorkflow && ($scope.saleType == 'QuotationPrint' || $scope.saleType == 'SalesOrder')) {
+		if ($scope.enableQuotationWorkflow && ($scope.saleType == 'QuotationPrint')) {
 			if (Modalopened) return;
 			toaster.pop('wait', 'Please Wait', 'popup opening....',600000);
 
