@@ -1,0 +1,82 @@
+<style>.hackyhack{position:relative}.hackyhack .dropdown-menu{left:auto!important;right:0}h4 .control-label{font-size:13px!important}.contentOfForm{padding-left:11px;padding-right:7px}.goButton{padding:6px 16px}.imageAncher{position:relative;vertical-align:middle;display:inline-block}.myCrossDesign{position:absolute;top:0;right:0;height:20px;width:20px;color:#eb615f;font-size:20px}.myCrossDesign:hover{color:red}.documentRight{display:block;position:absolute;top:10%;right:60%;font-size:40px;color:#88bf57}.documentRight:hover{color:green}.documentCross{display:block;position:absolute;font-size:40px;color:#eb615f;top:10%;right:20%}.documentCross:hover{color:red}.input-file{position:relative;margin:60px 60px 0}.input-file .input-group-addon{border:0;padding:0}.input-file .input-group-addon .btn{border-radius:0 4px 4px 0}.input-file .input-group-addon input{cursor:pointer;position:absolute;width:72px;z-index:2;top:0;right:0;filter:alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent}.myCursorPointer{cursor: pointer;}
+</style>
+<h3>
+	<small>
+   <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+   <a ui-sref="app.QuotationFlowView" ng-if="headerType == 'Quotations Process'" > {{headerType}} </a>>>
+   View Data {{headerType}}</small>
+</h3>
+   <div   class="container-fluid" >
+		<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+		<div id="panelDemo14" class="panel panel-default">
+			<div class="panel-heading myHeading">
+				<h5>Data of <b>{{displayCompany}}</b> Company <span ng-if="displayBranch"> in <b>{{displayBranch}}</b></span> Between {{accView.fromDate}} to {{accView.toDate}}</h5> 
+			</div>
+
+			<div class="panel-body">
+				<div class="col-md-12">
+					<div class="col-md-1" ng-repeat="user in statusCounts track by user.statusId">
+						<div class="myCursorPointer panel" ng-class="compareActiveStatus(user)" ng-click="loadStatusData(user)">
+					        <div class="panel-body text-center">
+					        	<h4 class="mt0">{{user.statusCount}}</h4>
+					        	<p class="mb0 text-muted">{{user.status}}</p>
+					        </div>
+					    </div>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+	         	<div data-toggle="tooltip" data-title="Show/Hide Column" class="checkbox c-checkbox" ng-if="headerType == 'Quotations Process'" >
+					<label class="mr-lg" ng-repeat="item in columnHideShow track by $index" >
+						<input type="checkbox" ng-model="columnHideShow[$index][item.itemKey]" ng-change="table.tableParams.reload()"  />
+						<span class="fa fa-check"></span>{{::item.displayName}}
+					</label>
+				</div>
+				<div class="table-responsive">
+			      	<table ng-table="table.tableParams"  show-filter="true" class="table table-bordered table-striped" >
+			          	<tbody>
+			            	<tr ng-repeat="user in $data | filter: activeStatus track by (user.quotationBillId+user.total+user.clientName+$index)"  >
+			            		<td data-title="'#'"  style="text-align:center">{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td>
+			               		<td title="'Invoice#'"  sortable="'quotationNumber'" filter="{ 'quotationNumber': 'text' }" >{{::user.quotationNumber}}</td>
+			               		<td title="'Date'" sortable="'date'" filter="{ 'entryDate': 'text' }" >{{::dateConvert(user.entryDate) | date:dateFormat}}</td>
+			               		<td ng-show="table.tableParams.branchNameFlag" title="'Branch Name'" filter="{ 'branchName': 'text' }" >{{user.branchName}}</td>
+			               		<td title="'Client Name'"  filter="{ 'clientName': 'text' }" >{{::user.clientName}}</td>
+			               		<td ng-show="table.tableParams.productsFlag" title="'Products'" >
+				                  	<ul>
+				                     	<li ng-repeat="prt in user.displayProduct track by (prt.productId+prt.productName+prt.amount+$index)">
+				                        	{{::prt.productName}}
+				                     	</li>
+				                  	</ul>
+				               	</td>
+			               
+			               		<td title="'Tax'" filter="{ 'tax': 'text' }" style="text-align:right">{{::user.tax}}</td>
+			               		<td title="'Total'" filter="{ 'total': 'text' }" style="text-align:right">{{::user.total}}</td>
+			               		<td title="'Action'" style="width:20%">
+			                		<center>
+			                     	<i class="fa fa-share-square-o myCursorPointer" style="font-size:17px;color:#10709f" title="Convert to Sales Order" ng-click="convertToSales(user.quotationBillId)"></i>
+			                    	<i class="icon-repeat myCursorPointer" style="font-size:17px;color:#10709f" ng-if="user.repeatIcon" ng-click="reGeneratePdf(user.quotationBillId)" > </i>
+			                     
+			                     	&nbsp;
+			                     
+				                    <a href="{{erpPath}}{{user.file[0].documentUrl}}{{user.file[0].documentName}}" target="_blank"  ng-if="user.singlePdfIcon">
+				                        <i  class="fa fa-file" style="font-size:17px;color:#10709f"> </i>
+				                    </a>
+			                    	&nbsp;
+			                     	<i class="fa fa-file myCursorPointer" style="font-size:17px;color:#10709f" ng-if="user.pdfIcon"  ng-click="openPdf('lg',user.saleId)" > </i>
+			                     
+			                     &nbsp; 
+			                     
+			                     <i ng-click="editDataViewSales(user.quotationBillId)" class="fa fa-edit myCursorPointer" style="font-size:17px;color:#10709f"> </i>
+			                     
+			                     &nbsp; 
+			                    <i ng-click="deleteBill('sm',user.quotationBillId,'quote')" ng-if="headerType == 'Quotations Process'" class="fa fa-times-circle myCursorPointer" style="font-size:17px;color:red"></i>
+			                  	</center>
+			               </td>
+			            </tr>
+			          </tbody>
+			      </table>
+			   	</div>
+			     <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" ></span>
+			</div>
+		</div>
+	</div>
+</h3>

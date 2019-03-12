@@ -252,6 +252,16 @@ $scope.enableDisableEmailId = false;
 			
 			$state.go("app.AccDataWholeSales");
 		}
+		else if($scope.viewDataTypePath == 'Sales Orders'){
+			
+			$state.go("app.AccDataSalesOrders");
+		}
+		else if($scope.viewDataTypePath == 'Quotations'){
+			$state.go("app.AccDataQuotations");
+		}
+		else if($scope.viewDataTypePath == 'Quotations Process'){
+			$state.go("app.AccDataQuotationsFlow");
+		}
 		else if($scope.viewDataTypePath == 'purchase'){
 			
 			$state.go("app.AccDataPurchase");

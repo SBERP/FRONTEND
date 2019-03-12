@@ -364,16 +364,16 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
 				}
 			})
         })
-		//Accounting Data Sales
-		.state('app.AccDataSales', {
+        //Accounting Data Sales
+        .state('app.AccDataSales', {
             url: '/AccDataSales',
             templateUrl: basepath('Accounting/viewData/AccDataViews.html'),
-			controller: 'AccViewDataController as table',
+            controller: 'AccViewDataController as table',
             resolve: angular.extend(requireDeps('ngTable', 'ngTableExport','angular-chosen','flot-chart','flot-chart-plugins','toaster'),{
-				headerType: function(){
-					return 'sales';
-				}
-			})
+                headerType: function(){
+                    return 'sales';
+                }
+            })
         })
 		//Accounting View Retail Sales
 		.state('app.AccViewRetailSales', {
@@ -386,27 +386,94 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
 				}
 			})
         })
-		//Accounting Data Retail Sales
-		.state('app.AccDataRetailSales', {
+        //Accounting Data Retail Sales
+        .state('app.AccDataRetailSales', {
             url: '/AccDataRetailSales',
             templateUrl: basepath('Accounting/viewData/AccDataViews.html'),
-			controller: 'AccViewDataController as table',
+            controller: 'AccViewDataController as table',
             resolve: angular.extend(requireDeps('ngTable', 'ngTableExport','angular-chosen','toaster'),{
+                headerType: function(){
+                    return 'Retailsales';
+                }
+            })
+        })
+        //Accounting Data Retail Sales
+        .state('app.AccDataQuotations', {
+            url: '/AccDataQuotations',
+            templateUrl: basepath('Accounting/viewData/AccDataViews.html'),
+            controller: 'AccViewDataController as table',
+            resolve: angular.extend(requireDeps('ngTable', 'ngTableExport','angular-chosen','toaster','moment'),{
+                headerType: function(){
+                    return 'Quotations';
+                }
+            })
+        })
+        //Accounting Data Retail Sales
+        .state('app.AccDataQuotationsFlow', {
+            url: '/AccDataQuotationsFlow',
+            templateUrl: basepath('Accounting/viewData/AccFlowViews.html'),
+            controller: 'AccFlowViewController as table',
+            resolve: angular.extend(requireDeps('ngTable', 'ngTableExport','angular-chosen','toaster','moment'),{
+                headerType: function(){
+                    return 'Quotations Process';
+                }
+            })
+        })
+		//Accounting Data Retail Sales
+		.state('app.AccDataSalesOrders', {
+            url: '/AccDataSalesOrders',
+            templateUrl: basepath('Accounting/viewData/AccDataViews.html'),
+			controller: 'AccViewDataController as table',
+            resolve: angular.extend(requireDeps('ngTable', 'ngTableExport','angular-chosen','toaster','moment'),{
 				headerType: function(){
-					return 'Retailsales';
+					return 'Sales Orders';
 				}
 			})
         })
-		//Accounting View Whole Sales
-		.state('app.AccViewWholeSales', {
+        //Accounting View Whole Sales
+        .state('app.AccViewWholeSales', {
             url: '/AccViewWholeSales',
             templateUrl: basepath('Accounting/viewData/AccView.html'),
-			controller: 'AccViewController as form',
+            controller: 'AccViewController as form',
             resolve: angular.extend(requireDeps('toaster','angular-chosen'),{
+                viewDataType: function(){
+                    return 'Wholesales';
+                }
+            })
+        })
+        //Accounting View Sales Orders
+        .state('app.AccViewSalesOrders', {
+            url: '/AccViewSalesOrders',
+            templateUrl: basepath('Accounting/viewData/AccView.html'),
+            controller: 'AccViewController as form',
+            resolve: angular.extend(requireDeps('ngTable', 'ngTableExport','angular-chosen','toaster','moment'),{
+                viewDataType: function(){
+                    return 'Sales Orders';
+                }
+            })
+        })
+		//Accounting View Quotations
+		.state('app.AccViewQuotations', {
+            url: '/AccViewQuotations',
+            templateUrl: basepath('Accounting/viewData/AccView.html'),
+			controller: 'AccViewController as form',
+            resolve: angular.extend(requireDeps('ngTable', 'ngTableExport','angular-chosen','toaster','moment'),{
 				viewDataType: function(){
-					return 'Wholesales';
+					return 'Quotations';
 				}
 			})
+        })
+
+        //Accounting Data Sales
+        .state('app.QuotationFlowView', {
+            url: '/QuotationFlowView',
+            templateUrl: basepath('Accounting/viewData/AccView.html'),
+            controller: 'AccViewController as form',
+            resolve: angular.extend(requireDeps('ngTable', 'ngTableExport','angular-chosen','flot-chart','flot-chart-plugins','toaster'),{
+                viewDataType: function(){
+                    return 'Quotations Process';
+                }
+            })
         })
 		//Accounting Data Whole Sales
 		.state('app.AccDataWholeSales', {

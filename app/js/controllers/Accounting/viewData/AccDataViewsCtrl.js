@@ -71,6 +71,16 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 		var getJrnlPath = apiPath.getBill+$rootScope.accView.companyId;
 		var headerData = {'Content-Type': undefined,'fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate,'salestype':'retail_sales'};
 	}
+	else if($scope.headerType == 'Sales Orders'){
+		
+		var getJrnlPath = apiPath.getBill+$rootScope.accView.companyId;
+		var headerData = {'Content-Type': undefined,'fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate,'salestype':'whole_sales','isSalesOrder': 'ok'};
+	}
+	else if($scope.headerType == 'Quotations'){
+		
+		var getJrnlPath = apiPath.postQuotationBill;
+		var headerData = {'Content-Type': undefined,'fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate,'companyId':$rootScope.accView.companyId};
+	}
 	else if($scope.headerType == 'purchase'){
 		
 		var getJrnlPath = apiPath.getLedgerJrnl+$rootScope.accView.companyId;
@@ -379,6 +389,9 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 			}
 
 			params.productsFlag = $scope.columnHideShow[1].productCheckbox;
+			if ($scope.headerType == 'Sales Orders' || $scope.headerType == 'Quotations') {
+				params.refundFlag = false;
+			}
 
 			  var orderedData;
 
@@ -606,6 +619,12 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 			$state.go("app.AccSales");
 			
 		}
+		if($scope.headerType == 'Sales Orders'){
+			$state.go("app.AccSalesOrder");
+		}
+		if($scope.headerType == 'Quotations'){
+			$state.go("app.QuotationPrint");
+		}
 		else if($scope.headerType == 'purchase'){
 			
 			$state.go("app.AccPurchase");
@@ -627,7 +646,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	
 	/** Edit Bill **/
 	
-	if($scope.headerType == 'Wholesales' || $scope.headerType == 'Retailsales' || $scope.headerType == 'Tax-Purchase'){
+	if($scope.headerType == 'Wholesales' || $scope.headerType == 'Retailsales' || $scope.headerType == 'Tax-Purchase' || $scope.headerType == 'Sales Orders' || $scope.headerType == 'Quotations'){
 		
 		$scope.editDataViewSales = function(id){
 			
@@ -653,6 +672,12 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 			}
 			else if($scope.headerType == 'Tax-Purchase'){
 				$state.go("app.PurchaseBill");
+			}
+			else if($scope.headerType == 'Sales Orders'){
+				$state.go("app.AccSalesOrder");
+			}
+			else if($scope.headerType == 'Quotations'){
+				$state.go("app.QuotationPrint");
 			}
 			
 			//getSetFactory.blank();
@@ -689,12 +714,12 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 		
 		modalInstance.result.then(function () {
 		 
-		 console.log('ok');
-		 
 		// return false;
 		 /**Delete Code **/
 		 	if (isPurchaseBill == 'yes'){
 		 		var deletePath = apiPath.postPurchaseBill+'/'+id;
+		 	}else if (isPurchaseBill == 'quote') {
+		 		var deletePath = apiPath.postQuotationBill+'/'+id+'/quote';
 		 	}
 		 	else{
 		 		var deletePath = apiPath.postBill+'/'+id;
@@ -790,7 +815,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 
 				data = response;
 				// console.log('refresh');
-				if($scope.headerType == 'Wholesales' || $scope.headerType == 'Retailsales' || $scope.headerType == 'Tax-Purchase'){
+				if($scope.headerType == 'Wholesales' || $scope.headerType == 'Retailsales' || $scope.headerType == 'Tax-Purchase' || $scope.headerType == 'Sales Orders' || $scope.headerType == 'Quotations'){
 					
 					if ($scope.headerType == 'Tax-Purchase'){
 						$scope.purchaseBillData = response;
@@ -803,7 +828,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 					{
 						$scope.totalAmountDisplay = $filter('setDecimal')( parseFloat($scope.totalAmountDisplay) + parseFloat(data[p].total),2);
 
-						if ($scope.headerType == 'Wholesales') {
+						if ($scope.headerType == 'Wholesales' || $scope.headerType == 'Sales Orders' || $scope.headerType == 'Quotations') {
 							if (!$rootScope.accView.branchId)  {
 								if (angular.isObject(data[p].branch)) {
 									data[p].branchName = data[p].branch.branchName;
@@ -848,7 +873,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 						
 						for(var k=0;k<fileCnt;k++){
 						
-							if(data[p].file[k].documentFormat == 'pdf' && data[p].file[k].documentType == 'bill')
+							if(data[p].file[k].documentFormat == 'pdf' && (data[p].file[k].documentType == 'bill' ||data[p].file[k].documentType == 'quotation'))
 							{
 								flag++;
 							}
