@@ -121,6 +121,8 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 
 	$scope.enableItemizedPurchaseSales = false;
 
+	$scope.enableQuotationWorkflow = false;
+
 	$scope.divTag = false;
 	$scope.divAdvanceMou = false;
 	$scope.colspanValue = '6';
@@ -232,6 +234,11 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					if ($scope.displayProductName == "altProductName") {
 						onGoogleInit();
 					}
+				}
+				else if (response[arrayData].settingType=="workflow") 
+				{
+					var arrayData1 = response[arrayData];
+					$scope.enableQuotationWorkflow = arrayData1.workflowQuotationStatus=="enable" ? true : false;
 				}
 			}
 		}
@@ -2005,10 +2012,54 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 
 	$scope.pop = function(generate)
 	{
-		$scope.disableButton = true;
-		 //$scope.disableButton = true;
-	
-		if($scope.quickBill.EditBillData){
+		// $scope.disableButton = true;
+		if ($scope.enableQuotationWorkflow && ($scope.saleType == 'QuotationPrint')) {
+			if (Modalopened) return;
+			toaster.pop('wait', 'Please Wait', 'popup opening....',600000);
+
+			var modalInstance = $modal.open({
+				templateUrl: 'app/views/PopupModal/Accounting/QuotationFlow.html',
+				controller: 'QuotationFlowController as form',
+				size: 'md',
+				backdrop  : 'static',
+				keyboard  : false,
+				resolve:{
+				  companyId: function(){
+					return $scope.quickBill.companyId.companyId;
+				  },
+				  transactionType: function(){
+				  	return $scope.saleType;
+				  }
+				}
+			});
+
+			Modalopened = true;
+			modalInstance.opened.then(function() {
+				toaster.clear();
+			});
+			modalInstance.result.then(function (returnModalData) {
+				Modalopened = false;
+				if(angular.isObject(returnModalData)){
+					console.log(returnModalData);
+					formdata.set('workflowStatus',returnModalData.statusId.statusId);
+					formdata.set('assignedTo',returnModalData.userId.userId);
+					formdata.set('assignedBy',$rootScope.$storage.authUser.userId);
+					$scope.popFurther(generate);
+				}
+				
+			}, function (returnModalData2) {
+				Modalopened = false;
+				formdata.set('workflowStatus',returnModalData2.statusId);
+				formdata.set('assignedTo',$rootScope.$storage.authUser.userId);
+				formdata.set('assignedBy',$rootScope.$storage.authUser.userId);
+				$scope.popFurther(generate);
+			});
+		}else{
+			$scope.popFurther(generate);
+		}
+  }
+  	$scope.popFurther = function(generate) {
+  		if($scope.quickBill.EditBillData){
 			
 			formdata.delete('companyId');
 			
@@ -2208,22 +2259,19 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			}
 				
 			formdata.set('isDisplay','yes');
-			
-			
 		}
 	 
 	  
 	  
 	 if($scope.changeProductArray){
 		 
-		 var  date = new Date();
+		var  date = new Date();
 		var tdate  = date.getDate()+'-'+(date.getMonth()+1)+'-'+date.getFullYear();
 		
-			if(!formdata.has('transactionDate')){
-				
-				formdata.set('transactionDate',tdate);
-				
-			}
+		if(!formdata.has('transactionDate')){
+			
+			formdata.set('transactionDate',tdate);	
+		}
 		  
 		   
 		 //Inventory
@@ -2460,7 +2508,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				console.log('Encountered server error');
 			 }
 		});
-  }
+  	}
  
 	$scope.cancel = function(copyData = ""){
 		

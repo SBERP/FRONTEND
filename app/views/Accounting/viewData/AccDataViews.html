@@ -11,6 +11,8 @@
    <a ui-sref="app.AccViewPayment" ng-if="headerType == 'payment'" > {{headerType}} </a>
    <a ui-sref="app.AccViewReceipt" ng-if="headerType == 'receipt'" > {{headerType}} </a>
    <a ui-sref="app.AccViewSpecialJrnl" ng-if="headerType == 'specialJournal'" > {{headerType}} </a>
+   <a ui-sref="app.AccViewSalesOrders" ng-if="headerType == 'Sales Orders'" > {{headerType}} </a>
+   <a ui-sref="app.AccViewQuotations" ng-if="headerType == 'Quotations'" > {{headerType}} </a>
    <a ui-sref="app.AccTaxPurchase" ng-if="headerType == 'Tax-Purchase'" > {{headerType}} </a>>>
    View Data {{headerType}}</small>
 </h3>
@@ -21,7 +23,7 @@
 			<h5>Data of <b>{{displayCompany}}</b> Company <span ng-if="displayBranch"> in <b>{{displayBranch}}</b></span> Between {{accView.fromDate}} to {{accView.toDate}}</h5> 
 		 </div>
          <div class="panel-body">
-         	<div data-toggle="tooltip" data-title="Show/Hide Column" class="checkbox c-checkbox" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Tax-Purchase'" >
+         	<div data-toggle="tooltip" data-title="Show/Hide Column" class="checkbox c-checkbox" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Tax-Purchase' || headerType == 'Sales Orders' || headerType == 'Quotations'" >
 				<label class="mr-lg" ng-repeat="item in columnHideShow track by $index" >
 					<input type="checkbox" ng-model="columnHideShow[$index][item.itemKey]" ng-change="table.tableParams.reload()"  />
 					<span class="fa fa-check"></span>{{::item.displayName}}
@@ -41,7 +43,7 @@
 			
 
 			<!-- From-date -->
-         	<div class="col-md-2 pull-right input-group hackyhack mr-lg" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Tax-Purchase'" >
+         	<div class="col-md-2 pull-right input-group hackyhack mr-lg" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Sales Orders' || headerType == 'Tax-Purchase' || headerType == 'Quotations'" >
 				<input type="text" ng-change="table.changeInvoiceDate();loadInit('yes')" datepicker-popup="{{table.format}}"  data-ng-model="table.dt1" is-open="table.openedStart" min-date="table.minStart" max-date="false" datepicker-options="table.dateOptions" date-disabled="table.disabled(table.date, table.mode)" close-text="Close"
 				class="form-control" tabindex="2" readonly />
 				<span class="input-group-btn">
@@ -52,7 +54,7 @@
 			</div>
 
             <tabset>
-               <tab heading="All" ng-if="headerType != 'Wholesales' && headerType != 'Retailsales' && headerType != 'Tax-Purchase'">
+               <tab heading="All" ng-if="headerType != 'Wholesales' && headerType != 'Retailsales' && headerType != 'Sales Orders' &&  headerType != 'Quotations' && headerType != 'Tax-Purchase'">
 				 <div class="table-responsive">
 					<table data-ng-table="table.tableParams"  show-filter="false" class="table table-bordered table-striped"  >
 						<!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
@@ -86,20 +88,20 @@
 				 <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
 			   </tab>
 
-			    <tab heading="All" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales'" ng-click="onSalesBillTabSelect(0)" active="firstTabActive" >
+			    <tab heading="All" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Sales Orders' || headerType == 'Quotations'" ng-click="onSalesBillTabSelect(0)" active="firstTabActive" >
 				 	<div ng-include="'salesBillContentData'" ng-if="currentActiveSalestab == 0">
 				 	</div>
 				</tab>
 
 				<!-- Paid -->
-				 <tab heading="Paid" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales'" ng-click="onSalesBillTabSelect(1)" active="secondTabActive" >
+				 <tab heading="Paid" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Sales Orders' ||  headerType == 'Quotations'" ng-click="onSalesBillTabSelect(1)" active="secondTabActive" >
 					<div ng-include="'salesBillContentData'" ng-if="currentActiveSalestab == 1">
 				 	</div>
 				</tab>
 				<!-- Paid -->
 
 				<!-- Unpaid -->
-				 <tab heading="Unpaid" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales'" ng-click="onSalesBillTabSelect(2)" active="thirdTabActive" >
+				 <tab heading="Unpaid" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Sales Orders' ||  headerType == 'Quotations'" ng-click="onSalesBillTabSelect(2)" active="thirdTabActive" >
 				 	<div ng-include="'salesBillContentData'" ng-if="currentActiveSalestab == 2">
 				 	</div>
 				</tab>
@@ -126,7 +128,7 @@
 				<!--End -->
 
 				<!-- End -->
-               <tab heading="Chart" ng-if="headerType != 'Wholesales' && headerType != 'Retailsales' && headerType != 'Tax-Purchase'">
+               <tab heading="Chart" ng-if="headerType != 'Wholesales' && headerType != 'Sales Orders' && headerType != 'Retailsales' && headerType != 'Tax-Purchase'">
 					<div class="row">
 					  <div class="col-lg-6">
 						 <div class="panel panel-transparent">
@@ -205,7 +207,7 @@
                <td title="'Tax'" filter="{ 'tax': 'text' }" style="text-align:right">{{::user.tax}}</td>
                <td title="'Advance'"  filter="{ 'advance': 'text' }" style="text-align:right">{{::user.advance}}</td>
                <td title="'Balance'"  filter="{ 'balance': 'text' }" style="text-align:right">{{::user.balance}}</td>
-               <td title="'Refund'"  filter="{ 'refund': 'text' }" style="text-align:right">{{::user.refund}}</td>
+               <td ng-show="table.tableParams.refundFlag" title="'Refund'"  filter="{ 'refund': 'text' }" style="text-align:right">{{::user.refund}}</td>
                <td title="'Total'" filter="{ 'total': 'text' }" style="text-align:right">{{::user.total}}</td>
                <td title="'Action'" style="width:20%" header="'ng-table/headers/stickerIcon.html'" >
                 <center>
@@ -239,13 +241,15 @@
                         Payment
                      </button>
                      
-                     <button type="button" ng-click="openPayment('lg',user.saleId,'refund')" class="mr mb-sm btn btn-primary" style="padding:4px 8px;margin-bottom:0px;margin-right:0px;" ng-if="user.balance == 0 && (user.advance-user.refund) > 0">
+                     <button type="button" ng-if="headerType != 'Sales Orders' && headerType != 'Quotations'" ng-click="openPayment('lg',user.saleId,'refund')" class="mr mb-sm btn btn-primary" style="padding:4px 8px;margin-bottom:0px;margin-right:0px;" ng-if="user.balance == 0 && (user.advance-user.refund) > 0">
                         Refund
                      </button>
                      
                      &nbsp;
                      
-                    <i ng-click="deleteBill('sm',user.saleId)" class="fa fa-times-circle myCursorPointer" style="font-size:17px;color:red"></i>
+                    <i ng-click="deleteBill('sm',user.saleId)" ng-if="headerType != 'Quotations'" class="fa fa-times-circle myCursorPointer" style="font-size:17px;color:red"></i>
+
+                    <i ng-click="deleteBill('sm',user.quotationBillId,'quote')" ng-if="headerType == 'Quotations'" class="fa fa-times-circle myCursorPointer" style="font-size:17px;color:red"></i>
          
                   	</center>
                </td>

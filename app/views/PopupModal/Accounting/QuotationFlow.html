@@ -1,0 +1,25 @@
+<div class="modal-header" data-ng-class="app.theme.brand">
+	<h4 id="myModalLabel" class="modal-title">Do you want to send the Quotation to new Level?</h4>
+</div>
+<div class="modal-body my-model-body">
+	<center>
+		<form action="#" name="formWorkFlow" class="form-validate form-horizontal" autocomplete="off">
+			<div class="form-group">
+		 		<label  class="col-sm-2 control-label" style="padding-left: 2px;">Send for:</label>
+				<div class="col-sm-4 contentOfForm" >
+					<select chosen="" data-ng-model="quotationStatus" name="statusDropDown" data-ng-options="s.status for s in form.statusDrop track by s.statusId" class="form-control input-sm chosen-select btn-sm"></select>
+				</div>
+				<label  class="col-sm-2 control-label" style="padding-left: 2px;">Assign To:</label>
+				<div class="col-sm-4 contentOfForm" >
+					<select chosen="" data-ng-model="assignTo" name="userDropDown" data-ng-options="s.userName for s in form.userDrop track by s.userId " class="form-control input-sm chosen-select btn-sm"></select>
+				</div>
+			</div>
+			<div class="form-group">
+				<span class="text-info">Note: </span><p>Select Status to which you want to submit the Quotation to, and Select the user to whom you want to assign.</p>
+			</div>
+			<hr/>
+			<button type="button" class="mr mb-sm btn btn-success pull-right" data-ng-click="ok()" class="btn btn-primary" ng-disabled="formWorkFlow.$invalid">Save</button>
+			<button type="button" class="mr mb-sm btn btn-danger pull-right" data-ng-click="cancel()">Skip</button>
+		</form>
+	</center>
+</div>

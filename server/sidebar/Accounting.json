@@ -1,4 +1,12 @@
 [
+
+  {
+    "text": "Quotation Flow",
+    "sref": "app.QuotationFlowView",
+    "icon": "fa fa-sitemap",
+    "permission":"sales",
+    "setting":"workflow"
+  },
   {
     "text": "Sales",
     "sref": "#",
@@ -27,8 +35,12 @@
   },
   {
     "text": "Sales Order",
-    "sref": "app.AccSalesOrder",
+    "sref": "#",
     "icon": "fa fa-credit-card",
+    "subnav": [
+      { "text": "Add/Edit", "sref": "app.AccSalesOrder", "translate": "" },
+      { "text": "Sales Orders", "sref": "app.AccViewSalesOrders", "translate": "" }
+    ],
     "permission":"salesOrder"
   },
   {
@@ -39,8 +51,12 @@
   },
   {
     "text": "Quotation",
-    "sref": "app.QuotationPrint",
+    "sref": "#",
     "icon": "fa fa-quora",
+    "subnav": [
+      { "text": "Add/Edit", "sref": "app.QuotationPrint", "translate": "" },
+      { "text": "Quotations", "sref": "app.AccViewQuotations", "translate": "" }
+    ],
     "permission":"quotation"
   },
   {

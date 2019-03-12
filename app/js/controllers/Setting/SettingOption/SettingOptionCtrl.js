@@ -67,6 +67,7 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 				var inventoryFlag=0;
 				var advanceBillFlag=0;
 				var languageFlag=0;
+				var workFlowFlag=0;
 				for(var arrayData=0;arrayData<responseLength;arrayData++)
 				{
 					if(angular.isObject(response2) || angular.isArray(response2))
@@ -158,6 +159,14 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 							$scope.enableLanguageHindi = arrayData1.languageSettingType=="hindi" ? true : false;
 						}
 
+						if(response2[arrayData].settingType=="workflow")
+						{
+							workFlowFlag=1;
+							$scope.insertUpdateWorkFlowLabel = "Update";
+							var arrayData1 = response2[arrayData];
+							$scope.enableworkFlowQuotation = arrayData1.workflowQuotationStatus=="enable" ? true : false;
+						}
+
 						if(response2[arrayData].settingType=="advance")
 						{
 							advanceBillFlag=1; 
@@ -200,6 +209,10 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 				{
 					$scope.insertUpdateLanguageLabel = "Insert";
 				}
+				if(workFlowFlag==0)
+				{
+					$scope.insertUpdateWorkFlowLabel = "Insert";
+				}
 				if(advanceBillFlag==0)
 				{
 					$scope.insertUpdateAdvanceBillLabel = "Insert";
@@ -215,6 +228,7 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 		$scope.productFlag = 0;
 		$scope.inventoryFlag = 0;
 		$scope.languageFlag = 0;
+		$scope.workFlowFlag = 0;
 		$scope.clientFlag = 0;
 		$scope.billFlag = 0;
 		$scope.advanceBillFlag = 0;
@@ -266,6 +280,9 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 		}
 		$scope.changeInLanguage = function(key,value){
 			$scope.languageFlag = 1;
+		}
+		$scope.changeInWorkFlow = function(key,value){
+			$scope.workFlowFlag = 1;
 		}
 		$scope.changeInClient = function(key,value){
 			
@@ -581,6 +598,37 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 				});
 			}else{
 				toaster.pop('info','language-Data','Please Change Data');
+			}
+		}
+		$scope.AddUpdateWorkFlowSetting = function() {
+			toaster.clear();
+			if($scope.workFlowFlag == 1){
+				var workFlowData = new FormData();
+				if($scope.enableworkFlowQuotation==true)
+				{
+					workFlowData.append('workflowQuotationStatus','enable');
+				} else {
+					workFlowData.append('workflowQuotationStatus','disable');
+				}
+				if ($scope.insertUpdateWorkFlowLabel == "Update") {
+					var apiPostPatchCall = apiCall.patchCall;
+				}
+				else{
+					var apiPostPatchCall = apiCall.postCall;
+				}
+				apiPostPatchCall(apiPath.settingOption,workFlowData).then(function(response){
+					if(apiResponse.ok == response){
+						
+						$scope.getOptionSettingData();
+						toaster.pop('success','Language-Data',$scope.insertUpdateWorkFlowLabel+' Successfull');
+						$scope.workFlowFlag = 0;
+					}
+					else{
+						toaster.pop('warning','Opps!!',response);
+					}
+				});
+			}else{
+				toaster.pop('info','workFlow-Data','Please Change Data');
 			}
 		}
 		//Add-Update client data
