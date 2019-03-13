@@ -555,7 +555,12 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		
 		$scope.changeProductArray = true;
 
-		
+		if ($scope.displayProductName == "altProductName") {
+			/* To Load Hindi Transliteration by Class */
+			setTimeout(function() {
+				onLoad();
+			}, 500);
+		}
     };
 
 
@@ -1518,7 +1523,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				productFactory.getSingleProduct(setData.productId).then(function(resData){
 					
 					/** Tax **/
-					vm.AccBillTable[d].productName = resData[$scope.displayProductName];
+					vm.AccBillTable[d].productName = resData[$scope.displayProductName] ? resData[$scope.displayProductName] : resData.productName;
 					if (angular.isArray(setData.itemizeDetail)) {
 						vm.AccBillTable[d].itemizeDetail = setData.itemizeDetail;
 					}else if(setData.itemizeDetail == ''){
@@ -4273,8 +4278,9 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	    // Create an instance on TransliterationControl with the required options.
 	    var control = new google.elements.transliteration.TransliterationControl(options);
 	    // Enable transliteration in the textfields with the given ids.
-	    var ids = ["productNameId"];
-	    control.makeTransliteratable(ids);
+	    // var ids = ["productNameId"];
+	    var classes = document.getElementsByClassName('productNameClass');
+	    control.makeTransliteratable(classes);
 
 	    // Show the transliteration control which can be used to toggle between English and Hindi and also choose other destination language.
 	    // control.showControl('translControl');
@@ -4284,6 +4290,5 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	  // 	google.setOnLoadCallback(onLoad);
 	  // 	onLoad();
 	  // }, 5000);
-
 }
 RetailsaleBillController.$inject = ["$rootScope","$scope","apiCall","apiPath","$http","$window","$modal","validationMessage","saleType","productArrayFactory","getSetFactory","toaster","apiResponse","$anchorScroll","maxImageSize","$sce","$templateCache","getLatestNumber","productFactory","stateCityFactory","$filter","$state","clientFactory","fetchArrayService","bankFactory"];
