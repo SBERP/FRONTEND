@@ -6,7 +6,7 @@
 
 App.controller('AccViewDataController', AccViewDataController);
 
-function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,apiCall,apiPath,flotOptions, colors,$timeout,getSetFactory,$state,headerType,$modal,$window,toaster,apiResponse,apiDateFormate) {
+function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,apiCall,apiPath,flotOptions, colors,$timeout,getSetFactory,$state,headerType,$modal,$window,toaster,apiResponse,apiDateFormate, productFactory) {
   'use strict';
   var vm = this;
   var data = [];
@@ -844,27 +844,32 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 						data[p].pdfIcon = false;
 						data[p].singlePdfIcon = false;
 						var productArrays = JSON.parse(data[p].productArray);
+						// console.log("productArrays.",productArrays);
+						// data[p].displayProduct = productArrays.inventory;
+						data[p].displayProduct = [];
 
-						data[p].displayProduct = productArrays.inventory;
-
-						// var invCnt = productArrays.inventory.length;
-						// var invIndex = 0;
-						// while(invIndex < invCnt)
-						// {
-						// 	console.log(productArrays.inventory[0].productId);
-						// 	if(productArrays.inventory[invIndex].productId)
-						// 	{
-						// 		var proId = productArrays.inventory[invIndex].productId;
-						// 		productFactory.getSingleProduct(proId,function(proResponse){
-						// 			console.log("here",proResponse);
-						// 			if(angular.isObject(proResponse)){
-						// 				console.log(proResponse);
-						// 				data[p].displayProduct.push(angular.copy(proResponse));
-						// 			}
-						// 		});
-						// 	}
-						// 	invIndex++;
-						// }
+						var invCnt = productArrays.inventory.length;
+						var invIndex = 0;
+						while(invIndex < invCnt)
+						{
+							if(productArrays.inventory[invIndex].productId)
+							{
+								(function(proId,pIndex) {
+									// console.log('pehla id aaveli..',proId);
+									productFactory.getSingleProduct(proId).then(function(proResponse) {
+										console.log("ab idhar..",pIndex);
+										// (function(pId) {
+											// console.log("here",pId);
+											if(angular.isObject(proResponse)) {
+												// console.log('abe idhar....',proResponse);
+												data[pIndex].displayProduct.push(angular.copy(proResponse));
+											}
+										// })(pIndex);
+									});
+								})(productArrays.inventory[invIndex].productId,p);
+							}
+							invIndex++;
+						}
 
 						var fileCnt = data[p].file.length;
 						
@@ -1530,4 +1535,4 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 
 	/* End */
 }
-AccViewDataController.$inject = ["$rootScope","$scope", "$filter","$http", "ngTableParams","apiCall","apiPath","flotOptions","colors","$timeout","getSetFactory","$state","headerType","$modal","$window","toaster","apiResponse","apiDateFormate"];
+AccViewDataController.$inject = ["$rootScope","$scope", "$filter","$http", "ngTableParams","apiCall","apiPath","flotOptions","colors","$timeout","getSetFactory","$state","headerType","$modal","$window","toaster","apiResponse","apiDateFormate","productFactory"];
