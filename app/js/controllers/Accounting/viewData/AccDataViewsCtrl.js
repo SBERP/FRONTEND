@@ -108,14 +108,34 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 		var headerData = {'Content-Type': undefined,'journalType':'special_journal','fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate};
 	}
   
-	  // console.log($rootScope.accView.companyId);
-	  // console.log($rootScope.accView.fromDate);
-	  // console.log($rootScope.accView.toDate);
+	// console.log($rootScope.accView.companyId);
+	// console.log($rootScope.accView.fromDate);
+	// console.log($rootScope.accView.toDate);
+	var settingResponse = [];
+	$scope.isLanguageHindi = false;
+	
+	$scope.getOptionSettingData = function() {
+		apiCall.getCall(apiPath.settingOption).then(function(response) {
+			settingResponse = response;
+			var responseLength = settingResponse.length;
+			for(var arrayData=0;arrayData<responseLength;arrayData++)
+			{
+				if(angular.isObject(response) || angular.isArray(response))
+				{
+					if(response[arrayData].settingType=="language")
+					{
+						var arrayData1 = response[arrayData];
+						$scope.isLanguageHindi = arrayData1.languageSettingType=="hindi" ? true : false;
+					}
+				}
+			}
+			console.log("seting data..",settingResponse);
+		});
+	}
 
 	function getTotalValue (fData)
 	{
 		$scope.totalAmountDisplay = $filter('setDecimal')(fData.reduce((a, b) => a + parseFloat(b['total']), 0),2);
-
 	}
 
 	$scope.currentActiveSalestab = 0;  // Currently Open Tab is "All" Tab
@@ -213,6 +233,8 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	  		toaster.clear();
 			toaster.pop('wait', 'Please Wait', 'Data Loading....',30000);
 
+			$scope.getOptionSettingData(); //Load Setting Data
+
 	  		if (onDateChange != null)
 	  		{
 	  			$rootScope.accView.fromDate = moment(vm.dt1).format(apiDateFormate);
@@ -237,6 +259,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	  	}
 		
 		$scope.loadInit();
+
 
 	$scope.displayProduct = function(productArray)
 	{
