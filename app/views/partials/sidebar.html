@@ -28,7 +28,7 @@
          <!-- START sidebar nav-->
          <ul class="nav" data-ng-class="app.topbar.isCollapsed ? 'my-topbar-margin':'' ">
             <!-- Iterates over all sidebar items-->
-			<li data-ng-class="[getSidebarItemClass(item),'ng-fadeInUp']" data-ng-repeat="item in menuItems" data-ng-include="'sidebar-items.html'" data-ng-click="toggleCollapse($index)" data-ng-switch="item.type" data-ng-if="settingOptionCheck(item.setting)" data-ng-if="$storage.permissionArray[0][permissionKey][item.permission]" ></li>
+			<li data-ng-class="[getSidebarItemClass(item),'ng-fadeInUp']" data-ng-repeat="item in menuItems" data-ng-include="'sidebar-items.html'" data-ng-click="toggleCollapse($index)" data-ng-switch="item.type" data-ng-if="$storage.permissionArray[0][permissionKey][item.permission] && settingOptionCheck(item.setting)" ></li>
 				<!--li class="nav-heading"><a > <i class="fa fa-home" ></i><span class="ng-scope ng-binding" >QWERTY</span></a></li-->
          </ul>
          <!-- END sidebar nav-->
