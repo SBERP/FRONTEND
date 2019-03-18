@@ -288,7 +288,8 @@
 					<td ng-show="table.tableParams.productsFlag" title="'Products'"  >
 						<ul>
 							<li ng-repeat="prt in user.displayProduct track by (prt.productId+prt.amount+$index)" ng-if="prt.productName">
-								{{::prt.productName}}
+								<span ng-if="!isLanguageHindi || !prt.altProductName" >{{::prt.productName}}</span>
+                        		<span ng-if="isLanguageHindi && prt.altProductName" >{{::prt.altProductName}}</span>
 							</li>
 						</ul>
 					</td>

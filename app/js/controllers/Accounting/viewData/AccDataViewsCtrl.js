@@ -113,7 +113,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	// console.log($rootScope.accView.toDate);
 	var settingResponse = [];
 	$scope.isLanguageHindi = false;
-	
+
 	$scope.getOptionSettingData = function() {
 		apiCall.getCall(apiPath.settingOption).then(function(response) {
 			settingResponse = response;
@@ -129,7 +129,6 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 					}
 				}
 			}
-			console.log("seting data..",settingResponse);
 		});
 	}
 
@@ -145,7 +144,6 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 
 	  	$scope.onSalesBillTabSelect = function(index)
 	  	{
-	  		console.log(index);
 	  		$scope.totalAmountDisplay = 0;
 	  		/* Uncheck all Checkbox */
 	  			$scope.clientFlag=0;
@@ -878,13 +876,9 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 							if(productArrays.inventory[invIndex].productId)
 							{
 								(function(proId,pIndex) {
-									// console.log('pehla id aaveli..',proId);
 									productFactory.getSingleProduct(proId).then(function(proResponse) {
-										console.log("ab idhar..",pIndex);
 										// (function(pId) {
-											// console.log("here",pId);
 											if(angular.isObject(proResponse)) {
-												// console.log('abe idhar....',proResponse);
 												data[pIndex].displayProduct.push(angular.copy(proResponse));
 											}
 										// })(pIndex);
@@ -1040,8 +1034,6 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 					
 				}
 				else{
-					
-					// console.log(data);
 				
 					vm.pieChartData = [{ "color" : "#6cc539",
 									"data" : "0",
@@ -1476,7 +1468,6 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 
 		$scope.changeBox = function(box,pData){
 			
-			//console.log(box+'...'+pData);
 			if(box == true){
 				$scope.selectedBoxArray.push(pData);
 			}
@@ -1487,9 +1478,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 		}
 
 		$scope.changeAllBox = function(box){
-			// console.log("innn change all box");
 			if(box == false){
-				// console.log("iff");
 				$scope.clientFlag=0;
 				$scope.selectedBoxArray = [];
 				var cnt  = data.length;
@@ -1498,11 +1487,9 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 				}
 			}
 			else{
-				// console.log("else");
 				$scope.clientFlag=1;
 				$scope.selectedBoxArray = [];
 				$scope.selectedBoxArray = $scope.filteredItems;
-				// console.log("consoldeeeeadsada  ",$scope.selectedBoxArray);
 				if(Array.isArray($scope.selectedBoxArray))
 				{
 					var cnt  = $scope.selectedBoxArray.length;
@@ -1516,7 +1503,6 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 
 		$scope.multiPdfPrint = function()
 		{
-			console.log("$scope.selectedBoxArray..",$scope.selectedBoxArray);
 			var selectedArray = $scope.selectedBoxArray;
 			var uniqueArray = selectedArray.map(function(obj) { return obj['saleId']; });
 			var saleIds = uniqueArray.join(',');
