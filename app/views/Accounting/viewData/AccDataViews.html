@@ -285,7 +285,7 @@
 					<td title="'Date'" sortable="'date'" filter="{ 'entryDate': 'text' }" >{{::dateConvert(user.entryDate) | date:dateFormat}}</td>
 					<td title="'Vendor Name'"  filter="{ 'ledgerName': 'text' }" >{{::user.ledgerName}}</td>
 					<!--td title="'Company'" filter="{ 'companyName': 'text' }" >{{user.company.companyName}}</td-->
-					<td ng-show="table.tableParams.productsFlag" title="'Products'"  >
+					<td ng-show="table.tableParams.productsFlag" title="'Products'"  width="15%">
 						<ul>
 							<li ng-repeat="prt in user.displayProduct track by (prt.productId+prt.amount+$index)" ng-if="prt.productName">
 								<span ng-if="!isLanguageHindi || !prt.altProductName" >{{::prt.productName}}</span>
@@ -326,7 +326,7 @@
 	        <tfooter>
 	          	<tr style="background-color: #f5f5f5;">
 					<td colspan="2" ><b>Grand Total</b></td>
-					<td colspan="5"></td>
+					<td colspan="4"></td>
 					<td ng-show="table.tableParams.productsFlag"></td>
 					
 					<td><span class="pull-right" ng-bind="totalAmountDisplay"></span></td>

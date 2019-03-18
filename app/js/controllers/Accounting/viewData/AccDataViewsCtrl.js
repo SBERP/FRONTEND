@@ -968,7 +968,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 
 						$scope.contents3 = $scope.paidData;
 						
-						$scope.contents3.sort(function(a, b){
+						$scope.contents3.sort(function(a, b) {
 							// var entDate = a.entryDate.split("-").reverse().join("-");
 							// var toDate = b.entryDate.split("-").reverse().join("-");
 							// var dateA=new Date(entDate), dateB=new Date(toDate);
@@ -1036,13 +1036,13 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 				else{
 				
 					vm.pieChartData = [{ "color" : "#6cc539",
-									"data" : "0",
-									"label" : "Debit"
-								  },
-								  { "color" : "#00b4ff",
-									"data" : "0",
-									"label" : "Credit"
-								  }];
+										"data" : "0",
+										"label" : "Debit"
+									  },
+									  { "color" : "#00b4ff",
+										"data" : "0",
+										"label" : "Credit"
+									  }];
 					vm.pieFlotCharts = [{
 								  "label": "Debit",
 								  "color": "#6cc539",
