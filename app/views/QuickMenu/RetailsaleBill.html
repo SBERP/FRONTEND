@@ -82,6 +82,14 @@
 .myTable td{
 	vertical-align: top !important;
 }
+.paddignBtn {
+	padding: 3px 7px !important;
+	font-size: 12px !important;
+}
+.halfPadding{
+	padding-left: 5px !important;
+    padding-right: 5px !important;
+}
 </style>
 <!-- START panel-->
 <div class="container-fluid"  >
@@ -98,20 +106,27 @@
 				 <span style="font-size:16px">[ {{quickBill.invoiceNumber}} ]</span></label>
 				<label  class="control-label" style="font-size: 20px !important;float: left;text-align: left;padding-top: 3px;padding-left: 5px;padding-right: 5px;" ng-if="saleType == 'QuotationPrint'">Quotation <span style="font-size:16px;padding-top: 3px;padding-left: 5px;padding-right: 5px;">({{quickBill.invoiceNumber}})</span></label>
 			 </div>
-			 <div style="padding: 0 5px 0 5px;"  ng-class="col-sm-2" >
+			 <div style="padding: 0 5px 0 5px;"  class="col-sm-2" >
 			 	<label  class="control-label" style="font-size:18px !important;text-align: right;padding-top: 3px;padding-left: 1px;padding-right: 0px;">
 				 	<button type="button" class="btn btn-default btn-md" data-ng-class="app.theme.brand"  >{{displayDefaultCompanyName}} ({{getCurrentFinancialYear()}})</button>
 				</label>
 			 </div>
-		</h4>
-		 <h4 class="panel-heading col-sm-12" style="padding:5px 1px;" >	
-		 	<div class="col-sm-2" >
-				<div class="input-group m-b">
+			 <div class="col-sm-2 pull-right" >
+		 		<div class="input-group m-b">
 					<input  type="text" ng-model="quickBill.searchInvoiceNumber" placeholder="Search" class="form-control input-sm" tooltip="Search By Invoice#/Contact#/Name/Email" tooltip-trigger="focus" tooltip-placement="top" ng-keyup="$event.keyCode == 13 ? goInvoiceNumber() : null" />
 					<span class="input-group-btn">
 					<button type="button" class="btn btn-sm" data-ng-class="app.theme.brand"  ng-click="goInvoiceNumber()" ><em class="fa fa-search" ></em></span>
 					</span>
 				</div>
+		 	</div>
+		</h4>
+		 <h4 class="panel-heading col-sm-12" style="padding:5px 1px;" >	
+		 	<div class="col-sm-3" ng-if="enableDisableSalesman">
+		 		<label  class="col-sm-3 control-label" style="padding-left: 2px;">SalesMan</label>
+				<div class="col-sm-9 contentOfForm" >
+					<select chosen="" data-ng-model="quickBill.userId" name="userDropDown" data-ng-options="s.userName for s in form.userDrop | filter : filterStaff track by s.userId " ng-change="changeInBill('userId',quickBill.userId)" class="form-control input-sm chosen-select btn-sm" ></select>
+				</div>
+				
 			</div>
 			<div class="col-sm-3">
 				<label  class="col-sm-3 control-label" style="padding-left: 2px;">*Company</label>
@@ -136,41 +151,33 @@
 					</span>
 				 </div>
 			</div>
-				<div ng-class="saleType == 'QuotationPrint' ? 'col-sm-2': 'col-sm-3'" >
-					<div class="col-sm-4" ng-if="saleType == 'WholesaleBill' || saleType == 'SalesOrder'">
-						<input  type="text" ng-model="quickBill.poNumber" ng-change="changeInBill('poNumber',quickBill.poNumber)" placeholder="PO No." tooltip="Purchase Order Number" tooltip-trigger="focus" tooltip-placement="top" class="form-control input-sm" />
-					</div>
-					<div class="col-sm-7">
-						<!--span class="input-group-btn" ng-if="saleType == 'WholesaleBill'">
-							<a  class="mr-sm mb-sm btn btn-default btn-sm pull-left goButton"  data-ng-class="app.theme.brand" ui-sref="." tooltip="Get Data From Draft" tooltip-trigger="focus" tooltip-placement="top" ng-click="form.getFromDraft()" >Get Draft</a>
-						</span-->
-						<div dropdown="dropdown" class="btn-group btn-sm pl0 pr0 pt0" ng-if="saleType == 'WholesaleBill'">
-			               <button type="button" class="btn btn-sm" data-ng-class="app.theme.brand" tooltip="Get Data From Draft OR SalesOrder" tooltip-trigger="focus" tooltip-placement="top" ng-click="form.getFromDraft()">Get</button>
-			               <button type="button" dropdown-toggle="" class="btn dropdown-toggle btn-sm" data-ng-class="app.theme.brand" >
-			                  <span class="caret"></span>
-			                  <span class="sr-only">primary</span>
-			               </button>
-			               <ul role="menu" class="dropdown-menu">
-			                  <li><a href="#" ng-click="form.getFromDraft()">Get Draft</a>
-			                  </li>
-			                  <li><a href="#" ng-click="form.getFromSalesOrder()">Get SalesOrder</a>
-			                  </li>
-			               </ul>
-			            </div>
+			<div ng-class="saleType == 'QuotationPrint' ? 'col-sm-2': 'col-sm-2'" >
+				<div class="col-sm-4 halfPadding" ng-if="saleType == 'WholesaleBill' || saleType == 'SalesOrder'">
+					<input  type="text" ng-model="quickBill.poNumber" ng-change="changeInBill('poNumber',quickBill.poNumber)" placeholder="PO No." tooltip="Purchase Order Number" tooltip-trigger="focus" tooltip-placement="top" class="form-control input-sm" />
+				</div>
+				<div class="col-sm-8">
+					<!--span class="input-group-btn" ng-if="saleType == 'WholesaleBill'">
+						<a  class="mr-sm mb-sm btn btn-default btn-sm pull-left goButton"  data-ng-class="app.theme.brand" ui-sref="." tooltip="Get Data From Draft" tooltip-trigger="focus" tooltip-placement="top" ng-click="form.getFromDraft()" >Get Draft</a>
+					</span-->
+					<div dropdown="dropdown" class="btn-group btn-sm pl0 pr0 pt0" ng-if="saleType == 'WholesaleBill'">
+		               <button type="button" class="btn btn-sm" data-ng-class="app.theme.brand" tooltip="Get Data From Draft OR SalesOrder" tooltip-trigger="focus" tooltip-placement="top" ng-click="form.getFromDraft()">Get</button>
+		               <button type="button" dropdown-toggle="" class="btn dropdown-toggle btn-sm" data-ng-class="app.theme.brand" >
+		                  <span class="caret"></span>
+		                  <span class="sr-only">primary</span>
+		               </button>
+		               <ul role="menu" class="dropdown-menu">
+		                  <li><a href="#" ng-click="form.getFromDraft()">Get Draft</a>
+		                  </li>
+		                  <li><a href="#" ng-click="form.getFromSalesOrder()">Get SalesOrder</a>
+		                  </li>
+		               </ul>
+		            </div>
+		            <div class="btn-group m-b">
 						<button type="button" class="btn btn-sm pb-sm pt-sm mb-sm"  data-ng-class="app.theme.brand"   ui-sref="app.AccViewWholeSales"  ><i class="fa fa-search"></i>
 						</button>
-					<div>
-					
-				</div>
-				
-		 </h4>
-		 <h4 class="panel-heading col-sm-12">
-		 	<div class="col-sm-3" ng-if="enableDisableSalesman">
-		 		<label  class="col-sm-4 control-label" style="padding-left: 2px;">SalesMan</label>
-				<div class="col-sm-8 contentOfForm" >
-					<select chosen="" data-ng-model="quickBill.userId" name="userDropDown" data-ng-options="s.userName for s in form.userDrop | filter : filterStaff track by s.userId " ng-change="changeInBill('userId',quickBill.userId)" class="form-control input-sm chosen-select btn-sm" ></select>
-				</div>
-		 	</div>
+					</div>
+				<div>
+			</div>
 		 </h4>
 		<div class="panel-body" style="padding:0px">
 			<div class="col-sm-12">
@@ -374,7 +381,7 @@
 					<td>
 						<div class="input-group mytypeDrop">
 							<!-- <input ng-attr-id="{{displayProductName=='altProductName' && 'productNameId' || ''}}" > -->
-							<input  typeahead="item as item[displayProductName] for item in form.productNameDrop | filter:$viewValue | limitTo:10"  ng-model="item.productName" typeahead-on-select="setProductData($item,$index);quickBill.advance = ((total) + (quickBill.extraCharge ? quickBill.extraCharge*1 : 0) | setDecimal: noOfDecimalPoints)" type="text" class="form-control input-sm productNameClass" autocomplete="off" placeholder="*Enter Product Name"  typeahead-editable="false" ng-required="true" style="padding-left: 6px;padding-right: 6px;" typeahead-template-url="customTemplate.html" ng-disabled="form.loadData" ng-keypress="presssuburb($event)" />
+							<input  typeahead="item[displayProductName] for item in form.productNameDrop | filter:$viewValue | limitTo:10"  ng-model="item.productName" typeahead-on-select="setProductData($item,$index);quickBill.advance = ((total) + (quickBill.extraCharge ? quickBill.extraCharge*1 : 0) | setDecimal: noOfDecimalPoints)" type="text" class="form-control input-sm productNameClass" autocomplete="off" placeholder="*Enter Product Name"  typeahead-editable="false" ng-required="true" style="padding-left: 6px;padding-right: 6px;" typeahead-template-url="customTemplate.html" ng-disabled="form.loadData" ng-keypress="presssuburb($event)" />
 							<span class="input-group-btn">
 								<button type="button" class="btn btn-default btn-sm" ng-if="item.productId" ng-click="editProductWithRedirect($index)"><i class="fa fa-edit fa-lg" style="color:#17A1E5;"></i></button>
 							   	<button type="button" class="btn btn-default btn-sm" data-ng-click="openProduct('lg',$index)" ng-if="!item.productId"><i class="fa fa-plus fa-lg" style="color:#17A1E5;"></i></button>
@@ -507,7 +514,7 @@
 					<!-- <td style="text-align:right"><span style="visibility:hidden" ng-bind="grandTotalTable = (total | setDecimal: noOfDecimalPoints)" ><span>
 					</td> -->
 					<td colspan="1">
-						<button type="button" class="btn btn-sm" data-ng-class="app.theme.brand"  ng-click="openExpenseRaw()">Expense</button>
+						<button type="button" class="btn btn-sm paddignBtn" data-ng-class="app.theme.brand"  ng-click="openExpenseRaw()">Expense</button>
 					</td>
 				</tr>
 				<tr  ng-repeat="item in form.AccExpense track by $index" ng-if="openExpenseRawData">

@@ -1532,7 +1532,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 						vm.AccBillTable[d].itemizeDetail = angular.fromJson(setData.itemizeDetail);
 					}
 					vm.productHsn[d] = resData.hsn;
-					if(!EditProducArray[d].hasOwnProperty('cgstPercentage')){
+					if (!EditProducArray[d].hasOwnProperty('cgstPercentage')) {
 						vm.AccBillTable[d].cgstPercentage = parseFloat(resData.vat);
 						vm.AccBillTable[d].sgstPercentage = parseFloat(resData.additionalTax); // Additional Tax
 						$scope.calculateTaxReverse(vm.AccBillTable[d],parseFloat(resData.vat),parseFloat(resData.additionalTax),0,d);

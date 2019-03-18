@@ -6,7 +6,7 @@
 
 App.controller('AccViewDataController', AccViewDataController);
 
-function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,apiCall,apiPath,flotOptions, colors,$timeout,getSetFactory,$state,headerType,$modal,$window,toaster,apiResponse,apiDateFormate) {
+function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,apiCall,apiPath,flotOptions, colors,$timeout,getSetFactory,$state,headerType,$modal,$window,toaster,apiResponse,apiDateFormate, productFactory) {
   'use strict';
   var vm = this;
   var data = [];
@@ -108,14 +108,33 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 		var headerData = {'Content-Type': undefined,'journalType':'special_journal','fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate};
 	}
   
-	  // console.log($rootScope.accView.companyId);
-	  // console.log($rootScope.accView.fromDate);
-	  // console.log($rootScope.accView.toDate);
+	// console.log($rootScope.accView.companyId);
+	// console.log($rootScope.accView.fromDate);
+	// console.log($rootScope.accView.toDate);
+	var settingResponse = [];
+	$scope.isLanguageHindi = false;
+
+	$scope.getOptionSettingData = function() {
+		apiCall.getCall(apiPath.settingOption).then(function(response) {
+			settingResponse = response;
+			var responseLength = settingResponse.length;
+			for(var arrayData=0;arrayData<responseLength;arrayData++)
+			{
+				if(angular.isObject(response) || angular.isArray(response))
+				{
+					if(response[arrayData].settingType=="language")
+					{
+						var arrayData1 = response[arrayData];
+						$scope.isLanguageHindi = arrayData1.languageSettingType=="hindi" ? true : false;
+					}
+				}
+			}
+		});
+	}
 
 	function getTotalValue (fData)
 	{
 		$scope.totalAmountDisplay = $filter('setDecimal')(fData.reduce((a, b) => a + parseFloat(b['total']), 0),2);
-
 	}
 
 	$scope.currentActiveSalestab = 0;  // Currently Open Tab is "All" Tab
@@ -125,7 +144,6 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 
 	  	$scope.onSalesBillTabSelect = function(index)
 	  	{
-	  		console.log(index);
 	  		$scope.totalAmountDisplay = 0;
 	  		/* Uncheck all Checkbox */
 	  			$scope.clientFlag=0;
@@ -213,6 +231,8 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	  		toaster.clear();
 			toaster.pop('wait', 'Please Wait', 'Data Loading....',30000);
 
+			$scope.getOptionSettingData(); //Load Setting Data
+
 	  		if (onDateChange != null)
 	  		{
 	  			$rootScope.accView.fromDate = moment(vm.dt1).format(apiDateFormate);
@@ -237,6 +257,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	  	}
 		
 		$scope.loadInit();
+
 
 	$scope.displayProduct = function(productArray)
 	{
@@ -844,27 +865,28 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 						data[p].pdfIcon = false;
 						data[p].singlePdfIcon = false;
 						var productArrays = JSON.parse(data[p].productArray);
+						// console.log("productArrays.",productArrays);
+						// data[p].displayProduct = productArrays.inventory;
+						data[p].displayProduct = [];
 
-						data[p].displayProduct = productArrays.inventory;
-
-						// var invCnt = productArrays.inventory.length;
-						// var invIndex = 0;
-						// while(invIndex < invCnt)
-						// {
-						// 	console.log(productArrays.inventory[0].productId);
-						// 	if(productArrays.inventory[invIndex].productId)
-						// 	{
-						// 		var proId = productArrays.inventory[invIndex].productId;
-						// 		productFactory.getSingleProduct(proId,function(proResponse){
-						// 			console.log("here",proResponse);
-						// 			if(angular.isObject(proResponse)){
-						// 				console.log(proResponse);
-						// 				data[p].displayProduct.push(angular.copy(proResponse));
-						// 			}
-						// 		});
-						// 	}
-						// 	invIndex++;
-						// }
+						var invCnt = productArrays.inventory.length;
+						var invIndex = 0;
+						while(invIndex < invCnt)
+						{
+							if(productArrays.inventory[invIndex].productId)
+							{
+								(function(proId,pIndex) {
+									productFactory.getSingleProduct(proId).then(function(proResponse) {
+										// (function(pId) {
+											if(angular.isObject(proResponse)) {
+												data[pIndex].displayProduct.push(angular.copy(proResponse));
+											}
+										// })(pIndex);
+									});
+								})(productArrays.inventory[invIndex].productId,p);
+							}
+							invIndex++;
+						}
 
 						var fileCnt = data[p].file.length;
 						
@@ -946,7 +968,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 
 						$scope.contents3 = $scope.paidData;
 						
-						$scope.contents3.sort(function(a, b){
+						$scope.contents3.sort(function(a, b) {
 							// var entDate = a.entryDate.split("-").reverse().join("-");
 							// var toDate = b.entryDate.split("-").reverse().join("-");
 							// var dateA=new Date(entDate), dateB=new Date(toDate);
@@ -1012,17 +1034,15 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 					
 				}
 				else{
-					
-					// console.log(data);
 				
 					vm.pieChartData = [{ "color" : "#6cc539",
-									"data" : "0",
-									"label" : "Debit"
-								  },
-								  { "color" : "#00b4ff",
-									"data" : "0",
-									"label" : "Credit"
-								  }];
+										"data" : "0",
+										"label" : "Debit"
+									  },
+									  { "color" : "#00b4ff",
+										"data" : "0",
+										"label" : "Credit"
+									  }];
 					vm.pieFlotCharts = [{
 								  "label": "Debit",
 								  "color": "#6cc539",
@@ -1448,7 +1468,6 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 
 		$scope.changeBox = function(box,pData){
 			
-			//console.log(box+'...'+pData);
 			if(box == true){
 				$scope.selectedBoxArray.push(pData);
 			}
@@ -1459,9 +1478,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 		}
 
 		$scope.changeAllBox = function(box){
-			// console.log("innn change all box");
 			if(box == false){
-				// console.log("iff");
 				$scope.clientFlag=0;
 				$scope.selectedBoxArray = [];
 				var cnt  = data.length;
@@ -1470,11 +1487,9 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 				}
 			}
 			else{
-				// console.log("else");
 				$scope.clientFlag=1;
 				$scope.selectedBoxArray = [];
 				$scope.selectedBoxArray = $scope.filteredItems;
-				// console.log("consoldeeeeadsada  ",$scope.selectedBoxArray);
 				if(Array.isArray($scope.selectedBoxArray))
 				{
 					var cnt  = $scope.selectedBoxArray.length;
@@ -1488,7 +1503,6 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 
 		$scope.multiPdfPrint = function()
 		{
-			console.log("$scope.selectedBoxArray..",$scope.selectedBoxArray);
 			var selectedArray = $scope.selectedBoxArray;
 			var uniqueArray = selectedArray.map(function(obj) { return obj['saleId']; });
 			var saleIds = uniqueArray.join(',');
@@ -1530,4 +1544,4 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 
 	/* End */
 }
-AccViewDataController.$inject = ["$rootScope","$scope", "$filter","$http", "ngTableParams","apiCall","apiPath","flotOptions","colors","$timeout","getSetFactory","$state","headerType","$modal","$window","toaster","apiResponse","apiDateFormate"];
+AccViewDataController.$inject = ["$rootScope","$scope", "$filter","$http", "ngTableParams","apiCall","apiPath","flotOptions","colors","$timeout","getSetFactory","$state","headerType","$modal","$window","toaster","apiResponse","apiDateFormate","productFactory"];
