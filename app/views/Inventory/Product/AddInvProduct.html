@@ -122,22 +122,22 @@
 						</div>
 				</div>
 				<div class="col-md-6" >
-					<div class="form-group">
-							<label  class="col-sm-3 control-label" ng-if="enableDisableColor">Color</label>
-							<div class="col-sm-4" ng-if="enableDisableColor">
-							 	<input id="input-id-1" name="productColor" ng-model="addInvProduct.color" ng-change="changeInvProductData('color',addInvProduct.color)" type="text" placeholder="Color" class="form-control" tabindex="7"  ng-maxlength="30" />
-								<span ng-messages="formProduct.productColor.$error" ng-if="formProduct.productColor.$dirty || formProduct.productColor.$touched"  role="alert">
-									<span ng-messages-include="errorRequired"></span>
-									<span ng-messages-include="errorLonglength"></span>
-									<span ng-messages-include="errorPatternThisSpecial"></span>
-								</span>
-							</div>
-						  	<label  class="col-sm-2" ng-if="addDiv"></label>
-					  		<div ng-if="addDiv">
-					  		</div>	
+					<div class="form-group" ng-if="enableDisableColor || enableDisableSize" >
+						<label  class="col-sm-3 control-label" ng-if="enableDisableColor">Color</label>
+						<div class="col-sm-4" ng-if="enableDisableColor">
+						 	<input id="input-id-1" name="productColor" ng-model="addInvProduct.color" ng-change="changeInvProductData('color',addInvProduct.color)" type="text" placeholder="Color" class="form-control" tabindex="7"  ng-maxlength="30" />
+							<span ng-messages="formProduct.productColor.$error" ng-if="formProduct.productColor.$dirty || formProduct.productColor.$touched"  role="alert">
+								<span ng-messages-include="errorRequired"></span>
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorPatternThisSpecial"></span>
+							</span>
+						</div>
+					  	<label  class="col-sm-2" ng-if="addDiv"></label>
+				  		<div ng-if="addDiv">
+				  		</div>	
 
-						  <label  class="col-sm-1 control-label" ng-if="enableDisableSize">Size</label>
-						  <div class="col-sm-4" ng-if="enableDisableSize">
+						<label  class="col-sm-1 control-label" ng-if="enableDisableSize">Size</label>
+						<div class="col-sm-4" ng-if="enableDisableSize">
 							 <input id="input-id-1" name="productSize" ng-model="addInvProduct.size" ng-change="changeInvProductData('size',addInvProduct.size)" type="text" placeholder="Size" class="form-control" tabindex="8"  ng-maxlength="15"/>
 							 
 							<span ng-messages="formProduct.productSize.$error" ng-if="formProduct.productSize.$dirty || formProduct.productSize.$touched"  role="alert">
@@ -145,7 +145,7 @@
 								<span ng-messages-include="errorLonglength"></span>
 								<span ng-messages-include="errorPatternThisSpecial"></span>
 							 </span>
-						  </div>
+						</div>
 					 </div>
 					 <div class="form-group">
 					 	<label class="col-sm-3 control-label">Product-Type</label>
@@ -187,6 +187,12 @@
 							<select chosen="" data-ng-model="addInvProduct.measureUnit" data-ng-options="s.unitName for s in form.advanceMeasureUnitDrop track by s.measurementUnitId" ng-change="changeInvProductData('measurementUnit',addInvProduct.measureUnit.measurementUnitId)" class="form-control chosen-select" tabindex="13" ng-required="true">
 							<option value=""></option>
 							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label">Item Code</label>
+						<div class="col-sm-9">
+							<input name="itemCode" ng-model="addInvProduct.itemCode" ng-change="changeInvProductData('itemCode',addInvProduct.itemCode)" type="text" placeholder="Item Code" class="form-control" tabindex="13" ng-maxlength="20" />
 						</div>
 					</div>
 				</div>

@@ -254,14 +254,17 @@
 					<td style="text-align:right">
 						<input id="price" type="text" ng-model="item.cgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%"  ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage);zeroSingleGst()" only-number ng-disabled="csgstDisable" /> 
 						<span ng-if="item.cgstAmount > 0" > {{item.cgstAmount}} </span>
+						<span title="Per Single Quantity" class="pull-left" ng-if="item.cgstAmount > 0" >({{item.cgstAmount/item.qty | setDecimal: noOfDecimalPoints}}/psq)</span>
 					</td>
 					<td style="text-align:right">
 						<input id="price" type="text" ng-model="item.sgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%"  ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage);zeroSingleGst()" only-number ng-disabled="csgstDisable" /> 
 						<span ng-if="item.sgstAmount > 0" >{{item.sgstAmount}}</span>
+						<span title="Per Single Quantity" class="pull-left" ng-if="item.sgstAmount > 0" >({{item.sgstAmount/item.qty | setDecimal: noOfDecimalPoints}}/psq)</span>
 					</td>
 					<td style="text-align:right">
 						<input id="price" type="text" ng-model="item.igstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%" ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage);zeroSingleGst()" only-number ng-disabled="igstDisable" /> 
 						<span ng-if="item.igstAmount > 0" >{{item.igstAmount}}</span>
+						<span title="Per Single Quantity" class="pull-left" ng-if="item.igstAmount > 0" >({{item.igstAmount/item.qty | setDecimal: noOfDecimalPoints}}/psq)</span>
 					</td>
 					<td>
 						<input placeholder="(&#x20b9;)Amount"  type="text" ng-model="item.amount"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"  ng-required="true" ng-minlength="1" ng-pattern="/^[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverseTwo(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage,$index);" only-number />

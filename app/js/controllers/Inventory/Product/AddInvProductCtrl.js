@@ -165,7 +165,7 @@ function AddInvProductController($scope,$rootScope,toaster,$filter,apiCall,apiPa
 	{
 		toaster.clear();
 		apiCall.getCall(apiPath.settingOption).then(function(response){
-			console.log("response..setting..",response);
+			// console.log("response..setting..",response);
 			var responseLength = response.length;
 			for(var arrayData=0;arrayData<responseLength;arrayData++)
 			{
@@ -240,7 +240,7 @@ function AddInvProductController($scope,$rootScope,toaster,$filter,apiCall,apiPa
 			if(editProductData.updatedBy==0 && editProductData.createdBy==0)
 			{
 				var getAllUser = apiPath.getAllStaff;
-				apiCall.getCall(getAllUser).then(function(userResponse){
+				apiCall.getCall(getAllUser).then(function(userResponse) {
 					// console.log("user response = ",userResponse);
 					var userResponseLength = userResponse.length;
 					for(var index=0;index<userResponseLength;index++)
@@ -307,6 +307,7 @@ function AddInvProductController($scope,$rootScope,toaster,$filter,apiCall,apiPa
 			$scope.addInvProduct.lowerMouConv = editProductData.lowerMouConv;
 			$scope.addInvProduct.mediumMouConv = editProductData.mediumMouConv;
 			$scope.addInvProduct.mediumLowerMouConv = editProductData.mediumLowerMouConv;
+			$scope.addInvProduct.itemCode = "itemCode" in editProductData ? editProductData.itemCode : "";
 			
 			loadCompanyData(editProductData.companyId,function(companyData){
 				$scope.addInvProduct.company = companyData;
@@ -449,7 +450,7 @@ function AddInvProductController($scope,$rootScope,toaster,$filter,apiCall,apiPa
 		formdata.set('productType',$scope.addInvProduct.productType);
 		$scope.addInvProduct.bestBeforeType ='day';
 		formdata.set('bestBeforeType',$scope.addInvProduct.bestBeforeType);
-		$scope.addInvProduct.taxInclusive = 'exclusive';
+		$scope.addInvProduct.taxInclusive = 'inclusive';
 		$scope.addInvProduct.notForSale = 'false';
 		formdata.set('notForSale',$scope.addInvProduct.notForSale);
 		$scope.addInvProduct.productMenu = 'not';

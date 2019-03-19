@@ -105,12 +105,15 @@
 			<div class="col-md-6">
 				<div class="form-group">
 					<label  class="col-md-2 control-label">GST#</label>
-					<div class="col-md-10">
+					<div class="col-md-8">
 						<input rows="1" name="gst" ng-model="clientForm.gst" placeholder="GST Number"  class="form-control input-sm ng-pristine ng-valid ng-touched"  ng-change="changeInClientData('gst',clientForm.gst)" ng-maxlength="50" >
 						<span ng-messages="formClient.gst.$error" ng-if="formClient.gst.$dirty || formClient.gst.$touched" role="alert">
-								<span ng-messages-include="errorPatternThisSpecial"></span>
-								<span ng-messages-include="errorLonglength"></span>
-							</span>
+							<span ng-messages-include="errorPatternThisSpecial"></span>
+							<span ng-messages-include="errorLonglength"></span>
+						</span>
+					</div>
+					<div class="col-md-2">
+						<a href="https://services.gst.gov.in/services/searchtp" target="_blank" class="pull-right">Verify GST</a>
 					</div>
 				</div>
 			</div>

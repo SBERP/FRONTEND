@@ -818,17 +818,20 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 				productFactory.getSingleProduct(EditProducArray[w].productId).then(function(resData){
 					/** Tax **/
 						vm.AccBillTable[d].productName = resData.productName;
-						if (angular.isArray(EditProducArray[w].itemizeDetail)) {
-							vm.AccBillTable[d].itemizeDetail = EditProducArray[w].itemizeDetail;
-						}else if(EditProducArray[w].itemizeDetail == ''){
-							vm.AccBillTable[d].itemizeDetail = [];
-						}else if (angular.isString(EditProducArray[w].itemizeDetail)) {
-							vm.AccBillTable[d].itemizeDetail = angular.fromJson(EditProducArray[w].itemizeDetail);
+						vm.AccBillTable[d].itemizeDetail = [];
+						if (EditProducArray[d].hasOwnProperty('itemizeDetail')) {
+							if (angular.isArray(EditProducArray[d].itemizeDetail)) {
+							vm.AccBillTable[d].itemizeDetail = EditProducArray[d].itemizeDetail;
+							}else if(EditProducArray[d].itemizeDetail == ''){
+								vm.AccBillTable[d].itemizeDetail = [];
+							}else if (angular.isString(EditProducArray[d].itemizeDetail)) {
+								vm.AccBillTable[d].itemizeDetail = angular.fromJson(EditProducArray[d].itemizeDetail);
+							}
 						}
 
 						vm.productHsn[d] = resData.hsn;
 
-						if(!EditProducArray[d].hasOwnProperty('cgstPercentage')){
+						if(!EditProducArray[d].hasOwnProperty('cgstPercentage')) {
 							vm.AccBillTable[d].cgstPercentage = parseFloat(resData.vat);
 							vm.AccBillTable[d].sgstPercentage = parseFloat(resData.additionalTax); // Additional Tax
 							$scope.calculateTaxReverse(vm.AccBillTable[d],vm.AccBillTable[d].cgstPercentage,vm.AccBillTable[d].sgstPercentage,0);

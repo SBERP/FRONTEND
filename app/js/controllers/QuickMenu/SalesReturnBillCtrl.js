@@ -709,13 +709,14 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 	$scope.getTotalQuantity = function()
 	{
 		var total = 0;
-		var count = vm.AccBillTable.length;
-		for(var i = 0; i < count; i++)
-		{
-			var product = vm.AccBillTable[i];
-			total += parseInt(product.qty);
+		if (angular.isArray(vm.AccBillTable)) {
+			var count = vm.AccBillTable.length;
+			for(var i = 0; i < count; i++)
+			{
+				var product = vm.AccBillTable[i];
+				total += parseInt(product.qty);
+			}
 		}
-
 		return isNaN(total) ? 0 : total;
 	}
 
@@ -744,28 +745,31 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 	$scope.getTotalTax = function()
 	{
 		var total = 0;
-		var count = vm.AccBillTable.length;
-		var getTotalAmount = 0;
-		var totalCessAmount = 0;
-		for(var i = 0; i < count; i++)
-		{
-			var cessAmount = 0;
-			var product = vm.AccBillTable[i];
-			// var vartax = vm.productTax[i];
-			var totaltax = checkGSTValue(product.cgstPercentage) + checkGSTValue(product.sgstPercentage) + checkGSTValue(product.igstPercentage);
-			if(product.discountType == 'flat') {
-				var getAmount = $filter('setDecimal')((product.price*product.qty) - product.discount,$scope.noOfDecimalPoints);
-			}
-			else{
-				var getAmount  =  $filter('setDecimal')((product.price*product.qty)-((product.price*product.qty)*product.discount/100),$scope.noOfDecimalPoints);
-			}
+		if (angular.isArray(vm.AccBillTable)) {
+			var count = vm.AccBillTable.length;
+			var getTotalAmount = 0;
+			var totalCessAmount = 0;
+			for(var i = 0; i < count; i++)
+			{
+				var cessAmount = 0;
+				var product = vm.AccBillTable[i];
+				// var vartax = vm.productTax[i];
+				var totaltax = checkGSTValue(product.cgstPercentage) + checkGSTValue(product.sgstPercentage) + checkGSTValue(product.igstPercentage);
+				if(product.discountType == 'flat') {
+					var getAmount = $filter('setDecimal')((product.price*product.qty) - product.discount,$scope.noOfDecimalPoints);
+				}
+				else{
+					var getAmount  =  $filter('setDecimal')((product.price*product.qty)-((product.price*product.qty)*product.discount/100),$scope.noOfDecimalPoints);
+				}
 
-			getTotalAmount += getAmount;
-			if (angular.isDefined(product.cessAmount)) {
-				cessAmount = product.cessAmount;
+				getTotalAmount += getAmount;
+				if (angular.isDefined(product.cessAmount)) {
+					cessAmount = product.cessAmount;
+				}
+				total += productArrayFactory.calculateTax(getAmount,totaltax,0) + parseFloat(cessAmount);
 			}
-			total += productArrayFactory.calculateTax(getAmount,totaltax,0) + parseFloat(cessAmount);
 		}
+		
 
 		if($scope.quickBill.totalDiscounttype == 'flat') {
 			getTotalAmount =  $filter('setDecimal')(getTotalAmount - checkGSTValue($scope.quickBill.totalDiscount),$scope.noOfDecimalPoints);
@@ -788,10 +792,12 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 	$scope.getTotal = function()
 	{
 		var total = 0;
-		var count = vm.AccBillTable.length;
-		while(count--){
-			var product = vm.AccBillTable[count];
-			total += parseFloat(product.amount);
+		if (angular.isArray(vm.AccBillTable)) {
+			var count = vm.AccBillTable.length;
+			while(count--) {
+				var product = vm.AccBillTable[count];
+				total += parseFloat(product.amount);
+			}
 		}
 		
 		if($scope.quickBill.totalDiscounttype == 'flat') {

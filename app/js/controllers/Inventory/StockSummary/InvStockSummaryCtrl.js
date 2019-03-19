@@ -106,11 +106,15 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 	$scope.calculateQty = function(){
 		// console.log("viewwwwwwwwwwwww");
 		$scope.pageQty=0;
-		var dataLength = $scope.filteredItems.length;
-		for(var index=0;index<dataLength;index++)
+		if (angular.isArray($scope.filteredItems)) 
 		{
-			$scope.pageQty = $scope.pageQty+$scope.filteredItems[index].qty;
+			var dataLength = $scope.filteredItems.length;
+			for(var index=0;index<dataLength;index++)
+			{
+				$scope.pageQty = $scope.pageQty+$scope.filteredItems[index].qty;
+			}
 		}
+		
 		return $scope.pageQty;
 	}
 

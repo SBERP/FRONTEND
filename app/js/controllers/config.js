@@ -927,7 +927,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
 				url: '/QuotationPrint',
 				templateUrl: basepath('QuickMenu/RetailsaleBill.html'),
 				controller: 'RetailsaleBillController as form',
-				resolve: angular.extend(requireDeps('taxInvoice','angular-chosen','toaster','ngTable','uiCropper','moment','jquery-ui'),{
+				resolve: angular.extend(requireDeps('taxInvoice','angular-chosen','toaster','ngTable','uiCropper','moment','jquery-ui','googleKeyboard'),{
 					saleType: function(){
 						return 'QuotationPrint';
 					}
@@ -942,7 +942,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
                     saleType: function(){
                         return 'SalesOrder';
                     }
-                },requireDeps('taxInvoice','twain','toaster','angular-chosen','ngTable','uiCropper','moment','jquery-ui'))
+                },requireDeps('taxInvoice','twain','toaster','angular-chosen','ngTable','uiCropper','moment','jquery-ui','googleKeyboard'))
             })
 		/*** End Quick Menu ***/
 		

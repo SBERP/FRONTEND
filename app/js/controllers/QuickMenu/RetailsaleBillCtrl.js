@@ -966,14 +966,14 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		var productId = vm.AccBillTable[index].productId;
 		productFactory.getSingleProduct(productId).then(function(response)
 		{
-			if ($scope.enableDisableAdvanceMou) 
+			if ($scope.enableDisableAdvanceMou)
 			{
 				if (response.taxInclusive == 'inclusive')
 				{
 					$scope.getAdvanceMouCalculationPrice(response,index, function (responsePrice) {
 						var calPrice = responsePrice;
 						vm.AccBillTable[index].amount = $filter('setDecimal')(calPrice * vm.AccBillTable[index].qty,$scope.noOfDecimalPoints);
-						if(vm.AccBillTable[index].amount == 0){
+						if(vm.AccBillTable[index].amount == 0) {
 							vm.AccBillTable[index].amount = $filter('setDecimal')(response.mrp * vm.AccBillTable[index].qty,$scope.noOfDecimalPoints);
 						}
 						$scope.calculateTaxReverseTwo(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage,index);
@@ -991,7 +991,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				{
 					var calQty = vm.AccBillTable[index].qty * vm.AccBillTable[index].lengthValue * vm.AccBillTable[index].heightValue * vm.AccBillTable[index].widthValue / vm.AccBillTable[index].devideFactor;
 					vm.AccBillTable[index].amount = $filter('setDecimal')(response.purchasePrice * calQty ,$scope.noOfDecimalPoints);
-					if(vm.AccBillTable[index].amount == 0){
+					if(vm.AccBillTable[index].amount == 0) {
 						vm.AccBillTable[index].amount = $filter('setDecimal')(response.mrp * calQty,$scope.noOfDecimalPoints);
 					}
 					$scope.calculateTaxReverseTwo(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage,index);
@@ -1014,11 +1014,9 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			}
 		});
 	}
-
 	// End Table 
 	
-	function checkGSTValue(value){
-		
+	function checkGSTValue(value) {
 		if(angular.isUndefined(value) || value == '' || isNaN(value)){
 			return 0;
 		}

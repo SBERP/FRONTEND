@@ -13,7 +13,8 @@
     "icon": "icon-outbox",
     "subnav": [
       { "text": "Add/Edit", "sref": "app.AccSales", "translate": "" },
-      { "text": "Tax Invoice", "sref": "app.AccViewWholeSales", "translate": "" }
+      { "text": "Tax Invoice", "sref": "app.AccViewWholeSales", "translate": "" },
+      { "text": "Sales Return", "sref": "app.AccSalesReturn", "translate": "" }
     ],
     "permission":"sales"
   },
@@ -26,12 +27,6 @@
       { "text": "Tax Purchase", "sref": "app.AccTaxPurchase", "translate": "" }
     ],
     "permission":"purchase"
-  },
-  {
-    "text": "Sales Return",
-    "sref": "app.AccSalesReturn",
-    "icon": "fa fa-mail-forward",
-    "permission":"sales"
   },
   {
     "text": "Sales Order",
