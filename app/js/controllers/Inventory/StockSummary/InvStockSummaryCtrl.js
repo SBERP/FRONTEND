@@ -14,6 +14,8 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 	$scope.enableDisableColor = true;
 	$scope.enableDisableSize = true;
 	$scope.enableItemizedPurchaseSales = true;
+	$scope.enableAlterLanguage = false;
+	$scope.alterLanguageKey = "productName";
 	var Modalopened = false;
 	// $scope.enableDisableBestBefore = true;
 	//get setting data
@@ -24,6 +26,7 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 		{
 			var product_setting = fetchArrayService.getfilteredSingleObject($rootScope.$storage.settingOptionArray,'product','settingType');
 			var inventory_setting = fetchArrayService.getfilteredSingleObject($rootScope.$storage.settingOptionArray,'inventory','settingType');
+			var language_setting = fetchArrayService.getfilteredSingleObject($rootScope.$storage.settingOptionArray,'language','settingType');
 			if (angular.isObject(product_setting))
 			{
 				if(product_setting.settingType=="product")
@@ -37,6 +40,13 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 			if (angular.isObject(inventory_setting)) {
 				var arrayData1 = inventory_setting;
 				$scope.enableItemizedPurchaseSales = arrayData1.inventoryItemizeStatus=="enable" ? true : false;
+			}
+			if (angular.isObject(language_setting)) {
+				var arrayData1 = language_setting;
+				$scope.enableAlterLanguage = arrayData1.languageSettingType=="hindi" ? true : false;
+				if ($scope.enableAlterLanguage) {
+					$scope.alterLanguageKey = "altProductName";
+				}
 			}
 		}
 		else
@@ -57,6 +67,13 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 						if (response[arrayData].settingType=="inventory") {
 							var arrayData1 = response[arrayData];
 							$scope.enableItemizedPurchaseSales = arrayData1.inventoryItemizeStatus=="enable" ? true : false;
+						}
+						if (response[arrayData].settingType=="language") {
+							var arrayData1 = response[arrayData];
+							$scope.enableAlterLanguage = arrayData1.languageSettingType=="hindi" ? true : false;
+							if ($scope.enableAlterLanguage) {
+								$scope.alterLanguageKey = "altProductName";
+							}
 						}
 					}
 				}

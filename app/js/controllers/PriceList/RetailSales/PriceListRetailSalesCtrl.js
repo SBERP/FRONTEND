@@ -15,7 +15,7 @@ function PriceListRetailSalesController($rootScope,$scope, $filter, ngTableParam
 	$scope.saleType = saleType;
 	
 	$scope.disableButton = true;
- var data = [];
+ 	var data = [];
  
 	var getData = getSetFactory.get();
 	getSetFactory.blank();
@@ -46,12 +46,15 @@ function PriceListRetailSalesController($rootScope,$scope, $filter, ngTableParam
 	delete getData.noOfDecimalPoints;
 	
 	
+	$scope.enableAlterLanguage = false;
+	$scope.alterLanguageKey = "productName";
 	/* Setting data for hide/show Color & Size */
 		$scope.setting_color = false;
 		$scope.setting_size = false;
 		if ($rootScope.$storage.settingOptionArray.length > 0)
 		{
 			var product_setting = fetchArrayService.getfilteredSingleObject($rootScope.$storage.settingOptionArray,'product','settingType');
+			var language_setting = fetchArrayService.getfilteredSingleObject($rootScope.$storage.settingOptionArray,'language','settingType');
 
 			if (angular.isObject(product_setting))
 			{
@@ -63,6 +66,13 @@ function PriceListRetailSalesController($rootScope,$scope, $filter, ngTableParam
 				if(product_setting.productSizeStatus == "enable") 
 				{
 					$scope.setting_size = true;	
+				}
+			}
+			if (angular.isObject(language_setting)) {
+				var arrayData1 = language_setting;
+				$scope.enableAlterLanguage = arrayData1.languageSettingType=="hindi" ? true : false;
+				if ($scope.enableAlterLanguage) {
+					$scope.alterLanguageKey = "altProductName";
 				}
 			}
 			
@@ -87,6 +97,13 @@ function PriceListRetailSalesController($rootScope,$scope, $filter, ngTableParam
 							if(arrayData1.productSizeStatus == "enable") 
 							{
 								$scope.setting_size = true;	
+							}
+						}
+						if (response2[arrayData].settingType=="language") {
+							var arrayData1 = response2[arrayData];
+							$scope.enableAlterLanguage = arrayData1.languageSettingType=="hindi" ? true : false;
+							if ($scope.enableAlterLanguage) {
+								$scope.alterLanguageKey = "altProductName";
 							}
 						}
 					}
@@ -232,7 +249,7 @@ function PriceListRetailSalesController($rootScope,$scope, $filter, ngTableParam
 							objectData.categoryName =  apiData.productGroup.productGroupName;
 							
 							// objectData.groupName = apiData.productGroup.productGroupName;
-							objectData.groupName = apiData.productName;
+							objectData.groupName = apiData[$scope.alterLanguageKey] || apiData.productName;
 							
 							$scope.setting_color ? objectData.color = apiData.color : '';
 							$scope.setting_size ? objectData.size = apiData.size : '';
@@ -265,7 +282,7 @@ function PriceListRetailSalesController($rootScope,$scope, $filter, ngTableParam
 						objectData.categoryName = apiData.productGroup.productGroupName;
 						
 						// objectData.groupName = apiData.productGroup.productGroupName;
-						objectData.groupName = apiData.productName;
+						objectData.groupName = apiData[$scope.alterLanguageKey] || apiData.productName;
 						$scope.setting_color ? objectData.color = apiData.color : '';
 						$scope.setting_size ? objectData.size = apiData.size : '';
 						
@@ -285,7 +302,7 @@ function PriceListRetailSalesController($rootScope,$scope, $filter, ngTableParam
 					
 					csvObject.categoryName = apiData.productCategory.productCategoryName;
 					csvObject.groupName = apiData.productGroup.productGroupName;
-					csvObject.productName = apiData.productName;
+					csvObject.productName = apiData[$scope.alterLanguageKey] || apiData.productName;
 					$scope.setting_color ? csvObject.color = apiData.color : '';
 					$scope.setting_size ? csvObject.size = apiData.size : '';
 					

@@ -44,7 +44,8 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 	$scope.purchaseBill.balanceTable;
 	$scope.igstDisable = true;
 	$scope.csgstDisable = false;
-	
+	vm.dueDate;
+
 	/* VALIDATION */
 	
 	$scope.errorMessage = validationMessage; //Error Messages In Constant
@@ -132,7 +133,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 		measurementUnitDropData = advanceRes;
 	});
 
-
+	$scope.displayProductName = "productName";
 	$scope.enableDisableAdvanceMou = false;
 	$scope.enableDisableColor = true;
 	$scope.enableDisableVariant = true;
@@ -142,7 +143,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 	$scope.divTag = true;
 	$scope.divAdvanceMou = false;
 	$scope.colspanValue = '6';
-	$scope.colspanAdvanceValue = '9';
+	$scope.colspanAdvanceValue = '7';
 	$scope.colspanExpenseValue = '7';
 	$scope.totalTd = '13';
 	$scope.ProductColorSizeVarDesign = 'productColorSizeWidth';
@@ -182,12 +183,12 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 						if($scope.divTag==false && $scope.enableDisableFrameNo==false)
 						{
 							if($scope.enableDisableAdvanceMou == true){
-								$scope.colspanAdvanceValue = '8';
+								$scope.colspanAdvanceValue = '6';
 								$scope.colspanValue = '5';
 								$scope.totalTd = '12';
 							}
 							else{
-								$scope.colspanAdvanceValue = '7';
+								$scope.colspanAdvanceValue = '5';
 								$scope.colspanValue = '4';
 								$scope.totalTd = '11';
 								$scope.colspanExpenseValue='5';
@@ -195,14 +196,14 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 						}
 						else if($scope.divTag==false || $scope.enableDisableFrameNo==false)
 						{
-							$scope.colspanAdvanceValue = '8';
+							$scope.colspanAdvanceValue = '6';
 							$scope.colspanValue = '5';
 							$scope.totalTd = '12';
 							$scope.colspanExpenseValue='6';
 						}
 						else
 						{
-							$scope.colspanAdvanceValue = '9';
+							$scope.colspanAdvanceValue = '7';
 							$scope.colspanValue = '6';
 							$scope.totalTd = '13';
 							$scope.colspanExpenseValue='7';
@@ -210,6 +211,14 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 					}
 					if (response[arrayData].settingType=="inventory") {
 						$scope.enableItemizedPurchaseSales = response[arrayData].inventoryItemizeStatus=="enable" ? true : false;
+					}
+					if (response[arrayData].settingType=="language") 
+					{
+						var arrayData1 = response[arrayData];
+						$scope.displayProductName = arrayData1.languageSettingType=="hindi" ? "altProductName" : "productName";
+						if ($scope.displayProductName == "altProductName") {
+							onGoogleInit();
+						}
 					}
 				}
 			}
@@ -310,7 +319,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 	});
 	
 	/* Table */
-	$scope.addRow = function(index){
+	$scope.addRow = function(index) {
 		
 		var plusOne = index+1;
 		
@@ -331,6 +340,12 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 		
 		$scope.changeProductArray = true;
 		
+		if ($scope.displayProductName == "altProductName") {
+			/* To Load Hindi Transliteration by Class */
+			setTimeout(function() {
+				onLoad();
+			}, 500);
+		}
     };
 	$scope.addExpenseRow = function(index){
 		
@@ -357,6 +372,11 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 		
 		$scope.advanceValueUpdate();
 	};
+	
+	$scope.myCustomProductFilter = function(item) 
+	{
+		return item[$scope.displayProductName] != null && item[$scope.displayProductName] != '';
+	}
 	
 	$scope.setProductData = function(item,index)
 	{
@@ -817,7 +837,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 			for(var w=0;w<count;w++){
 				productFactory.getSingleProduct(EditProducArray[w].productId).then(function(resData){
 					/** Tax **/
-						vm.AccBillTable[d].productName = resData.productName;
+						vm.AccBillTable[d].productName = resData[$scope.displayProductName] ? resData[$scope.displayProductName] : resData.productName;
 						vm.AccBillTable[d].itemizeDetail = [];
 						if (EditProducArray[d].hasOwnProperty('itemizeDetail')) {
 							if (angular.isArray(EditProducArray[d].itemizeDetail)) {
@@ -892,6 +912,15 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 				});
 			}
 			
+			vm.dueDate = '';
+			if ('dueDate' in $scope.purchaseBill.EditBillData ) {
+				if ($scope.purchaseBill.EditBillData.dueDate != '' && $scope.purchaseBill.EditBillData.dueDate != null) {
+					var getDuedate =  $scope.purchaseBill.EditBillData.dueDate;
+					var spliteDuedate = getDuedate.split("-").reverse().join("-");
+					vm.dueDate = new Date(spliteDuedate);
+				}
+			}
+
 			// Extracharge,Advance
 			$scope.purchaseBill.extraCharge = $filter('setDecimal')($scope.purchaseBill.EditBillData.extraCharge,$scope.noOfDecimalPoints); //ExtraCharge
 			$scope.purchaseBill.advance = $filter('setDecimal')($scope.purchaseBill.EditBillData.advance,$scope.noOfDecimalPoints); //Advance
@@ -913,10 +942,12 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 		}
 		else{
 			vm.disableCompany = false;
-			
+			vm.dueDate = new Date();
+			$scope.dueDateChange();
+
 			//get Company
 			vm.companyDrop=[];
-			apiCall.getCall(apiPath.getAllCompany).then(function(response2){
+			apiCall.getCall(apiPath.getAllCompany).then(function(response2) {
 				vm.companyDrop = response2;
 				$scope.defaultComapny();  // Set Default Company and Other Data
 			});
@@ -930,17 +961,15 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 			{
 				if(measurementUnitDropData.length == 0)
 				{
-					loadAdvanceMeasurementUnit(function(advanceRes){
+					loadAdvanceMeasurementUnit(function(advanceRes) {
 						measurementUnitDropData = advanceRes;
 						vm.measurementUnitDrop[0] = advanceRes;
 					});
 				}
 				else{
-					vm.measurementUnitDrop[tempIndex] = measurementUnitDropData;
+					vm.measurementUnitDrop[0] = measurementUnitDropData;
 				}
 			}
-
-			
 			$scope.purchaseBill.overallDiscountType = 'flat';
 		}
 	}	
@@ -969,7 +998,11 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 		var fdate  = date.getDate()+'-'+(date.getMonth()+1)+'-'+date.getFullYear();
 		formdata.set(Fname,fdate);
 	}
-	
+	$scope.dueDateChange = function(){
+		var  dueDate = new Date(vm.dueDate);
+		var fdueDate  = dueDate.getDate()+'-'+(dueDate.getMonth()+1)+'-'+dueDate.getFullYear();
+		formdata.set('dueDate',fdueDate);	
+	}
 	$scope.changeInBill = function(Fname,value) {
 		if(formdata.has(Fname))
 		{
@@ -1273,6 +1306,8 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 				var companyObject = $scope.purchaseBill.companyDropDown;
 				$scope.purchaseBill = [];
 				vm.dt1 = new Date();
+				vm.dueDate = new Date();
+				$scope.dueDateChange();
 				$scope.openExpenseRawData=false;
 				vm.AccBillTable = [{"productId":"","productName":"","color":"","frameNo":"","discountType":"flat","price":0,"discount":"","qty":1,"amount":"","size":"","variant":""}];
 				vm.AccExpense = [];
@@ -1358,6 +1393,8 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 		$scope.clearScannedResult();
 				
 		vm.dt1 = new Date();
+		vm.dueDate = new Date();
+		$scope.dueDateChange();
 		vm.AccBillTable = [{"productId":"","productName":"","color":"","frameNo":"","discountType":"flat","price":0,"discount":"","qty":1,"amount":"","size":"","variant":""}];
 		vm.AccExpense = [];
 		vm.productHsn = [];
@@ -1366,7 +1403,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 		$scope.changeProductAdvancePrice = false;
 		vm.disableCompany = false;
 		
-		if(copyData == 'copy'){
+		if(copyData == 'copy') {
 			getSetFactory.set(CopyBillData);
 			$scope.EditAddBill('copy');
 		}
@@ -1621,7 +1658,20 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
     this.openedStart = true;
   };
   
+  this.openStartServiceDate = function($event) {
+	  
+    $event.preventDefault();
+    $event.stopPropagation();
+
+    this.openedStartServiceDate = true;
+  };
+
   this.dateOptions = {
+    formatYear: 'yy',
+    startingDay: 1
+  };
+
+  this.dateOptions2 = {
     formatYear: 'yy',
     startingDay: 1
   };
@@ -2230,5 +2280,38 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 		  }
 		  return fiscalyear
 	}
+
+	function onGoogleInit() {
+		// Load the Google Transliteration API
+	  	google.load("elements", "1", {
+		    packages: "transliteration",
+		    callback: onLoad 
+		    // "nocss" : true
+		});
+	}
+	
+
+	function onLoad() {
+	    var options = {
+	      sourceLanguage: google.elements.transliteration.LanguageCode.ENGLISH,
+	      destinationLanguage: google.elements.transliteration.LanguageCode.HINDI,
+	      // shortcutKey: 'ctrl+m',
+	      transliterationEnabled: true
+	    };
+	    // Create an instance on TransliterationControl with the required options.
+	    var control = new google.elements.transliteration.TransliterationControl(options);
+	    // Enable transliteration in the textfields with the given ids.
+	    // var ids = ["productNameId"];
+	    var classes = document.getElementsByClassName('productNameClass');
+	    control.makeTransliteratable(classes);
+
+	    // Show the transliteration control which can be used to toggle between English and Hindi and also choose other destination language.
+	    // control.showControl('translControl');
+	}
+	  
+	// setTimeout(function() {
+	// 	google.setOnLoadCallback(onLoad);
+	// 	onLoad();
+	// }, 5000);
 }
 PurchaseBillController.$inject = ["$rootScope","$scope","apiCall","apiPath","$http","$window","$modal","purchaseType","validationMessage","productArrayFactory","getSetFactory","toaster","apiResponse","$anchorScroll","maxImageSize","$sce","$templateCache","getLatestNumber","productFactory","$filter","$state","fetchArrayService","bankFactory"];

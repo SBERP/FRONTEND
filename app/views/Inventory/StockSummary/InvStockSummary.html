@@ -27,7 +27,7 @@
    <div class="panel panel-default">
       <div class="panel-heading myHeading" >
          <!--button data-ng-click="table.tableParams.sorting({})" class="pull-right btn btn-default btn-sm">Clear sorting</button-->
-         <div class="panel-title" id="allPro">All Product  </div>
+         <div class="panel-title" id="allPro">All Product {{alterLanguageKey}} </div>
       </div>
 	   <div class="table-responsive">
 		  <table data-ng-table="table.tableParams" show-filter="true" class="table table-bordered table-striped">
@@ -35,12 +35,11 @@
 			 <tbody>
 				<tr data-ng-repeat="user in ($parent.filteredItems = $data) track by user.productTrnSummaryId">
 					<td data-title="'Brand'" sortable="'productCategoryName'" filter="{ 'productCategoryName': 'text' }" ng-bind="user.productCategoryName"></td>
-					 <td data-title="'Category'" sortable="'productGroupName'" filter="{ 'productGroupName': 'text' }" ng-bind="user.productGroupName"></td>
+					<td data-title="'Category'" sortable="'productGroupName'" filter="{ 'productGroupName': 'text' }" ng-bind="user.productGroupName"></td>
 					<td data-title="'Product Name'" sortable="'productName'" filter="{ 'productName': 'text' }">
-						<span ng-if="!enableItemizedPurchaseSales" ng-bind="::user.productName"></span>
-						<a ng-if="enableItemizedPurchaseSales" href="javascript:void()" ng-click="itemizeTrnModal(user.product.productId,'lg')" ng-bind="::user.productName"></a>
+						<span ng-if="!enableItemizedPurchaseSales" ng-bind="user.product[alterLanguageKey] || user.productName"></span>
+						<a ng-if="enableItemizedPurchaseSales" href="javascript:void()" ng-click="itemizeTrnModal(user.product.productId,'lg')" ng-bind="user.product[alterLanguageKey] || user.productName"></a>
 					</td>
-				   
 					<td ng-show="enableDisableColor" data-title="'Color'"  filter="{ 'color': 'text' }" ng-bind="::user.color"></td>
 					<td ng-show="enableDisableSize" data-title="'Size'"  filter="{ 'size': 'text' }" ng-bind="::user.size"></td>
 					<!-- <td  data-title="'Purchase-Price'"  filter="{ 'purchasePrice': 'text' }" ng-bind="::user.product.purchasePrice"></td> -->

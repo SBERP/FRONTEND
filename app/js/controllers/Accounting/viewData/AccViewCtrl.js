@@ -6,7 +6,7 @@
 
 App.controller('AccViewController', AccViewController);
 
-function AccViewController($rootScope,$scope,apiCall,apiPath,$state,viewDataType,validationMessage,toaster,clientFactory,stateCityFactory,fetchArrayService) {
+function AccViewController($rootScope,$scope,apiCall,apiPath,$state,viewDataType,validationMessage,toaster,clientFactory,stateCityFactory,fetchArrayService,productFactory) {
   'use strict';
   
   var vm = this; 
@@ -20,6 +20,8 @@ $scope.enableDisableAddress = false;
 $scope.enableDisableEmailId = false;
   var settingResponse = [];
 
+  	productFactory.getProduct();
+  	
   	if ($scope.viewDataTypePath == 'CrmClientFilterView'){
 
   		//get setting data
@@ -543,4 +545,4 @@ $scope.enableDisableEmailId = false;
   
   
 }
-AccViewController.$inject = ["$rootScope","$scope","apiCall","apiPath","$state","viewDataType","validationMessage","toaster","clientFactory","stateCityFactory","fetchArrayService"];
+AccViewController.$inject = ["$rootScope","$scope","apiCall","apiPath","$state","viewDataType","validationMessage","toaster","clientFactory","stateCityFactory","fetchArrayService","productFactory"];

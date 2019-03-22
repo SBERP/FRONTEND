@@ -172,6 +172,7 @@ function InvProductController($scope, $filter, ngTableParams,apiCall,apiPath,$st
 	$scope.enableDisableColor = true;
 	$scope.enableDisableSize = true;
 	$scope.enableDisableVariant = true;
+	$scope.enableAlterLanguage = false;
 	// $scope.enableDisableBestBefore = true;
 	//get setting data
 	$scope.getOptionSettingData = function(){
@@ -190,6 +191,10 @@ function InvProductController($scope, $filter, ngTableParams,apiCall,apiPath,$st
 						$scope.enableDisableSize = arrayData1.productSizeStatus=="enable" ? true : false;
 						$scope.enableDisableVariant = arrayData1.productVariantStatus=="enable" ? true : false;
 						// $scope.enableDisableBestBefore = arrayData1.productBestBeforeStatus=="enable" ? true : false;
+					}
+					if (response[arrayData].settingType=="language") {
+						var arrayData1 = response[arrayData];
+						$scope.enableAlterLanguage = arrayData1.languageSettingType=="hindi" ? true : false;
 					}
 				}
 			}
