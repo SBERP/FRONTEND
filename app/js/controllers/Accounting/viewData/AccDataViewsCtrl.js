@@ -873,13 +873,15 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 						var invIndex = 0;
 						while(invIndex < invCnt)
 						{
-							if(productArrays.inventory[invIndex].productId)
+							if("productId" in productArrays.inventory[invIndex] && productArrays.inventory[invIndex].productId)
 							{
 								(function(proId,pIndex) {
 									productFactory.getSingleProduct(proId).then(function(proResponse) {
 										// (function(pId) {
 											if(angular.isObject(proResponse)) {
-												data[pIndex].displayProduct.push(angular.copy(proResponse));
+												if (data[pIndex]) {
+													data[pIndex].displayProduct.push(angular.copy(proResponse));
+												}
 											}
 										// })(pIndex);
 									});
@@ -887,13 +889,12 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 							}
 							invIndex++;
 						}
-
 						var fileCnt = data[p].file.length;
 						
 						var flag = 0;
 						var imageFlag = 0;
 						
-						for(var k=0;k<fileCnt;k++){
+						for(var k=0;k<fileCnt;k++) {
 						
 							if(data[p].file[k].documentFormat == 'pdf' && (data[p].file[k].documentType == 'bill' ||data[p].file[k].documentType == 'quotation'))
 							{

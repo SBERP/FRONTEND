@@ -181,7 +181,7 @@
 	<div class="table-responsive">
       <table ng-table="table.tableParams"  show-filter="true" class="table table-bordered table-striped" >
           <tbody>
-            <tr ng-repeat="user in $data track by (user.saleId+user.total+user.clientName+$index)"  >
+            <tr data-ng-repeat="user in $data track by (user.saleId+user.total+user.clientName+$index)"  >
             <!--td data-title="'#'"  style="text-align:center">{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td-->
             	<td style="text-align: left" header="'ng-table/headers/checkbox.html'"  >
 					<div class="checkbox c-checkbox">
@@ -197,9 +197,9 @@
                	<td title="'Client Name'"  filter="{ 'clientName': 'text' }" >{{::user.clientName}}</td>
                	<td ng-show="table.tableParams.productsFlag" title="'Products'" width="15%" >
                   <ul>
-                     <li ng-repeat="prt in user.displayProduct track by (prt.productId+prt.productName+prt.amount+$index)">
-                        <span ng-if="!isLanguageHindi || !prt.altProductName" >{{::prt.productName}}</span>
-                        <span ng-if="isLanguageHindi && prt.altProductName" >{{::prt.altProductName}}</span>
+                     <li data-ng-repeat="prt in user.displayProduct track by (prt.productId+prt.productName+prt.amount+$index)">
+                        <span ng-if="!isLanguageHindi || !prt.altProductName" >{{prt.productName}}</span>
+                        <span ng-if="isLanguageHindi && prt.altProductName" >{{prt.altProductName}}</span>
                      </li>
                   </ul>
                	</td>
@@ -287,9 +287,9 @@
 					<!--td title="'Company'" filter="{ 'companyName': 'text' }" >{{user.company.companyName}}</td-->
 					<td ng-show="table.tableParams.productsFlag" title="'Products'"  width="15%">
 						<ul>
-							<li ng-repeat="prt in user.displayProduct track by (prt.productId+prt.amount+$index)" ng-if="prt.productName">
-								<span ng-if="!isLanguageHindi || !prt.altProductName" >{{::prt.productName}}</span>
-                        		<span ng-if="isLanguageHindi && prt.altProductName" >{{::prt.altProductName}}</span>
+							<li ng-repeat="prt in user.displayProduct track by (prt.productId+prt.productName+prt.amount+$index)" ng-if="prt.productName">
+								<span ng-if="!isLanguageHindi || !prt.altProductName" >{{prt.productName}}</span>
+                        		<span ng-if="isLanguageHindi && prt.altProductName" >{{prt.altProductName}}</span>
 							</li>
 						</ul>
 					</td>

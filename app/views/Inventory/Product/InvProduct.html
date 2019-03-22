@@ -118,7 +118,9 @@
 					</td>
 					<td sortable="'productCategoryName'" filter="{ 'productCategoryName': 'text' }" ng-bind="::user.productCategoryName" ></td>
 					<td sortable="'productGroupName'" filter="{ 'productGroupName': 'text' }" ng-bind="::user.productGroupName" ></td>
-					<td sortable="'productName'" filter="{ 'productName': 'text' }" ng-bind="::user.productName" ></td>
+					<td sortable="'productName'" filter="{ 'productName': 'text' }" ng-if="!enableAlterLanguage" ng-bind="::user.productName" ></td>
+					<td sortable="'productName'" filter="{ 'productName': 'text' }" ng-if="enableAlterLanguage && user.altProductName == null" ng-bind="::user.productName" ></td>
+					<td sortable="'altProductName'" filter="{ 'altProductName': 'text' }" ng-if="enableAlterLanguage && user.altProductName != null" ng-bind="::user.altProductName" ></td>
 					<td  filter="{ 'color': 'text' }" ng-bind="::user.color" ng-if="enableDisableColor"></td>
 					<td  filter="{ 'size': 'text' }" ng-bind="::user.size" ng-if="enableDisableSize"></td>
 					<td  filter="{ 'variant': 'text' }" ng-bind="::user.variant" ng-if="enableDisableVariant"></td>

@@ -6,14 +6,26 @@
 
 App.controller('AddInvStockController', AddInvStockController);
 
-function AddInvStockController($rootScope,$scope,apiCall,apiPath,getSetFactory,$state,toaster,productFactory) {
+function AddInvStockController($rootScope,$scope,apiCall,apiPath,getSetFactory,$state,toaster,productFactory,fetchArrayService) {
   'use strict';
   
-  var vm = this;
-  $scope.invStock = [];
+  	var vm = this;
+  	$scope.invStock = [];
   
-  var dateFormats = $rootScope.dateFormats;
-  
+  	var dateFormats = $rootScope.dateFormats;
+  	$scope.altLanguageKey = "productName";
+  	//Get Setting
+  	apiCall.getCall(apiPath.settingOption).then(function(response)	{
+  		if (angular.isArray(response)) {
+  			var language_setting = fetchArrayService.getfilteredSingleObject(response,'language','settingType');
+  			if (angular.isObject(language_setting)) {
+	  			if (language_setting.languageSettingType == "hindi") {
+	  				$scope.altLanguageKey = "altProductName";
+	  			}
+	  		}
+  		}
+  	});
+
 	//Get Company
 	vm.companyDrop=[];
 	apiCall.getCall(apiPath.getAllCompany).then(function(response){
@@ -295,4 +307,4 @@ function AddInvStockController($rootScope,$scope,apiCall,apiPath,getSetFactory,$
   
   
 }
-AddInvStockController.$inject = ["$rootScope","$scope","apiCall","apiPath","getSetFactory","$state","toaster","productFactory"];
+AddInvStockController.$inject = ["$rootScope","$scope","apiCall","apiPath","getSetFactory","$state","toaster","productFactory","fetchArrayService"];

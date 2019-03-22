@@ -894,7 +894,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
 				url: '/PurchaseBill',
 				templateUrl: basepath('QuickMenu/PurchaseBill.html'),
 				controller: 'PurchaseBillController as form',
-				resolve: angular.extend(requireDeps('purchaseBill','toaster','angular-chosen','twain','ngTable','uiCropper','jquery-ui'),{
+				resolve: angular.extend(requireDeps('purchaseBill','toaster','angular-chosen','twain','ngTable','uiCropper','jquery-ui','googleKeyboard'),{
                     purchaseType: function(){
                         return 'purchaseBill';
                     }
@@ -905,7 +905,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
                 url: '/AccSalesReturn',
                 templateUrl: basepath('QuickMenu/salesReturnBill.html'), 
                 controller: 'SalesReturnBillController as form',
-                resolve: angular.extend(requireDeps('twain','toaster','angular-chosen','ngTable','uiCropper','moment','jquery-ui'),{
+                resolve: angular.extend(requireDeps('twain','toaster','angular-chosen','ngTable','uiCropper','moment','jquery-ui','googleKeyboard'),{
                     saleType: function(){
                         return 'SalesReturn';
                     }

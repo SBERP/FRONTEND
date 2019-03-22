@@ -112,11 +112,10 @@
 						   <div class="form-group">
 							  <label class="col-sm-3 control-label">Product</label>
 							  <div class="col-sm-9">
-								 <select chosen="" ng-model="invStock.productDropDown" data-ng-options="s as s.productName+' ('+s.color+' | '+s.size+')' for s in form.productDrop track by s.productId"   class="form-control chosen-select" tabindex="2" ></select>
+								 <select chosen="" ng-model="invStock.productDropDown" data-ng-options="s as s[altLanguageKey] || s.productName+' ('+s.color+' | '+s.size+')' for s in form.productDrop track by s.productId"   class="form-control chosen-select" tabindex="2" ></select>
 							  </div>
 						   </div>
 						</fieldset>
-				
 					</div>
 				</div>
 				
