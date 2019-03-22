@@ -989,15 +989,21 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			else if ($scope.enableDisableLWHSetting) {
 				if (response.taxInclusive == 'inclusive')
 				{
-					var calQty = vm.AccBillTable[index].qty * vm.AccBillTable[index].lengthValue * vm.AccBillTable[index].heightValue * vm.AccBillTable[index].widthValue / vm.AccBillTable[index].devideFactor;
-					vm.AccBillTable[index].amount = $filter('setDecimal')(response.purchasePrice * calQty ,$scope.noOfDecimalPoints);
+					var calcQty = getCalcQty(vm.AccBillTable[index],$scope.enableDisableLWHArray[index]);
+					var calcTax = parseFloat(vm.AccBillTable[index].cgstPercentage) + parseFloat(vm.AccBillTable[index].sgstPercentage) + parseFloat(vm.AccBillTable[index].igstPercentage);
+					vm.AccBillTable[index].stockFt = calcQty;
+					if (angular.isDefined(vm.AccBillTable[index].price) && !isNaN(vm.AccBillTable[index].price) && vm.AccBillTable[index].price != 0) {
+						vm.AccBillTable[index].amount = $filter('setDecimal')(vm.AccBillTable[index].price*calcQty*(1+(calcTax)),$scope.noOfDecimalPoints);
+					}else{
+						vm.AccBillTable[index].amount = $filter('setDecimal')(response.purchasePrice * calcQty ,$scope.noOfDecimalPoints);
+					}
 					if(vm.AccBillTable[index].amount == 0) {
-						vm.AccBillTable[index].amount = $filter('setDecimal')(response.mrp * calQty,$scope.noOfDecimalPoints);
+						vm.AccBillTable[index].amount = $filter('setDecimal')(response.mrp * calcQty,$scope.noOfDecimalPoints);
 					}
 					$scope.calculateTaxReverseTwo(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage,index);
 				}else{
 					$scope.calculateTaxReverse(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage,index);
-				}	
+				}
 			}
 			else
 			{
@@ -1015,7 +1021,34 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		});
 	}
 	// End Table 
-	
+	function getCalcQty(calcItem,lwhStatus){
+		var calcLength = 1;
+		var calcWidth = 1;
+		var calcHeight = 1;
+		var tempLength;
+		var tempWidth;
+		var tempHeight;
+		if (angular.isNumber(calcItem.moduloFactor) && calcItem.moduloFactor > 1) {
+			var moduloFactor = parseInt(calcItem.moduloFactor);
+			if (lwhStatus.lengthStatus) {
+				tempLength = parseFloat(calcItem.lengthValue) / moduloFactor;
+				calcLength = Math.ceil(tempLength) * moduloFactor;
+			}
+			if (lwhStatus.widthStatus) {
+				tempWidth = parseFloat(calcItem.widthValue) / moduloFactor;
+				calcWidth = Math.ceil(tempWidth) * moduloFactor;
+			}
+			if (lwhStatus.heightStatus) {
+				tempHeight = parseFloat(calcItem.heightValue) / moduloFactor;
+				calcHeight = Math.ceil(tempHeight) * moduloFactor;
+			}
+		}else{
+			calcLength = parseFloat(calcItem.lengthValue);
+			calcWidth = parseFloat(calcItem.widthValue);
+			calcHeight = parseFloat(calcItem.heightValue);
+		}
+		return $filter('setDecimal')(parseFloat(calcItem.qty)*calcLength*calcWidth*calcHeight/parseFloat(calcItem.devideFactor),$scope.noOfDecimalPoints);
+	}
 	function checkGSTValue(value) {
 		if(angular.isUndefined(value) || value == '' || isNaN(value)){
 			return 0;
@@ -1134,33 +1167,10 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			var getCess = checkGSTValue(item.cessPercentage);
 			var getFlatCess = 0;
 			if ($scope.enableDisableLWHSetting) {
-				var calcLength = 1;
-				var calcWidth = 1;
-				var calcHeight = 1;
-				var tempLength;
-				var tempWidth;
-				var tempHeight;
-				if (angular.isNumber(item.moduloFactor) && item.moduloFactor > 1) {
-					var moduloFactor = parseInt(item.moduloFactor);
-					if ($scope.enableDisableLWHArray[index].lengthStatus) {
-						tempLength = parseFloat(item.lengthValue) / moduloFactor;
-						calcLength = Math.ceil(tempLength) * moduloFactor;
-					}
-					if ($scope.enableDisableLWHArray[index].widthStatus) {
-						tempWidth = parseFloat(item.widthValue) / moduloFactor;
-						calcWidth = Math.ceil(tempWidth) * moduloFactor;
-					}
-					if ($scope.enableDisableLWHArray[index].heightStatus) {
-						tempHeight = parseFloat(item.heightValue) / moduloFactor;
-						calcLength = Math.ceil(tempHeight) * moduloFactor;
-					}
-				}else{
-					calcLength = parseFloat(item.lengthValue);
-					calcWidth = parseFloat(item.widthValue);
-					calcHeight = parseFloat(item.heightValue);
-				}
+				
+				var calcQty = getCalcQty(item,$scope.enableDisableLWHArray[index]);
+				vm.AccBillTable[index].stockFt = calcQty;
 				vm.AccBillTable[index].totalFt = $filter('setDecimal')(parseFloat(item.qty)*item.lengthValue*item.widthValue*item.heightValue/parseFloat(item.devideFactor),$scope.noOfDecimalPoints);
-				var calcQty = $filter('setDecimal')(parseFloat(item.qty)*calcLength*calcWidth*calcHeight/parseFloat(item.devideFactor),$scope.noOfDecimalPoints);
 			}else{
 				var calcQty = item.qty;
 			}
@@ -1211,33 +1221,9 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			var getCess = checkGSTValue(item.cessPercentage);
 			var getFlatCess = 0;
 			if ($scope.enableDisableLWHSetting) {
-				var calcLength = 1;
-				var calcWidth = 1;
-				var calcHeight = 1;
-				var tempLength;
-				var tempWidth;
-				var tempHeight;
-				if (angular.isNumber(item.moduloFactor) && item.moduloFactor > 1) {
-					var moduloFactor = parseInt(item.moduloFactor);
-					if ($scope.enableDisableLWHArray[index].lengthStatus) {
-						tempLength = parseFloat(item.lengthValue) / moduloFactor;
-						calcLength = Math.ceil(tempLength) * moduloFactor;
-					}
-					if ($scope.enableDisableLWHArray[index].widthStatus) {
-						tempWidth = parseFloat(item.widthValue) / moduloFactor;
-						calcWidth = Math.ceil(tempWidth) * moduloFactor;
-					}
-					if ($scope.enableDisableLWHArray[index].heightStatus) {
-						tempHeight = parseFloat(item.heightValue) / moduloFactor;
-						calcLength = Math.ceil(tempHeight) * moduloFactor;
-					}
-				}else{
-					calcLength = parseFloat(item.lengthValue);
-					calcWidth = parseFloat(item.widthValue);
-					calcHeight = parseFloat(item.heightValue);
-				}
+				var calcQty = getCalcQty(item,$scope.enableDisableLWHArray[index]);
 				vm.AccBillTable[index].totalFt = $filter('setDecimal')(parseFloat(item.qty)*item.lengthValue*item.widthValue*item.heightValue/parseFloat(item.devideFactor),$scope.noOfDecimalPoints);
-				var calcQty = $filter('setDecimal')(parseFloat(item.qty)*calcLength*calcWidth*calcHeight/parseFloat(item.devideFactor),$scope.noOfDecimalPoints);
+				vm.AccBillTable[index].stockFt = calcQty;
 			}else{
 				var calcQty = item.qty;
 			}
@@ -1598,6 +1584,11 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 							}
 							$scope.enableDisableLWHArray[d] = {};
 							$scope.enableDisableLWHArray[d].totalFt = $filter('setDecimal')(parseFloat(setData.lengthValue)*parseFloat(setData.widthValue)*parseFloat(setData.heightValue)*parseFloat(setData.qty)/parseFloat(vm.AccBillTable[d].devideFactor),$scope.noOfDecimalPoints);
+							if (angular.isDefined(vm.AccBillTable[d].stockFt) || vm.AccBillTable[d].stockFt == 'undefined') {
+								vm.AccBillTable[d].stockFt = getCalcQty(setData,$scope.enableDisableLWHArray[d]);
+							}else{
+								vm.AccBillTable[d].stockFt = setData.stockFt;
+							}
 							resData.measurementUnit.lengthStatus == 'enable' ? 
 							$scope.enableDisableLWHArray[d].lengthStatus = true : $scope.enableDisableLWHArray[d].lengthStatus = false;
 							$scope.enableDisableLWHArray[d].widthStatus = resData.measurementUnit.widthStatus == 'enable' ? true : false;
@@ -2043,7 +2034,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			modalInstance.result.then(function (returnModalData) {
 				Modalopened = false;
 				if(angular.isObject(returnModalData)){
-					console.log(returnModalData);
 					formdata.set('workflowStatus',returnModalData.statusId.statusId);
 					formdata.set('assignedTo',returnModalData.userId.userId);
 					formdata.set('assignedBy',$rootScope.$storage.authUser.userId);
