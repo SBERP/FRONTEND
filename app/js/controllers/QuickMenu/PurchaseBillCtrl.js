@@ -373,6 +373,11 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 		$scope.advanceValueUpdate();
 	};
 	
+	$scope.myCustomProductFilter = function(item) 
+	{
+		return item[$scope.displayProductName] != null && item[$scope.displayProductName] != '';
+	}
+	
 	$scope.setProductData = function(item,index)
 	{
 		vm.AccBillTable[index].productId = item.productId;

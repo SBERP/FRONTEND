@@ -627,6 +627,12 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			callback(response);
 		});
 	}
+	
+	$scope.myCustomProductFilter = function(item) 
+	{
+		return item[$scope.displayProductName] != null && item[$scope.displayProductName] != '';
+	}
+
 	vm.productHsn = [];
 	vm.productDesc = [];
 	vm.measurementUnitDrop = [];
