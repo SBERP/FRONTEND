@@ -6,13 +6,14 @@
 
 App.controller('previewBillModalController',previewBillModalController);
 
-function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,apiPath,$timeout,$state,apiResponse,$sce,billData,inventoryData,total,grandTotal,entryDate,$filter,productArrayFactory,buttonValidation,insertOrUpdate,saleType,productFactory,productHsn) {
+function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,apiPath,$timeout,$state,apiResponse,$sce,billData,inventoryData,total,grandTotal,entryDate,$filter,productArrayFactory,buttonValidation,insertOrUpdate,saleType,productFactory,productHsn,settingData) {
   'use strict';
   
 	 var data = [];
 	 var vm = this;
 	
 	 $scope.billData = billData;
+	 var settingData = settingData;
 	 $scope.companyData = $scope.billData.companyId;
 	 $scope.noOfDecimalPoints = parseInt($scope.companyData.noOfDecimalPoints);
 	 $scope.inventoryData = inventoryData;
@@ -244,6 +245,81 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
 		}
 	}
 
+	function getInvoiceHeading ()
+	{
+		var unitColumn = "";
+
+		var customLabel = "Unit";
+		var extraColumnColSpan = "3";
+		// var setting_color = setting_size = setting_frameNo = setting_variant = false;
+		var setting_color = false , setting_size = false , setting_frameNo = false , setting_variant = false;
+		
+		var extraFlag = 0;
+		
+		if (settingData.color) {
+			setting_color = true;
+			customLabel += " | Color";
+			extraFlag = 1;
+		}
+		if (settingData.size) {
+			setting_size = true;
+			customLabel += " | Size";
+			extraFlag = 1;
+		}
+		if (settingData.frame) {
+			setting_frameNo = true;
+			customLabel += " | Frame";
+			extraFlag = 1;
+		}
+		if (settingData.variant) {
+			setting_variant = true;
+			customLabel += " | Variant";
+			extraFlag = 1;
+		}
+		if (settingData.productMeasurementType == 'Unit Measurement') {
+			unitColumn = "<td class='tg-m36b theqp' style='font-size: 12px; padding: 2px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px; overflow-wrap: break-word; max-width: 100px;' colspan='1' rowspan='2'><strong>Total Ft.</strong></td>";
+			extraColumnColSpan = "2";
+			extraFlag = 1;
+		}
+
+		var productColspan = "3";
+
+		if (!extraFlag) {
+			extraColumnColSpan = "1";
+			productColspan = "5";
+		}
+		var productTitleHead = `
+						</td></tr></tbody>
+						<tbody>
+						<tr style='height: 15px; text-align: left; background-color: transparent;'>
+							<td class='tg-m36b thsrno' style='font-size: 12px; text-align: center; height: 15px; width: 5px; padding: 1px; border: 1px solid black; border-left: 0px;' colspan='1' rowspan='2'><strong>Sr. No</strong></td>
+							<td class='tg-m36b theqp' style='font-size: 12px; padding: 2px; height: 15px; text-align: left; border: 1px solid black; border-right: 0px; border-left: 0px; max-width: 120px; overflow-wrap: break-word;' colspan='`+productColspan+`' rowspan='2'><strong>Perticular</strong></td>
+							<td class='tg-m36b theqp' style='font-size: 12px; padding: 2px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px;' colspan='1' rowspan='2'><strong>HSN</strong></td>
+							[extraColumns]
+							<td class='tg-ullm thsrno' style='font-size: 12px; padding: 2px; height: 15px; width: 10px; text-align: center; border: 1px solid black; border-right: 0px;' colspan='1' rowspan='2'><strong>Qty</strong></td>
+							<td class='tg-ullm thsrno' style='font-size: 12px; padding: 2px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px;' colspan='1' rowspan='2'><strong>Rate</strong></td>
+							<td class='tg-ullm thsrno' style='font-size: 12px; padding: 2px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px;' colspan='1' rowspan='2'><strong>Amt</strong></td>
+							<td class='tg-ullm thamt' style='font-size: 12px; padding: 0px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px; border-bottom: 0px;' colspan='2'><strong>Discount</strong></td>
+							<td class='tg-ullm thsrno' style='font-size: 12px; padding: 2px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px;' colspan='1' rowspan='2'><strong>Taxable Amt</strong></td>
+							<td class='tg-m36b theqp' style='font-size: 12px; padding: 2px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px;' colspan='1' rowspan='2'><strong>GST</strong></td>
+							<td class='tg-ullm thamt' style='font-size: 12px; padding: 1px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px; min-width: 50px;' colspan='1' rowspan='2'><strong>Amount</strong></td>
+						</tr>
+						<tr style='height: 15px; text-align: left; background-color: transparent;'>
+							<td class='tg-ullm thamt' style='font-size: 12px; padding: 1px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px; border-top: 0px;' colspan='1'><strong>Rate</strong></td>
+							<td class='tg-ullm thamt' style='font-size: 12px; padding: 1px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px; border-top: 0px;' colspan='1'><strong>Amount</strong></td>
+						</tr>
+					</tbody>
+					<tbody>
+						<tr style='text-align: left; height: 1px; background-color: transparent; display: [displayNone];'>
+							<td style='font-size: 11px; height: 1px;' colspan='16'>[Description]`;
+
+		var extraColumns = "<td class='tg-m36b theqp' style='font-size: 12px; padding: 2px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px; overflow-wrap: break-word; max-width: 100px;' colspan='"+extraColumnColSpan+"' rowspan='2'><strong>"+customLabel+"</strong></td>"+unitColumn;
+
+		productTitleHead = productTitleHead.replace('[extraColumns]', extraColumns, 'g');
+
+		return productTitleHead;
+	}
+
 	// var obj = {name: 'misko', gender: 'male'};
 	// var log = [];
 	// angular.forEach(obj, function(value, key) {
@@ -263,6 +339,8 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
 	var totalAmount = 0;
 	var cessSummaryArray = [];
 	var totalCessAmount = 0;
+
+
 	for(var productArray=0;productArray<inventoryCount;productArray++){
 		
 		var productData = $scope.inventoryData[productArray];
@@ -324,17 +402,66 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
 			if(allProductHsn[productArray] == '' || allProductHsn[productArray] == undefined || allProductHsn[productArray] == null){
 				var hsnNo = '-';
 			}
-			else{	
+			else{
 				// var hsnNo = allProductHsn[productArray];
 			}
 			
+			var display_product_name = productData.productName;
+			var productColspan = "3",extraColumnColspan = "3";
+			var variantColumn = "";
+				/* Color/Size By Setting */
+					var extraFlag = 0;
+					var extraColumnValue = "test";
+					if (settingData.color) {
+						extraColumnValue += " | "+productData.color;
+						extraFlag = 1;
+					}
+					if (settingData.size) {
+						extraColumnValue += " | "+productData.size;
+						extraFlag = 1;
+					}
+					if (settingData.frame) {
+						extraColumnValue += " | "+productData.frameNo;
+						extraFlag = 1;
+					}
+					if (settingData.variant) {
+						extraColumnValue += " | "+productData.variant;
+						extraFlag = 1;
+					}
+
+					if (settingData.productMeasurementType == "Unit Measurement") {
+						var totalFt = productData.totalFt ? productData.totalFt : 0;
+
+						variantColumn = "<td  style='font-size: 11px;  height:  0.7cm; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);text-align:center'>"+ totalFt +"</td>";
+
+						var d_length = "", d_width = "", d_height = "";
+						/* L W H */
+							d_length = productData.lengthValue ? productData.lengthValue+'x ': "";
+							d_width = productData.widthValue ? productData.widthValue+'x ' : "";
+							d_height = productData.heightValue ? productData.heightValue+'x' : "";
+							if (d_length != "" || d_width != "" || d_height != "") {
+								display_product_name += " <span >"+d_length+d_width+d_height+"</span>";
+							}
+						/* End */
+
+						extraColumnColspan = "2";
+						extraFlag = 1;
+					}
+
+					if (!extraFlag) {
+						productColspan = "5";
+						extraColumnColspan = "1";
+					}
+
+					var extraColumnHtml = "<td colspan='"+extraColumnColspan+"' style='font-size: 11px;  height:  0.7cm; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);text-align:center'>"+extraColumnValue+"</td>";
+					
+				/* End */
+			
 				output = output+"<tr  style='font-family: Calibri; text-align: left; height:  0.7cm; background-color: transparent;'><td  style='font-size: 12px; height: 0.7cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);'>"+ srNumber +
 				"</td><td colspan='3' style='font-size: 12px;  height:  0.7cm; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' >&nbsp;"
-				+ productData.productName +
+				+ display_product_name +
 				"</td><td  style='font-size: 12px;  height:  0.7cm; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);text-align:center'>"+ (hsnNo ? hsnNo : '-') +
-				"</td><td colspan='2' style='font-size: 12px;  height:  0.7cm; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);text-align:center'>"+ productData.color +" | "+ productData.size +
-				"</td><td  style='font-size: 12px;  height:  0.7cm; padding:0 0 0 0; text-align: center;border-right: 1px solid rgba(0, 0, 0, .3);'>"+ productData.frameNo +
-				"</td><td  style='font-size: 12px;  height:  0.7cm; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);text-align:center'>"+ productData.qty +
+				"</td>"+extraColumnHtml+variantColumn+"<td  style='font-size: 12px;  height:  0.7cm; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);text-align:center'>"+ productData.qty +
 				"</td><td  style='font-size: 12px;   height:  0.7cm; text-align: right; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);'>"+ $filter('number')(productData.price,$scope.noOfDecimalPoints) +
 				"&nbsp;</td><td  style='font-size: 12px;   height:  0.7cm; text-align: right; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);'>"+ $filter('number')(mainPrice,$scope.noOfDecimalPoints) +
 				"&nbsp;</td><td  style='font-size: 12px; height:  0.7cm; text-align: center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);'>"+ discountInPercentage +
@@ -399,13 +526,18 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
 				var totalProductSpace = lastManageSpace*0.7;
 				var finalProductBlankSpace = parseFloat(descTotalCM) - parseFloat(totalProductSpace);
 				
-				output = output + "<tr  style='height:"+finalProductBlankSpace+"cm; background-color: transparent;'><td style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' colspan='3' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td colspan='2' style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, 1);' ></td></tr>";
+				var blankExtraColumn = "<td colspan='"+extraColumnColspan+"' style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td>";
+
+				var variantBlankHtml = "<td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td>";
+				if (variantColumn == "") {
+					variantBlankHtml = "";
+				}
+
+				output = output + "<tr  style='height:"+finalProductBlankSpace+"cm; background-color: transparent;'><td style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' colspan='"+productColspan+"' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td>"+blankExtraColumn+variantBlankHtml+"<td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, 1);' ></td></tr>";
 			}
 			 srNumber++;
 			totalQty = totalQty + parseInt(productData.qty);
-
 		}
-
 	}
 
 	var totalTaxableAmt = 0;
@@ -578,10 +710,12 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
 	billArrayTag.CLIENTTINNO = $scope.billData.gst ? $scope.billData.gst : '-';
 	billArrayTag.PONO = $scope.billData.poNumber == '' || $scope.billData.poNumber == undefined ? '': $scope.billData.poNumber;
 	
-	
+	var productInfoHtml = getInvoiceHeading();
+
 	apiCall.getCall(apiPath.getTemplateByCompany+$scope.companyData.companyId).then(function(responseTemp){
 		
-		//$scope.TemplateDisplay = $sce.trustAsHtml(responseTemp[0].templateBody);
+		//$scope.TemplateDisplay = $sce.trustAsHtml(responseTemp[0].templateBody);getInvoiceHeading
+		
 		var countData = responseTemp.length;
 		for(var j=0;j<countData;j++){
 			
@@ -589,7 +723,7 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
 			if(TemplateData.templateType == $scope.useTemplate){
 				
 				var tempData = TemplateData.templateBody;
-				
+				tempData = tempData.replace("[productInfo]",productInfoHtml,"g");
 				 angular.forEach(billArrayTag,function(value,key){
 					
 					//var check = "/\[["+key+"\]]+\]/g";
@@ -603,14 +737,9 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
 				$scope.TemplateDisplay = $sce.trustAsHtml(tempData);
 			
 			}
-			
-		
 		}
-		
-		
-	
 	});
 	
 }
 
-previewBillModalController.$inject = ["$scope", "$modalInstance","$rootScope","apiCall","apiPath","$timeout","$state","apiResponse","$sce","billData","inventoryData","total","grandTotal","entryDate","$filter","productArrayFactory","buttonValidation","insertOrUpdate","saleType","productFactory","productHsn"];
+previewBillModalController.$inject = ["$scope", "$modalInstance","$rootScope","apiCall","apiPath","$timeout","$state","apiResponse","$sce","billData","inventoryData","total","grandTotal","entryDate","$filter","productArrayFactory","buttonValidation","insertOrUpdate","saleType","productFactory","productHsn","settingData"];
