@@ -68,7 +68,7 @@
     "sref": "#",
     "icon": "fa fa-cog",
     "subnav": [
-      {"text": "Option", "sref": "app.SettingOption", "icon": "fa fa-barcode", "translate": "" },
+      {"text": "Option", "sref": "app.SettingOption", "icon": "fa fa-barcode", "translate": "","permission": "erpOptions"},
       {"text": "Itemwise Commission", "sref": "app.ItemwiseCommission", "icon": "fa fa-barcode", "translate": "" },
       {"text": "Integration", "sref": "app.SettingIntegration", "icon": "fa fa-globe", "translate": "" },
       {"text": "Jobcard#", "sref": "app.SettingJobcardNumber", "icon": "fa fa-barcode", "translate": "" },

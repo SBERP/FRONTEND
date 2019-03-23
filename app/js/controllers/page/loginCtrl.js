@@ -99,7 +99,11 @@ function loginController($rootScope,$scope,hostFrontUrl,$http,apiPath,apiCall,$s
 								//console.log($rootScope.loggedUser);
 								// $state.go("app.Company");
 							}
-
+							if (response.user['userType']=='superadmin') {
+								$rootScope.$storage.permissionArray[0].configuration.erpOptions = true;
+							}else{
+								$rootScope.$storage.permissionArray[0].configuration.erpOptions = false;
+							}
 							$rootScope.$storage.settingOptionArray = [];
 
 							apiCall.getCall(apiPath.settingOption).then(function(response2)

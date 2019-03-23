@@ -1419,7 +1419,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				//Auto Suggest Product Dropdown data
 				vm.productNameDrop = [];
 				productFactory.getProductByCompany($scope.quickBill.EditBillData.company.companyId).then(function(data){
-					// console.log('1329....',data);
 					vm.productNameDrop = data;
 					
 				});

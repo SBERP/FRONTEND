@@ -13,7 +13,6 @@ App.controller('SidebarController', ['$rootScope', '$scope', '$location', '$http
 		var $win  = $($window);
 		var $html = $('html');
 		var $body = $('body');
-		// console.log($scope.$storage.permissionArray);
 		// Load menu from json file
 		// ----------------------------------- 
 		 var check_flag = angular.copy($rootScope.app.sidebar.sidebar_hide);
@@ -103,7 +102,14 @@ App.controller('SidebarController', ['$rootScope', '$scope', '$location', '$http
 			$rootScope.$broadcast('closeSidebarMenu');
 			$rootScope.$broadcast('closeSidebarSlide');
 		});
-
+		$scope.checkSubNavPermission = function(setting)
+		{
+			if (setting==false) {
+				return false;
+			}else{
+				return true;
+			}
+		}
 		// Check item and children active state
 		var isActive = function(item) {
 
