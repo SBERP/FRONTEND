@@ -116,7 +116,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	$scope.enableDisableEmailId = false;
 	$scope.enableDisableProfession = false;
 	$scope.enableDisableLWHSetting = false;
-	
+	$scope.productMeasurementType = "normal";
 	$scope.enableDisableSalesman = false;
 
 	$scope.enableItemizedPurchaseSales = false;
@@ -157,6 +157,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					$scope.enableDisableVariant = arrayData1.productVariantStatus=="enable" ? true : false;
 					$scope.enableDisableFrameNo = arrayData1.productFrameNoStatus=="enable" ? true : false;
 					$scope.divTag = $scope.enableDisableColor == false && $scope.enableDisableSize == false && $scope.enableDisableVariant == false ? false : true;
+					$scope.productMeasurementType = arrayData1.productMeasurementType;
 					if (arrayData1.productMeasurementType == 'Unit Measurement') {
 						$scope.enableDisableLWHSetting = true;
 					}
@@ -627,7 +628,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			callback(response);
 		});
 	}
-	
+
 	$scope.myCustomProductFilter = function(item) 
 	{
 		return item[$scope.displayProductName] != null && item[$scope.displayProductName] != '';
@@ -3049,6 +3050,15 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				  productHsn: function(){
 					  
 					 return vm.productHsn;
+				  },
+				  settingData: function() {
+				  	return {
+				  		color: $scope.enableDisableColor,
+				  		size: $scope.enableDisableSize,
+				  		frame: $scope.enableDisableFrameNo,
+				  		variant: $scope.enableDisableVariant,
+				  		productMeasurementType: $scope.productMeasurementType
+				  	};
 				  },
 				  insertOrUpdate: function(){
 					  
