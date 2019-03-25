@@ -165,7 +165,6 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	  			$scope.firstTabActive = true;
 				$scope.secondTabActive = false;
 				$scope.thirdTabActive = false;
-				console.log("All..",$scope.allSalesData);
 	  				if (angular.isArray($scope.allSalesData)) {
 	  					if ($scope.allSalesData.length > 0) {
 	  						data = angular.copy($scope.allSalesData);
@@ -183,7 +182,6 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	  				$scope.secondTabActive = true;
 	  				$scope.firstTabActive = false;
 					$scope.thirdTabActive = false;
-					console.log("Paid..",$scope.paidData);
 	  				if (angular.isArray($scope.paidData)) {
 	  					if ($scope.paidData.length > 0) {
 	  						data = angular.copy($scope.paidData);
@@ -202,7 +200,6 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	  				$scope.thirdTabActive = true;
 	  				$scope.firstTabActive = false;
 					$scope.secondTabActive = false;
-					console.log("unPaid..",$scope.unPaidData);
 	  				if (angular.isArray($scope.unPaidData)) {
 	  					if ($scope.unPaidData.length > 0) {
 	  						data = angular.copy($scope.unPaidData);
@@ -846,7 +843,6 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 					} else {
 						$scope.billData = response;
 					}
-					console.log("all Data..",data);
 					var cnt = data.length;
 					for(var p=0;p<cnt;p++)
 					{
@@ -884,7 +880,6 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 
 										// (function(pId) {
 											if(angular.isObject(proResponse)) {
-												console.log("data..", data[extraIndex]);
 												if ("displayProduct" in data[extraIndex]) {
 													if (angular.isArray(data[extraIndex].displayProduct)) {
 														data[extraIndex].displayProduct.push(angular.copy(proResponse));
