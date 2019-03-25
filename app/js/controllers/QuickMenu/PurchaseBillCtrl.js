@@ -227,6 +227,16 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 	}
 	$scope.getOptionSettingData();
 	
+	//Set Settings Color/Size/Frame in Product Data
+	function filterProductData () {
+		vm.productNameDrop.map(function(mData) {
+			mData['isColor'] = $scope.enableDisableColor;
+			mData['isSize'] = $scope.enableDisableSize;
+			mData['isVariant'] = $scope.enableDisableVariant;
+			return mData;
+		});
+	}
+
 	$scope.expenseAmount=[];
 	$scope.getExpenseValue = function(index)
 	{
@@ -287,6 +297,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 		productFactory.getProductByCompany(id).then(function(data){
 			
 			vm.productNameDrop = data;
+			filterProductData();
 			vm.loadData = false;
 			toaster.clear();
 		});
@@ -767,6 +778,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 			vm.productNameDrop = [];
 			productFactory.getProductByCompany($scope.purchaseBill.EditBillData.company.companyId).then(function(data){
 				vm.productNameDrop = data;
+				filterProductData();
 			});
 			
 			//EntryDate
@@ -1071,6 +1083,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 			vm.productNameDrop = [];
 			productFactory.getProductByCompany(item.companyId).then(function(data){
 				vm.productNameDrop = data;
+				filterProductData();
 				vm.loadData = false;
 				toaster.clear();
 			});
@@ -1842,6 +1855,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 					if(angular.isObject(response)){
 						productFactory.getProductByCompany(companyID).then(function(responseCompayWise){
 							vm.productNameDrop = responseCompayWise;
+							filterProductData();
 							vm.AccBillTable[data.index].productName = response.productName;
 							$scope.setProductData(response,productIndex);
 							toaster.clear();
@@ -1862,6 +1876,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 					if(angular.isObject(response)){
 						productFactory.getProductByCompany(companyID).then(function(responseCompayWise){
 							vm.productNameDrop = responseCompayWise;
+							filterProductData();
 							vm.AccBillTable[data.index].productName = response.productName;
 							$scope.setProductData(response,productIndex);
 							toaster.clear();

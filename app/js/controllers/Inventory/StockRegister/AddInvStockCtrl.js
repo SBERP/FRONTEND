@@ -12,19 +12,67 @@ function AddInvStockController($rootScope,$scope,apiCall,apiPath,getSetFactory,$
   	var vm = this;
   	$scope.invStock = [];
   
+    $scope.productDisplayPattern = "' ('+s.color+' | '+s.size+')'";
+
+    $scope.displayPattern = function(s) {
+      return s[altLanguageKey] || s.productName+' ('+s.color+' | '+s.size+')';
+    }
+
   	var dateFormats = $rootScope.dateFormats;
-  	$scope.altLanguageKey = "productName";
+  	var altLanguageKey = false,color_setting = false,size_setting = false,variant_setting = false;
   	//Get Setting
   	apiCall.getCall(apiPath.settingOption).then(function(response)	{
   		if (angular.isArray(response)) {
+            var product_setting = fetchArrayService.getfilteredSingleObject(response,'product','settingType');
   			var language_setting = fetchArrayService.getfilteredSingleObject(response,'language','settingType');
-  			if (angular.isObject(language_setting)) {
+  			if (angular.isObject(product_setting)) {
+                if (product_setting.productColorStatus == "enable") {
+                    color_setting = true;
+                }
+                if (product_setting.productSizeStatus == "enable") {
+                    size_setting = true;
+                }
+                if (product_setting.productVariantStatus == "enable") {
+                    variant_setting = true;
+                }
+            }
+            if (angular.isObject(language_setting)) {
 	  			if (language_setting.languageSettingType == "hindi") {
-	  				$scope.altLanguageKey = "altProductName";
+	  				altLanguageKey = true;
 	  			}
 	  		}
   		}
   	});
+
+    function filterProductData () {
+        vm.productDrop.map(function(mData) {
+            mData['displayProductName'] = mData['productName'];
+            if (altLanguageKey && mData['altProductName'] != null && mData['altProductName'] != '') {
+                mData['displayProductName'] = mData['altProductName'];
+            }
+            if (color_setting || size_setting || variant_setting) {
+                var settingArray = [];
+                if (color_setting) {
+                    settingArray.push(mData['color']);
+                }
+                if (size_setting) {
+                    settingArray.push(mData['size']);
+                }
+                if (variant_setting) {
+                    settingArray.push(mData['variant']);
+                }
+                mData['displayProductName'] += " (";
+                for (var i = 0; i < settingArray.length; i++) {
+                    if (i != 0) {
+                        mData['displayProductName'] += " | ";
+                    }
+                    mData['displayProductName'] += settingArray[i];
+                }
+                mData['displayProductName'] += ")";
+            }
+            return mData;
+        });
+    }
 
 	//Get Company
 	vm.companyDrop=[];
@@ -45,6 +93,7 @@ function AddInvStockController($rootScope,$scope,apiCall,apiPath,getSetFactory,$
 				
 				if(angular.isArray(responseDrop)){
 					vm.productDrop = responseDrop;
+                    filterProductData();
 				}
 				else{
 					toaster.clear();
@@ -106,6 +155,7 @@ function AddInvStockController($rootScope,$scope,apiCall,apiPath,getSetFactory,$
 			
 			if(angular.isArray(response)){
 				vm.productDrop = response;
+                filterProductData();
 			}
 			else{
 				toaster.clear();

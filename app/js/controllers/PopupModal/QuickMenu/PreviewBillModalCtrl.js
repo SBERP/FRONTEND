@@ -202,8 +202,6 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
 	
 	//$scope.billData.splice("clientName",1);
 	
-	
-	
 		$scope.stockModel=[];
  
 	if($rootScope.ArraystockModel)
