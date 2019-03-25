@@ -149,11 +149,11 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	  			$scope.clientFlag=0;
 				$scope.selectedBoxArray = [];
 				var cnt  = data.length;
-				for(var k=0;k<cnt;k++){
+				for(var k=0;k<cnt;k++) {
 					data[k].selected = false;
 				}
 	  		/* End  */
-	  		data = [];
+	  		// data = [];
 	  		vm.tableParams.total(data.length);
 	  		vm.tableParams.reload();
 	  		vm.tableParams.page(1);
@@ -165,6 +165,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	  			$scope.firstTabActive = true;
 				$scope.secondTabActive = false;
 				$scope.thirdTabActive = false;
+				console.log("All..",$scope.allSalesData);
 	  				if (angular.isArray($scope.allSalesData)) {
 	  					if ($scope.allSalesData.length > 0) {
 	  						data = angular.copy($scope.allSalesData);
@@ -182,6 +183,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	  				$scope.secondTabActive = true;
 	  				$scope.firstTabActive = false;
 					$scope.thirdTabActive = false;
+					console.log("Paid..",$scope.paidData);
 	  				if (angular.isArray($scope.paidData)) {
 	  					if ($scope.paidData.length > 0) {
 	  						data = angular.copy($scope.paidData);
@@ -200,6 +202,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	  				$scope.thirdTabActive = true;
 	  				$scope.firstTabActive = false;
 					$scope.secondTabActive = false;
+					console.log("unPaid..",$scope.unPaidData);
 	  				if (angular.isArray($scope.unPaidData)) {
 	  					if ($scope.unPaidData.length > 0) {
 	  						data = angular.copy($scope.unPaidData);
@@ -836,14 +839,14 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 
 				data = response;
 				// console.log('refresh');
-				if($scope.headerType == 'Wholesales' || $scope.headerType == 'Retailsales' || $scope.headerType == 'Tax-Purchase' || $scope.headerType == 'Sales Orders' || $scope.headerType == 'Quotations'){
+				if($scope.headerType == 'Wholesales' || $scope.headerType == 'Retailsales' || $scope.headerType == 'Tax-Purchase' || $scope.headerType == 'Sales Orders' || $scope.headerType == 'Quotations') {
 					
-					if ($scope.headerType == 'Tax-Purchase'){
+					if ($scope.headerType == 'Tax-Purchase') {
 						$scope.purchaseBillData = response;
 					} else {
 						$scope.billData = response;
 					}
-					
+					console.log("all Data..",data);
 					var cnt = data.length;
 					for(var p=0;p<cnt;p++)
 					{
@@ -871,167 +874,44 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 
 						var invCnt = productArrays.inventory.length;
 						var invIndex = 0;
+						var extraIndex = 0;
 						while(invIndex < invCnt)
 						{
 							if("productId" in productArrays.inventory[invIndex] && productArrays.inventory[invIndex].productId)
 							{
-								(function(proId,pIndex) {
-									productFactory.getSingleProduct(proId).then(function(proResponse) {
+								// (function(proId,pIndex) {
+									productFactory.getSingleProduct(productArrays.inventory[invIndex].productId).then(function(proResponse) {
+
 										// (function(pId) {
 											if(angular.isObject(proResponse)) {
-												if (data[pIndex]) {
-													data[pIndex].displayProduct.push(angular.copy(proResponse));
+												console.log("data..", data[extraIndex]);
+												if ("displayProduct" in data[extraIndex]) {
+													if (angular.isArray(data[extraIndex].displayProduct)) {
+														data[extraIndex].displayProduct.push(angular.copy(proResponse));
+													} else {
+														data[extraIndex].displayProduct = [];
+													}
+												} else {
+													data[extraIndex].displayProduct = [];
 												}
 											}
-										// })(pIndex);
+										// })(p);
+										pushedIntoArray(extraIndex);
+										if (extraIndex == cnt-1) {
+											loadSorting();
+											//data.slice().reverse();
+										}
+										extraIndex++;
 									});
-								})(productArrays.inventory[invIndex].productId,p);
+								// })(productArrays.inventory[invIndex].productId,p);
 							}
 							invIndex++;
 						}
-						var fileCnt = data[p].file.length;
 						
-						var flag = 0;
-						var imageFlag = 0;
-						
-						for(var k=0;k<fileCnt;k++) {
-						
-							if(data[p].file[k].documentFormat == 'pdf' && (data[p].file[k].documentType == 'bill' ||data[p].file[k].documentType == 'quotation'))
-							{
-								flag++;
-							}
-							
-							if(data[p].file[k].documentFormat == 'jpg' || data[p].file[k].documentFormat == 'jpeg' || data[p].file[k].documentFormat == 'png'){
-								
-								imageFlag = 1;
-							}
-						}
-						
-						if(flag == 0){
-							data[p].repeatIcon = true;
-						}
-						else if(flag == 1){
-							data[p].singlePdfIcon = true;
-						}
-						else{
-							data[p].pdfIcon = true;
-						}
-						
-						if(imageFlag == 1){
-							data[p].imageIcon = true;
-						}
-
-						if ($scope.headerType != 'Tax-Purchase'){
-							data[p].invoiceNumber = data[p].invoiceNumber;
-							data[p].clientName = data[p].client.clientName;
-						}
-						else{
-							data[p].ledgerName = data[p].vendor.ledgerName;
-						}
-
-						if(data[p].balance >= 1)
-						{
-							$scope.unPaidData.push(data[p]);
-						}
-						else{
-							$scope.paidData.push(data[p]);
-						}
 					}
 					
-					$scope.contents1 = data;
+					// loadSorting();
 					
-					if ($scope.headerType != 'Tax-Purchase'){
-
-						$scope.contents1.sort(function(a, b){
-							// var entDate = a.entryDate.split("-").reverse().join("-");
-							// var toDate = b.entryDate.split("-").reverse().join("-");
-							// var dateA=new Date(entDate), dateB=new Date(toDate);
-							var parseA = parseInt(a.invoiceNumber);
-							var parseB = parseInt(b.invoiceNumber);
-							return parseA - parseB; 
-						});
-						
-						data= $scope.contents1;
-						$scope.allSalesData = angular.copy($scope.contents1);
-
-						$scope.contents2 = $scope.unPaidData;
-						
-						$scope.contents2.sort(function(a, b){
-							// var entDate = a.entryDate.split("-").reverse().join("-");
-							// var toDate = b.entryDate.split("-").reverse().join("-");
-							// var dateA=new Date(entDate), dateB=new Date(toDate);
-							var parseA = parseInt(a.invoiceNumber);
-							var parseB = parseInt(b.invoiceNumber);
-							return parseA - parseB; 
-						});
-						
-						$scope.unPaidData = $scope.contents2;
-
-						$scope.contents3 = $scope.paidData;
-						
-						$scope.contents3.sort(function(a, b) {
-							// var entDate = a.entryDate.split("-").reverse().join("-");
-							// var toDate = b.entryDate.split("-").reverse().join("-");
-							// var dateA=new Date(entDate), dateB=new Date(toDate);
-							var parseA = parseInt(a.invoiceNumber);
-							var parseB = parseInt(b.invoiceNumber);
-							return parseA - parseB; 
-						});
-
-						$scope.paidData= $scope.contents3;
-					}
-					else if($scope.headerType == 'Tax-Purchase')
-					{
-						$scope.contents1.sort(function(a, b){
-							var parseA = parseInt(a.billNumber);
-							var parseB = parseInt(b.billNumber);
-							return parseA - parseB; 
-						});
-						
-						data= $scope.contents1;
-						$scope.allSalesData = angular.copy($scope.contents1);
-						
-						$scope.contents2 = $scope.unPaidData;
-						
-						$scope.contents2.sort(function(a, b){
-							var parseA = parseInt(a.billNumber);
-							var parseB = parseInt(b.billNumber);
-							return parseA - parseB; 
-						});
-						
-						$scope.unPaidData = $scope.contents2;
-
-						$scope.contents3 = $scope.paidData;
-						
-						$scope.contents3.sort(function(a, b){
-							var parseA = parseInt(a.billNumber);
-							var parseB = parseInt(b.billNumber);
-							return parseA - parseB; 
-						});
-
-						$scope.paidData= $scope.contents3;
-					}
-
-					//data.slice().reverse();
-					if(vm.tableParams)
-					{
-						var activeTab = $scope.currentActiveSalestab;
-						if (activeTab == 0){
-							$scope.onSalesBillTabSelect(activeTab+1);
-						} else if (activeTab == 1) {
-							$scope.onSalesBillTabSelect(activeTab+1);
-						} else if (activeTab == 2) {
-							$scope.onSalesBillTabSelect(activeTab-1);
-						}
-
-						setTimeout(function() {
-							$scope.onSalesBillTabSelect(activeTab);
-						}, 1000);
-						
-					}
-					else{
-						$scope.saleTableData();
-					}
 					
 				}
 				else{
@@ -1133,6 +1013,152 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 		}
 	/** End Reaload Pdf Data **/
 	
+	function pushedIntoArray (p) {
+		var fileCnt = data[p].file.length;
+						
+		var flag = 0;
+		var imageFlag = 0;
+		
+		for(var k=0;k<fileCnt;k++) {
+		
+			if(data[p].file[k].documentFormat == 'pdf' && (data[p].file[k].documentType == 'bill' ||data[p].file[k].documentType == 'quotation'))
+			{
+				flag++;
+			}
+			
+			if(data[p].file[k].documentFormat == 'jpg' || data[p].file[k].documentFormat == 'jpeg' || data[p].file[k].documentFormat == 'png'){
+				
+				imageFlag = 1;
+			}
+		}
+		
+		if(flag == 0){
+			data[p].repeatIcon = true;
+		}
+		else if(flag == 1){
+			data[p].singlePdfIcon = true;
+		}
+		else{
+			data[p].pdfIcon = true;
+		}
+		
+		if(imageFlag == 1){
+			data[p].imageIcon = true;
+		}
+
+		if ($scope.headerType != 'Tax-Purchase'){
+			data[p].invoiceNumber = data[p].invoiceNumber;
+			data[p].clientName = data[p].client.clientName;
+		}
+		else{
+			data[p].ledgerName = data[p].vendor.ledgerName;
+		}
+
+		if(data[p].balance >= 1)
+		{
+			$scope.unPaidData.push(data[p]);
+		}
+		else{
+			$scope.paidData.push(data[p]);
+		}
+	}
+
+	function loadSorting () 
+	{
+		$scope.contents1 = data;
+
+		if ($scope.headerType != 'Tax-Purchase') {
+
+			$scope.contents1.sort(function(a, b) {
+				// var entDate = a.entryDate.split("-").reverse().join("-");
+				// var toDate = b.entryDate.split("-").reverse().join("-");
+				// var dateA=new Date(entDate), dateB=new Date(toDate);
+				var parseA = parseInt(a.invoiceNumber);
+				var parseB = parseInt(b.invoiceNumber);
+				return parseA - parseB;
+			});
+			
+			data= $scope.contents1;
+			$scope.allSalesData = $scope.contents1;
+
+			$scope.contents2 = $scope.unPaidData;
+			
+			$scope.contents2.sort(function(a, b) {
+				// var entDate = a.entryDate.split("-").reverse().join("-");
+				// var toDate = b.entryDate.split("-").reverse().join("-");
+				// var dateA=new Date(entDate), dateB=new Date(toDate);
+				var parseA = parseInt(a.invoiceNumber);
+				var parseB = parseInt(b.invoiceNumber);
+				return parseA - parseB; 
+			});
+			
+			$scope.unPaidData = $scope.contents2;
+
+			$scope.contents3 = $scope.paidData;
+			
+			$scope.contents3.sort(function(a, b) {
+				// var entDate = a.entryDate.split("-").reverse().join("-");
+				// var toDate = b.entryDate.split("-").reverse().join("-");
+				// var dateA=new Date(entDate), dateB=new Date(toDate);
+				var parseA = parseInt(a.invoiceNumber);
+				var parseB = parseInt(b.invoiceNumber);
+				return parseA - parseB; 
+			});
+
+			$scope.paidData= $scope.contents3;
+		}
+		else if($scope.headerType == 'Tax-Purchase')
+		{
+			$scope.contents1.sort(function(a, b){
+				var parseA = parseInt(a.billNumber);
+				var parseB = parseInt(b.billNumber);
+				return parseA - parseB; 
+			});
+			
+			data= $scope.contents1;
+			$scope.allSalesData = angular.copy($scope.contents1);
+			
+			$scope.contents2 = $scope.unPaidData;
+			
+			$scope.contents2.sort(function(a, b){
+				var parseA = parseInt(a.billNumber);
+				var parseB = parseInt(b.billNumber);
+				return parseA - parseB; 
+			});
+			
+			$scope.unPaidData = $scope.contents2;
+
+			$scope.contents3 = $scope.paidData;
+			
+			$scope.contents3.sort(function(a, b){
+				var parseA = parseInt(a.billNumber);
+				var parseB = parseInt(b.billNumber);
+				return parseA - parseB; 
+			});
+
+			$scope.paidData= $scope.contents3;
+		}
+
+		if(vm.tableParams)
+		{
+			var activeTab = $scope.currentActiveSalestab;
+			// if (activeTab == 0){
+			// 	$scope.onSalesBillTabSelect(activeTab+1);
+			// } else if (activeTab == 1) {
+			// 	$scope.onSalesBillTabSelect(activeTab+1);
+			// } else if (activeTab == 2) {
+			// 	$scope.onSalesBillTabSelect(activeTab-1);
+			// }
+
+			// setTimeout(function() {
+				$scope.onSalesBillTabSelect(activeTab);
+			// }, 300);
+			
+		}
+		else{
+			$scope.saleTableData();
+		}
+	}
 	/** Regenerate Pdf **/
 		
 		$scope.reGeneratePdf = function(sId){

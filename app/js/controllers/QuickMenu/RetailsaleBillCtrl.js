@@ -245,6 +245,15 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		}
 	}
 
+	//Set Settings Color/Size/Frame in Product Data
+	function filterProductData () {
+		vm.productNameDrop.map(function(mData){
+			mData['isColor'] = $scope.enableDisableColor;
+			mData['isSize'] = $scope.enableDisableSize;
+			mData['isVariant'] = $scope.enableDisableVariant;
+			return mData;
+		});
+	}
 	$scope.getInvoiceAndJobcardNumber = function(id)
 	{
 		
@@ -405,6 +414,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		
 		productFactory.getProductByCompany(id).then(function(data){
 			vm.productNameDrop = data;
+			filterProductData();
 			vm.loadData = false;
 			//insertvalTime();
 		});
@@ -416,7 +426,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 
 		$scope.printButtonType = response2.printType == '' ? 'print':response2.printType;
 	}
-	
+
 	function getUserData(companyId)
 	{
 		var headerDataOnLoad = {'Content-Type': undefined,'companyId':companyId};
@@ -1420,7 +1430,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				vm.productNameDrop = [];
 				productFactory.getProductByCompany($scope.quickBill.EditBillData.company.companyId).then(function(data){
 					vm.productNameDrop = data;
-					
+					filterProductData();
 				});
 			
 			/** End **/
@@ -1958,7 +1968,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			productFactory.getProductByCompany(item.companyId).then(function(data){
 				// console.log('1815....',data);
 				vm.productNameDrop = data;
-				
+				filterProductData();
 				$scope.getInvoiceAndJobcardNumber(item.companyId); // Invoice#
 				
 				vm.loadData = false;
@@ -1998,6 +2008,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					if(angular.isArray(data)){
 						// console.log('1855....',data);
 						vm.productNameDrop = data;
+						filterProductData();
 					}
 				});
 				$scope.getInvoiceAndJobcardNumber(id); // Invoice#
@@ -3381,6 +3392,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 						productFactory.getProductByCompany(companyID).then(function(responseCompayWise){
 							// console.log('3183....',responseCompayWise);
 							vm.productNameDrop = responseCompayWise;
+							filterProductData();
 							vm.AccBillTable[data.index].productName = response.productName;
 							$scope.setProductData(response,productIndex);
 							toaster.clear();
@@ -3403,7 +3415,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 						productFactory.getProductByCompany(companyID).then(function(responseCompayWise){
 							// console.log('3204....',responseCompayWise);
 							vm.productNameDrop = responseCompayWise;
-
+							filterProductData();
 							vm.AccBillTable[data.index].productName = response.productName;
 							$scope.setProductData(response,productIndex);
 							toaster.clear();

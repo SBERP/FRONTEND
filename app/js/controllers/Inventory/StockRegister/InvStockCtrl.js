@@ -27,6 +27,36 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
 	// var getData = { "Content-Type": undefined, "fromDate": "1-02-2017", "toDate": "25-02-2017", "companyId": "45"};
 	//var CompanyID = getData.companyId;
 	
+	function filterProductData () {
+        vm.states.map(function(mData) {
+            mData['displayProductName'] = mData['productName'];
+            if ($scope.enableAlterLanguage && mData['altProductName'] != null && mData['altProductName'] != '') {
+                mData['displayProductName'] = mData['altProductName'];
+            }
+            if (color_setting || size_setting || variant_setting) {
+                var settingArray = [];
+                if (color_setting) {
+                    settingArray.push(mData['color']);
+                }
+                if (size_setting) {
+                    settingArray.push(mData['size']);
+                }
+                if (variant_setting) {
+                    settingArray.push(mData['variant']);
+                }
+                mData['displayProductName'] += " (";
+                for (var i = 0; i < settingArray.length; i++) {
+                    if (i != 0) {
+                        mData['displayProductName'] += " | ";
+                    }
+                    mData['displayProductName'] += settingArray[i];
+                }
+                mData['displayProductName'] += ")";
+            }
+            return mData;
+        });
+    }
+
 	$scope.displayFromDate = getData.fromDate;
 	$scope.displayToDate = getData.toDate;
 	
@@ -38,22 +68,19 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
 	var dataSet = angular.copy(getData);
 	vm.states = [];
 	
-	if(dataSet.productId){
-		
-		
-		
-		
+	if(dataSet.productId) {
 		var Path = apiPath.getAllProduct+'/'+dataSet.productId;
 		
-		apiCall.getCall(Path).then(function(response){
+		apiCall.getCall(Path).then(function(response) {
 			toaster.clear();
 			toaster.pop('wait', 'Please Wait', 'Data Loading....',60000);
 			
 			//console.log(response);
 			vm.states.push(response);
+			filterProductData();
 			$scope.allProductModel = response;
 			apiCall.getCall(apiPath.getAllCompany+'/'+response.companyId).then(function(response2){
-				console.log(response2);
+				// console.log(response2);
 				$scope.displayCompany = response2.companyName;
 				$scope.apiCallStock();
 			});
@@ -61,12 +88,9 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
 		
 	}
 	else{
-		
-		
-		
 		var Path = apiPath.getProductByCompany+CompanyID;
 		
-		apiCall.getCallHeader(Path,dataSet).then(function(response){
+		apiCall.getCallHeader(Path,dataSet).then(function(response) {
 			
 			toaster.pop('wait', 'Please Wait', 'Data Loading....',60000);
 			
@@ -74,7 +98,7 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
 			if(apiResponse.notFound != response){
 				
 				vm.states = response;
-				
+				filterProductData();
 				$scope.allProductModel = response[0];
 				apiCall.getCall(apiPath.getAllCompany+'/'+response[0].companyId).then(function(response2){
 					$scope.displayCompany = response2.companyName;
@@ -85,25 +109,37 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
 				toaster.clear();
 				toaster.pop('info', 'Message', 'No Product Available');		
 			}
-			
-			
 		});
 	}
 
 	$scope.enableAlterLanguage = false;
 	$scope.alterLanguageKey = "productName";
+	var color_setting = false,size_setting = false,variant_setting = false;
+
 	$scope.getOptionSettingData = function()
 	{
 		toaster.clear();
 		if ($rootScope.$storage.settingOptionArray.length > 0)
 		{
 			var inventory_setting = fetchArrayService.getfilteredSingleObject($rootScope.$storage.settingOptionArray,'inventory','settingType');
+			var product_setting = fetchArrayService.getfilteredSingleObject($rootScope.$storage.settingOptionArray,'product','settingType');
   			var language_setting = fetchArrayService.getfilteredSingleObject($rootScope.$storage.settingOptionArray,'language','settingType');
 
 			if (angular.isObject(inventory_setting)) {
 				var arrayData1 = inventory_setting;
 				$scope.enableItemizedPurchaseSales = arrayData1.inventoryItemizeStatus=="enable" ? true : false;
 			}
+			if (angular.isObject(product_setting)) {
+                if (product_setting.productColorStatus == "enable") {
+                    color_setting = true;
+                }
+                if (product_setting.productSizeStatus == "enable") {
+                    size_setting = true;
+                }
+                if (product_setting.productVariantStatus == "enable") {
+                    variant_setting = true;
+                }
+            }
 			if (angular.isObject(language_setting)) {
 				var arrayData1 = language_setting;
 				$scope.enableAlterLanguage = arrayData1.languageSettingType=="hindi" ? true : false;
@@ -123,6 +159,18 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
 						if (response[arrayData].settingType=="inventory") {
 							var arrayData1 = response[arrayData];
 							$scope.enableItemizedPurchaseSales = arrayData1.inventoryItemizeStatus=="enable" ? true : false;
+						}
+						if (response[arrayData].settingType=="product") {
+							var arrayData1 = response[arrayData];
+							if (arrayData1.productColorStatus == "enable") {
+			                    color_setting = true;
+			                }
+			                if (arrayData1.productSizeStatus == "enable") {
+			                    size_setting = true;
+			                }
+			                if (arrayData1.productVariantStatus == "enable") {
+			                    variant_setting = true;
+			                }
 						}
 						if (response[arrayData].settingType=="language") {
 							var arrayData1 = response[arrayData];
