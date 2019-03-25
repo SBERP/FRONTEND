@@ -1145,9 +1145,9 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 			// 	$scope.onSalesBillTabSelect(activeTab-1);
 			// }
 
-			// setTimeout(function() {
+			setTimeout(function() {
 				$scope.onSalesBillTabSelect(activeTab);
-			// }, 300);
+			}, 1000);
 			
 		}
 		else{
