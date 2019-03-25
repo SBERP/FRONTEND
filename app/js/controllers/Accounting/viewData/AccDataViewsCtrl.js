@@ -839,9 +839,9 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 
 				data = response;
 				// console.log('refresh');
-				if($scope.headerType == 'Wholesales' || $scope.headerType == 'Retailsales' || $scope.headerType == 'Tax-Purchase' || $scope.headerType == 'Sales Orders' || $scope.headerType == 'Quotations'){
+				if($scope.headerType == 'Wholesales' || $scope.headerType == 'Retailsales' || $scope.headerType == 'Tax-Purchase' || $scope.headerType == 'Sales Orders' || $scope.headerType == 'Quotations') {
 					
-					if ($scope.headerType == 'Tax-Purchase'){
+					if ($scope.headerType == 'Tax-Purchase') {
 						$scope.purchaseBillData = response;
 					} else {
 						$scope.billData = response;
@@ -879,58 +879,39 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 						{
 							if("productId" in productArrays.inventory[invIndex] && productArrays.inventory[invIndex].productId)
 							{
-								(function(proId,pIndex) {
-									productFactory.getSingleProduct(proId).then(function(proResponse) {
+								// (function(proId,pIndex) {
+									productFactory.getSingleProduct(productArrays.inventory[invIndex].productId).then(function(proResponse) {
 
 										// (function(pId) {
 											if(angular.isObject(proResponse)) {
-												console.log("data..", data[pIndex]);
-												if ("displayProduct" in data[pIndex]) {
-													if (angular.isArray(data[pIndex].displayProduct)) {
-														data[pIndex].displayProduct.push(angular.copy(proResponse));
+												console.log("data..", data[extraIndex]);
+												if ("displayProduct" in data[extraIndex]) {
+													if (angular.isArray(data[extraIndex].displayProduct)) {
+														data[extraIndex].displayProduct.push(angular.copy(proResponse));
 													} else {
-														data[pIndex].displayProduct = [];
+														data[extraIndex].displayProduct = [];
 													}
 												} else {
-													data[pIndex].displayProduct = [];
+													data[extraIndex].displayProduct = [];
 												}
 											}
 										// })(p);
-										pushedIntoArray(pIndex);
-										if (pIndex == cnt-1) {
+										pushedIntoArray(extraIndex);
+										if (extraIndex == cnt-1) {
 											loadSorting();
+											//data.slice().reverse();
 										}
-										// extraIndex++;
+										extraIndex++;
 									});
-								})(productArrays.inventory[invIndex].productId,p);
+								// })(productArrays.inventory[invIndex].productId,p);
 							}
 							invIndex++;
 						}
 						
 					}
 					
-					loadSorting();
+					// loadSorting();
 					
-					//data.slice().reverse();
-					if(vm.tableParams)
-					{
-						var activeTab = $scope.currentActiveSalestab;
-						// if (activeTab == 0){
-						// 	$scope.onSalesBillTabSelect(activeTab+1);
-						// } else if (activeTab == 1) {
-						// 	$scope.onSalesBillTabSelect(activeTab+1);
-						// } else if (activeTab == 2) {
-						// 	$scope.onSalesBillTabSelect(activeTab-1);
-						// }
-
-						// setTimeout(function() {
-							$scope.onSalesBillTabSelect(activeTab);
-						// }, 300);
-						
-					}
-					else{
-						$scope.saleTableData();
-					}
 					
 				}
 				else{
@@ -1156,6 +1137,26 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 			});
 
 			$scope.paidData= $scope.contents3;
+		}
+
+		if(vm.tableParams)
+		{
+			var activeTab = $scope.currentActiveSalestab;
+			// if (activeTab == 0){
+			// 	$scope.onSalesBillTabSelect(activeTab+1);
+			// } else if (activeTab == 1) {
+			// 	$scope.onSalesBillTabSelect(activeTab+1);
+			// } else if (activeTab == 2) {
+			// 	$scope.onSalesBillTabSelect(activeTab-1);
+			// }
+
+			// setTimeout(function() {
+				$scope.onSalesBillTabSelect(activeTab);
+			// }, 300);
+			
+		}
+		else{
+			$scope.saleTableData();
 		}
 	}
 	/** Regenerate Pdf **/
