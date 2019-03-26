@@ -902,12 +902,8 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 							}
 							invIndex++;
 						}
-						
 					}
-					
 					// loadSorting();
-					
-					
 				}
 				else{
 				
