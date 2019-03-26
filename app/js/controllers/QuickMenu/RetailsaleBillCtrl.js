@@ -247,13 +247,30 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 
 	//Set Settings Color/Size/Frame in Product Data
 	function filterProductData () {
-		vm.productNameDrop.map(function(mData){
+		vm.productNameDrop.map(function(mData) {
 			mData['isColor'] = $scope.enableDisableColor;
 			mData['isSize'] = $scope.enableDisableSize;
 			mData['isVariant'] = $scope.enableDisableVariant;
+			// if ($scope.displayProductName == "altProductName" && (mData.altProductName == null || mData.altProductName == '')) {
+			// 	mData['altProductName'] = mData.productName;
+			// }
+			// mData['productName'] = mData.productName+" ";
 			return mData;
 		});
 	}
+
+	//get Settings Color/Size/Frame in Product Data
+	$scope.getfilterProductDataForSuggestion = function() {
+		var filteProData = vm.productNameDrop.filter(function(mData) {
+			if ($scope.displayProductName == "altProductName" && mData.altProductName != null && mData.altProductName != '') {
+				return mData;
+			} else if ($scope.displayProductName != "altProductName") {
+				return mData;
+			}
+		});
+		return filteProData;
+	}
+
 	$scope.getInvoiceAndJobcardNumber = function(id)
 	{
 		
@@ -643,7 +660,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	{
 		return item[$scope.displayProductName] != null && item[$scope.displayProductName] != '';
 	}
-
+	
 	vm.productHsn = [];
 	vm.productDesc = [];
 	vm.measurementUnitDrop = [];
@@ -661,6 +678,15 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		}
 
 		vm.AccBillTable[index].productId = item.productId;
+		// setTimeout(function() {
+		// 	if ($scope.displayProductName == "altProductName" && item.altProductName != null && item.altProductName != '') {
+		// 		vm.AccBillTable[index].productName = item.altProductName;
+		// 	} else {
+		// 		vm.AccBillTable[index].productName = angular.copy(item.productName);
+		// 	}
+		// },2000);
+		
+
 		if ($scope.enableItemizedPurchaseSales) {
 			vm.AccBillTable[index].itemizeDetail = [];
 		}
@@ -742,7 +768,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		grandPrice = productArrayFactory.calculate(item.purchasePrice,0,item.wholesaleMargin) + parseFloat(item.wholesaleMarginFlat);
 
 		var timeOut = 1;
-		if ($scope.enableDisableAdvanceMou) 
+		if ($scope.enableDisableAdvanceMou)
 		{
 			timeOut = 0;
 			vm.AccBillTable[index].measurementUnit = undefined;
