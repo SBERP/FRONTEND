@@ -209,7 +209,7 @@
 					</td>
 					<td>
 						<div class="input-group mytypeDrop">
-							<input typeahead="item[displayProductName] for item in form.productNameDrop | filter:$viewValue | limitTo:10" ng-model="item.productName" typeahead-on-select="setProductData($item,$index);calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage);purchaseBill.advance = ((totalTable) + (purchaseBill.extraCharge ? purchaseBill.extraCharge*1 : 0) | setDecimal: noOfDecimalPoints);editProductSuggest = true;" autocomplete="off" type="text" class="form-control input-sm productNameClass" placeholder="*Enter Product Name"  typeahead-editable="false" ng-required="true" style="padding-left: 6px;padding-right: 6px;" typeahead-template-url="customTemplate.html" ng-disabled="form.loadData" ng-keypress="presssuburb($event)" />
+							<input typeahead="item[displayProductName] for item in form.productNameDrop | filter:$viewValue | limitTo:10" ng-model="item.productName" typeahead-on-select="setProductData($item,$index);calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage,$index);purchaseBill.advance = ((totalTable) + (purchaseBill.extraCharge ? purchaseBill.extraCharge*1 : 0) | setDecimal: noOfDecimalPoints);editProductSuggest = true;" autocomplete="off" type="text" class="form-control input-sm productNameClass" placeholder="*Enter Product Name"  typeahead-editable="false" ng-required="true" style="padding-left: 6px;padding-right: 6px;" typeahead-template-url="customTemplate.html" ng-disabled="form.loadData" ng-keypress="presssuburb($event)" />
 							<span class="input-group-btn">
 								 <button type="button" class="btn btn-default btn-sm" ng-if="item.productId" ng-click="editProductWithRedirect($index)"><i class="fa fa-edit" style="font-size:15px;color:#17A1E5;"></i></button>
 							   <button type="button" class="btn btn-default btn-sm" data-ng-click="openProduct('lg',$index)"><i class="fa fa-plus" style="font-size:15px;color:#17A1E5;"></i></button>
@@ -250,7 +250,7 @@
 						<input placeholder="Frame No"  type="text" ng-model="item.frameNo"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"   ng-pattern="/^[a-z-A-Z0-9 ]*$/" ng-change="changeProductTable()" /> 
 					</td>
 					<td>
-						<input  type="text" ng-model="item.qty"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"  ng-required="true" ng-minlength="1" ng-pattern="/^[1-9]+[0-9]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage,$index)" only-number /> 
+						<input  type="text" ng-model="item.qty"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"  ng-required="true" ng-minlength="1" ng-pattern="/^\s*(?=.*[1-9])\d*(?:\.\d{1,2})?\s*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage,$index)" only-number /> 
 					</td>
 					<td>
 						<!--span style="float:right">{{item.price}}</span-->
