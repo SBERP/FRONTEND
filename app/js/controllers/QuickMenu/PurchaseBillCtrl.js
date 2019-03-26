@@ -243,6 +243,18 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 		});
 	}
 
+	//get Settings Color/Size/Frame in Product Data
+	$scope.getfilterProductDataForSuggestion = function() {
+		var filteProData = vm.productNameDrop.filter(function(mData) {
+			if ($scope.displayProductName == "altProductName" && mData.altProductName != null && mData.altProductName != '') {
+				return mData;
+			} else if ($scope.displayProductName != "altProductName") {
+				return mData;
+			}
+		});
+		return filteProData;
+	}
+
 	$scope.expenseAmount=[];
 	$scope.getExpenseValue = function(index)
 	{
