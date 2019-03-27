@@ -660,7 +660,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	{
 		return item[$scope.displayProductName] != null && item[$scope.displayProductName] != '';
 	}
-	
+
 	vm.productHsn = [];
 	vm.productDesc = [];
 	vm.measurementUnitDrop = [];
@@ -3712,7 +3712,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		//Api
 			var headerSearch = {'Content-Type': undefined,'productCode':proBarcode};
 	
-			apiCall.getCallHeader(apiPath.getAllProduct,headerSearch).then(function(response){
+			apiCall.getCallHeader(apiPath.getAllProduct,headerSearch).then(function(response) {
 				
 				var companyId = $scope.quickBill.companyId.companyId;
 				
@@ -3745,7 +3745,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 							
 						}
 					/** End Check Product **/
-					if(checkFlag == 0){
+					if(checkFlag == 0) {
 						
 						var barcodeflag = 0;
 						var checkCnt = vm.AccBillTable.length;
@@ -3753,7 +3753,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 								
 								var arrayData = vm.AccBillTable[cVar];
 								
-								if(arrayData.productId == ""){
+								if(arrayData.productId == "") {
 									
 									vm.AccBillTable[cVar].productName = response.productName;
 									//vm.AccBillTable[data.index].productId = response.productId;
