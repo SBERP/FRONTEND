@@ -308,7 +308,7 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
 				
 				if(balanceArray.length == 0){
 					
-					inward.qty = parseInt(transData.qty);
+					inward.qty = parseFloat(transData.qty);
 					inward.price = transData.price * transData.qty;
 					inward.date = transData.transactionDate;
 					inward.jfId = transData.jfId;
@@ -324,7 +324,7 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
 						outward1.date = transData.transactionDate;
 						outward1.jfId = transData.jfId;
 				
-						inward.qty = parseInt(transData.qty);
+						inward.qty = parseFloat(transData.qty);
 						
 						inward.date = transData.transactionDate;
 						inward.jfId = transData.jfId;
@@ -370,7 +370,7 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
 					}
 					else{
 						
-						inward.qty = parseInt(transData.qty);
+						inward.qty = parseFloat(transData.qty);
 						inward.price = transData.price * transData.qty;
 						inward.date = transData.transactionDate;
 						inward.jfId = transData.jfId;
@@ -391,7 +391,7 @@ function InvStockController($rootScope,$scope, $filter, ngTableParams,getSetFact
 				//console.log(transData.qty);
 				//console.log(balanceArray);
 				
-				outward.qty = parseInt(transData.qty);  //4
+				outward.qty = parseFloat(transData.qty);  //4
 				outward.price = transData.price;
 				outward.date = transData.transactionDate;
 				outward.jfId = transData.jfId;

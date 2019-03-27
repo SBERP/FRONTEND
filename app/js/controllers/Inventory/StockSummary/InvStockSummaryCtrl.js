@@ -111,7 +111,7 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 			data[iIndex].size = ""; 
 			data[iIndex].size = data[iIndex].product.size;
 			
-			data[iIndex].qty = parseInt(data[iIndex].qty);
+			data[iIndex].qty = $filter('setDecimal')(parseFloat(data[iIndex].qty),2);
 			
 			iIndex++;
 		}
