@@ -42,14 +42,14 @@ App.factory('stateCityFactory',['apiCall','apiPath','$q','fetchArrayService', fu
 	}
 	
 	function getDefaultStateCities(stateId) {
-		console.log("stateid..",stateId);
+		// console.log("stateid..",stateId);
 		if (!whileRunning_state) {
 			return (function innerFunc(){
 				whileRunning_state = 1;
-				console.log("call state..",stateId);
+				// console.log("call state..",stateId);
 				if (cityData !== null) {
 					whileRunning_state = 0;
-					console.log("Done call State..",stateId);
+					// console.log("Done call State..",stateId);
 					return fetchArrayService.getfilteredArray(cityData,stateId,'state','stateAbb');
 				}
 				innerFunc();
@@ -71,14 +71,14 @@ App.factory('stateCityFactory',['apiCall','apiPath','$q','fetchArrayService', fu
 	}
 	
 	function getDefaultCity(cityId) {
-		console.log("cityid..",cityId);
+		// console.log("cityid..",cityId);
 		if (!whileRunning_city) {
 			return (function innerFunc1(){
 				whileRunning_city = 1;
-				console.log("call city..",cityId);
+				// console.log("call city..",cityId);
 				if (cityData !== null) {
 					whileRunning_city = 0;
-					console.log("Done call City..",cityId);
+					// console.log("Done call City..",cityId);
 					return fetchArrayService.getfilteredSingleObject(cityData,cityId,'cityId');
 				}
 				innerFunc1();
