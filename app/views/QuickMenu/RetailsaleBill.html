@@ -187,7 +187,7 @@
 						  <label  class="col-sm-2 control-label" style="padding-left: 2px;">*Contact</label>
 						 	 <div class="col-sm-10">
 							  	<div class="input-group mytypeDrop">
-									 <input  typeahead="s.contactNo for s in form.clientSuggest | filter:$viewValue | limitTo:10" ng-model="quickBill.contactNo" typeahead-on-select="setClientSuggest('contactNo',$item);" ng-change="changeInBill('contactNo',quickBill.contactNo)" type="text" placeholder="Contact Number" class="form-control input-sm" dir="ltr" name="contactNo" id="contactNoSelect"  auto-focus="true" ng-required="true" ng-maxlength="12" ng-pattern="/^[0-9]+$/"  ng-minlength="10"   only-number style="font-size:15px;" />
+									 <input  typeahead="s.contactNo for s in form.clientSuggest | filter:$viewValue | limitTo:10" ng-model="quickBill.contactNo" typeahead-on-select="setClientSuggest('contactNo',$item);" ng-change="changeInBill('contactNo',quickBill.contactNo)" type="text" placeholder="Contact Number" class="form-control input-sm" dir="ltr" name="contactNo" id="contactNoSelect"  auto-focus="true" ng-required="true" ng-maxlength="12" ng-pattern="/^[0-9]+$/" ng-disabled="form.stateDataLoaded" ng-minlength="10"   only-number style="font-size:15px;" />
 									<span class="input-group-btn" >
 									   <button type="button" class="btn btn-default btn-sm"  data-ng-click="editClientData('lg')"><i class="fa fa-edit fa-lg" style="color:#17A1E5;" ></i></button>
 									   <button type="button" class="btn btn-default btn-sm" data-ng-click="openClient('lg',$index)"><i class="fa fa-plus fa-lg" style="color:#17A1E5;"></i></button>

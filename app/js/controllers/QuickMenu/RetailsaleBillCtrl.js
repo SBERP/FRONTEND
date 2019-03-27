@@ -401,6 +401,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			toaster.pop('wait', 'Please Wait', 'Data Loading....',600000);
 			
 		vm.loadData = true;
+		vm.stateDataLoaded = true;
 		
 		//Set default Company
 		var  response2 = apiCall.getDefaultCompanyFilter(vm.companyDrop);
@@ -529,6 +530,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		
 		stateCityFactory.getState().then(function(response){
 			toaster.clear();
+			vm.stateDataLoaded = false;
 			vm.statesDrop = response;
 			$scope.quickBill.stateAbb = stateCityFactory.getDefaultState($rootScope.defaultState);
 				
