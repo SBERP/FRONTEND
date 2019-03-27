@@ -132,7 +132,7 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 			}
 		}
 		
-		return $scope.pageQty;
+		return $filter('setDecimal')($scope.pageQty,2);
 	}
 
 	//calculate total qty
@@ -144,7 +144,7 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 		{
 			$scope.totalQty = $scope.totalQty+data[index].qty;
 		}
-		return $scope.totalQty;
+		return $filter('setDecimal')($scope.totalQty,2);
 	}
 
 	$scope.showProduct = function(){
@@ -242,7 +242,7 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 		  //counts: [],
 		  total: data.length, // length of data
 		  getData: function($defer, params) {
-			 
+			 $scope.searchQty = '';
 			  // use build-in angular filter
 			  if(!$.isEmptyObject(params.$params.filter) && ((typeof(params.$params.filter.productName) != "undefined" && params.$params.filter.productName != "")  || (typeof(params.$params.filter.productCategoryName) != "undefined" && params.$params.filter.productCategoryName != "") || (typeof(params.$params.filter.productGroupName) != "undefined" && params.$params.filter.productGroupName != "") || (typeof(params.$params.filter.color) != "undefined" && params.$params.filter.color != "") || (typeof(params.$params.filter.size) != "undefined" && params.$params.filter.size != "") || (typeof(params.$params.filter.qty) != "undefined" && params.$params.filter.qty != "")))
 			  {
@@ -258,7 +258,7 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 					    //calculate search qty
 						for(var index=0;index<dataLength1;index++)
 						{
-							$scope.searchQty = $scope.searchQty+orderedData[index].qty;
+							$scope.searchQty = $filter('setDecimal')($scope.searchQty+orderedData[index].qty,2);
 						}
 			  }
 			else
