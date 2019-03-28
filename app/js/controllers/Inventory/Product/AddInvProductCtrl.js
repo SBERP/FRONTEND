@@ -59,7 +59,25 @@ function AddInvProductController($scope,$rootScope,toaster,$filter,apiCall,apiPa
   ];
 	
 	
-	
+	function setValueOnInit() {
+		$scope.addInvProduct.primaryMeasureUnit = 'lowest';
+		formdata.set('primaryMeasureUnit',$scope.addInvProduct.primaryMeasureUnit);
+
+		$scope.addInvProduct.productType ='product';
+		formdata.set('productType',$scope.addInvProduct.productType);
+		$scope.addInvProduct.bestBeforeType ='day';
+		formdata.set('bestBeforeType',$scope.addInvProduct.bestBeforeType);
+		$scope.addInvProduct.taxInclusive = 'inclusive';
+		$scope.addInvProduct.notForSale = 'false';
+		formdata.set('notForSale',$scope.addInvProduct.notForSale);
+		$scope.addInvProduct.productMenu = 'not';
+		formdata.set('productMenu',$scope.addInvProduct.productMenu);
+		$scope.addInvProduct.bestBeforeTime=0;
+		formdata.set('bestBeforeTime',$scope.addInvProduct.bestBeforeTime);
+		$scope.addInvProduct.highestUnitQty = 1.00;
+		formdata.set('highestUnitQty',$scope.addInvProduct.highestUnitQty);
+	}
+
 	$scope.defaultCompany  = function(){
 			
 		//Set default Company
@@ -437,28 +455,12 @@ function AddInvProductController($scope,$rootScope,toaster,$filter,apiCall,apiPa
 	else{
 		
 		$scope.defaultCompany();
-		
 		// vm.measureUnitTable = [{"fromQty":"","toQty":"","SalePrice":""}];
 
 		// $scope.addInvProduct.measureUnit = 'piece';
 		// formdata.append('measurementUnit',$scope.addInvProduct.measureUnit);
 
-		$scope.addInvProduct.primaryMeasureUnit = 'lowest';
-		formdata.set('primaryMeasureUnit',$scope.addInvProduct.primaryMeasureUnit);
-
-		$scope.addInvProduct.productType ='product';
-		formdata.set('productType',$scope.addInvProduct.productType);
-		$scope.addInvProduct.bestBeforeType ='day';
-		formdata.set('bestBeforeType',$scope.addInvProduct.bestBeforeType);
-		$scope.addInvProduct.taxInclusive = 'inclusive';
-		$scope.addInvProduct.notForSale = 'false';
-		formdata.set('notForSale',$scope.addInvProduct.notForSale);
-		$scope.addInvProduct.productMenu = 'not';
-		formdata.set('productMenu',$scope.addInvProduct.productMenu);
-		$scope.addInvProduct.bestBeforeTime=0;
-		formdata.set('bestBeforeTime',$scope.addInvProduct.bestBeforeTime);
-		$scope.addInvProduct.highestUnitQty = 1.00;
-		formdata.set('highestUnitQty',$scope.addInvProduct.highestUnitQty);
+		setValueOnInit();
 		productFactory.getProduct();
 	}
 
@@ -679,87 +681,101 @@ function AddInvProductController($scope,$rootScope,toaster,$filter,apiCall,apiPa
 		return isNaN(parseFloat(val)) ? 0: parseFloat(val);
 	}
 
-	$scope.pop = function() 
+	$scope.pop = function(form) 
 	{
-		if ($scope.addInvProduct.getSetProductId)
+		if (form.$invalid) 
 		{
-			toaster.clear();
-			toaster.pop('wait','Data Updating...','',60000);
-
-			//Quantity pricing
-			if ($scope.changeMeasureUnitTableArray) 
+		    angular.forEach(form.$error, function (field) {
+		        angular.forEach(field, function(errorField){
+		            errorField.$setDirty();
+		            errorField.$setTouched();
+		            // errorField.$setPristine();
+		        });
+		    });
+		    toaster.pop('error','Invalid or Missing Data!');
+		} 
+		else 
+		{
+			if ($scope.addInvProduct.getSetProductId)
 			{
-				var json2 = angular.copy(vm.measureUnitTable);
-				if (json2.length != 0)
+				toaster.clear();
+				toaster.pop('wait','Data Updating...','',60000);
+
+				//Quantity pricing
+				if ($scope.changeMeasureUnitTableArray) 
 				{
-					for (var i=0;i<json2.length;i++) {
-						angular.forEach(json2[i], function (value,key) {
-							formdata.set('quantityWisePricing['+i+']['+key+']',value);
-						});
+					var json2 = angular.copy(vm.measureUnitTable);
+					if (json2.length != 0)
+					{
+						for (var i=0;i<json2.length;i++) {
+							angular.forEach(json2[i], function (value,key) {
+								formdata.set('quantityWisePricing['+i+']['+key+']',value);
+							});
+						}
+					}
+					else{
+						formdata.set('quantityWisePricing','');
 					}
 				}
-				else{
-					formdata.set('quantityWisePricing','');
-				}
-			}
 
-			//formdata.append('branchId',1);
-			formdata.set('isDisplay','yes');
-			if ($scope.mergeProduct) {
-				$rootScope.mergingPop(2,formdata);
-				return false;
-			}
-			var editProduct = apiPath.getAllProduct+'/'+$scope.addInvProduct.getSetProductId;
-			apiCall.postCall(editProduct,formdata).then(function(response5)
-			{
-				toaster.clear();
-				if (apiResponse.ok == response5) {
-					
-					productFactory.setUpdatedProduct($scope.addInvProduct.getSetProductId).then(function(response){
-						toaster.pop('success', 'Title', 'SuccessFull');
-						window.history.back();
-					});
+				//formdata.append('branchId',1);
+				formdata.set('isDisplay','yes');
+				if ($scope.mergeProduct) {
+					$rootScope.mergingPop(2,formdata);
+					return false;
 				}
-				else{
-					formdata.delete('isDisplay');
-					toaster.pop('warning', 'Opps!!', response5);
-				}
-			});
-		}
-		else{
-			
-			toaster.clear();
-			toaster.pop('wait','Data Inserting...','',60000);
-
-			//Quantity pricing
-			  var json2 = angular.copy(vm.measureUnitTable);
-			 
-			 for (var i=0;i<json2.length;i++) {
-				 
-				angular.forEach(json2[i], function (value,key) {
-					formdata.set('quantityWisePricing['+i+']['+key+']',value);
+				var editProduct = apiPath.getAllProduct+'/'+$scope.addInvProduct.getSetProductId;
+				apiCall.postCall(editProduct,formdata).then(function(response5)
+				{
+					toaster.clear();
+					if (apiResponse.ok == response5) {
+						
+						productFactory.setUpdatedProduct($scope.addInvProduct.getSetProductId).then(function(response){
+							toaster.pop('success', 'Title', 'SuccessFull');
+							window.history.back();
+						});
+					}
+					else{
+						formdata.delete('isDisplay');
+						toaster.pop('warning', 'Opps!!', response5);
+					}
 				});
-			 }
-
-			// formdata.append('productType',$scope.addInvProduct.productType);
-			// formdata.append('bestBeforeType',$scope.addInvProduct.bestBeforeType);
-			formdata.set('isDisplay','yes');
-			if (true) {}
-			apiCall.postCall(apiPath.getAllProduct,formdata).then(function(response5) {
+			}
+			else{
+				
 				toaster.clear();
-				if (apiResponse.ok == response5) {
-					toaster.pop('success', 'Title', 'SuccessFull');
-					productFactory.setNewProduct($scope.addInvProduct.company.companyId,$scope.addInvProduct.name,$scope.addInvProduct.color,$scope.addInvProduct.size,$scope.addInvProduct.variant).then(function(response){
-						if(angular.isObject(response)){
-							$state.go('app.InvProduct');
-						}
+				toaster.pop('wait','Data Inserting...','',60000);
+
+				//Quantity pricing
+				  var json2 = angular.copy(vm.measureUnitTable);
+				 
+				 for (var i=0;i<json2.length;i++) {
+					 
+					angular.forEach(json2[i], function (value,key) {
+						formdata.set('quantityWisePricing['+i+']['+key+']',value);
 					});
-				}
-				else{
-					formdata.delete('isDisplay');
-					toaster.pop('warning', 'Opps!!', response5);
-				}
-			});
+				 }
+
+				// formdata.append('productType',$scope.addInvProduct.productType);
+				// formdata.append('bestBeforeType',$scope.addInvProduct.bestBeforeType);
+				formdata.set('isDisplay','yes');
+				if (true) {}
+				apiCall.postCall(apiPath.getAllProduct,formdata).then(function(response5) {
+					toaster.clear();
+					if (apiResponse.ok == response5) {
+						toaster.pop('success', 'Title', 'SuccessFull');
+						productFactory.setNewProduct($scope.addInvProduct.company.companyId,$scope.addInvProduct.name,$scope.addInvProduct.color,$scope.addInvProduct.size,$scope.addInvProduct.variant).then(function(response){
+							if(angular.isObject(response)){
+								$state.go('app.InvProduct');
+							}
+						});
+					}
+					else{
+						formdata.delete('isDisplay');
+						toaster.pop('warning', 'Opps!!', response5);
+					}
+				});
+			}
 		}
 	};
   
@@ -779,7 +795,7 @@ function AddInvProductController($scope,$rootScope,toaster,$filter,apiCall,apiPa
 		  formdata = new FormData();
 		
 		$scope.defaultCompany();
-		
+		setValueOnInit();
 		toaster.pop('info', 'Form Reset', 'Message');
   };
   

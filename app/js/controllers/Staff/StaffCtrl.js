@@ -73,13 +73,14 @@ function StaffController($scope,$rootScope, $filter, ngTableParams,apiCall,apiPa
 	//Change Branch On Select Company
 	$scope.changeCompany = function(state)
 	{
-		 vm.branchDrop = [];
-		var getAllBranch = apiPath.getOneBranch+state;
-		//Get Branch
-		apiCall.getCall(getAllBranch).then(function(response4){
-			vm.branchDrop = response4;
-				
-		});
+		vm.branchDrop = [];
+		if (state) {
+			var getAllBranch = apiPath.getOneBranch+state;
+			//Get Branch
+			apiCall.getCall(getAllBranch).then(function(response4){
+				vm.branchDrop = response4;
+			});
+		}
 	}
 	
 	$scope.showFilterStaff = function(){

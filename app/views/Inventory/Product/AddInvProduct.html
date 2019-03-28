@@ -52,7 +52,10 @@
 							<div class="form-group">
 							  <label class="col-sm-3 control-label">*Brand</label>
 							  <div class="col-sm-9">
-								 <select chosen="" data-ng-model="addInvProduct.category" data-ng-options="s.productCategoryName for s in form.categoryDrop track by s.productCategoryId" ng-change="changeInvProductData('productCategoryId',addInvProduct.category.productCategoryId)" class="form-control chosen-select" ng-required="true" tabindex="4" ></select>
+								 <select chosen="" data-ng-model="addInvProduct.category" data-ng-options="s.productCategoryName for s in form.categoryDrop track by s.productCategoryId" ng-change="changeInvProductData('productCategoryId',addInvProduct.category.productCategoryId)" class="form-control chosen-select" name="brand" ng-required="true" tabindex="4" ></select>
+								 <span ng-messages="formProduct.brand.$error" ng-if="formProduct.brand.$dirty || formProduct.brand.$touched"  role="alert">
+									<span ng-messages-include="errorRequired"></span>
+								</span>
 							  </div>
 						   </div>
 						
@@ -61,14 +64,20 @@
 						   <div class="form-group">
 							  <label class="col-sm-3 control-label">*Branch</label>
 							  <div class="col-sm-9">
-								 <select chosen="" data-ng-model="addInvProduct.branch" data-ng-options="s.branchName for s in form.branchDrop track by s.branchId" ng-change="changeInvProductData('branchId',addInvProduct.branch.branchId)" class="form-control chosen-select" ng-required="true" tabindex="3" ></select>
+								 <select chosen="" data-ng-model="addInvProduct.branch" data-ng-options="s.branchName for s in form.branchDrop track by s.branchId" ng-change="changeInvProductData('branchId',addInvProduct.branch.branchId)" class="form-control chosen-select" ng-required="true" name="branch" tabindex="3" ></select>
+								  <span ng-messages="formProduct.branch.$error" ng-if="formProduct.branch.$dirty || formProduct.branch.$touched"  role="alert">
+									<span ng-messages-include="errorRequired"></span>
+								</span>
 							  </div>
 						   </div>
 							
 							 <div class="form-group">
 							  <label class="col-sm-3 control-label">*Category</label>
 							  <div class="col-sm-9">
-								 <select chosen="" data-ng-model="addInvProduct.group" data-ng-options="s.productGroupName for s in form.groupDrop track by s.productGroupId" ng-change="changeInvProductData('productGroupId',addInvProduct.group.productGroupId)" class="form-control chosen-select" size='5' tabindex="5" ng-required="true"></select>
+								 <select chosen="" data-ng-model="addInvProduct.group" data-ng-options="s.productGroupName for s in form.groupDrop track by s.productGroupId" ng-change="changeInvProductData('productGroupId',addInvProduct.group.productGroupId)" class="form-control chosen-select" size='5' tabindex="5" name="category"  ng-required="true"></select>
+								  <span ng-messages="formProduct.category.$error" ng-if="formProduct.category.$dirty || formProduct.category.$touched"  role="alert">
+									<span ng-messages-include="errorRequired"></span>
+								</span>
 							  </div>
 						   </div>
 					</div>
@@ -907,11 +916,12 @@
 						</div>
 					</div>
 			 <button type="button" class="mr mb-sm btn btn-danger pull-right" data-ng-click="cancel()" tabindex="46" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id" >Cancel</button>
-			 <button type="button" class="mr mb-sm btn btn-success pull-right" data-ng-click="pop()" ng-disabled="formProduct.$invalid" tabindex="45" >
+			 <button type="button" class="mr mb-sm btn btn-success pull-right" data-ng-click="pop(formProduct)"  tabindex="45" >
 				 <span ng-if="!addInvProduct.getSetProductId" >Insert</span>
 				 <span ng-if="addInvProduct.getSetProductId && mergeProduct" >Next</span>
 				 <span ng-if="addInvProduct.getSetProductId && !mergeProduct" >Update</span>
 			 </button>
+			 <!-- ng-disabled="formProduct.$invalid" -->
 			</div>
          </form>
       </div>
