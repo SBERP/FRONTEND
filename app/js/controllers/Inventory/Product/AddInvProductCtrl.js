@@ -681,19 +681,22 @@ function AddInvProductController($scope,$rootScope,toaster,$filter,apiCall,apiPa
 		return isNaN(parseFloat(val)) ? 0: parseFloat(val);
 	}
 
-	$scope.pop = function(form) 
+	$scope.pop = function(form)
 	{
-		if (form.$invalid) 
+		if (form.$invalid)
 		{
 		    angular.forEach(form.$error, function (field) {
-		        angular.forEach(field, function(errorField){
+		        angular.forEach(field, function(errorField,indexx){
+		        	if (indexx == 0) {
+		        		$('[name="'+errorField.$name+'"]').focus();
+		        	}
 		            errorField.$setDirty();
 		            errorField.$setTouched();
 		            // errorField.$setPristine();
 		        });
 		    });
 		    toaster.pop('error','Invalid or Missing Data!');
-		} 
+		}
 		else 
 		{
 			if ($scope.addInvProduct.getSetProductId)
