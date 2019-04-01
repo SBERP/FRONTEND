@@ -2670,7 +2670,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	vm.clientEditData = {};
 
 	$scope.setClientSuggest = function(Fname,data){
-		
+		console.log("iinn");
 		$scope.clientSaveButton = false; //Save Button
 		vm.clientEditData = data;
 		// $scope.quickBill.cityId = {};
@@ -2680,6 +2680,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		//$scope.quickBill.companyName = data.companyName;
 		$scope.quickBill.clientId = data.clientId;
 		$scope.quickBill.clientName = data.clientName;
+		$scope.quickBill.contactNo = data.contactNo;
 		$scope.quickBill.gst = data.gst;
 		$scope.quickBill.contactNo1 = data.contactNo1;
 		$scope.quickBill.emailId = data.emailId;

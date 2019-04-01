@@ -229,7 +229,7 @@
 					   <div class="form-group" style="margin-bottom: 0px">
 						  <label  class="col-sm-2 control-label">*Name</label>
 						  <div class="col-sm-10">
-							 <input ng-model="quickBill.clientName" name="clientName"  type="text" placeholder="Client Name" class="form-control input-sm"  ng-required="true" ng-pattern="/^[a-zA-Z0-9 &_`#().\'-]*$/" ng-maxlength="100" ng-change="changeInBill('clientName',quickBill.clientName)" />
+							 <input typeahead="s.clientName for s in form.clientSuggest | filter:$viewValue | limitTo:10"  typeahead-on-select="setClientSuggest('clientName',$item);" ng-model="quickBill.clientName" name="clientName"  type="text" placeholder="Client Name" class="form-control input-sm"  ng-required="true" ng-pattern="/^[a-zA-Z0-9 &_`#().\'-]*$/"  ng-disabled="form.stateDataLoaded" ng-maxlength="100" ng-change="changeInBill('clientName',quickBill.clientName)" />
 							 <!-- <span  only-alpha ></span> -->
 							  <span ng-messages="formBill.clientName.$error" ng-if="formBill.clientName.$dirty || formBill.clientName.$touched" role="alert">
 								<span ng-messages-include="errorRequired"></span>
