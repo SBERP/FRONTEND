@@ -161,6 +161,7 @@ $scope.enableDisableEmailId = false;
 			var getAllBranch = apiPath.getOneBranch+id;
 			// Get Branch
 			apiCall.getCall(getAllBranch).then(function(response4){
+				toaster.clear();
 				vm.branchDrop = response4;
 				if(angular.isArray(response4)){
 					if (response4.length > 0){

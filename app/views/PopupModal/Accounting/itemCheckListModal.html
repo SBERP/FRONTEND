@@ -1,0 +1,79 @@
+<style>
+.imageAncher{position:relative;vertical-align:middle;display:inline-block}
+.myCrossDesign{position:absolute;top:0;right:0;height:20px;width:20px;color:#eb615f;font-size:20px}.myCrossDesign:hover{color:red}.documentRight{display:block;position:absolute;top:10%;right:60%;font-size:40px;color:#88bf57}.documentRight:hover{color:green}.documentCross{display:block;position:absolute;font-size:40px;color:#eb615f;top:10%;right:20%}.documentCross:hover{color:red}
+</style>
+<div class="modal-header" data-ng-class="app.theme.brand">
+	<button type="button" data-dismiss="modal" data-ng-click="cancel()" aria-hidden="true" class="close text-md"><i class="fa fa-times" style="color:white"></i></button>  
+	  <h4 id="myModalLabel" class="modal-title">Item Lists</h4>
+</div>
+<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true,'animation-class': 'bounceIn'}"></toaster-container>
+	
+	<div class="modal-body my-model-body">
+		<center id="printDiv">
+			<form  action="#" name="formBill" class="form-validate form-horizontal" autocomplete="off" novalidate>
+				<table  class="table table-bordered table-striped tableTopCss">
+					<thead>
+						<tr>
+							<th ng-if="form.statusType!='list'" style="text-align: left" style="width:5%" >
+								<div class="checkbox c-checkbox">
+								  <label>
+									 <input type="checkbox" ng-model="checkAllBox" ng-change="changeAllBox(checkAllBox)" />
+									 <span class="fa fa-check"></span>
+								  </label>
+							   </div>
+							</th>
+							<th  ng-if="form.statusType=='list'" class="header my-table-paddingTopBottom" width="2%">#</th>
+							<th class="header my-table-paddingTopBottom">Product Name</th>
+							<th class="header my-table-paddingTopBottom" style="width: 8%">Qty</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="myTable" data-ng-class="app.tableAnimation" ng-repeat="user in TableData track by $index">
+							<td ng-if="form.statusType!='list'" style="text-align: left" style="width:5%" >
+								<div class="checkbox c-checkbox">
+								  <label>
+									 <input type="checkbox" ng-model="checkArray[$index]"/>
+									 <span class="fa fa-check"></span>
+								  </label>
+							   </div>
+							</td>
+							<td  ng-if="form.statusType=='list'">
+								<strong ng-bind="$index+1"></strong>
+							</td>
+							<td>
+								<span>{{user.productName}}</span>
+								<span ng-if="user.heightStatus || user.lengthStatus || user.widthStatus">
+									&nbsp;(<span ng-if="user.lengthStatus">&nbsp;{{user.lengthValue}}</span>
+									<span ng-if="user.lengthStatus && (user.widthStatus || user.heightStatus)">x</span>
+									<span ng-if="user.widthStatus">{{user.widthValue}}</span>
+									<span ng-if="user.widthStatus && user.heightStatus">x</span>
+									<span ng-if="user.heightStatus">{{user.heightValue}}&nbsp;</span>)
+								</span>
+							</td>
+							<td class="text-right">
+								<span ng-if="form.statusType=='list'">{{parseQty(user.qty)}}</span>
+								<input ng-if="form.statusType!='list'"  type="text" ng-model="qtyArray[$index]"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"  ng-required="true" ng-minlength="1" ng-change="changeQty(qtyArray[$index],$index)" ng-pattern="/^\s*(?=.*[1-9])\d*(?:\.\d{1,2})?\s*$/" only-number /> 
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<button type="button" class="mr mb-sm btn btn-danger pull-right" data-ng-click="cancel()">Close</button>
+				<button type="button" class="mr mb-sm btn btn-success pull-right" data-ng-click="pop()" ng-if="form.statusType=='list'">Print</button>
+				<button type="button" class="mr mb-sm btn btn-info pull-right" data-ng-click="ok()" ng-disabled="formBill.$invalid || disableButton">
+					<span ng-if="form.statusType=='list'">Ready to </span>Dispatch
+				</button>
+		</form>
+		</center>
+	</div>
+	
+<script type="text/ng-template" id="errorRequired">
+	<span class="text-danger" ng-message="required">{{errorMessage.require}}</span>
+</script>
+
+<script type="text/ng-template" id="errorLonglength">
+	<span class="text-danger" ng-message="maxlength">{{errorMessage.longLength}}</span>
+</script>
+
+<script type="text/ng-template" id="errorPatternAlpha">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.Alphabets}}</span>
+</script>

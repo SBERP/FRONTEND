@@ -24,7 +24,7 @@ function QuotationFlowController($scope,toaster,$filter, $modalInstance,$rootSco
 				if (transactionType == 'QuotationPrint') {
 					return element.statusType == 'quotation';
 				}else if (transactionType == 'SalesOrder') {
-					return element.statusType != 'quotation';
+					return element.statusType == 'salesorder' || element.statusType == 'sales';
 				}
 			});
 		}

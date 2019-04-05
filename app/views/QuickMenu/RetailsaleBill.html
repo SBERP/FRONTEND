@@ -518,7 +518,7 @@
 					<!-- <td style="text-align:right"><span style="visibility:hidden" ng-bind="grandTotalTable = (total | setDecimal: noOfDecimalPoints)" ><span>
 					</td> -->
 					<td colspan="1">
-						<button type="button" class="btn btn-sm paddignBtn" data-ng-class="app.theme.brand"  ng-click="openExpenseRaw()">Expense</button>
+						<button type="button" class="btn btn-sm paddignBtn" data-ng-class="app.theme.brand" ng-if="saleType != 'QuotationPrint'" ng-click="openExpenseRaw()">Expense</button>
 					</td>
 				</tr>
 				<tr  ng-repeat="item in form.AccExpense track by $index" ng-if="openExpenseRawData">

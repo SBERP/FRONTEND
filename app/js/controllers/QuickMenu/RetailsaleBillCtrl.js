@@ -1869,6 +1869,9 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			$scope.quickBill.bankName = "";
 			$scope.quickBill.checkNumber = "";
 			$scope.quickBill.bankLedgerId = "";
+			if (value == 'credit') {
+				$scope.quickBill.advance = 0;
+			}
 		} else {
 			$scope.quickBill.bankName ? formdata.set('bankName',$scope.quickBill.bankName) : '';
 			$scope.quickBill.chequeNo ? formdata.set('checkNumber',$scope.quickBill.chequeNo) : '';
