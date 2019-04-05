@@ -94,9 +94,9 @@
 			               		<td title="'Total'" filter="{ 'total': 'text' }" style="text-align:right">{{::user.total}}</td>
 			               		<td title="'Action'" style="width:20%">
 			                		<center>
-			                     	<i class="fa fa-stack-exchange myCursorPointer" style="font-size:17px;color:#10709f" title="Items CheckList" ng-if="activeStatus.dispatchStatus==0" ng-click="itemListModel(user,$index)"></i>
+			                     	<i class="fa fa-stack-exchange myCursorPointer" style="font-size:17px;color:#10709f" title="Items CheckList" ng-if="activeStatus.dispatchStatus==0" ng-click="itemListModel(user)"></i>
 			                     	&nbsp;
-				                     <i  class="fa fa-truck myCursorPointer" title="Dispatch Items" ng-if="activeStatus.dispatchStatus!=0 && activeStatus.dispatchStatus!=9" ng-click="itemListModel(user,$index)" style="font-size:17px;color:#10709f"> </i>
+				                     <i  class="fa fa-truck myCursorPointer" title="Dispatch Items" ng-if="activeStatus.dispatchStatus!=0 && activeStatus.dispatchStatus!=9" ng-click="itemListModel(user)" style="font-size:17px;color:#10709f"> </i>
 				                  	</center>
 			               		</td>
 			            	</tr>

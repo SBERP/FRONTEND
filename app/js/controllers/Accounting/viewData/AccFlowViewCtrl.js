@@ -1,6 +1,6 @@
 App.controller('AccFlowViewController', AccFlowViewController);
 
-function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,apiCall,apiPath,flotOptions, colors,$timeout,getSetFactory,$state,headerType,$modal,$window,toaster,apiResponse,apiDateFormate) {
+function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,apiCall,apiPath,flotOptions,fetchArrayService, colors,$timeout,getSetFactory,$state,headerType,$modal,$window,toaster,apiResponse,apiDateFormate) {
   	'use strict';
   	var vm = this;
   	var data = [];
@@ -431,7 +431,7 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 			return false;
 		});
 	}
-	$scope.itemListModel = function(sale,index){
+	$scope.itemListModel = function(sale){
 		if (Modalopened) return;
 	  	toaster.pop('wait', 'Please Wait', 'popup opening....',600000);
 	  	var statusType = 'list';
@@ -447,7 +447,8 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 		  templateUrl: 'app/views/PopupModal/Accounting/itemCheckListModal.html',
 		  controller: 'AccDispatchItemModalController as form',
 		  size: 'md',
-		  resolve:{
+		  resolve:
+		  {
 			  billData: function(){
 				return sale;
 			  },
@@ -462,10 +463,12 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 			toaster.clear();
 		});
 		modalInstance.result.then(function (res) {
-			console.log(res);
 			if (res.result=='success') {
 				$scope.loadCounts();
-				saleData[index].dispatchStatus = res.status;
+				sale.dispatchStatus = res.status;
+				fetchArrayService.setUpdatedObject(saleData,sale,sale.saleId,'saleId');
+				vm.tableParams2.reload();
+				vm.tableParams2.page(1);
 			}
 			Modalopened = false;
 		},function(){
@@ -473,4 +476,4 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 		});
 	}
 }
-AccFlowViewController.$inject = ["$rootScope","$scope", "$filter","$http", "ngTableParams","apiCall","apiPath","flotOptions","colors","$timeout","getSetFactory","$state","headerType","$modal","$window","toaster","apiResponse","apiDateFormate"];
+AccFlowViewController.$inject = ["$rootScope","$scope", "$filter","$http", "ngTableParams","apiCall","apiPath","flotOptions","fetchArrayService","colors","$timeout","getSetFactory","$state","headerType","$modal","$window","toaster","apiResponse","apiDateFormate"];
