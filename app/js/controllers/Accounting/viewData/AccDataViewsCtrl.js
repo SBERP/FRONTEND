@@ -135,6 +135,8 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	function getTotalValue (fData)
 	{
 		$scope.totalAmountDisplay = $filter('setDecimal')(fData.reduce((a, b) => a + parseFloat(b['total']), 0),2);
+		$scope.totalAdvanceDisplay = $filter('setDecimal')(fData.reduce((a, b) => a + parseFloat(b['advance']), 0),2);
+		$scope.totalBalanceDisplay = $filter('setDecimal')(fData.reduce((a, b) => a + parseFloat(b['balance']), 0),2);
 	}
 
 	$scope.currentActiveSalestab = 0;  // Currently Open Tab is "All" Tab
@@ -145,6 +147,8 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	  	$scope.onSalesBillTabSelect = function(index)
 	  	{
 	  		$scope.totalAmountDisplay = 0;
+	  		$scope.totalAdvanceDisplay = 0;
+	  		$scope.totalBalanceDisplay = 0;
 	  		/* Uncheck all Checkbox */
 	  			$scope.clientFlag=0;
 				$scope.selectedBoxArray = [];
@@ -353,14 +357,15 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 
 			} else if(!params.sorting().date){
 
-			  if (params.filter().term) {
-				orderedData = params.filter() ? $filter('filter')(data, params.filter().term) : data;
-			  } else {
-				orderedData = params.sorting() ? $filter('orderBy')(data, params.orderBy()) : data;
-			  }
+			  // if (params.filter().term) {
+				orderedData = params.filter() ? $filter('filter')(data, params.filter()) : data;
+			  // } else {
+				orderedData = params.sorting() ? $filter('orderBy')(orderedData, params.orderBy()) : orderedData;
+			  // }
 			  
 			}
-
+			orderedData = params.filter() ? $filter('filter')(orderedData, params.filter()) : orderedData;
+			getTotalValue(orderedData);
 			$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
 			
 			$scope.totalData = data.length;
@@ -398,7 +403,6 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 		  dataset: data,
 		  total: data.length, // length of data
 		  getData: function($defer, params) {
-			 
 			params.total(data.length);
 
 			if(!$scope.displayBranch)
@@ -442,14 +446,15 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 			}
 			else if(!params.sorting().date){
 
-			  if (params.filter().term) {
-				orderedData = params.filter() ? $filter('filter')(data, params.filter().term) : data;
-			  } else {
-				orderedData = params.sorting() ? $filter('orderBy')(data, params.orderBy()) : data;
-			  }
+			  // if (params.filter()) {
+				orderedData = params.filter() ? $filter('filter')(data, params.filter()) : data;
+			  // } else {
+				orderedData = params.sorting() ? $filter('orderBy')(orderedData, params.orderBy()) : orderedData;
+			  // }
 			  
 			}
-
+			orderedData = params.filter() ? $filter('filter')(orderedData, params.filter()) : orderedData;
+			getTotalValue(orderedData);
 			$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
 			
 			  /** New Sort Code **/
@@ -536,7 +541,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 				  	var orderedData = params.sorting() ?
 						$filter('orderBy')(filteredData, params.orderBy()) :
 						data;
-						  
+					getTotalValue(orderedData);
 				  	params.total(orderedData.length); // set total for recalc pagination
 				  	$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
 			  /** End **/
@@ -609,7 +614,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 					var filteredData = params.filter() ?
 	             	$filter('filter')(data, params.filter()) :
 	              	data;
-
+	              	getTotalValue(filteredData);
 	              	// console.log('fill',filteredData);
 				  	var orderedData = params.sorting() ?
 						$filter('orderBy')(filteredData, params.orderBy()) :
@@ -821,6 +826,8 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 			$scope.paidData = [];
 			$scope.unPaidData = [];
 			$scope.totalAmountDisplay = 0;
+			$scope.totalAdvanceDisplay = 0;
+			$scope.totalBalanceDisplay = 0;
 			
 			if(apiResponse.notFound == response)
 			{
@@ -844,66 +851,86 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 						$scope.billData = response;
 					}
 					var cnt = data.length;
-					for(var p=0;p<cnt;p++)
-					{
-						$scope.totalAmountDisplay = $filter('setDecimal')( parseFloat($scope.totalAmountDisplay) + parseFloat(data[p].total),2);
-
-						if ($scope.headerType == 'Wholesales' || $scope.headerType == 'Sales Orders' || $scope.headerType == 'Quotations') {
-							if (!$rootScope.accView.branchId)  {
-								if (angular.isObject(data[p].branch)) {
-									data[p].branchName = data[p].branch.branchName;
-								}
-								else{
-									data[p].branchName = '-';
-								}
-							}
-						}
-
-						data[p].repeatIcon = false;
-						data[p].imageIcon = false;
-						data[p].pdfIcon = false;
-						data[p].singlePdfIcon = false;
-						var productArrays = JSON.parse(data[p].productArray);
-						// console.log("productArrays.",productArrays);
-						// data[p].displayProduct = productArrays.inventory;
-						data[p].displayProduct = [];
-
-						var invCnt = productArrays.inventory.length;
-						var invIndex = 0;
-						var extraIndex = 0;
-						while(invIndex < invCnt)
+					if (cnt > 0) {
+						(function billAmountFix(p)
 						{
-							if("productId" in productArrays.inventory[invIndex] && productArrays.inventory[invIndex].productId)
-							{
-								// (function(proId,pIndex) {
-									productFactory.getSingleProduct(productArrays.inventory[invIndex].productId).then(function(proResponse) {
-
-										// (function(pId) {
-											if(angular.isObject(proResponse)) {
-												if ("displayProduct" in data[extraIndex]) {
-													if (angular.isArray(data[extraIndex].displayProduct)) {
-														data[extraIndex].displayProduct.push(angular.copy(proResponse));
-													} else {
-														data[extraIndex].displayProduct = [];
-													}
-												} else {
-													data[extraIndex].displayProduct = [];
-												}
-											}
-										// })(p);
-										pushedIntoArray(extraIndex);
-										if (extraIndex == cnt-1) {
-											loadSorting();
-											//data.slice().reverse();
-										}
-										extraIndex++;
-									});
-								// })(productArrays.inventory[invIndex].productId,p);
+							$scope.totalAmountDisplay = $filter('setDecimal')( parseFloat($scope.totalAmountDisplay) + parseFloat(data[p].total),2);
+							$scope.totalAdvanceDisplay = $filter('setDecimal')( parseFloat($scope.totalAdvanceDisplay) + parseFloat(data[p].balance),2);
+							$scope.totalBalanceDisplay = $filter('setDecimal')( parseFloat($scope.totalBalanceDisplay) + parseFloat(data[p].advance),2);
+							if ($scope.headerType == 'Wholesales' || $scope.headerType == 'Sales Orders' || $scope.headerType == 'Quotations') {
+								if (!$rootScope.accView.branchId)  {
+									if (angular.isObject(data[p].branch)) {
+										data[p].branchName = data[p].branch.branchName;
+									}
+									else{
+										data[p].branchName = '-';
+									}
+								}
 							}
-							invIndex++;
-						}
+							data[p].repeatIcon = false;
+							data[p].imageIcon = false;
+							data[p].pdfIcon = false;
+							data[p].singlePdfIcon = false;
+							data[p].displayProduct = [];
+							var productArrays = JSON.parse(data[p].productArray);
+							var invCnt = productArrays.inventory.length;
+							(function displayProductList(invIndex,billIndex){
+								if("productId" in productArrays.inventory[invIndex] && productArrays.inventory[invIndex].productId)
+								{
+									productFactory.getSingleProduct(productArrays.inventory[invIndex].productId).then(function(proResponse) {
+										if(angular.isObject(proResponse)) 
+										{
+											if ("displayProduct" in data[billIndex]) 
+											{
+												if (angular.isArray(data[billIndex].displayProduct)) 
+												{
+													data[billIndex].displayProduct.push(angular.copy(proResponse));
+												} 
+												else 
+												{
+													data[billIndex].displayProduct = [];
+												}
+											} 
+											else 
+											{
+												data[billIndex].displayProduct = [];
+											}
+											if (invIndex == invCnt - 1) 
+											{
+												pushedIntoArray(billIndex);
+												billIndex++;
+												if (billIndex < cnt) {
+													billAmountFix(billIndex);
+												}else{
+													loadSorting();
+												}
+												
+											}
+											invIndex++;
+											if (invIndex < invCnt) {
+												displayProductList(invIndex,billIndex);
+											}
+										}
+									});
+								}
+								else
+								{
+									if (invIndex == invCnt - 1) 
+									{
+										pushedIntoArray(billIndex);
+										billIndex++;
+										if (billIndex < cnt) {
+											billAmountFix(billIndex);
+										}else{
+											loadSorting();
+										}
+									}
+								}
+								
+							})(0,p);
+
+						})(0);
 					}
-					// loadSorting();
 				}
 				else{
 				

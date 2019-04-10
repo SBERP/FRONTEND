@@ -47,7 +47,7 @@ function AccLedgerController($rootScope,$scope,$filter, ngTableParams,apiCall,ap
   
 	$scope.trueData = false;
 	$scope.alertData = true;
-	
+	$scope.defaultLedger = false;
 	$scope.getLegderCompany = [];
 
 	/* VALIDATION */
@@ -72,6 +72,7 @@ function AccLedgerController($rootScope,$scope,$filter, ngTableParams,apiCall,ap
 		$scope.ledgerForm = [];
 		$scope.ledgerEditId = [];
 		$scope.trueData = true;
+		$scope.defaultLedger = false;
 		$scope.alertData = false;
 		
 		//Set default Company
@@ -190,8 +191,8 @@ function AccLedgerController($rootScope,$scope,$filter, ngTableParams,apiCall,ap
 		$scope.alertData = false;
 		$scope.ledgerEditId.id = id;
 		
-		apiCall.getCall(apiPath.getAllLedger+'/'+id).then(function(response){
-			
+		apiCall.getCall(apiPath.getAllLedger+'/'+id).then(function(response)
+		{
 			$scope.ledgerForm.ledgerName = response.ledgerName;
 			$scope.ledgerForm.emailId = response.emailId;
 			$scope.ledgerForm.alias = response.alias;
@@ -202,6 +203,7 @@ function AccLedgerController($rootScope,$scope,$filter, ngTableParams,apiCall,ap
 			$scope.ledgerForm.address2 = response.address2;
 			$scope.ledgerForm.tin = response.tin;
 			$scope.ledgerForm.pan = response.pan;
+			$scope.defaultLedger = response.isDefault;
 			//$scope.ledgerForm.sgst = response.sgst;
 			$scope.ledgerForm.cgst = response.cgst;
 			
@@ -237,7 +239,6 @@ function AccLedgerController($rootScope,$scope,$filter, ngTableParams,apiCall,ap
 					}
 				});
 			}
-
 			$scope.ledgerForm.bankMicr = response.micrCode != null && response.micrCode != "" ? response.micrCode : '';
 		
 		});

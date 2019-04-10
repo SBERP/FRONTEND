@@ -1258,36 +1258,36 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	
 	/** Tax Calculation **/
 	
-		$scope.calculateTaxReverseTwo = function(item,cgst,sgst,igst,index)
-		{
-			var getCgst = checkGSTValue(cgst);
-			var getSgst = checkGSTValue(sgst);
-			var getIgst = checkGSTValue(igst);
-			var getCess = checkGSTValue(item.cessPercentage);
-			var getFlatCess = 0;
-			if ($scope.enableDisableLWHSetting) {
-				var calcQty = getCalcQty(item,$scope.enableDisableLWHArray[index]);
-				vm.AccBillTable[index].totalFt = $filter('setDecimal')(parseFloat(item.qty)*item.lengthValue*item.widthValue*item.heightValue/parseFloat(item.devideFactor),$scope.noOfDecimalPoints);
-				vm.AccBillTable[index].stockFt = calcQty;
-			}else{
-				var calcQty = item.qty;
-			}
-			if (item.hasOwnProperty('realQtyData') && angular.isDefined(item.realQtyData) && angular.isNumber(item.realQtyData)) {
-				getFlatCess = parseFloat(item.realQtyData * item.cessFlat);
-			}else{
-				getFlatCess = calcQty * item.cessFlat;
-			}
-			var TaxSum = getCgst+getSgst+getIgst+getCess;
-			vm.AccBillTable[index].price = $filter('setDecimal')(((item.amount-getFlatCess)/ (1+(TaxSum/100))) / parseFloat(calcQty),$scope.noOfDecimalPoints);
-			vm.AccBillTable[index].cgstAmount = $filter('setDecimal')(vm.AccBillTable[index].price * getCgst/100,$scope.noOfDecimalPoints);
-			vm.AccBillTable[index].sgstAmount = $filter('setDecimal')(vm.AccBillTable[index].price * getSgst/100,$scope.noOfDecimalPoints);
-			vm.AccBillTable[index].igstAmount = $filter('setDecimal')(vm.AccBillTable[index].price * getIgst/100,$scope.noOfDecimalPoints);
-			vm.AccBillTable[index].cessAmount = $filter('setDecimal')((vm.AccBillTable[index].price * getCess/100)+getFlatCess,$scope.noOfDecimalPoints);
-			
-			if(!$scope.quickBill.EditBillData){
-				$scope.advanceValueUpdate();
-			}
+	$scope.calculateTaxReverseTwo = function(item,cgst,sgst,igst,index)
+	{
+		var getCgst = checkGSTValue(cgst);
+		var getSgst = checkGSTValue(sgst);
+		var getIgst = checkGSTValue(igst);
+		var getCess = checkGSTValue(item.cessPercentage);
+		var getFlatCess = 0;
+		if ($scope.enableDisableLWHSetting) {
+			var calcQty = getCalcQty(item,$scope.enableDisableLWHArray[index]);
+			vm.AccBillTable[index].totalFt = $filter('setDecimal')(parseFloat(item.qty)*item.lengthValue*item.widthValue*item.heightValue/parseFloat(item.devideFactor),$scope.noOfDecimalPoints);
+			vm.AccBillTable[index].stockFt = calcQty;
+		}else{
+			var calcQty = item.qty;
 		}
+		if (item.hasOwnProperty('realQtyData') && angular.isDefined(item.realQtyData) && angular.isNumber(item.realQtyData)) {
+			getFlatCess = parseFloat(item.realQtyData * item.cessFlat);
+		}else{
+			getFlatCess = calcQty * item.cessFlat;
+		}
+		var TaxSum = getCgst+getSgst+getIgst+getCess;
+		vm.AccBillTable[index].price = $filter('setDecimal')(((item.amount-getFlatCess)/ (1+(TaxSum/100))) / parseFloat(calcQty),$scope.noOfDecimalPoints);
+		vm.AccBillTable[index].cgstAmount = $filter('setDecimal')(vm.AccBillTable[index].price * getCgst/100,$scope.noOfDecimalPoints);
+		vm.AccBillTable[index].sgstAmount = $filter('setDecimal')(vm.AccBillTable[index].price * getSgst/100,$scope.noOfDecimalPoints);
+		vm.AccBillTable[index].igstAmount = $filter('setDecimal')(vm.AccBillTable[index].price * getIgst/100,$scope.noOfDecimalPoints);
+		vm.AccBillTable[index].cessAmount = $filter('setDecimal')((vm.AccBillTable[index].price * getCess/100)+getFlatCess,$scope.noOfDecimalPoints);
+		
+		if(!$scope.quickBill.EditBillData){
+			$scope.advanceValueUpdate();
+		}
+	}
 		
 	/** END **/
 	
@@ -1544,12 +1544,9 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			var count = EditProducArray.length;
 
 			var d = 0;
-			for(var w=0;w<count;w++) {
-				
-				var setData = EditProducArray[w];
-				//apiCall.getCall(apiPath.getAllProduct+'/'+setData.productId).then(function(resData){
+			(function productFixInner(wx){
+				var setData = EditProducArray[wx];
 				productFactory.getSingleProduct(setData.productId).then(function(resData){
-					
 					/** Tax **/
 					vm.AccBillTable[d].productName = resData[$scope.displayProductName] ? resData[$scope.displayProductName] : resData.productName;
 					if (angular.isArray(setData.itemizeDetail)) {
@@ -1666,9 +1663,13 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 						}
 					}
 					d++;
+					if (d < count) 
+					{
+						productFixInner(d);
+					}
 					/** End **/
 				});
-			}
+			})(d);
 			
 			toaster.clear();
 			if(copyData == 'copy'){
@@ -3439,7 +3440,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				var productName = data.productName;
 				var color = data.color;
 				var size = data.size;
-				var variant = data.variant != undefined ? data.variant : '';
+				var variant = data.variant != undefined ? data.variant : 'YY';
 				
 				productFactory.setNewProduct(companyID,productName,color,size,variant).then(function(response){
 					if(angular.isObject(response))

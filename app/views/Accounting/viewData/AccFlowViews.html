@@ -24,6 +24,7 @@
 					    </div>
 					</div>
 				</div>
+				
 				<div class="clearfix"></div>
 	         	<div data-toggle="tooltip" data-title="Show/Hide Column" class="checkbox c-checkbox" ng-if="headerType == 'Quotations Process'" >
 					<label class="mr-lg" ng-repeat="item in columnHideShow track by $index" >
@@ -32,11 +33,13 @@
 					</label>
 				</div>
 				<div class="table-responsive" ng-show="activeStatus.statusId!=undefined">
-			      	<table ng-table="table.tableParams"  show-filter="true" class="table table-bordered table-striped" >
+				<a ng-click='quotCsv.generate($event, "quotations.csv",table.tableParams)' class="pull-right btn btn-sm btn-primary">Export to CSV</a>
+		      	<table ng-table="table.tableParams" export-to-csv="quotCsv" separator="," export-csv-ignore="ignore" show-filter="true" id="quotationTable" class="table table-bordered table-striped">
 			          	<tbody>
 			            	<tr ng-repeat="user in $data track by (user.quotationBillId+user.total+user.clientName+$index)"  >
 			            		<td data-title="'#'"  style="text-align:center">{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td>
-			               		<td title="'Invoice#'"  sortable="'quotationNumber'" filter="{ 'quotationNumber': 'text' }" >{{::user.quotationNumber}}</td>
+			               		<td title="'Invoice#'"  sortable="'quotationNumber'" filter="{ 'quotationNumber': 'text' }" >
+			               			<a href="javascript:void(0)" ng-click="goToBillPage('quotation',user)">{{::user.quotationNumber}}</a></td>
 			               		<td title="'Date'" sortable="'date'" filter="{ 'entryDate': 'text' }" >{{::dateConvert(user.entryDate) | date:dateFormat}}</td>
 			               		<td ng-show="table.tableParams.branchNameFlag" title="'Branch Name'" filter="{ 'branchName': 'text' }" >{{user.branchName}}</td>
 			               		<td title="'Client Name'"  filter="{ 'clientName': 'text' }" >{{::user.clientName}}</td>
@@ -50,7 +53,7 @@
 			               
 			               		<td title="'Tax'" filter="{ 'tax': 'text' }" style="text-align:right">{{::user.tax}}</td>
 			               		<td title="'Total'" filter="{ 'total': 'text' }" style="text-align:right">{{::user.total}}</td>
-			               		<td title="'Action'" style="width:20%">
+			               		<td title="'Action'" style="width:20%" class="ignore">
 			                		<center>
 			                     	<i class="fa fa-share-square-o myCursorPointer" style="font-size:17px;color:#10709f" title="Convert to Sales Order" ng-click="convertToSales(user.quotationBillId)"></i>
 			                    	<i class="icon-repeat myCursorPointer" style="font-size:17px;color:#10709f" ng-if="user.repeatIcon" ng-click="reGeneratePdf(user.quotationBillId)" > </i>
@@ -61,7 +64,7 @@
 				                        <i  class="fa fa-file" style="font-size:17px;color:#10709f"> </i>
 				                    </a>
 			                    	&nbsp;
-			                     	<i class="fa fa-file myCursorPointer" style="font-size:17px;color:#10709f" ng-if="user.pdfIcon"  ng-click="openPdf('lg',user.saleId)" > </i>
+			                     	<i class="fa fa-file myCursorPointer" style="font-size:17px;color:#10709f" ng-if="user.pdfIcon"  ng-click="openPdf('lg',user)" > </i>
 				                     &nbsp; 
 				                     <i ng-click="editDataViewSales(user.quotationBillId)" class="fa fa-edit myCursorPointer" style="font-size:17px;color:#10709f"> </i>
 				                     
@@ -74,11 +77,14 @@
 			      </table>
 			   	</div>
 				<div class="table-responsive" ng-show="activeStatus.dispatchStatus!=undefined">
-			      	<table ng-table="table.tableParams2"  show-filter="true" class="table table-bordered table-striped" >
+					<a ng-click='saleCsv.generate($event, "sale-bills.csv",table.tableParams2)' class="pull-right btn btn-sm btn-primary">Export to CSV</a>
+			      	<table ng-table="table.tableParams2"  export-csv="saleCsv" separator="," csv-ignore="ignore"  show-filter="true" class="table table-bordered table-striped" >
 			          	<tbody>
 			            	<tr ng-repeat="user in $data track by (user.saleId+user.total+user.clientName+$index)"  >
 			            		<td data-title="'#'"  style="text-align:center">{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td>
-			               		<td title="'Invoice#'"  sortable="'invoiceNumber'" filter="{ 'invoiceNumber': 'text' }" >{{::user.invoiceNumber}}</td>
+			               		<td title="'Invoice#'"  sortable="'invoiceNumber'" filter="{ 'invoiceNumber': 'text' }" >
+			               			<a href="javascript:void(0)" ng-click="goToBillPage('sales',user)">{{::user.invoiceNumber}}</a>
+			               		</td>
 			               		<td title="'Date'" sortable="'date'" filter="{ 'entryDate': 'text' }" >{{::dateConvert(user.entryDate) | date:dateFormat}}</td>
 			               		<td ng-show="table.tableParams.branchNameFlag" title="'Branch Name'" filter="{ 'branchName': 'text' }" >{{user.branchName}}</td>
 			               		<td title="'Client Name'"  filter="{ 'clientName': 'text' }" >{{::user.clientName}}</td>
@@ -92,7 +98,7 @@
 			               
 			               		<td title="'Tax'" filter="{ 'tax': 'text' }" style="text-align:right">{{::user.tax}}</td>
 			               		<td title="'Total'" filter="{ 'total': 'text' }" style="text-align:right">{{::user.total}}</td>
-			               		<td title="'Action'" style="width:20%">
+			               		<td title="'Action'" style="width:20%" class="ignore">
 			                		<center>
 			                     	<i class="fa fa-stack-exchange myCursorPointer" style="font-size:17px;color:#10709f" title="Items CheckList" ng-if="activeStatus.dispatchStatus==0" ng-click="itemListModel(user)"></i>
 			                     	&nbsp;

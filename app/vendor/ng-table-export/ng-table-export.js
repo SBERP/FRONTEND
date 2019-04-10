@@ -1,3 +1,140 @@
-/*! ngTableExport v0.1.0 by Vitalii Savchuk(esvit666@gmail.com) - https://github.com/esvit/ng-table-export - New BSD License */
-angular.module("ngTableExport",[]).config(["$compileProvider",function(a){a.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|data):/)}]).directive("exportCsv",["$parse",function(a){return{restrict:"A",scope:!1,link:function(b,c,d){var e="",f={stringify:function(a){return'"'+a.replace(/^\s\s*/,"").replace(/\s*\s$/,"").replace(/"/g,'""')+'"'},generate:function(){e="";var a=c.find("tr");angular.forEach(a,function(a,b){var c=angular.element(a),d=c.find("th"),g="";c.hasClass("ng-table-filters")||(0==d.length&&(d=c.find("td")),1!=b&&(angular.forEach(d,function(a){g+=f.stringify(angular.element(a).text())+";"}),g=g.slice(0,g.length-1)),e+=g+"\n")})},link:function(){return"data:text/csv;charset=UTF-8,"+encodeURIComponent(e)}};a(d.exportCsv).assign(b.$parent,f)}}}]);
-//# sourceMappingURL=ng-table-export.map
+
+angular.module('ngTableExport', [])
+.config(['$compileProvider', function($compileProvider) {
+    // allow data links
+    $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|data):/);
+}])
+.directive('exportCsv', ['$parse', '$timeout', function ($parse, $timeout) {
+
+  var delimiter = ',';
+  var csvIgnore = 'ignore';
+  var header = 'data:text/csv;charset=UTF-8,';
+
+  return {
+      restrict: 'A',
+      scope: false,
+
+      /**
+       * scope is table scope, element is <table>
+       */
+      link: function(scope, element, attrs) {
+
+          var data = '';
+          // allow pass in of delimiter via directive attrs
+
+          if (attrs.delimiter) { delimiter = attrs.delimiter; }
+          if (attrs.csvIgnore) { csvIgnore = attrs.csvIgnore; }
+
+          function stringify(str) {
+            return '"' +
+              str.replace(/^\s\s*/, '').replace(/\s*\s$/, '') // trim spaces
+                 .replace(/"/g,'""') + // replace quotes with double quotes
+              '"';
+          }
+
+          /**
+           * Parse the table and build up data uri
+           */
+          function parseTable() {
+            data = '';
+            var rows = element.find('tr');
+            angular.forEach(rows, function(row, i) {
+              var tr = angular.element(row),
+                tds = tr.find('th').not('.'+csvIgnore),
+                rowData = '';
+              if (tr.hasClass('ng-table-filters')) {
+                return;
+              }
+              if (tds.length === 0) {
+                tds = tr.find('td').not('.'+csvIgnore);
+              }
+              if (i !== 1) {
+                angular.forEach(tds, function(td) {
+                  // respect colspan in row data
+                  rowData += stringify(angular.element(td).text()) + Array.apply(null, Array(td.colSpan)).map(function () { return delimiter; }).join('');
+                });
+                rowData = rowData.slice(0, rowData.length - 1); //remove last semicolon
+              }
+              data += rowData + '\n';
+            });
+            // add delimiter hint for excel so it opens without having to import
+            data = 'sep=' + delimiter + '\n' + data;
+          }
+
+          /**
+           * Dynamically generate a link and click it; works in chrome + firefox; unfortunately, safari
+           * does not support the `download` attribute, so it ends up opening the file in a new tab https://bugs.webkit.org/show_bug.cgi?id=102914
+           */
+          function download(dataUri, filename, scope) {
+            // tested in chrome / firefox / safari
+            var link = document.createElement('a');
+            // chrome + firefox
+            link.style.display = 'none';
+            link.href = dataUri;
+            link.download = filename;
+            link.target = '_blank';
+            // needs to get wrapped to play nicely with angular $digest
+            // else may cause '$digest already in progress' errors with other angular controls (e.g. angular-ui dropdown)
+            $timeout(function () {
+              try {
+                // must append to body for firefox; chrome & safari don't mind
+                document.body.appendChild(link);
+                link.click();
+                // destroy
+                document.body.removeChild(link);
+              }
+              catch(err) {
+                if (scope.logError) {
+                  scope.logError('NG Table Export Error saving file on client.');
+                }
+                throw(err);
+              }
+            }, 0, false);
+          }
+
+          var csv = {
+            /**
+             *  Generate data URI from table data
+             */
+            generate: function(event, filename, table) {
+            // console.log(table);
+              var isNgTable = attrs.ngTable,
+                table = table || scope.$parent.tableParams,
+                settings = table ? table.settings() : {},
+                cnt = table ? table.count() : {},
+                total = table ? settings.total : {};
+
+              // is pager on?  if so, we have to disable it temporarily
+              if (isNgTable && cnt < total) {
+                // var $off = ngTableEventsChannel.onAfterReloadData(function () {
+                //   // de-register callback so it won't continue firing
+                //   $off();
+                //   // give browser some time to re-render; FIXME - no good way to know when rendering is done?
+      
+                // });
+
+                // disable the pager and reload the table so we get all the data
+                table.count(Infinity);
+                table.reload();
+                $timeout(function () {
+	                // generate data from table
+	                parseTable();
+	                // finally, restore original table cnt
+	                table.count(cnt);
+	                table.reload();
+	                // dynamically trigger download
+	                download(header + encodeURIComponent(data), filename, scope);
+	              }, 1000, false);
+              } else {
+                // pager isn't on, just parse the table
+                parseTable();
+                download(header + encodeURIComponent(data), filename);
+              }
+            }
+          };
+
+          // attach csv to table scope
+          $parse(attrs.exportCsv).assign(scope.$parent, csv);
+      }
+  };
+}]);

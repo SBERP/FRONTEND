@@ -13,6 +13,9 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 	$scope.dateFormat =  $rootScope.dateFormats; //Date Format
    	$scope.statusCounts = [];
    	$scope.activeStatus = {statusId : 1};
+   	if ($rootScope.accView.companyId == undefined) {
+   		$rootScope.accView.companyId = $rootScope.$storage.authUser.defaultCompanyId;
+   	}
 	/** Display Company and date **/
 	apiCall.getCall(apiPath.getAllCompany+'/'+$rootScope.accView.companyId).then(function(res)
 	{
@@ -32,10 +35,10 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 
 	$scope.loadInit = function() 
   	{
-		var headerData = {'Content-Type': undefined,'fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate,'isQuotationProcess':'yes'};
+		var headerData = {'Content-Type': undefined,'fromDate':$rootScope.accView.fromDate,'companyId':$rootScope.accView.companyId,'toDate':$rootScope.accView.toDate,'isQuotationProcess':'yes'};
 		var getJrnlPath = apiPath.postQuotationBill;
 		toaster.clear();
-		toaster.pop('wait', 'Please Wait', 'Data Loading....',30000);  		
+		toaster.pop('wait', 'Please Wait', 'Data Loading....',30000);
 		$scope.loadCounts();
   		
 		toaster.pop('wait', 'Please Wait', 'Data Loading....',30000);
@@ -61,6 +64,17 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 		});
 
   	}
+  	$scope.goToBillPage = function(trnType,bill)
+	{
+		var gotoUrl;
+		if (trnType == 'quotation') {
+			gotoUrl = 'app.QuotationPrint';
+		}else if (trnType == 'sales') {
+			gotoUrl = 'app.WholesaleBill';
+		}
+		getSetFactory.set(bill);
+      	$state.go(gotoUrl);
+	}
   	$scope.loadCounts = function() {
   		if($scope.headerType == 'Quotations Process'){
 			var getStatusPath = apiPath.postQuotationBill+'/status/'+$rootScope.accView.companyId;
@@ -156,7 +170,11 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 			data[p].singlePdfIcon = false;
 			var productArrays = JSON.parse(data[p].productArray);
 			data[p].displayProduct = productArrays.inventory;
-			var fileCnt = data[p].file.length;
+
+			var fileCnt = 0;
+			if (data[p].file != null) {
+				fileCnt = data[p].file.length;
+			}
 			var flag = 0;
 			
 			for(var k=0;k<fileCnt;k++){
@@ -183,6 +201,45 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 		}
 		$scope.TableData();
 	}
+	$scope.openPdf = function (size,singleBillData) {
+
+		if (Modalopened) return;
+		
+		var modalInstance = $modal.open({
+		  templateUrl: 'app/views/PopupModal/Accounting/imageGalleryModal/imageGalleryModalContent.html',
+		  controller: imageGalleryModalCtrl,
+		  size: size,
+		  resolve:{
+			  billData: function(){
+				 
+				return singleBillData;
+			  },
+			  formatType: function(){
+				  
+				 return 'pdf';
+			  },
+			  transType: function(){
+				  
+				  return 'none';
+			  }
+		  }
+		});
+
+	   Modalopened = true;
+	   
+		modalInstance.result.then(function () {
+		 
+			Modalopened = false;
+		
+		}, function () {
+			
+		  console.log('Cancel');	
+		  Modalopened = false;
+		  
+		});
+		
+	
+	};
 	/** Reload Load Data **/
 	$scope.reLoadPdfData2 = function(response)
 	{
@@ -224,7 +281,7 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 			
 			for(var k=0;k<fileCnt;k++){
 			
-				if(saleData[p].file[k].documentFormat == 'pdf' && saleData[p].file[k].documentType == 'quotation')
+				if(saleData[p].file[k].documentFormat == 'pdf' && saleData[p].file[k].documentType == 'bill')
 				{
 					flag++;
 				}
@@ -250,16 +307,19 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 	{
 		if (obj.statusPosition=='quotation') {
 			$scope.activeStatus = {statusId : obj.statusId};
-
+			vm.tableParams.reload();
+			vm.tableParams.page(1);
 		}else if (obj.statusPosition=='delivery') {
 			$scope.activeStatus = {dispatchStatus : obj.statusId};
+			vm.tableParams2.reload();
+			vm.tableParams2.page(1);
 		}else if (obj.statusPosition=='sales') {
 			$scope.activeStatus = {dispatchStatus : 0};
+			vm.tableParams2.reload();
+			vm.tableParams2.page(1);
 		}
-		vm.tableParams.reload();
-		vm.tableParams2.reload();
-		vm.tableParams.page(1);
-		vm.tableParams2.page(1);
+		
+		
 	}
 	$scope.TableData = function(){
 		vm.tableParams = new ngTableParams({
@@ -295,12 +355,9 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 				});
 				// orderedData = data;
 				} else if(!params.sorting().date){
-					if (params.filter().term) {
-						orderedData = params.filter() ? $filter('filter')(data, params.filter().term) : data;
-					} else {
-						orderedData = params.sorting() ? $filter('orderBy')(data, params.orderBy()) : data;
-					}
+					orderedData = params.sorting() ? $filter('orderBy')(data, params.orderBy()) : data;
 				}
+				orderedData = params.filter() ? $filter('filter')(orderedData, params.filter()) : orderedData;
 				orderedData = $filter('filter')(orderedData, $scope.activeStatus);
 				vm.tableParams.total(orderedData.length);
 				$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
@@ -346,12 +403,9 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 				});
 				orderedData2 = $filter('filter')(saleData,$scope.activeStatus);
 				} else if(!params.sorting().date){
-					if (params.filter().term) {
-						orderedData2 = params.filter() ? $filter('filter')(saleData, params.filter().term) : saleData;
-					} else {
-						orderedData2 = params.sorting() ? $filter('orderBy')(saleData, params.orderBy()) : saleData;
-					}
+					orderedData2 = params.sorting() ? $filter('orderBy')(saleData, params.orderBy()) : saleData;
 				}
+				orderedData2 = params.filter() ? $filter('filter')(orderedData2, params.filter()) : orderedData2;
 				orderedData2 = $filter('filter')(orderedData2, $scope.activeStatus);
 				vm.tableParams2.total(orderedData2.length);
 				$defer.resolve(orderedData2.slice((params.page() - 1) * params.count(), params.page() * params.count()));

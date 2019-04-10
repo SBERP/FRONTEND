@@ -104,7 +104,6 @@ App.controller('DashboardController', ['$rootScope','$scope', '$filter','colors'
     $scope.emailSmsPopup = function(size,tab,dateType,clientData = 'all')
     {
       toaster.clear();
-      console.log("Cient data",clientData);
       if(clientData != 'all')
       {
         var clientModalData = [];
@@ -197,7 +196,6 @@ App.controller('DashboardController', ['$rootScope','$scope', '$filter','colors'
     {
       apiCall.getCall(apiPath.settingOption+'/payment').then(function(response){
           data=response;
-          console.log("app",data);
           filterDataForTable();
           $scope.TableData();
       });
@@ -291,7 +289,6 @@ App.controller('DashboardController', ['$rootScope','$scope', '$filter','colors'
                     
                     }
                 }, function () {
-                    console.log('Cancel');
                     Modalopened = false;
                 });
 
