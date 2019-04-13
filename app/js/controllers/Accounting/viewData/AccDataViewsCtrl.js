@@ -911,6 +911,27 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 												displayProductList(invIndex,billIndex);
 											}
 										}
+										else
+										{
+											productArrays.inventory[invIndex].productName = '<em class="text-danger">(deleted)</em>';
+											productArrays.inventory[invIndex].altProductName = '<em class="text-danger">(deleted)</em>';
+											data[billIndex].displayProduct.push(productArrays.inventory[invIndex]);
+											if (invIndex == invCnt - 1) 
+											{
+												pushedIntoArray(billIndex);
+												billIndex++;
+												if (billIndex < cnt) {
+													billAmountFix(billIndex);
+												}else{
+													loadSorting();
+												}
+												
+											}
+											invIndex++;
+											if (invIndex < invCnt) {
+												displayProductList(invIndex,billIndex);
+											}
+										}
 									});
 								}
 								else

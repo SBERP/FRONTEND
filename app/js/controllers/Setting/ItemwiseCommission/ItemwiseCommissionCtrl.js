@@ -90,7 +90,12 @@ function ItemwiseCommissionController($rootScope,$scope,$state,$filter,apiCall,a
 	    var headerCr = {'Content-Type': undefined,'companyId':companyId};
 	    apiCall.getCallHeader(jsuggestPath,headerCr).then(function(response){
 	       	data = angular.copy(response);
-	        $scope.TableData();
+	       	if (vm.tableParams != undefined) {
+	       		vm.tableParams.reload();
+				vm.tableParams.page(1);
+	       	}else{
+	       		$scope.TableData();
+	       	}
 	    });
 	}
 	$scope.editProduct = function(item)

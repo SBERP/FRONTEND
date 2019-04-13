@@ -33,8 +33,13 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 	$scope.displayfromDate = $rootScope.accView.fromDate;
 	$scope.displaytoDate = $rootScope.accView.toDate;
 
-	$scope.loadInit = function() 
+	$scope.loadInit = function(onDateChange = null) 
   	{
+  		if (onDateChange != null)
+  		{
+  			$rootScope.accView.fromDate = moment(vm.dt1).format(apiDateFormate);
+  			$rootScope.accView.toDate = moment(vm.dt2).format(apiDateFormate);
+  		}
 		var headerData = {'Content-Type': undefined,'fromDate':$rootScope.accView.fromDate,'companyId':$rootScope.accView.companyId,'toDate':$rootScope.accView.toDate,'isQuotationProcess':'yes'};
 		var getJrnlPath = apiPath.postQuotationBill;
 		toaster.clear();
@@ -142,64 +147,67 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 	$scope.reLoadPdfData = function(response)
 	{
 		toaster.clear();
-		if (apiResponse.notFound == response) {
-			toaster.pop('alert', 'Opps!!', 'No Data Found');
-			return false;
-		}
-		data = response;
-		$scope.totalAmountDisplay = 0;
-
-		var cnt = data.length;
-		for(var p=0;p<cnt;p++)
+		if (apiResponse.notFound == response) 
 		{
-			$scope.totalAmountDisplay = $filter('setDecimal')( parseFloat($scope.totalAmountDisplay) + parseFloat(data[p].total),2);
+			toaster.pop('alert', 'Opps!!', 'No Data Found');
+			data = [];
+		}
+		else if (apiResponse.noContent == response) 
+		{
+			toaster.pop('alert', 'Opps!!', 'No Data Found');
+			data = [];
+		}
+		else
+		{
+			data = response;
+			// $scope.totalAmountDisplay = 0;
+			var cnt = data.length;
+			for(var p=0;p<cnt;p++)
+			{
+				// $scope.totalAmountDisplay = $filter('setDecimal')( parseFloat($scope.totalAmountDisplay) + parseFloat(data[p].total),2);
+				data[p].repeatIcon = false;
+				data[p].imageIcon = false;
+				data[p].pdfIcon = false;
+				data[p].singlePdfIcon = false;
+				var productArrays = JSON.parse(data[p].productArray);
+				data[p].displayProduct = productArrays.inventory;
 
-			if ($scope.headerType == 'Quotations Process') {
-				if (!$rootScope.accView.branchId)  {
-					if (angular.isObject(data[p].branch)) {
-						data[p].branchName = data[p].branch.branchName;
-					}
-					else{
-						data[p].branchName = '-';
+				var fileCnt = 0;
+				if (data[p].file != null) {
+					fileCnt = data[p].file.length;
+				}
+				var flag = 0;
+				
+				for(var k=0;k<fileCnt;k++){
+				
+					if(data[p].file[k].documentFormat == 'pdf' && data[p].file[k].documentType == 'quotation')
+					{
+						flag++;
 					}
 				}
-			}
-			data[p].repeatIcon = false;
-			data[p].imageIcon = false;
-			data[p].pdfIcon = false;
-			data[p].singlePdfIcon = false;
-			var productArrays = JSON.parse(data[p].productArray);
-			data[p].displayProduct = productArrays.inventory;
-
-			var fileCnt = 0;
-			if (data[p].file != null) {
-				fileCnt = data[p].file.length;
-			}
-			var flag = 0;
-			
-			for(var k=0;k<fileCnt;k++){
-			
-				if(data[p].file[k].documentFormat == 'pdf' && data[p].file[k].documentType == 'quotation')
-				{
-					flag++;
+				
+				if(flag == 0){
+					data[p].repeatIcon = true;
 				}
-			}
-			
-			if(flag == 0){
-				data[p].repeatIcon = true;
-			}
-			else if(flag == 1){
-				data[p].singlePdfIcon = true;
-			}
-			else{
-				data[p].pdfIcon = true;
-			}
-			if ($scope.headerType == 'Quotations Process'){
-				data[p].invoiceNumber = data[p].invoiceNumber;
-				data[p].clientName = data[p].client.clientName;
+				else if(flag == 1){
+					data[p].singlePdfIcon = true;
+				}
+				else{
+					data[p].pdfIcon = true;
+				}
+				if ($scope.headerType == 'Quotations Process'){
+					data[p].invoiceNumber = data[p].invoiceNumber;
+					data[p].clientName = data[p].client.clientName;
+				}
 			}
 		}
-		$scope.TableData();
+		
+		if (vm.tableParams != undefined) {
+			vm.tableParams.reload();
+			vm.tableParams.page(1);
+		}else{
+			$scope.TableData();
+		}
 	}
 	$scope.openPdf = function (size,singleBillData) {
 
@@ -244,84 +252,111 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 	$scope.reLoadPdfData2 = function(response)
 	{
 		toaster.clear();
-		if (apiResponse.notFound == response) {
-			toaster.pop('alert', 'Opps!!', 'No Data Found');
-			return false;
-		}
-		saleData = response;
-		$scope.totalAmountDisplay = 0;
-
-		var cnt = saleData.length;
-		for(var p=0;p<cnt;p++)
+		if (apiResponse.notFound == response) 
 		{
-			$scope.totalAmountDisplay = $filter('setDecimal')( parseFloat($scope.totalAmountDisplay) + parseFloat(saleData[p].total),2);
+			toaster.pop('alert', 'Opps!!', 'No Data Found');
+			// $scope.totalAmountDisplay = 0;
+			saleData = [];
+		}
+		else if (apiResponse.noContent == response) 
+		{
+			toaster.pop('alert', 'Opps!!', apiResponse.noContent);
+			// $scope.totalAmountDisplay = 0;
+			saleData = [];
+		}
+		else
+		{
+			saleData = response;
+			// $scope.totalAmountDisplay = 0;
 
-			if ($scope.headerType == 'Quotations Process') {
-				if (!$rootScope.accView.branchId)  {
-					if (angular.isObject(saleData[p].branch)) {
-						saleData[p].branchName = saleData[p].branch.branchName;
-					}
-					else{
-						saleData[p].branchName = '-';
+			var cnt = saleData.length;
+			for(var p=0;p<cnt;p++)
+			{
+				// $scope.totalAmountDisplay = $filter('setDecimal')( parseFloat($scope.totalAmountDisplay) + parseFloat(saleData[p].total),2);
+
+				if ($scope.headerType == 'Quotations Process') {
+					if (!$rootScope.accView.branchId)  {
+						if (angular.isObject(saleData[p].branch)) {
+							saleData[p].branchName = saleData[p].branch.branchName;
+						}
+						else{
+							saleData[p].branchName = '-';
+						}
 					}
 				}
-			}
-			saleData[p].repeatIcon = false;
-			saleData[p].imageIcon = false;
-			saleData[p].pdfIcon = false;
-			saleData[p].singlePdfIcon = false;
-			var productArrays = JSON.parse(saleData[p].productArray);
-			saleData[p].displayProduct = productArrays.inventory;
+				saleData[p].repeatIcon = false;
+				saleData[p].imageIcon = false;
+				saleData[p].pdfIcon = false;
+				saleData[p].singlePdfIcon = false;
+				var productArrays = JSON.parse(saleData[p].productArray);
+				saleData[p].displayProduct = productArrays.inventory;
 
-			var fileCnt = 0;
-			if (saleData[p].file != null) {
-				fileCnt = saleData[p].file.length;
-			}
-			var flag = 0;
-			
-			for(var k=0;k<fileCnt;k++){
-			
-				if(saleData[p].file[k].documentFormat == 'pdf' && saleData[p].file[k].documentType == 'bill')
-				{
-					flag++;
+				var fileCnt = 0;
+				if (saleData[p].file != null) {
+					fileCnt = saleData[p].file.length;
 				}
-			}
-			
-			if(flag == 0){
-				saleData[p].repeatIcon = true;
-			}
-			else if(flag == 1){
-				saleData[p].singlePdfIcon = true;
-			}
-			else{
-				saleData[p].pdfIcon = true;
-			}
-			if ($scope.headerType == 'Quotations Process'){
-				saleData[p].invoiceNumber = saleData[p].invoiceNumber;
-				saleData[p].clientName = saleData[p].client.clientName;
+				var flag = 0;
+				
+				for(var k=0;k<fileCnt;k++){
+				
+					if(saleData[p].file[k].documentFormat == 'pdf' && saleData[p].file[k].documentType == 'bill')
+					{
+						flag++;
+					}
+				}
+				
+				if(flag == 0){
+					saleData[p].repeatIcon = true;
+				}
+				else if(flag == 1){
+					saleData[p].singlePdfIcon = true;
+				}
+				else{
+					saleData[p].pdfIcon = true;
+				}
+				if ($scope.headerType == 'Quotations Process'){
+					saleData[p].invoiceNumber = saleData[p].invoiceNumber;
+					saleData[p].clientName = saleData[p].client.clientName;
+				}
 			}
 		}
-		$scope.TableData2();
+		if (vm.tableParams2 != undefined) {
+			vm.tableParams2.reload();
+			vm.tableParams2.page(1);
+		}else{
+			$scope.TableData2();
+		}
 	}
 	$scope.loadStatusData = function(obj)
 	{
 		if (obj.statusPosition=='quotation') {
 			$scope.activeStatus = {statusId : obj.statusId};
-			vm.tableParams.reload();
-			vm.tableParams.page(1);
+			
+			
 		}else if (obj.statusPosition=='delivery') {
 			$scope.activeStatus = {dispatchStatus : obj.statusId};
-			vm.tableParams2.reload();
-			vm.tableParams2.page(1);
+			
 		}else if (obj.statusPosition=='sales') {
 			$scope.activeStatus = {dispatchStatus : 0};
+		}
+
+		if (vm.tableParams != undefined) {
+			vm.tableParams.reload();
+			vm.tableParams.page(1);
+		}else{
+			$scope.TableData();
+		}
+		if (vm.tableParams2 != undefined) {
 			vm.tableParams2.reload();
 			vm.tableParams2.page(1);
+		}else{
+			$scope.TableData2();
 		}
 		
 		
 	}
 	$scope.TableData = function(){
+		vm.tableParams = undefined;
 		vm.tableParams = new ngTableParams({
 			page: 1,            // show first page
 			count: 10,          // count per page
@@ -334,7 +369,7 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 			getData: function($defer, params) {
 				/** ngTable **/
 				params.total(data.length);
-				var orderedData;
+				var orderedData = [];
 				if(params.sorting().date === 'asc'){
 					data.sort(function (a, b) {
 						
@@ -367,9 +402,9 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 	          	$scope.totalPages = Math.ceil($scope.totalData/params.count());
 			}
 		});
-		
 	}
 	$scope.TableData2 = function(){
+		vm.tableParams2 = undefined;
 		vm.tableParams2 = new ngTableParams({
 			page: 1,            // show first page
 			count: 10,          // count per page
@@ -382,7 +417,7 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 			getData: function($defer, params) {
 				/** ngTable **/
 				params.total(saleData.length);
-				var orderedData2;
+				var orderedData2 = [];
 				if(params.sorting().date === 'asc'){
 					saleData.sort(function (a, b) {
 						
@@ -529,5 +564,42 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 			Modalopened = false;
 		});
 	}
+
+
+
+	// Date picker functions
+	this.openStart = function($event) {
+		$event.preventDefault();
+		$event.stopPropagation();
+		this.openedStart = true;
+	};
+	this.openEnd = function($event) {
+		$event.preventDefault();
+		$event.stopPropagation();
+		this.openedEnd = true;
+	};
+	this.clear = function () {
+		this.dt1 = null;
+	};
+	this.check = function()
+	{
+		this.dt2 = this.dt1;
+	};
+	this.disabled = function(date, mode) {
+		return false; //( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+	};
+
+	this.today = function() {
+		this.dt1 = new Date(moment($rootScope.accView.fromDate,apiDateFormate).format('YYYY-MM-DD'));
+	};
+	this.today();
+
+	this.today2 = function() {
+		this.dt2 = new Date(moment($rootScope.accView.toDate,apiDateFormate).format('YYYY-MM-DD'));
+	};
+	this.today2();
+
+	this.initDate = new Date('2016-15-20');
+  	var dateFormats = $rootScope.dateFormats;
 }
 AccFlowViewController.$inject = ["$rootScope","$scope", "$filter","$http", "ngTableParams","apiCall","apiPath","flotOptions","fetchArrayService","colors","$timeout","getSetFactory","$state","headerType","$modal","$window","toaster","apiResponse","apiDateFormate"];

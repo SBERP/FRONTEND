@@ -261,7 +261,7 @@
 				<div class="col-md-3" ng-if="enableDisableState">
 					<!-- <fieldset class="my-fieldset-paddingBottom my-fieldset-marginBottom"> -->
 						<div class="form-group" style="margin-bottom: 0px">
-							<label class="col-sm-2 control-label style="padding-left: 2px"> *State </label>
+							<label class="col-sm-2 control-label" style="padding-left: 2px"> *State </label>
 							<div class="col-sm-10">
 								<select chosen="" data-ng-model="quickBill.stateAbb" data-ng-options="s.stateName for s in form.statesDrop track by s.stateAbb" ng-change="ChangeState('stateAbb',quickBill.stateAbb.stateAbb)"  class="form-control input-sm chosen-select" ng-required="true" style="font-size:15px;"></select>
 							</div>

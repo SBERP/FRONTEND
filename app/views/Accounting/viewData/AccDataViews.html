@@ -95,14 +95,14 @@
 				</tab>
 
 				<!-- Paid -->
-				 <tab heading="Paid" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Sales Orders' ||  headerType == 'Quotations'" ng-click="onSalesBillTabSelect(1)" active="secondTabActive" >
+				 <tab heading="Paid" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Sales Orders'" ng-click="onSalesBillTabSelect(1)" active="secondTabActive" >
 					<div ng-include="'salesBillContentData'" ng-if="currentActiveSalestab == 1">
 				 	</div>
 				</tab>
 				<!-- Paid -->
 
 				<!-- Unpaid -->
-				 <tab heading="Unpaid" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Sales Orders' ||  headerType == 'Quotations'" ng-click="onSalesBillTabSelect(2)" active="thirdTabActive" >
+				 <tab heading="Unpaid" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Sales Orders'" ng-click="onSalesBillTabSelect(2)" active="thirdTabActive" >
 				 	<div ng-include="'salesBillContentData'" ng-if="currentActiveSalestab == 2">
 				 	</div>
 				</tab>
@@ -129,7 +129,7 @@
 				<!--End -->
 
 				<!-- End -->
-               <tab heading="Chart" ng-if="headerType != 'Wholesales' && headerType != 'Sales Orders' && headerType != 'Retailsales' && headerType != 'Tax-Purchase'">
+               <tab heading="Chart" ng-if="headerType != 'Wholesales' && headerType != 'Sales Orders' && headerType != 'Retailsales' && headerType != 'Quotations' && headerType != 'Tax-Purchase'">
 					<div class="row">
 					  <div class="col-lg-6">
 						 <div class="panel panel-transparent">
@@ -200,8 +200,8 @@
                	<td ng-show="table.tableParams.productsFlag" title="'Products'" width="15%" >
                   <ul>
                      <li data-ng-repeat="prt in user.displayProduct track by (prt.productId+prt.productName+prt.amount+$index)">
-                        <span ng-if="!isLanguageHindi || !prt.altProductName" >{{prt.productName}}</span>
-                        <span ng-if="isLanguageHindi && prt.altProductName" >{{prt.altProductName}}</span>
+                        <span ng-if="!isLanguageHindi || !prt.altProductName"  ng-bind-html="prt.productName"></span>
+                        <span ng-if="isLanguageHindi && prt.altProductName" ng-bind-html="prt.altProductName"></span>
                      </li>
                   </ul>
                	</td>
@@ -267,9 +267,9 @@
 					<td ng-if="!table.tableParams.productsFlag && table.tableParams.branchNameFlag" colspan="4" ></td>
 					<td ng-if="table.tableParams.productsFlag && table.tableParams.branchNameFlag" colspan="5" ></td>
 					<!-- <td ng-show="table.tableParams.branchNameFlag && table.tableParams.productsFlag"  colspan="6"></td> -->
-					<td><span class="pull-right" ng-bind="totalAdvanceDisplay"></span></td>
-					<td><span class="pull-right" ng-bind="totalBalanceDisplay"></span></td>
-					<td><span class="pull-right" ng-bind="totalAmountDisplay"></span></td>
+					<td><span class="pull-right" ng-bind="totalAdvanceDisplay | number : 2"></span></td>
+					<td><span class="pull-right" ng-bind="totalBalanceDisplay | number : 2"></span></td>
+					<td><span class="pull-right" ng-bind="totalAmountDisplay | number : 2"></span></td>
 					<td></td>
 				</tr>
 	        </tfooter>
@@ -293,8 +293,8 @@
 					<td ng-show="table.tableParams.productsFlag" title="'Products'"  width="15%">
 						<ul>
 							<li ng-repeat="prt in user.displayProduct track by (prt.productId+prt.productName+prt.amount+$index)" ng-if="prt.productName">
-								<span ng-if="!isLanguageHindi || !prt.altProductName" >{{prt.productName}}</span>
-                        		<span ng-if="isLanguageHindi && prt.altProductName" >{{prt.altProductName}}</span>
+								<span ng-if="!isLanguageHindi || !prt.altProductName" ng-bind-html="prt.productName"></span>
+                        		<span ng-if="isLanguageHindi && prt.altProductName" ng-bind-html="prt.altProductName"></span>
 							</li>
 						</ul>
 					</td>
@@ -331,10 +331,11 @@
 	        <tfooter>
 	          	<tr style="background-color: #f5f5f5;">
 					<td colspan="2" ><b>Grand Total</b></td>
-					<td colspan="4"></td>
+					<td colspan="2"></td>
 					<td ng-show="table.tableParams.productsFlag"></td>
-					
-					<td><span class="pull-right" ng-bind="totalAmountDisplay"></span></td>
+					<td><span class="pull-right" ng-bind="totalAdvanceDisplay | number : 2"></span></td>
+					<td><span class="pull-right" ng-bind="totalBalanceDisplay | number : 2"></span></td>
+					<td><span class="pull-right" ng-bind="totalAmountDisplay | number : 2"></span></td>
 					<td></td>
 				</tr>
 	        </tfooter>

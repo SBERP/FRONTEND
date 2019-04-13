@@ -2302,8 +2302,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				
 			formdata.set('isDisplay','yes');
 		}
-	 
-	  
 	  
 	 if($scope.changeProductArray){
 		 
@@ -2376,9 +2374,13 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			// }
 			else if ($scope.saleType == 'WholesaleBill') {
 				headerData.salesType = 'whole_sales';
+				if (formdata.has('isSalesOrderUpdate')) {
+					headerData.isSalesOrderUpdate = 'ok';
+					formdata.delete('isSalesOrderUpdate');
+					formdata.set('isSalesorder','not');
+				}
 			}
 		}
-		
 		apiCall.postCallHeader(BillPath,headerData,formdata).then(function(data) {
 			toaster.clear();
 			// Delete formdata  keys
@@ -3919,7 +3921,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				modalInstance.result.then(function () {
 					toaster.clear();
 					Modalopened = false;
-					console.log("draftOrSalesOrder..",draftOrSalesOrder);
 					if (draftOrSalesOrder == 'SalesOrder'){
 						$scope.EditAddBill('','SalesOrder');
 					} else if (draftOrSalesOrder == 'draft') {
