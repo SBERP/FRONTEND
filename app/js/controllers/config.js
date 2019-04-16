@@ -655,7 +655,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
             url: '/AccDataReceipt',
              templateUrl: basepath('Accounting/viewData/AccDataViews.html'),
 			controller: 'AccViewDataController as table',
-            resolve: angular.extend(requireDeps('ngTable', 'ngTableExport','angular-chosen','flot-chart','flot-chart-plugins','toaster'),{
+            resolve: angular.extend(requireDeps('ngTable', 'ngTableExport','angular-chosen','flot-chart','flot-chart-plugins','toaster','moment'),{
 				headerType: function(){
 					return 'receipt';
 				}

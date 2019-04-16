@@ -93,12 +93,12 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	}
 	else if($scope.headerType == 'payment'){
 		
-		var getJrnlPath = apiPath.getJrnlByCompany+$rootScope.accView.companyId;
+		var getJrnlPath = apiPath.getJrnlTrnByCompany+$rootScope.accView.companyId;
 		 var headerData = {'Content-Type': undefined,'journalType':'payment','fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate};
 	}
 	else if($scope.headerType == 'receipt'){
 		
-		var getJrnlPath = apiPath.getJrnlByCompany+$rootScope.accView.companyId;
+		var getJrnlPath = apiPath.getJrnlTrnByCompany+$rootScope.accView.companyId;
 		// var headerData = {'Content-Type': undefined,'fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate,'type':'sales'};
 		var headerData = {'Content-Type': undefined,'journalType':'receipt','fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate};
 	}
@@ -998,35 +998,64 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 									["Dec", "0"]
 								  ]
 								}];
-		  
-					for (var i = 0; i < data.length; i++) {
-						
-						if(data[i].amountType=='debit'){
-						  
-							vm.pieChartData[0]["data"] = parseInt(vm.pieChartData[0]["data"]) + parseFloat(data[i].amount);
-							var date = data[i].entryDate;
-							var splitedate = date.split("-").reverse().join("-");
-							var getdate = new Date(splitedate);
-							var month = getdate.getMonth();
-							
-								vm.pieFlotCharts[0]["data"][month][1] = parseInt(vm.pieFlotCharts[0]["data"][month][1]) + parseFloat(data[i].amount);
+		  			if ($scope.headerType == 'payment' || $scope.headerType == 'receipt') {
+		  				var dataCnt = data.length;
+		  				var i = 0;
+		  				(function paymentReceiptLoop(i) {
+		  					// for (var j = 0; j < data[i].creditArray.length; j++) {
+		  						vm.pieChartData[0]["data"] = parseInt(vm.pieChartData[0]["data"]) + parseFloat(data[i].creditAmount);
+								var date = data[i].entryDate;
+								var splitedate = date.split("-").reverse().join("-");
+								var getdate = new Date(splitedate);
+								var month = getdate.getMonth();
+								vm.pieFlotCharts[0]["data"][month][1] = parseInt(vm.pieFlotCharts[0]["data"][month][1]) + parseFloat(data[i].creditAmount);
+		  					// }
+		  					// for (var k = 0; k < data[i].debitArray.length; k++) {
+		  						vm.pieChartData[1]["data"] = parseInt(vm.pieChartData[1]["data"]) + parseFloat(data[i].debitAmount);
 								
-							//console.log(vm.pieFlotCharts[0]["data"][0][1] = parseInt(vm.pieFlotCharts[0]["data"][0][1]) + parseInt(data[i].amount));
+								var date2 = data[i].entryDate;
+								var splitedate2 = date2.split("-").reverse().join("-");
+								var getdate2 = new Date(splitedate2);
+								var month2 = getdate2.getMonth();
+								vm.pieFlotCharts[1]["data"][month2][1] = parseInt(vm.pieFlotCharts[1]["data"][month2][1]) + parseFloat(data[i].debitAmount);
+		  					// }
+		  					i++;
+		  					if (i < dataCnt) {
+		  						paymentReceiptLoop(i);
+		  					}
+		  				})(0);
+		  			}
+		  			else{
+		  				for (var i = 0; i < data.length; i++) {
 						
-						}
-						else{
-							vm.pieChartData[1]["data"] = parseInt(vm.pieChartData[1]["data"]) + parseFloat(data[i].amount);
+							if(data[i].amountType=='debit'){
+							  
+								vm.pieChartData[0]["data"] = parseInt(vm.pieChartData[0]["data"]) + parseFloat(data[i].amount);
+								var date = data[i].entryDate;
+								var splitedate = date.split("-").reverse().join("-");
+								var getdate = new Date(splitedate);
+								var month = getdate.getMonth();
+								
+									vm.pieFlotCharts[0]["data"][month][1] = parseInt(vm.pieFlotCharts[0]["data"][month][1]) + parseFloat(data[i].amount);
+									
+								//console.log(vm.pieFlotCharts[0]["data"][0][1] = parseInt(vm.pieFlotCharts[0]["data"][0][1]) + parseInt(data[i].amount));
 							
-							var date = data[i].entryDate;
-							var splitedate = date.split("-").reverse().join("-");
-							var getdate = new Date(splitedate);
-							var month = getdate.getMonth();
-							
-								vm.pieFlotCharts[1]["data"][month][1] = parseInt(vm.pieFlotCharts[1]["data"][month][1]) + parseFloat(data[i].amount);
-							   
-							//vm.pieFlotCharts[1]["data"] = parseInt(vm.pieFlotCharts[1]["data"]) + parseInt(data[i].amount);
+							}
+							else{
+								vm.pieChartData[1]["data"] = parseInt(vm.pieChartData[1]["data"]) + parseFloat(data[i].amount);
+								
+								var date = data[i].entryDate;
+								var splitedate = date.split("-").reverse().join("-");
+								var getdate = new Date(splitedate);
+								var month = getdate.getMonth();
+								
+									vm.pieFlotCharts[1]["data"][month][1] = parseInt(vm.pieFlotCharts[1]["data"][month][1]) + parseFloat(data[i].amount);
+								   
+								//vm.pieFlotCharts[1]["data"] = parseInt(vm.pieFlotCharts[1]["data"]) + parseInt(data[i].amount);
+							}
 						}
-					}
+		  			}
+					
 					//console.log(vm.pieFlotCharts);
 					
 					$scope.contents = data;

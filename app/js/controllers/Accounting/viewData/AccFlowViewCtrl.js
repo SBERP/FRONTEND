@@ -67,7 +67,6 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 				alert('Encountered server error');
 			 }
 		});
-
   	}
   	$scope.goToBillPage = function(trnType,bill)
 	{

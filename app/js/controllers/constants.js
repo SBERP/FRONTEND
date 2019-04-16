@@ -146,6 +146,7 @@ App
   'getLatestInvoice2'     : '/latest',
   'getLatestQuotation'    : 'settings/quotation-numbers/company/',
   'getJrnlByCompany'      : 'accounting/journals/company/',
+  'getJrnlTrnByCompany'   : 'accounting/journals/transaction/',
   'getOneJrnl'            : 'accounting/journals/',
   'getLedgerJrnl'         : 'accounting/ledgers/company/',
   'getAllStaff'           : 'users',

@@ -44,8 +44,6 @@ function AccDataLedgerController($rootScope,$scope, $filter, ngTableParams,$http
   var GetTransationPath = apiPath.getAllLedger+'/'+ledgerId+'/transactions';
   
 	apiCall.getCall(GetTransationPath).then(function(response){
-		console.log(response);
-		
 		var secondLayoutArrayData = [];
 		var totaldebit = 0;
 		var totalcredit = 0;
@@ -402,7 +400,6 @@ function AccDataLedgerController($rootScope,$scope, $filter, ngTableParams,$http
   }
 
   $scope.open_bill_ledger =function(user){
-  	console.log("useeeerrr = ",user);
   	if(user.ledger.contactNo!=null && user.ledger.contactNo!=undefined && user.ledger.contactNo!='undefined')
   	{	
   		var BillPath = apiPath.getBill+user.ledger.companyId;
@@ -499,11 +496,9 @@ function AccDataLedgerController($rootScope,$scope, $filter, ngTableParams,$http
 				
 				var state = $('#modal-state');
 				modalInstance.result.then(function (data) {
-					console.log("dataaaaa = ",data);
 					Modalopened = false;
 				
 				}, function (data) {
-					console.log("errror = ",data);
 					Modalopened = false;
 				});
 			}

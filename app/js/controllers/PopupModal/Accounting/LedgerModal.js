@@ -81,7 +81,6 @@ function AccLedgerModalController($rootScope,$scope, $modalInstance,apiCall,apiP
 	if(Object.keys(getSetFactory.get()).length){
 		
 		var editLedgerData = getSetFactory.get();
-		console.log(editLedgerData);
 		getSetFactory.blank();
 		
 		$scope.ledgerForm.getSetLedgerId = editLedgerData.ledgerId;

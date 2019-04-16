@@ -111,7 +111,6 @@ function AccPaymentController($rootScope,$scope,apiCall,apiPath,toaster,$modal,a
 		$scope.accPayment.getSetJrnlId = getSetFactory.get();
 		getSetFactory.blank();
 		
-		console.log("update");
 		console.log($scope.accPayment.getSetJrnlId);
 		
 		var getOneJrnlPath = apiPath.getOneJrnl+$scope.accPayment.getSetJrnlId;

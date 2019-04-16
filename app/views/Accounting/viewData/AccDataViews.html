@@ -54,7 +54,7 @@
 			</div>
 
             <tabset>
-               <tab heading="All" ng-if="headerType != 'Wholesales' && headerType != 'Retailsales' && headerType != 'Sales Orders' &&  headerType != 'Quotations' && headerType != 'Tax-Purchase'">
+               <tab heading="All" ng-if="headerType != 'Wholesales' && headerType != 'Retailsales' && headerType != 'Sales Orders' &&  headerType != 'Quotations' && headerType != 'Tax-Purchase' && headerType != 'payment' && headerType != 'receipt'">
 				 <div class="table-responsive">
 				 	<a ng-click='dataCsv.generate($event, "data.csv",table.tableParams)' class="pull-right btn btn-sm btn-primary">Export to CSV</a>
 					<table data-ng-table="table.tableParams" export-csv="dataCsv" show-filter="false" class="table table-bordered table-striped"  >
@@ -88,7 +88,33 @@
 				</div>
 				 <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
 			   </tab>
-
+			   <tab heading="All"  ng-if="headerType == 'payment' || headerType == 'receipt'">
+			   		<div class="table-responsive">
+					 	<a ng-click='dataCsv.generate($event, "data.csv",table.tableParams)' class="pull-right btn btn-sm btn-primary">Export to CSV</a>
+						<table data-ng-table="table.tableParams" export-csv="dataCsv" show-filter="false" class="table table-bordered table-striped"  >
+							<!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
+							 <tbody>
+								<tr data-ng-repeat="user in $data track by $index ">
+									<td data-title="'#'"  >{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td>
+									<td data-title="'Date'" sortable="'date'" filter="{ 'entryDate': 'text' }" >{{dateConvert(user.entryDate) | date:dateFormat}}</td>
+									<td data-title="'Paid From'"><span ng-repeat="item in user.creditArray">{{item.ledgerName}} <br></span></td>
+									<td data-title="'Paid To'"><span ng-repeat="item in user.debitArray">{{item.ledgerName}} <br></span></td>
+									<td data-title="'Amount'" filter="{ 'creditAmount': 'text' }" style="text-align:right" ><span>{{user.creditAmount | number:2}}</span></td>
+									
+									<!-- <td data-title="'Credit'"  filter="{ 'amountTypeCredit': 'text' }" style="text-align:right"  ><span ng-if="user.amountType=='credit'">{{user.amount}}</span></td> -->
+									
+									<!--td data-title="'Amount'"  filter="{ 'amount': 'text' }" >{{user.amount}}</td-->
+								   <td data-title="'Action'" >
+										<center ng-if="headerType == 'specialJournal' || headerType == 'payment' || headerType == 'receipt'">
+											<i ng-click="editDataView(user.journalId)" class="fa fa-edit" style="font-size:17px;color:#10709f"> </i>
+										</center>
+									</td>
+								</tr>
+							 </tbody>
+						</table>
+					</div>
+					 <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
+			   </tab>
 			    <tab heading="All" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Sales Orders' || headerType == 'Quotations'" ng-click="onSalesBillTabSelect(0)" active="firstTabActive" >
 				 	<div ng-include="'salesBillContentData'" ng-if="currentActiveSalestab == 0">
 				 	</div>
