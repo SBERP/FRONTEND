@@ -119,6 +119,8 @@
 					</span>
 				</div>
 		 	</div>
+		 	<label class="control-label col-sm-2 pull-right">&nbsp;&nbsp;Closing Balance: 
+		 		<span ng-if="closingBalance.length != 0" style="font-weight: 100;">{{closingBalance[0].closingBalance}} <span ng-if="closingBalance[0].closingBalanceType == 'credit'">Cr</span><span ng-if="closingBalance[0].closingBalanceType == 'debit'">Dr</span></span> <span ng-if="closingBalance.length == 0" style="font-weight: 100;">0 Dr</span></label>
 		</h4>
 		 <h4 class="panel-heading col-sm-12" style="padding:5px 1px;" >	
 		 	<div class="col-sm-3" ng-if="enableDisableSalesman">
@@ -126,7 +128,6 @@
 				<div class="col-sm-9 contentOfForm" >
 					<select chosen="" data-ng-model="quickBill.userId" name="userDropDown" data-ng-options="s.userName for s in form.userDrop | filter : filterStaff track by s.userId " ng-change="changeInBill('userId',quickBill.userId)" class="form-control input-sm chosen-select btn-sm" ></select>
 				</div>
-				
 			</div>
 			<div class="col-sm-3">
 				<label  class="col-sm-3 control-label" style="padding-left: 2px;">*Company</label>

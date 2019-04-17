@@ -63,7 +63,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	$scope.quickBill.invoiceNumber;
 	$scope.quickBill.invoiceEndAt;
 	$scope.quickBill.invoiceId;
-	
+	$scope.closingBalance = [];
 	/* VALIDATION */
 	
 	$scope.errorMessage = validationMessage; //Error Messages In Constant
@@ -2511,7 +2511,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				// $scope.defaultComapny();
 				$scope.ReloadAfterSave(companyObject);
 				
-			//	$scope.getInitStateCity(); //get Default State and City
+				//$scope.getInitStateCity(); //get Default State and City
 				
 				//$scope.stateAndCityDefault(defStateData,defCityData); 
 				
@@ -2526,10 +2526,12 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				toaster.clear();
 				if(apiResponse.noContent == data)
 				{
-					if(angular.equals($scope.quickBill.EditBillData.lastPdf,{}) || generate == 'not'){
+					if(angular.equals($scope.quickBill.EditBillData.lastPdf,{}) || generate == 'not')
+					{
 						toaster.pop('info', 'Please Change Your Data');
 					}
-					else{
+					else
+					{
 						//toaster.pop('wait', 'Printing...');
 						var pdfPath = $scope.erpPath+$scope.quickBill.EditBillData.lastPdf.documentUrl+$scope.quickBill.EditBillData.lastPdf.documentName;
 						$scope.directPrintPdf(pdfPath);
@@ -2676,7 +2678,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	vm.clientEditData = {};
 
 	$scope.setClientSuggest = function(Fname,data){
-		console.log("iinn");
 		$scope.clientSaveButton = false; //Save Button
 		vm.clientEditData = data;
 		// $scope.quickBill.cityId = {};
@@ -2688,6 +2689,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		$scope.quickBill.clientName = data.clientName;
 		$scope.quickBill.contactNo = data.contactNo;
 		$scope.quickBill.gst = data.gst;
+		$scope.closingBalance = $filter('filter')(data.closingBalance,{companyId: $scope.quickBill.companyId.companyId});
 		$scope.quickBill.contactNo1 = data.contactNo1;
 		$scope.quickBill.emailId = data.emailId;
 		
@@ -4290,7 +4292,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			mywindow.document.write(tempData);
 			mywindow.document.write('</body></html>');
 			if (is_chrome) {
-							
 			   setTimeout(function () { // wait until all resources loaded 
 					mywindow.focus(); // necessary for IE >= 10
 					mywindow.print();  // change window to mywindow
