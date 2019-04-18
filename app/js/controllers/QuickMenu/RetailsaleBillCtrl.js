@@ -760,6 +760,8 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 			}else{
 				$scope.enableDisableLWHArray[index] = {};
 			}
+		}else{
+			vm.AccBillTable[index].measurementUnit = item.measurementUnit;
 		}
 
 		var grandPrice;
@@ -1395,6 +1397,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 								$scope.quickBill.documentData = angular.copy(clientUpdateData.file);
 							}
 						}
+						$scope.closingBalance = $filter('filter')(clientUpdateData.closingBalance,{companyId: $scope.quickBill.companyId.companyId});
 					}
 					
 				}, 1000);
@@ -1661,6 +1664,8 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 						}else{
 							$scope.enableDisableLWHArray[d] = {};
 						}
+					}else{
+						vm.AccBillTable[d].measurementUnit = resData.measurementUnit;
 					}
 					d++;
 					if (d < count) 
@@ -2532,7 +2537,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					}
 					else
 					{
-						//toaster.pop('wait', 'Printing...');
 						var pdfPath = $scope.erpPath+$scope.quickBill.EditBillData.lastPdf.documentUrl+$scope.quickBill.EditBillData.lastPdf.documentName;
 						$scope.directPrintPdf(pdfPath);
 					}
@@ -2650,27 +2654,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		  xhr.open('GET', url);
 		  xhr.responseType = 'blob';
 		  xhr.send();
-
-		  /** Print **/
-			 // $http({
-				// url : url,
-				// method : 'GET',
-				// headers : {
-					// 'Content-type' : undefined
-				// }
-			// }).success(function(data, status, headers, config) {
-				
-				  // var pdfFile = new Blob([data], {
-					// type : 'image/png'
-				// });
-
-				
-				// formdata.append("file[]",pdfFile);
-				
-			// }).error(function(data, status, headers, config) {
-				// alert('Sorry, something went wrong')
-			// });
-		/** End **/
 		
 					
 	}

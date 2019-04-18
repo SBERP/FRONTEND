@@ -7,7 +7,7 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
   	var saleData = [];
    	$scope.filteredItems;
   	var Modalopened = false;
-  
+  	var finalStatus = {};
 	$scope.erpPath = $rootScope.erpPath; //Erp Path
 	$scope.headerType = headerType;
 	$scope.dateFormat =  $rootScope.dateFormats; //Date Format
@@ -87,6 +87,7 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 		}
 		apiCall.getCallHeader(getStatusPath,headerData).then(function(response){
 			$scope.statusCounts = response;
+			finalStatus = fetchArrayService.getfilteredSingleObject(response,'finalized','statusPosition');
 			toaster.clear();
 		});
   	}
@@ -125,6 +126,48 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 				}
 				else{
 					toaster.pop('warning', '', deleteres);
+				}
+			});
+		 /** End **/
+		 
+		 Modalopened = false;
+		
+		}, function () {	
+		  Modalopened = false;
+		  
+		});
+	}
+	$scope.finishEditing = function(billObj) {
+		
+		toaster.clear();
+		if (Modalopened) return;
+		getSetFactory.set({msg: 'Do you want to set Bill as Edited?'});
+		var modalInstance = $modal.open({
+			  templateUrl: 'app/views/PopupModal/Delete/deleteDataModal.html',
+			  controller: deleteDataModalController,
+			  size: 'sm'
+			});
+		Modalopened = true;
+		modalInstance.result.then(function () {
+		// return false;
+		 /**Delete Code **/
+		 	var jrnPath = apiPath.postBill+'/'+billObj.saleId+'/status';
+		 	var formd = new FormData();
+		 	formd.set('statusType','finalized');
+		 	formd.set('statusId',finalStatus.statusId);
+		 	formd.set('status',finalStatus.status);
+		 	formd.set('companyId',$rootScope.accView.companyId);
+			apiCall.postCall(jrnPath,formd).then(function(statusres){
+				//console.log(deleteres);
+				if(apiResponse.ok == statusres){
+					$scope.loadCounts();
+					billObj.dispatchStatus = finalStatus.statusId;
+					fetchArrayService.setUpdatedObject(saleData,billObj,billObj.saleId,'saleId');
+					vm.tableParams2.reload();
+					vm.tableParams2.page(1);
+				}
+				else{
+					toaster.pop('warning', '', statusres);
 				}
 			});
 		 /** End **/
@@ -332,7 +375,7 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 			$scope.activeStatus = {statusId : obj.statusId};
 			
 			
-		}else if (obj.statusPosition=='delivery') {
+		}else if (obj.statusPosition=='delivery' || obj.statusPosition=='finalized') {
 			$scope.activeStatus = {dispatchStatus : obj.statusId};
 			
 		}else if (obj.statusPosition=='sales') {
@@ -463,7 +506,7 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 		{
 			return 'active-panel';
 		}
-		else if ($scope.activeStatus.dispatchStatus==0 && status.statusPosition=='sales') 
+		else if ($scope.activeStatus.dispatchStatus==0 && status.statusPosition=='sales' && status.statusPosition=='finalized') 
 		{
 			return 'active-panel';
 		}

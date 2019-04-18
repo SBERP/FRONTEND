@@ -23,6 +23,7 @@
 							   </div>
 							</th>
 							<th  ng-if="form.statusType=='list'" class="header my-table-paddingTopBottom" width="2%">#</th>
+							<th class="header my-table-paddingTopBottom">Item Code</th>
 							<th class="header my-table-paddingTopBottom">Product Name</th>
 							<th class="header my-table-paddingTopBottom" style="width: 8%">Qty</th>
 						</tr>
@@ -39,6 +40,9 @@
 							</td>
 							<td  ng-if="form.statusType=='list'">
 								<strong ng-bind="$index+1"></strong>
+							</td>
+							<td>
+								<span>{{user.itemCode}}</span>
 							</td>
 							<td>
 								<span>{{user.productName}}</span>

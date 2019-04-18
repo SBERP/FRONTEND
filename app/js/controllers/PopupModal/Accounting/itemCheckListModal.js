@@ -26,6 +26,7 @@ function AccDispatchItemModalController($scope,toaster,$modalInstance,$filter,st
             $scope.TableData[d].widthStatus = resData.measurementUnit.widthStatus == "enable" ? true : false;
             $scope.TableData[d].unitName = resData.measurementUnit.unitName;
             $scope.TableData[d].productName = resData.productName;
+            $scope.TableData[d].itemCode = resData.itemCode;
           });
         })(i);
       }
