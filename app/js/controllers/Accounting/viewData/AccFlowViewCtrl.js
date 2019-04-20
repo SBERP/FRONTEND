@@ -506,7 +506,7 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 		{
 			return 'active-panel';
 		}
-		else if ($scope.activeStatus.dispatchStatus==0 && status.statusPosition=='sales' && status.statusPosition=='finalized') 
+		else if ($scope.activeStatus.dispatchStatus==0 && status.statusPosition=='sales') 
 		{
 			return 'active-panel';
 		}

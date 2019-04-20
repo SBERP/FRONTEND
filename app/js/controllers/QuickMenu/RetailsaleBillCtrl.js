@@ -2227,18 +2227,18 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				  formdata.set('gst',$scope.quickBill.gst);
 				 }
 				  
-				  if($scope.quickBill.address1){
+				if($scope.quickBill.address1){
 					 
-					 formdata.set('address1',$scope.quickBill.address1);
-				  }
+					formdata.set('address1',$scope.quickBill.address1);
+				}
 				  
 				 
-				 if(!formdata.has('stateAbb'))
+				if(!formdata.has('stateAbb'))
 				{
 					formdata.set('stateAbb',$scope.quickBill.stateAbb.stateAbb);
 				}
 				
-				 if(!formdata.has('cityId'))
+				if(!formdata.has('cityId'))
 				{
 					formdata.set('cityId',$scope.quickBill.cityId.cityId);
 				}
@@ -2360,6 +2360,8 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		if($scope.saleType == 'WholesaleBill' || $scope.saleType == 'SalesOrder'){
 			if(generate == 'preprint'){
 				headerData.operation = 'preprint';
+			}else if(generate == 'generate'){
+				headerData.operation = 'generate';
 			}
 			if($scope.saleType == 'SalesOrder')
 			{

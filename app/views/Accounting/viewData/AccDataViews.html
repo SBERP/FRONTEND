@@ -222,7 +222,7 @@
                	<td title="'Invoice#'"  sortable="'invoiceNumber'" filter="{ 'invoiceNumber': 'text' }" >{{::user.invoiceNumber}}</td>
                	<td title="'Date'" sortable="'date'" filter="{ 'entryDate': 'text' }" >{{::dateConvert(user.entryDate) | date:dateFormat}}</td>
                	<td ng-show="table.tableParams.branchNameFlag" title="'Branch Name'" filter="{ 'branchName': 'text' }" >{{user.branchName}}</td>
-               	<td title="'Client Name'"  filter="{ 'clientName': 'text' }" >{{user.clientName}}</td>
+               	<td title="'Client Name'"  filter="{ 'clientName': 'text' }" ><span tooltip="No. of Prints: {{user.printCount}}" tooltip-trigger="mouseenter" tooltip-placement="top">{{user.clientName}}</span></td>
                	<td ng-show="table.tableParams.productsFlag" title="'Products'" width="15%" >
                   <ul>
                      <li data-ng-repeat="prt in user.displayProduct track by (prt.productId+prt.productName+prt.amount+$index)">
