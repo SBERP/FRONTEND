@@ -17,6 +17,11 @@ function AccTaxationController($rootScope,$scope, $filter, ngTableParams,apiCall
   var data = [];
   $scope.data2 = [];
   $scope.data3 = [];
+  $scope.tableHeaders = [];
+  $scope.gstr2TotalRow = {};
+  $scope.gstr2Data = {};
+  var numericFields = ['invoice_value', 'taxable_value', 'integrated_tax', 'central_tax', 'state_tax', 'cess'];
+  $scope.selectedTab = '';
   $scope.gstr3bTotal = {
   	outward: {
   		taxable_value: 0,
@@ -236,6 +241,18 @@ function AccTaxationController($rootScope,$scope, $filter, ngTableParams,apiCall
 				}
 				else if(angular.isObject(response))
 				{
+					if ($scope.headerType == 'GST Return3b')
+					{
+						$scope.gstr3bData = response;
+						totalCalcForGSTR3B(response);
+					}
+					else if ($scope.headerType == 'GST Return2')
+					{
+						$scope.gstr2Data = response;
+						$scope.selectedTab = Object.keys(response)[0];
+						$scope.tableHeaders = Object.keys($scope.gstr2Data[$scope.selectedTab][0]);
+						calculate_GSTR2($scope.gstr2Data[$scope.selectedTab]);
+					}
 					if(response.hasOwnProperty('imps'))
 					{
 						$scope.data2 = response.imps;
@@ -270,11 +287,7 @@ function AccTaxationController($rootScope,$scope, $filter, ngTableParams,apiCall
 					// 	$scope.TableData2();
 					// 	$scope.TableData3();
 					// /* End */
-					if ($scope.headerType == 'GST Return3b')
-					{
-						$scope.gstr3bData = response;
-						totalCalcForGSTR3B(response);
-					}
+					
 
 					$scope.exportPdfHidden = true;
 
@@ -448,31 +461,32 @@ function AccTaxationController($rootScope,$scope, $filter, ngTableParams,apiCall
 				  // use build-in angular filter
 				  if(!$.isEmptyObject(params.$params.filter) && ((typeof(params.$params.filter.productName) != "undefined" && params.$params.filter.productName != "")))
 				  {
-						 var orderedData = params.filter() ?
-						 $filter('filter')($scope.data3, params.filter()) :$scope.data3;
-						  vm.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
+				  	var orderedData = params.filter() ?
+				  	$filter('filter')($scope.data3, params.filter()) :$scope.data3;
+				  	vm.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
 						  params.total(orderedData.length); // set total for recalc pagination
 						  $defer.resolve(vm.users);
-				  }
-				else
-				{
-					params.total($scope.data3.length);
-				}
-				 
-				 if(!$.isEmptyObject(params.$params.sorting))
-				  {
-					  var orderedData = params.sorting() ?
-							  $filter('orderBy')($scope.data3, params.orderBy()) :
-							  $scope.data3;
-					  $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-				  }
-				
-				$scope.totalData3 = $scope.data3.length;
-				$scope.pageNumber3 = params.page();
-				$scope.itemsPerPage3 = params.count();
-				$scope.totalPages3 = Math.ceil($scope.totalData3/params.count());
-				  }
+						}
+						else
+						{
+							params.total($scope.data3.length);
+						}
+
+						if(!$.isEmptyObject(params.$params.sorting))
+						{
+							var orderedData = params.sorting() ?
+							$filter('orderBy')($scope.data3, params.orderBy()) :
+							$scope.data3;
+							$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+						}
+
+						$scope.totalData3 = $scope.data3.length;
+						$scope.pageNumber3 = params.page();
+						$scope.itemsPerPage3 = params.count();
+						$scope.totalPages3 = Math.ceil($scope.totalData3/params.count());
+					}
 		  });
+		 // vm
 		}
 	/** End **/
 	var headerData = {'Content-Type': undefined,'fromDate':$scope.displayfromDate,'toDate':$scope.displaytoDate};
@@ -524,6 +538,63 @@ function AccTaxationController($rootScope,$scope, $filter, ngTableParams,apiCall
 		$scope.getProduct(getJrnlPath,headerData,1);
 	}
 	
+	$scope.changeActiveTab = function(tab)
+	{
+		$scope.selectedTab = tab;
+		if ($scope.gstr2Data[tab].length) 
+		{
+			$scope.tableHeaders = Object.keys($scope.gstr2Data[tab][0]);
+		}
+		calculate_GSTR2($scope.gstr2Data[tab]);
+	}
+	$scope.fixHeading = function(title)
+	{
+		return title.replace(/_/g,' ');
+	}
+	$scope.fixValue = function(title, key)
+	{
+		if (numericFields.indexOf(key) >= 0) 
+		{
+			title = $filter('setDecimal')(title,2);
+		}
+		return title;
+	}
+	$scope.fixValueCss = function(key)
+	{
+		if (numericFields.indexOf(key) >= 0) 
+		{
+			return 'text-align:right;'
+		}
+		return 'text-align:left;';
+	}
+
+	function calculate_GSTR2(gstrRes)
+	{
+		$scope.gstr2TotalRow = {};
+		$scope.gstr2TotalRow[$scope.tableHeaders[0]] = 'Total';
+		for (var j = 1; j < $scope.tableHeaders.length; j++) 
+		{
+			if (numericFields.indexOf($scope.tableHeaders[j]) >= 0) 
+			{
+				$scope.gstr2TotalRow[$scope.tableHeaders[j]] = 0;
+			}
+			else
+			{
+				$scope.gstr2TotalRow[$scope.tableHeaders[j]] = '-';
+			}
+		}
+		for (var i = 0; i < gstrRes.length; i++) 
+		{
+			$.each(gstrRes[i], function(key, val) 
+			// for(const [key, val] of gstrRes[i])
+			{
+				if (numericFields.indexOf(key) >= 0) 
+				{
+					$scope.gstr2TotalRow[key] += parseFloat(val);
+				}
+			});
+		}
+	}
 
 	$scope.refreshTable = function(){
 		

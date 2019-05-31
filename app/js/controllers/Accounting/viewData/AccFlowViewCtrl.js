@@ -607,7 +607,10 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 		});
 	}
 
-
+	$scope.getKeys = function(res)
+	{
+		return Object.keys(res);
+	}
 
 	// Date picker functions
 	this.openStart = function($event) {
