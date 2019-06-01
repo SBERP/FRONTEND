@@ -260,7 +260,12 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 	{
 		var expenseType = vm.AccExpense[index].expenseType;
 		var expenseValue = vm.AccExpense[index].expenseValue;
+		vm.AccExpense[index].expenseTax = vm.AccExpense[index].expenseTax != undefined && !isNaN(vm.AccExpense[index].expenseTax) ?
+											vm.AccExpense[index].expenseTax : 0;
+		var expenseTax = parseFloat(vm.AccExpense[index].expenseTax);
 		var totalData=0;
+		var expenseAmt = expenseValue * (1+(expenseTax/100));
+
 		if(index==0)
 		{
 			totalData = parseFloat($scope.totalTable_without_expense);
@@ -271,11 +276,12 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 		}
 		if(vm.AccExpense[index].expenseOperation=="plus")
 		{
-			var totalExpense = expenseType=="flat" ? parseFloat(expenseValue)+ parseFloat(totalData) : (((parseFloat(expenseValue)/100)*parseFloat($scope.totalTable_without_expense)) + parseFloat(totalData));
+			var totalExpense = expenseType=="flat" ? parseFloat(expenseAmt)+ parseFloat(totalData) : (((parseFloat(expenseAmt)/100)*parseFloat($scope.totalTable_without_expense)) + parseFloat(totalData));
 		}
 		else
 		{
-			var totalExpense = expenseType=="flat" ? parseFloat(totalData) - parseFloat(expenseValue) : (parseFloat(totalData) - ((parseFloat(expenseValue)/100)*parseFloat($scope.totalTable_without_expense)));
+			var totalExpense = expenseType=="flat" ? parseFloat(totalData) - parseFloat(expenseAmt) : (parseFloat(totalData) - ((parseFloat(expenseAmt)/100)*parseFloat($scope.totalTable_without_expense)));
+
 		}
 		$scope.totalTable = $scope.expenseAmount[$scope.expenseAmount.length-1];
 		return totalExpense;
@@ -615,6 +621,7 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 		vm.AccExpense[index].expenseName = item.expenseName;
 		vm.AccExpense[index].expenseId = item.expenseId;
 		vm.AccExpense[index].expenseValue = item.expenseValue;
+		vm.AccExpense[index].expenseTax = item.expenseTax;
 		vm.AccExpense[index].expenseType = item.expenseType;
 		vm.AccExpense[index].expenseOperation = 'plus';
 		$scope.changeProductArray = true;

@@ -75,7 +75,6 @@ function SettingExpenseController($rootScope,$scope,$filter,ngTableParams,apiCal
 	var expenseGetApiPath = apiPath.settingExpense;
 	// Get All Expense Call 
 	apiCall.getCall(expenseGetApiPath).then(function(response){
-		console.log(response);
 		$scope.expenseData = response;
 		filterDataForTable();
 		 $scope.TableData();

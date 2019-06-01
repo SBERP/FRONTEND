@@ -381,11 +381,12 @@
 						<input  type="text" ng-model="item.expenseValue"  class="form-control input-sm" style="padding-left: 5px;padding-right: 5px;width:40%;" ng-pattern="/^[0-9 .]*$/" ng-change="changeProductTable();advanceValueUpdate();"  only-number /> 
 					</td>
 					<td colspan="3">
-						<input type="text" placeholder="GST(%)" ng-model="item.expenseTax" class="form-control input-sm pull-left"  style="padding-left: 5px;padding-right: 5px;width:40%;" only-number>
+						<input type="text" placeholder="GST(%)" ng-model="item.expenseTax" ng-change="changeProductTable();advanceValueUpdate();" class="form-control input-sm pull-left"  style="padding-left: 5px;padding-right: 5px;width:40%;" only-number>
 						<span class="pull-right" ng-bind='(item.expenseTax * item.expenseValue / 100) | setDecimal: noOfDecimalPoints'></span>
 					</td>
 					<td colspan="1" style="text-align:right">
 						<span ng-bind='expenseAmount[$index] = getExpenseValue($index) | setDecimal: noOfDecimalPoints'></span>
+						
 					</td>
 					<td colspan="1">
 						<center>
