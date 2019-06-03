@@ -302,13 +302,19 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 	$scope.getExpenseValue = function(index)
 	{
 		var expenseType = vm.AccExpense[index].expenseType;
-		var expenseValue = vm.AccExpense[index].expenseValue;
+		var expenseValue = parseFloat(vm.AccExpense[index].expenseValue);
 		vm.AccExpense[index].expenseTax = vm.AccExpense[index].expenseTax != undefined && !isNaN(vm.AccExpense[index].expenseTax) ?
 											vm.AccExpense[index].expenseTax : 0;
 		var expenseTax = parseFloat(vm.AccExpense[index].expenseTax);
-		var expenseAmt = expenseValue * (1+(expenseTax/100));
+		var expenseAmt = expenseType=="flat" ? 
+							expenseValue * (1+(expenseTax/100))
+								: expenseValue + expenseTax;
+		vm.AccExpense[index].expenseAmt = $filter('setDecimal')(expenseType=="flat" ? 
+													parseFloat(expenseAmt)
+														: (parseFloat(expenseAmt/100) * parseFloat($scope.total_without_expense)),$scope.noOfDecimalPoints);
 		// var expenseValue = vm.AccExpense[index].expenseOperation;
 		var totalData=0;
+
 		if(index==0)
 		{
 			totalData = parseFloat($scope.total_without_expense);
@@ -317,13 +323,18 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		{
 			totalData = parseFloat($scope.expenseAmount[index-1]);
 		}
+
 		if(vm.AccExpense[index].expenseOperation=="plus")
 		{
-			var totalExpense = expenseType=="flat" ? parseFloat(expenseAmt)+ parseFloat(totalData) : (((parseFloat(expenseAmt)/100)*parseFloat($scope.total_without_expense)) + parseFloat(totalData));
+			var totalExpense = expenseType=="flat" ? 
+								parseFloat(expenseAmt)+ parseFloat(totalData) 
+									: (((parseFloat(expenseAmt)/100)*parseFloat($scope.total_without_expense)) + parseFloat(totalData));
 		}
 		else
 		{
-			var totalExpense = expenseType=="flat" ? parseFloat(totalData) - parseFloat(expenseAmt)  : (  parseFloat(totalData) - ((parseFloat(expenseAmt)/100)*parseFloat($scope.total_without_expense)));
+			var totalExpense = expenseType=="flat" ? 
+								parseFloat(totalData) - parseFloat(expenseAmt)  
+									: (  parseFloat(totalData) - ((parseFloat(expenseAmt)/100)*parseFloat($scope.total_without_expense)));
 		}
 		
 		$scope.total = $scope.expenseAmount[$scope.expenseAmount.length-1];

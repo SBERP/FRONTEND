@@ -256,15 +256,21 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 	}
 
 	$scope.expenseAmount=[];
+	
 	$scope.getExpenseValue = function(index)
 	{
 		var expenseType = vm.AccExpense[index].expenseType;
-		var expenseValue = vm.AccExpense[index].expenseValue;
+		var expenseValue = parseFloat(vm.AccExpense[index].expenseValue);
 		vm.AccExpense[index].expenseTax = vm.AccExpense[index].expenseTax != undefined && !isNaN(vm.AccExpense[index].expenseTax) ?
 											vm.AccExpense[index].expenseTax : 0;
 		var expenseTax = parseFloat(vm.AccExpense[index].expenseTax);
 		var totalData=0;
-		var expenseAmt = expenseValue * (1+(expenseTax/100));
+		var expenseAmt = expenseType=="flat" ? 
+							expenseValue * (1+(expenseTax/100))
+								: expenseValue + expenseTax;
+		vm.AccExpense[index].expenseAmt = $filter('setDecimal')(expenseType=="flat" ? 
+													parseFloat(expenseAmt)
+														: parseFloat(expenseAmt/100) * parseFloat($scope.totalTable_without_expense), $scope.noOfDecimalPoints);
 
 		if(index==0)
 		{
