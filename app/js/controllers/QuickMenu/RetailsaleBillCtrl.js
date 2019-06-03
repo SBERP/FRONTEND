@@ -306,9 +306,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 		vm.AccExpense[index].expenseTax = vm.AccExpense[index].expenseTax != undefined && !isNaN(vm.AccExpense[index].expenseTax) ?
 											vm.AccExpense[index].expenseTax : 0;
 		var expenseTax = parseFloat(vm.AccExpense[index].expenseTax);
-		var expenseAmt = expenseType=="flat" ? 
-							expenseValue * (1+(expenseTax/100))
-								: expenseValue + expenseTax;
+		var expenseAmt = expenseValue * (1+(expenseTax/100));
 		vm.AccExpense[index].expenseAmt = $filter('setDecimal')(expenseType=="flat" ? 
 													parseFloat(expenseAmt)
 														: (parseFloat(expenseAmt/100) * parseFloat($scope.total_without_expense)),$scope.noOfDecimalPoints);
