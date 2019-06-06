@@ -2034,9 +2034,12 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 			if(data.hasOwnProperty('productId')){
 				var productID = data.productId;
 				
-				productFactory.setUpdatedProduct(productID).then(function(response){
-					if(angular.isObject(response)){
-						productFactory.getProductByCompany(companyID).then(function(responseCompayWise){
+				productFactory.setUpdatedProduct(productID).then(function(response)
+				{
+					if(angular.isObject(response))
+					{
+						productFactory.getProductByCompany(companyID).then(function(responseCompayWise)
+						{
 							vm.productNameDrop = responseCompayWise;
 							filterProductData();
 							vm.AccBillTable[data.index].productName = response.productName;
@@ -2050,14 +2053,17 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 				});
 			}
 			else{
-				var productName = data.productId;
-				var color = data.color;
-				var size = data.size;
-				var variant = data.variant;
+				var productName = data.productName;
+				var color = data.color == undefined ? 'XX' : data.color;
+				var size = data.size == undefined ? 'ZZ' : data.size;
+				var variant = data.variant == undefined ? 'YY' : data.variant;
 				
-				productFactory.setNewProduct(companyID,productName,color,size,variant).then(function(response){
-					if(angular.isObject(response)){
-						productFactory.getProductByCompany(companyID).then(function(responseCompayWise){
+				productFactory.setNewProduct(companyID,productName,color,size,variant).then(function(response)
+				{
+					if(angular.isObject(response))
+					{
+						productFactory.getProductByCompany(companyID).then(function(responseCompayWise)
+						{
 							vm.productNameDrop = responseCompayWise;
 							filterProductData();
 							vm.AccBillTable[data.index].productName = response.productName;
