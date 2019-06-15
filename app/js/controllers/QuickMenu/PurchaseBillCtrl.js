@@ -145,9 +145,9 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 	$scope.enableDisableLWHSetting = false;
 	$scope.divTag = true;
 	$scope.divAdvanceMou = false;
-	$scope.colspanValue = '6';
-	$scope.colspanAdvanceValue = '7';
-	$scope.colspanExpenseValue = '7';
+	$scope.colspanValue = '7';
+	$scope.colspanAdvanceValue = '8';
+	$scope.colspanExpenseValue = '8';
 	$scope.totalTd = '13';
 	$scope.ProductColorSizeVarDesign = 'productColorSizeWidth';
 	//get setting data
@@ -185,34 +185,34 @@ function PurchaseBillController($rootScope,$scope,apiCall,apiPath,$http,$window,
 						// $scope.colspanValue = $scope.divTag==false ? '5' : '6';
 						// $scope.totalTd = $scope.divTag==false ? '12' : '13';
 						// $scope.colspanAdvanceValue = $scope.divTag==false ? '8' : '9';
-						$scope.colspanExpenseValue = $scope.divTag==false ? '6' : '7';
+						$scope.colspanExpenseValue = $scope.divTag==false ? '7' : '8';
 						if($scope.divTag==false && $scope.enableDisableFrameNo==false)
 						{
 							if($scope.enableDisableAdvanceMou == true){
-								$scope.colspanAdvanceValue = '6';
-								$scope.colspanValue = '5';
+								$scope.colspanAdvanceValue = '7';
+								$scope.colspanValue = '6';
 								$scope.totalTd = '12';
 							}
 							else{
-								$scope.colspanAdvanceValue = '5';
-								$scope.colspanValue = '4';
+								$scope.colspanAdvanceValue = '6';
+								$scope.colspanValue = '5';
 								$scope.totalTd = '11';
-								$scope.colspanExpenseValue='5';
+								$scope.colspanExpenseValue='6';
 							}
 						}
 						else if($scope.divTag==false || $scope.enableDisableFrameNo==false)
 						{
-							$scope.colspanAdvanceValue = '6';
-							$scope.colspanValue = '5';
+							$scope.colspanAdvanceValue = '7';
+							$scope.colspanValue = '6';
 							$scope.totalTd = '12';
-							$scope.colspanExpenseValue='6';
+							$scope.colspanExpenseValue='7';
 						}
 						else
 						{
-							$scope.colspanAdvanceValue = '7';
-							$scope.colspanValue = '6';
+							$scope.colspanAdvanceValue = '8';
+							$scope.colspanValue = '7';
 							$scope.totalTd = '13';
-							$scope.colspanExpenseValue='7';
+							$scope.colspanExpenseValue='8';
 						}
 					}
 					if (response[arrayData].settingType=="inventory") {
