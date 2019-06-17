@@ -125,7 +125,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 
 	$scope.divTag = false;
 	$scope.divAdvanceMou = false;
-	$scope.colspanValue = '6';
+	$scope.colspanValue = '5';
 	$scope.colspanAdvanceValue = '7';
 	$scope.totalTd = '13';
 	var settingResponse = [];
@@ -187,8 +187,8 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 					}
 					else if($scope.divTag==false || $scope.enableDisableFrameNo==false)
 					{
-						$scope.colspanAdvanceValue = '6';
-						$scope.colspanValue = '6';
+						$scope.colspanAdvanceValue = '5';
+						$scope.colspanValue = '5';
 						$scope.totalTd = '12';
 					}
 					else
