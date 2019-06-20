@@ -14,6 +14,7 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
   	$scope.enableDisableValue=false;
   	$scope.enableDisableChequeNoValue=false;
   	$scope.enableDisableBestBefore=false;
+  	$scope.enableDisableProductDelete=false;
   	$scope.enableDisableColor=false;
   	$scope.enableDisableSize=false;
   	$scope.enableDisableFrameno=false;
@@ -120,6 +121,7 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 							if ($scope.enableDisableAdvanceMou) {
 								$scope.measurementType = 'Advance Measurement';
 							}
+							$scope.enableDisableProductDelete = arrayData1.productDeleteStatus=="enable" ? true : false;
 						}
 						if(response2[arrayData].settingType=="client")
 						{
@@ -506,6 +508,14 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 				else if($scope.enableDisableVariant==false)
 				{
 					productData.append('productVariantStatus','disable');
+				}
+				if($scope.enableDisableProductDelete==true)
+				{
+					productData.append('productDeleteStatus','enable');
+				}
+				else if($scope.enableDisableProductDelete==false)
+				{
+					productData.append('productDeleteStatus','disable');
 				}
 				productData.append('productMeasurementType',$scope.measurementType);
 				if($scope.insertUpdateProductLabel == "Update"){

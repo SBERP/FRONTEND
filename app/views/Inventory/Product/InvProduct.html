@@ -135,7 +135,7 @@
 				   <td style="width:10%"> 
 						<center>
 							<i  title="Edit" ng-click="editProduct(user)" class="fa fa-edit myCursorPointer" style="font-size:17px;color:#10709f"> </i> &nbsp; &nbsp;
-							<i title="Delete" ng-click="deleteProduct('sm',user.productId)" class="fa fa-times-circle myCursorPointer" style="font-size:17px;color:red"></i>
+							<i ng-if="enableDisableProductDelete" title="Delete" ng-click="deleteProduct('sm',user.productId)" class="fa fa-times-circle myCursorPointer" style="font-size:17px;color:red"></i>
 						</center>
 					</td>
 

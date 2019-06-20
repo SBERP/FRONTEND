@@ -173,13 +173,13 @@ function InvProductController($scope, $filter, ngTableParams,apiCall,apiPath,$st
 	$scope.enableDisableSize = true;
 	$scope.enableDisableVariant = true;
 	$scope.enableAlterLanguage = false;
+	$scope.enableDisableProductDelete = true;
 	// $scope.enableDisableBestBefore = true;
 	//get setting data
 	$scope.getOptionSettingData = function(){
 		toaster.clear();
 		apiCall.getCall(apiPath.settingOption).then(function(response){
 			var responseLength = response.length;
-			console.log(response);
 			for(var arrayData=0;arrayData<responseLength;arrayData++)
 			{
 				if(angular.isObject(response) || angular.isArray(response))
@@ -190,6 +190,7 @@ function InvProductController($scope, $filter, ngTableParams,apiCall,apiPath,$st
 						$scope.enableDisableColor = arrayData1.productColorStatus=="enable" ? true : false;
 						$scope.enableDisableSize = arrayData1.productSizeStatus=="enable" ? true : false;
 						$scope.enableDisableVariant = arrayData1.productVariantStatus=="enable" ? true : false;
+						$scope.enableDisableProductDelete = arrayData1.productDeleteStatus=="enable" ? true : false;
 						// $scope.enableDisableBestBefore = arrayData1.productBestBeforeStatus=="enable" ? true : false;
 					}
 					if (response[arrayData].settingType=="language") {
@@ -227,7 +228,6 @@ function InvProductController($scope, $filter, ngTableParams,apiCall,apiPath,$st
 		 /**Delete Code **/
 			productFactory.deleteSingleProduct(id).then(function(response){
 				if(apiResponse.ok == response){
-					// console.log("successccccccccccccccccc");
 					$scope.showProduct();
 					$state.go($state.current, {}, {reload: true});
 					toaster.pop('success', 'Title', 'Delete SuccessFully');
@@ -240,7 +240,6 @@ function InvProductController($scope, $filter, ngTableParams,apiCall,apiPath,$st
 			 Modalopened = false;
 			 
 		}, function () {
-		  console.log('Cancel');	
 			 Modalopened = false;
 		});
 		
@@ -268,14 +267,12 @@ function InvProductController($scope, $filter, ngTableParams,apiCall,apiPath,$st
 			 Modalopened = true;
 			 
 			modalInstance.result.then(function (data) {
-			 
-			  console.log('Ok');	
+			 	
 			  productFactory.blankProduct();
 			  $scope.init();
 			  Modalopened = false;
 			
 			}, function (data) {
-			  console.log('Cancel');	
 				Modalopened = false;
 				
 			});
@@ -318,12 +315,10 @@ function InvProductController($scope, $filter, ngTableParams,apiCall,apiPath,$st
 			 Modalopened = true;
 			 
 			modalInstance.result.then(function (data1) {
-			  console.log('Ok');
 
 			  // productFactory.blankProduct();
 			  // $scope.showProduct();	
 			  Modalopened = false;
-			  console.log("state reload");
 			  $state.go($state.current, {}, {reload: true});
 			  
 			 //  var count =   data.length;
@@ -339,7 +334,6 @@ function InvProductController($scope, $filter, ngTableParams,apiCall,apiPath,$st
 			  
 			
 			}, function (data1) {
-			  console.log('Cancel');	
 				Modalopened = false;
 				
 			});
@@ -357,12 +351,10 @@ function InvProductController($scope, $filter, ngTableParams,apiCall,apiPath,$st
 			$scope.selectedBoxArray.push(pData);
 		}
 		else
-		{	
-			console.log("else");
+		{
 			var index = $scope.selectedBoxArray.indexOf(pData);
 			$scope.selectedBoxArray.splice(index,1);
 		}
-		console.log("special console = ",$scope.selectedBoxArray);
 	}
 	$scope.changeAllBox = function(box)
 	{		
@@ -377,19 +369,14 @@ function InvProductController($scope, $filter, ngTableParams,apiCall,apiPath,$st
 		}
 		else{
 			$scope.productFlag=1;
-			// console.log("daaadtaa = ",data);
 			var count =   data.length;
 			// $scope.productFlag=0;
 			for(var sat=0;sat<count;sat++){
-				// console.log("data = ",data[sat]);
 				var dataSet =   data[sat];	
 				dataSet.selected = true;	
 			}
-			// console.log("filter array data =",$scope.filteredItems);
-			// console.log(" data =",data);
 			$scope.selectedBoxArray = data;
 		}
-		// console.log("rrr = ",$scope.selectedBoxArray);
 	}
    /*End*/
 }
