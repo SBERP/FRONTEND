@@ -1229,6 +1229,26 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
             url: '/lock',
             templateUrl: 'app/pages/lock.html'
         })
+
+        // Report Builder Paths
+        .state('app.ReportsList', {
+            url: '/ReportsList',
+            templateUrl: basepath('Accounting/viewData/AccView.html'),
+            controller: 'AccViewController as form',
+            resolve: angular.extend(requireDeps('toaster','angular-chosen'),{
+                viewDataType: function(){
+                    return 'ReportsList';
+                }
+            })
+        })
+
+        .state('app.ReportBuilder', {
+            url: '/ReportBuilder',
+            templateUrl: basepath('Analyzer/ReportBuilder/BuildView.html'),
+            controller: 'BuildViewController as table',
+            resolve: requireDeps('toaster', 'angular-chosen', 'reportBuilder', 'treeControl', 'dragNdrop', 'jquery-ui', 'angular-ui-sortable')
+        })
+
         // 
         // CUSTOM RESOLVE FUNCTION
         //   Add your own resolve properties

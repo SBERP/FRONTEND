@@ -4,53 +4,53 @@
  * Controller for ngTables
  =========================================================*/
 
-App.controller('AccViewDataController', AccViewDataController);
+ App.controller('AccViewDataController', AccViewDataController);
 
-function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,apiCall,apiPath,flotOptions, colors,$timeout,getSetFactory,$state,headerType,$modal,$window,toaster,apiResponse,apiDateFormate, productFactory) {
-  'use strict';
-  var vm = this;
-  var data = [];
-  $scope.paidData = [];
-  $scope.unPaidData = [];
-  var formdata = new FormData();
-  $scope.billData = [];
-  $scope.purchaseBillData = [];
-  
-  $scope.filteredItems;
-  var Modalopened = false;
-  
+ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,apiCall,apiPath,flotOptions, colors,$timeout,getSetFactory,$state,headerType,$modal,$window,toaster,apiResponse,apiDateFormate, productFactory) {
+ 	'use strict';
+ 	var vm = this;
+ 	var data = [];
+ 	$scope.paidData = [];
+ 	$scope.unPaidData = [];
+ 	var formdata = new FormData();
+ 	$scope.billData = [];
+ 	$scope.purchaseBillData = [];
+
+ 	$scope.filteredItems;
+ 	var Modalopened = false;
+
 	$scope.erpPath = $rootScope.erpPath; //Erp Path
 	
 	$scope.dateFormat =  $rootScope.dateFormats; //Date Format
-   
-	/** Display Company and date **/
-		apiCall.getCall(apiPath.getAllCompany+'/'+$rootScope.accView.companyId).then(function(res)
-		{
-			$scope.displayCompany = res.companyName;
-			toaster.clear();
-			toaster.pop('wait', 'Please Wait', 'Data Loading....',30000);
-		});
 
-		if ($rootScope.accView.branchId) 
+	/** Display Company and date **/
+	apiCall.getCall(apiPath.getAllCompany+'/'+$rootScope.accView.companyId).then(function(res)
+	{
+		$scope.displayCompany = res.companyName;
+		toaster.clear();
+		toaster.pop('wait', 'Please Wait', 'Data Loading....',30000);
+	});
+
+	if ($rootScope.accView.branchId) 
+	{
+		apiCall.getCall(apiPath.getAllBranch+'/'+$rootScope.accView.branchId).then(function(res)
 		{
-			apiCall.getCall(apiPath.getAllBranch+'/'+$rootScope.accView.branchId).then(function(res)
-			{
-				$scope.displayBranch = res.branchName;
-			});
-		}
-		
+			$scope.displayBranch = res.branchName;
+		});
+	}
+
 		// $scope.displayCompany = $rootScope.accView.companyId;
-		  $scope.displayfromDate = $rootScope.accView.fromDate;
-		  $scope.displaytoDate = $rootScope.accView.toDate;
-	/** End **/
+		$scope.displayfromDate = $rootScope.accView.fromDate;
+		$scope.displaytoDate = $rootScope.accView.toDate;
+		/** End **/
   // An array of boolean to tell the directive which series we want to show
   $scope.areaSeries = [true, true];
   vm.chartAreaFlotChart  = flotOptions['area'];
   
-   vm.chartPieFlotChart  = flotOptions['pie'];
+  vm.chartPieFlotChart  = flotOptions['pie'];
   
-	$scope.headerType = headerType;
-	
+  $scope.headerType = headerType;
+
 	//alert(headerType);
 	
 	if($scope.headerType == 'sales'){
@@ -94,7 +94,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	else if($scope.headerType == 'payment'){
 		
 		var getJrnlPath = apiPath.getJrnlTrnByCompany+$rootScope.accView.companyId;
-		 var headerData = {'Content-Type': undefined,'journalType':'payment','fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate};
+		var headerData = {'Content-Type': undefined,'journalType':'payment','fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate};
 	}
 	else if($scope.headerType == 'receipt'){
 		
@@ -107,7 +107,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 		var getJrnlPath = apiPath.getJrnlByCompany+$rootScope.accView.companyId;
 		var headerData = {'Content-Type': undefined,'journalType':'special_journal','fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate};
 	}
-  
+
 	// console.log($rootScope.accView.companyId);
 	// console.log($rootScope.accView.fromDate);
 	// console.log($rootScope.accView.toDate);
@@ -144,19 +144,19 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	$scope.secondTabActive = false;
 	$scope.thirdTabActive = false;
 
-	  	$scope.onSalesBillTabSelect = function(index)
-	  	{
-	  		$scope.totalAmountDisplay = 0;
-	  		$scope.totalAdvanceDisplay = 0;
-	  		$scope.totalBalanceDisplay = 0;
-	  		/* Uncheck all Checkbox */
-	  			$scope.clientFlag=0;
-				$scope.selectedBoxArray = [];
-				var cnt  = data.length;
-				for(var k=0;k<cnt;k++) {
-					data[k].selected = false;
-				}
-	  		/* End  */
+	$scope.onSalesBillTabSelect = function(index)
+	{
+		$scope.totalAmountDisplay = 0;
+		$scope.totalAdvanceDisplay = 0;
+		$scope.totalBalanceDisplay = 0;
+		/* Uncheck all Checkbox */
+		$scope.clientFlag=0;
+		$scope.selectedBoxArray = [];
+		var cnt  = data.length;
+		for(var k=0;k<cnt;k++) {
+			data[k].selected = false;
+		}
+		/* End  */
 	  		// data = [];
 	  		vm.tableParams.total(data.length);
 	  		vm.tableParams.reload();
@@ -167,62 +167,62 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	  			case 0:
 	  			$scope.currentActiveSalestab = 0;
 	  			$scope.firstTabActive = true;
-				$scope.secondTabActive = false;
-				$scope.thirdTabActive = false;
-	  				if (angular.isArray($scope.allSalesData)) {
-	  					if ($scope.allSalesData.length > 0) {
-	  						data = angular.copy($scope.allSalesData);
-	  						getTotalValue(data);
-	  					} else {
-	  						data = [];
-	  					}
+	  			$scope.secondTabActive = false;
+	  			$scope.thirdTabActive = false;
+	  			if (angular.isArray($scope.allSalesData)) {
+	  				if ($scope.allSalesData.length > 0) {
+	  					data = angular.copy($scope.allSalesData);
+	  					getTotalValue(data);
 	  				} else {
 	  					data = [];
 	  				}
+	  			} else {
+	  				data = [];
+	  			}
 	  			break;
 
 	  			case 1:
-	  				$scope.currentActiveSalestab = 1;
-	  				$scope.secondTabActive = true;
-	  				$scope.firstTabActive = false;
-					$scope.thirdTabActive = false;
-	  				if (angular.isArray($scope.paidData)) {
-	  					if ($scope.paidData.length > 0) {
-	  						data = angular.copy($scope.paidData);
-	  						getTotalValue(data);
-	  					} else {
-	  						data = [];
-	  					}
+	  			$scope.currentActiveSalestab = 1;
+	  			$scope.secondTabActive = true;
+	  			$scope.firstTabActive = false;
+	  			$scope.thirdTabActive = false;
+	  			if (angular.isArray($scope.paidData)) {
+	  				if ($scope.paidData.length > 0) {
+	  					data = angular.copy($scope.paidData);
+	  					getTotalValue(data);
 	  				} else {
 	  					data = [];
 	  				}
-	  				
+	  			} else {
+	  				data = [];
+	  			}
+
 	  			break;
 
 	  			case 2:
-	  				$scope.currentActiveSalestab = 2;
-	  				$scope.thirdTabActive = true;
-	  				$scope.firstTabActive = false;
-					$scope.secondTabActive = false;
-	  				if (angular.isArray($scope.unPaidData)) {
-	  					if ($scope.unPaidData.length > 0) {
-	  						data = angular.copy($scope.unPaidData);
-	  						getTotalValue(data);
-	  					} else {
-	  						data = [];
-	  					}
+	  			$scope.currentActiveSalestab = 2;
+	  			$scope.thirdTabActive = true;
+	  			$scope.firstTabActive = false;
+	  			$scope.secondTabActive = false;
+	  			if (angular.isArray($scope.unPaidData)) {
+	  				if ($scope.unPaidData.length > 0) {
+	  					data = angular.copy($scope.unPaidData);
+	  					getTotalValue(data);
 	  				} else {
 	  					data = [];
 	  				}
+	  			} else {
+	  				data = [];
+	  			}
 	  			break;
 
 	  			default:
-	  				$scope.currentActiveSalestab = 0;
-	  				$scope.firstTabActive = true;
-					$scope.secondTabActive = false;
-					$scope.thirdTabActive = false;
-	  				data = angular.copy(data);
-	  				getTotalValue(data);
+	  			$scope.currentActiveSalestab = 0;
+	  			$scope.firstTabActive = true;
+	  			$scope.secondTabActive = false;
+	  			$scope.thirdTabActive = false;
+	  			data = angular.copy(data);
+	  			getTotalValue(data);
 	  		}
 
 	  		vm.tableParams.total(data.length);
@@ -233,44 +233,44 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	  	$scope.loadInit = function(onDateChange = null) 
 	  	{
 	  		toaster.clear();
-			toaster.pop('wait', 'Please Wait', 'Data Loading....',30000);
+	  		toaster.pop('wait', 'Please Wait', 'Data Loading....',30000);
 
 			$scope.getOptionSettingData(); //Load Setting Data
 
-	  		if (onDateChange != null)
-	  		{
-	  			$rootScope.accView.fromDate = moment(vm.dt1).format(apiDateFormate);
-	  			$rootScope.accView.toDate = moment(vm.dt2).format(apiDateFormate);
+			if (onDateChange != null)
+			{
+				$rootScope.accView.fromDate = moment(vm.dt1).format(apiDateFormate);
+				$rootScope.accView.toDate = moment(vm.dt2).format(apiDateFormate);
 
-	  			headerData = {'Content-Type': undefined,'fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate,'salestype':'whole_sales'};
+				headerData = {'Content-Type': undefined,'fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate,'salestype':'whole_sales'};
 				if ($rootScope.accView.branchId) {
 					headerData.branchId = $rootScope.accView.branchId;
 				}
-	  		}
-	  		
-	  		apiCall.getCallHeader(getJrnlPath,headerData).then(function(response){
+			}
+
+			apiCall.getCallHeader(getJrnlPath,headerData).then(function(response){
 				$scope.reLoadPdfData(response);
 			}).catch(function (reason) {
 				 // err
 				 if (reason.status === 500) {
 					// do something
 					alert('Encountered server error');
-				 }
+				}
 			});
 
-	  	}
+		}
 		
 		$scope.loadInit();
 
 
-	$scope.displayProduct = function(productArray)
-	{
-		var productArrayJS = JSON.parse(productArray);
-		var productArray = productArrayJS.inventory;
-		var phtml = "";
+		$scope.displayProduct = function(productArray)
+		{
+			var productArrayJS = JSON.parse(productArray);
+			var productArray = productArrayJS.inventory;
+			var phtml = "";
 
-		var cnt = productArray.length;
-		var i = 0;
+			var cnt = productArray.length;
+			var i = 0;
 		// phtml += `<ul>`;
 		while(i < cnt){
 			// console.log(productArray[i].productName);
@@ -281,21 +281,21 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 		return phtml;
 	}
 	
-  $scope.TableData = function(){
-	
+	$scope.TableData = function(){
 
-	  vm.tableParams = new ngTableParams({
+
+		vm.tableParams = new ngTableParams({
 		  page: 1,            // show first page
 		  count: 10,          // count per page
 		  sorting: {
 			  ledgerName: 'asc'     // initial sorting
-		  }
-	  }, {
+			}
+		}, {
 		  // counts: [],
 		  total: data.length, // length of data
 		  getData: function($defer, params) {
-			 
-			  /** NgTable **/
+
+		  	/** NgTable **/
 			  // if(!$.isEmptyObject(params.$params.filter) && ((typeof(params.$params.filter.ledgerName) != "undefined" && params.$params.filter.ledgerName != "")  || (typeof(params.$params.filter.entryDate) != "undefined" && params.$params.filter.entryDate != "") || (typeof(params.$params.filter.amount) != "undefined" && params.$params.filter.amount != "")|| (typeof(params.$params.filter.amountTypeCredit) != "undefined" && params.$params.filter.amountTypeCredit != "")|| (typeof(params.$params.filter.amountTypeDebit) != "undefined" && params.$params.filter.amountTypeDebit != "")))
 			  // {
 					 // var orderedData = params.filter() ?
@@ -306,61 +306,61 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 
 					  // params.total(orderedData.length); // set total for recalc pagination
 					  // $defer.resolve(vm.users);
-			  
+
 
 			  // }
 			  // else{
-				  
+
 				   // params.total(data.length);
-				  
+
 			  // }
-			 
+
 			 // if(!$.isEmptyObject(params.$params.sorting))
 			  // {
-				
+
 				  // var orderedData = params.sorting() ?
 						  // $filter('orderBy')(data, params.orderBy()) :
 						  // data;
-		  
+
 				  // $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
 			  // }
 			  
 			// $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
 			/** ngTable **/
 			params.total(data.length);
-			  var orderedData;
+			var orderedData;
 
 			if(params.sorting().date === 'asc'){
 
-			  data.sort(function (a, b) {
-				  
-				  var entDate = a.entryDate.split("-").reverse().join("-");
-						var toDate = b.entryDate.split("-").reverse().join("-");
-						var dateA=new Date(entDate), dateB=new Date(toDate);
-						
+				data.sort(function (a, b) {
+
+					var entDate = a.entryDate.split("-").reverse().join("-");
+					var toDate = b.entryDate.split("-").reverse().join("-");
+					var dateA=new Date(entDate), dateB=new Date(toDate);
+
 				//var dateA = new Date(a.date), dateB = new Date(b.date);
 				return dateA - dateB; //sort by date descending
-			  });
-			  orderedData = data;
+			});
+				orderedData = data;
 
 			} else if(params.sorting().date === 'desc') {
 
-			  data.sort(function (a, b) {
-				  var entDate = a.entryDate.split("-").reverse().join("-");
-						var toDate = b.entryDate.split("-").reverse().join("-");
-						var dateA=new Date(entDate), dateB=new Date(toDate);
-						
+				data.sort(function (a, b) {
+					var entDate = a.entryDate.split("-").reverse().join("-");
+					var toDate = b.entryDate.split("-").reverse().join("-");
+					var dateA=new Date(entDate), dateB=new Date(toDate);
+
 				//var dateA = new Date(a.date), dateB = new Date(b.date);
 				return dateB - dateA; //sort by date descending
-			  });
-			  orderedData = data;
+			});
+				orderedData = data;
 
 			} else if(!params.sorting().date){
 
 			  // if (params.filter().term) {
-				orderedData = params.filter() ? $filter('filter')(data, params.filter()) : data;
+			  	orderedData = params.filter() ? $filter('filter')(data, params.filter()) : data;
 			  // } else {
-				orderedData = params.sorting() ? $filter('orderBy')(orderedData, params.orderBy()) : orderedData;
+			  	orderedData = params.sorting() ? $filter('orderBy')(orderedData, params.orderBy()) : orderedData;
 			  // }
 			  
 			}
@@ -370,86 +370,86 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 			
 			$scope.totalData = data.length;
 			$scope.pageNumber = params.page();
-            $scope.itemsPerPage = params.count();
-            $scope.totalPages = Math.ceil($scope.totalData/params.count());
+			$scope.itemsPerPage = params.count();
+			$scope.totalPages = Math.ceil($scope.totalData/params.count());
 			
-		  }
-	  });
-	  
-  }
+		}
+	});
 
-  	$scope.columnHideShow = [
-  	{
-  		displayName : "Branch",
-  		itemKey: "branchCheckbox",
-  		branchCheckbox: true
-  	},
-  	{
-  		displayName : "Products",
-  		itemKey: "productCheckbox",
-  		productCheckbox: true
-  	}];
+	}
+
+	$scope.columnHideShow = [
+	{
+		displayName : "Branch",
+		itemKey: "branchCheckbox",
+		branchCheckbox: true
+	},
+	{
+		displayName : "Products",
+		itemKey: "productCheckbox",
+		productCheckbox: true
+	}];
 
 	$scope.saleTableData = function()
 	{
-	  	vm.tableParams = new ngTableParams({
+		vm.tableParams = new ngTableParams({
 		  page: 1,            // show first page
 		  count: 10,          // count per page
 		  sorting: {
 		  	date : 'asc'
 		  }
-	  	}, {
+		}, {
 		  //counts: [],
 		  dataset: data,
 		  total: data.length, // length of data
 		  getData: function($defer, params) {
-			params.total(data.length);
+		  	params.total(data.length);
 
-			if(!$scope.displayBranch)
-			{
-				params.branchNameFlag = $scope.columnHideShow[0].branchCheckbox;
-			}
-			else{
-			 	params.branchNameFlag = false;
-			}
+		  	if(!$scope.displayBranch)
+		  	{
+		  		params.branchNameFlag = $scope.columnHideShow[0].branchCheckbox;
+		  	}
+		  	else{
+		  		params.branchNameFlag = false;
+		  	}
 
-			params.productsFlag = $scope.columnHideShow[1].productCheckbox;
-			if ($scope.headerType == 'Sales Orders' || $scope.headerType == 'Quotations') {
-				params.refundFlag = false;
-			}
+		  	params.productsFlag = $scope.columnHideShow[1].productCheckbox;
+		  	if ($scope.headerType == 'Sales Orders' || $scope.headerType == 'Quotations') {
+		  		params.refundFlag = false;
+		  	}
 
-			  var orderedData;
+		  	var orderedData;
 
-			if(params.sorting().date === 'asc'){
+		  	if(params.sorting().date === 'asc'){
 
-			  data.sort(function (a, b) {
-				  
-			 var entDate = a.entryDate.split("-").reverse().join("-");
-						var toDate = b.entryDate.split("-").reverse().join("-");
-						var dateA=new Date(entDate), dateB=new Date(toDate);
-						
+		  		data.sort(function (a, b) {
+
+		  			var entDate = a.entryDate.split("-").reverse().join("-");
+		  			var toDate = b.entryDate.split("-").reverse().join("-");
+		  			var dateA=new Date(entDate), dateB=new Date(toDate);
+
 				return dateA - dateB; //sort by date descending
-			  });
-			  orderedData = data;
+			});
+		  		orderedData = data;
 
-			} else if(params.sorting().date === 'desc') {
+		  	} else if(params.sorting().date === 'desc') {
 
-			  data.sort(function (a, b) {
-				  
-				 var entDate = a.entryDate.split("-").reverse().join("-");
-						var toDate = b.entryDate.split("-").reverse().join("-");
-						var dateA=new Date(entDate), dateB=new Date(toDate);
+		  		data.sort(function (a, b) {
+
+		  			var entDate = a.entryDate.split("-").reverse().join("-");
+		  			var toDate = b.entryDate.split("-").reverse().join("-");
+		  			var dateA=new Date(entDate), dateB=new Date(toDate);
 				return dateB - dateA; //sort by date descending
-			  });
-			  orderedData = data;
+			});
+		  		orderedData = data;
 
-			}
-			else if(!params.sorting().date){
+		  	}
+		  	else if(!params.sorting().date){
 
 			  // if (params.filter()) {
-				orderedData = params.filter() ? $filter('filter')(data, params.filter()) : data;
+			  	orderedData = params.filter() ? $filter('filter')(data, params.filter()) : data;
 			  // } else {
-				orderedData = params.sorting() ? $filter('orderBy')(orderedData, params.orderBy()) : orderedData;
+			  	orderedData = params.sorting() ? $filter('orderBy')(orderedData, params.orderBy()) : orderedData;
 			  // }
 			  
 			}
@@ -457,7 +457,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 			getTotalValue(orderedData);
 			$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
 			
-			  /** New Sort Code **/
+			/** New Sort Code **/
 					// var filteredData = params.filter() ?
 	    //          	$filter('filter')(data, params.filter()) :
 	    //           	data;
@@ -466,46 +466,46 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 				 //  	var orderedData = params.sorting() ?
 					// 	$filter('orderBy')(filteredData, params.orderBy()) :
 					// 	data;
-						  
+
 				 //  	params.total(orderedData.length); // set total for recalc pagination
 				 //  	$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-			  /** End **/
+				 /** End **/
 
-			$scope.filteredItems = orderedData;	
-			$scope.totalData = data.length;
-			$scope.pageNumber = params.page();
-            $scope.itemsPerPage = params.count();
-            $scope.totalPages = Math.ceil($scope.totalData/params.count());
-		  }
-	  });
+				 $scope.filteredItems = orderedData;	
+				 $scope.totalData = data.length;
+				 $scope.pageNumber = params.page();
+				 $scope.itemsPerPage = params.count();
+				 $scope.totalPages = Math.ceil($scope.totalData/params.count());
+				}
+			});
 
-	  	vm.tableParams2 = new ngTableParams({
+		vm.tableParams2 = new ngTableParams({
 		  page: 1,            // show first page
 		  count: 10,          // count per page
 		  sorting: {   // initial sorting
 		  }
-	  	}, {
+		}, {
 		  //counts: [],
 		  total: $scope.paidData.length, // length of data
 		  getData: function($defer, params) {
-			 
-			if(!$scope.displayBranch){
-			 	params.branchNameFlag = true;
-			}
-			else{
-			 	params.branchNameFlag = false;
-			}
+
+		  	if(!$scope.displayBranch){
+		  		params.branchNameFlag = true;
+		  	}
+		  	else{
+		  		params.branchNameFlag = false;
+		  	}
 
 			//   var orderedData;
 
 			// if(params.sorting().date === 'asc'){
 
 			//   $scope.paidData.sort(function (a, b) {
-				  
+
 			//  var entDate = a.entryDate.split("-").reverse().join("-");
 			// 			var toDate = b.entryDate.split("-").reverse().join("-");
 			// 			var dateA=new Date(entDate), dateB=new Date(toDate);
-						
+
 			// 	return dateA - dateB; //sort by date descending
 			//   });
 			//   orderedData = $scope.paidData;
@@ -513,7 +513,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 			// } else if(params.sorting().date === 'desc') {
 
 			//   $scope.paidData.sort(function (a, b) {
-				  
+
 			// 	 var entDate = a.entryDate.split("-").reverse().join("-");
 			// 			var toDate = b.entryDate.split("-").reverse().join("-");
 			// 			var dateA=new Date(entDate), dateB=new Date(toDate);
@@ -529,61 +529,61 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 			//   } else {
 			// 	orderedData = params.sorting() ? $filter('orderBy')($scope.paidData, params.orderBy()) : $scope.paidData;
 			//   }
-			  
+
 			// }
 
-			 /** New Sort Code **/
-					var filteredData = params.filter() ?
-	             	$filter('filter')(data, params.filter()) :
-	              	data;
+			/** New Sort Code **/
+			var filteredData = params.filter() ?
+			$filter('filter')(data, params.filter()) :
+			data;
 
 	              	// console.log('fill',filteredData);
-				  	var orderedData = params.sorting() ?
-						$filter('orderBy')(filteredData, params.orderBy()) :
-						data;
-					getTotalValue(orderedData);
+	              	var orderedData = params.sorting() ?
+	              	$filter('orderBy')(filteredData, params.orderBy()) :
+	              	data;
+	              	getTotalValue(orderedData);
 				  	params.total(orderedData.length); // set total for recalc pagination
 				  	$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-			  /** End **/
+				  	/** End **/
 
 
-			$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-			
-			$scope.totalData2 = $scope.paidData.length;
-			$scope.pageNumber2 = params.page();
-            $scope.itemsPerPage2 = params.count();
-            $scope.totalPages2 = Math.ceil($scope.totalData2/params.count());
-		  }
-	  });
-	  
+				  	$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
 
-	  vm.tableParams3 = new ngTableParams({
+				  	$scope.totalData2 = $scope.paidData.length;
+				  	$scope.pageNumber2 = params.page();
+				  	$scope.itemsPerPage2 = params.count();
+				  	$scope.totalPages2 = Math.ceil($scope.totalData2/params.count());
+				  }
+				});
+
+
+		vm.tableParams3 = new ngTableParams({
 		  page: 1,            // show first page
 		  count: 10,          // count per page
 		  sorting: {    // initial sorting
 		  }
-	  	}, {
+		}, {
 		  //counts: [],
 		  total: $scope.unPaidData.length, // length of data
 		  getData: function($defer, params) {
-			
-			if(!$scope.displayBranch){
-			 	params.branchNameFlag = true;
-			}
-			else{
-			 	params.branchNameFlag = false;
-			}
+
+		  	if(!$scope.displayBranch){
+		  		params.branchNameFlag = true;
+		  	}
+		  	else{
+		  		params.branchNameFlag = false;
+		  	}
 
 			//   var orderedData;
 
 			// if(params.sorting().date === 'asc'){
 
 			//   $scope.unPaidData.sort(function (a, b) {
-				  
+
 			//  var entDate = a.entryDate.split("-").reverse().join("-");
 			// 			var toDate = b.entryDate.split("-").reverse().join("-");
 			// 			var dateA=new Date(entDate), dateB=new Date(toDate);
-						
+
 			// 	return dateA - dateB; //sort by date descending
 			//   });
 			//   orderedData = $scope.unPaidData;
@@ -591,7 +591,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 			// } else if(params.sorting().date === 'desc') {
 
 			//   $scope.unPaidData.sort(function (a, b) {
-				  
+
 			// 	 var entDate = a.entryDate.split("-").reverse().join("-");
 			// 			var toDate = b.entryDate.split("-").reverse().join("-");
 			// 			var dateA=new Date(entDate), dateB=new Date(toDate);
@@ -607,39 +607,39 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 			//   } else {
 			// 	orderedData = params.sorting() ? $filter('orderBy')($scope.unPaidData, params.orderBy()) : $scope.unPaidData;
 			//   }
-			  
+
 			// }
 
-			 /** New Sort Code **/
-					var filteredData = params.filter() ?
-	             	$filter('filter')(data, params.filter()) :
-	              	data;
-	              	getTotalValue(filteredData);
+			/** New Sort Code **/
+			var filteredData = params.filter() ?
+			$filter('filter')(data, params.filter()) :
+			data;
+			getTotalValue(filteredData);
 	              	// console.log('fill',filteredData);
-				  	var orderedData = params.sorting() ?
-						$filter('orderBy')(filteredData, params.orderBy()) :
-						data;
-						  
+	              	var orderedData = params.sorting() ?
+	              	$filter('orderBy')(filteredData, params.orderBy()) :
+	              	data;
+
 				  	params.total(orderedData.length); // set total for recalc pagination
 				  	$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-			  /** End **/
+				  	/** End **/
 
 
-			$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-			
-			$scope.totalData3 = $scope.unPaidData.length;
-			$scope.pageNumber3 = params.page();
-            $scope.itemsPerPage3 = params.count();
-            $scope.totalPages3 = Math.ceil($scope.totalData3/params.count());
-		  }
-	  });
-  }
-  
-  
+				  	$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+
+				  	$scope.totalData3 = $scope.unPaidData.length;
+				  	$scope.pageNumber3 = params.page();
+				  	$scope.itemsPerPage3 = params.count();
+				  	$scope.totalPages3 = Math.ceil($scope.totalData3/params.count());
+				  }
+				});
+	}
+
+
 	$scope.editDataView= function(id)
 	{
 		getSetFactory.set(id);
-	  
+
 		if($scope.headerType == 'sales'){
 			
 			$state.go("app.AccSales");
@@ -667,7 +667,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 			
 			$state.go("app.AccSpecialJrnl");
 		}
-	
+
 	}
 	
 	/** Edit Bill **/
@@ -712,102 +712,102 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	}
 	/** End Edit Bill **/
 	
-  $scope.deleteDataView = function(id)
-  {
-	
+	$scope.deleteDataView = function(id)
+	{
+
 	// var deletePath = apiPath.getAllBranch+'/'+parseInt(branch_id);
-	  
+
 	// apiCall.deleteCall(deletePath).then(function(deleteres){
 		
 		// console.log(deleteres);
-	 
-	// });
-  }
-  
-	$scope.deleteBill = function(size,id,isPurchaseBill = 'no')
-	{
-		
-		toaster.clear();
-		if (Modalopened) return;
-		
-		var modalInstance = $modal.open({
-			  templateUrl: 'app/views/PopupModal/Delete/deleteDataModal.html',
-			  controller: deleteDataModalController,
-			  size: size
-			});
 
-		Modalopened = true;
-		
-		modalInstance.result.then(function () {
-		 
+	// });
+}
+
+$scope.deleteBill = function(size,id,isPurchaseBill = 'no')
+{
+
+	toaster.clear();
+	if (Modalopened) return;
+
+	var modalInstance = $modal.open({
+		templateUrl: 'app/views/PopupModal/Delete/deleteDataModal.html',
+		controller: deleteDataModalController,
+		size: size
+	});
+
+	Modalopened = true;
+
+	modalInstance.result.then(function () {
+
 		// return false;
-		 /**Delete Code **/
-		 	if (isPurchaseBill == 'yes'){
-		 		var deletePath = apiPath.postPurchaseBill+'/'+id;
-		 	}else if (isPurchaseBill == 'quote') {
-		 		var deletePath = apiPath.postQuotationBill+'/'+id+'/quote';
-		 	}
-		 	else{
-		 		var deletePath = apiPath.postBill+'/'+id;
-		 	}
-			
-			apiCall.deleteCall(deletePath).then(function(deleteres){
-				
+		/**Delete Code **/
+		if (isPurchaseBill == 'yes'){
+			var deletePath = apiPath.postPurchaseBill+'/'+id;
+		}else if (isPurchaseBill == 'quote') {
+			var deletePath = apiPath.postQuotationBill+'/'+id+'/quote';
+		}
+		else{
+			var deletePath = apiPath.postBill+'/'+id;
+		}
+
+		apiCall.deleteCall(deletePath).then(function(deleteres){
+
 				//console.log(deleteres);
 				if(apiResponse.ok == deleteres){
 					
 					$scope.loadInit();
-				
+
 					toaster.pop('success', 'Title', 'Data Successfully Deleted');
 				}
 				else{
 					toaster.pop('warning', '', deleteres);
 				}
-			 
-			});
-		 /** End **/
-		 
-		 Modalopened = false;
-		
-		}, function () {
-			
-		  console.log('Cancel');	
-		  Modalopened = false;
-		  
-		});
-		
-		
-	}
-  
-	
-	$scope.returnSingleData = function(saleId)
-	{
-		var tempObject = {};
-		
-		for(var i=0;i<$scope.billData.length;i++)
-		{
-			var billdata = $scope.billData[i];
-			if(billdata.saleId == saleId){
-				tempObject = billdata;
-			}
-		}
-		return tempObject;
-	}
 
-	$scope.returnSinglePurchaseData = function(purchaseId)
-	{
-		var tempObject = {};
+			});
+		/** End **/
+
+		Modalopened = false;
 		
-		for(var i=0;i<$scope.purchaseBillData.length;i++)
-		{
-			var billdata = $scope.purchaseBillData[i];
-			if(billdata.purchaseId == purchaseId){
-				tempObject = billdata;
-			}
+	}, function () {
+
+		console.log('Cancel');	
+		Modalopened = false;
+
+	});
+
+
+}
+
+
+$scope.returnSingleData = function(saleId)
+{
+	var tempObject = {};
+
+	for(var i=0;i<$scope.billData.length;i++)
+	{
+		var billdata = $scope.billData[i];
+		if(billdata.saleId == saleId){
+			tempObject = billdata;
 		}
-		return tempObject;
 	}
-	
+	return tempObject;
+}
+
+$scope.returnSinglePurchaseData = function(purchaseId)
+{
+	var tempObject = {};
+
+	for(var i=0;i<$scope.purchaseBillData.length;i++)
+	{
+		var billdata = $scope.purchaseBillData[i];
+		if(billdata.purchaseId == purchaseId){
+			tempObject = billdata;
+		}
+	}
+	return tempObject;
+}
+
 	//Date Convert
 	
 	$scope.dateConvert = function(entryDate){
@@ -818,24 +818,24 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	}
 	
 	/** Reload Load Data **/
-		$scope.reLoadPdfData = function(response)
-		{
-			toaster.clear();
+	$scope.reLoadPdfData = function(response)
+	{
+		toaster.clear();
 
-			$scope.allSalesData = [];
-			$scope.paidData = [];
-			$scope.unPaidData = [];
-			$scope.totalAmountDisplay = 0;
-			$scope.totalAdvanceDisplay = 0;
-			$scope.totalBalanceDisplay = 0;
-			
-			if(apiResponse.notFound == response)
-			{
-				if(vm.tableParams) {
-					$scope.onSalesBillTabSelect($scope.currentActiveSalestab);
-				} else {
-					$scope.saleTableData();
-				}
+		$scope.allSalesData = [];
+		$scope.paidData = [];
+		$scope.unPaidData = [];
+		$scope.totalAmountDisplay = 0;
+		$scope.totalAdvanceDisplay = 0;
+		$scope.totalBalanceDisplay = 0;
+
+		if(apiResponse.notFound == response)
+		{
+			if(vm.tableParams) {
+				$scope.onSalesBillTabSelect($scope.currentActiveSalestab);
+			} else {
+				$scope.saleTableData();
+			}
 				//data = [];
 				toaster.pop('alert', 'Opps!!', 'No Data Found');
 			}
@@ -873,151 +873,151 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 							data[p].singlePdfIcon = false;
 							data[p].displayProduct = [];
 							var productArrays = JSON.parse(data[p].productArray);
-							var invCnt = productArrays.inventory.length;
-							(function displayProductList(invIndex,billIndex){
-								if("productId" in productArrays.inventory[invIndex] && productArrays.inventory[invIndex].productId)
-								{
-									productFactory.getSingleProduct(productArrays.inventory[invIndex].productId).then(function(proResponse) {
-										if(angular.isObject(proResponse)) 
-										{
-											if ("displayProduct" in data[billIndex]) 
+								var invCnt = productArrays.inventory.length;
+								(function displayProductList(invIndex,billIndex){
+									if(productArrays.inventory[invIndex] != undefined && productArrays.inventory[invIndex] != null && "productId" in productArrays.inventory[invIndex] && productArrays.inventory[invIndex].productId)
+									{
+										productFactory.getSingleProduct(productArrays.inventory[invIndex].productId).then(function(proResponse) {
+											if(angular.isObject(proResponse)) 
 											{
-												if (angular.isArray(data[billIndex].displayProduct)) 
+												if ("displayProduct" in data[billIndex]) 
 												{
-													data[billIndex].displayProduct.push(angular.copy(proResponse));
+													if (angular.isArray(data[billIndex].displayProduct)) 
+													{
+														data[billIndex].displayProduct.push(angular.copy(proResponse));
+													} 
+													else 
+													{
+														data[billIndex].displayProduct = [];
+													}
 												} 
 												else 
 												{
 													data[billIndex].displayProduct = [];
 												}
-											} 
-											else 
-											{
-												data[billIndex].displayProduct = [];
-											}
-											if (invIndex == invCnt - 1) 
-											{
-												pushedIntoArray(billIndex);
-												billIndex++;
-												if (billIndex < cnt) {
-													billAmountFix(billIndex);
-												}else{
-													loadSorting();
+												if (invIndex == invCnt - 1) 
+												{
+													pushedIntoArray(billIndex);
+													billIndex++;
+													if (billIndex < cnt) {
+														billAmountFix(billIndex);
+													}else{
+														loadSorting();
+													}
+
 												}
-												
-											}
-											invIndex++;
-											if (invIndex < invCnt) {
-												displayProductList(invIndex,billIndex);
-											}
-										}
-										else
-										{
-											productArrays.inventory[invIndex].productName = '<em class="text-danger">(deleted)</em>';
-											productArrays.inventory[invIndex].altProductName = '<em class="text-danger">(deleted)</em>';
-											data[billIndex].displayProduct.push(productArrays.inventory[invIndex]);
-											if (invIndex == invCnt - 1) 
-											{
-												pushedIntoArray(billIndex);
-												billIndex++;
-												if (billIndex < cnt) {
-													billAmountFix(billIndex);
-												}else{
-													loadSorting();
+												invIndex++;
+												if (invIndex < invCnt) {
+													displayProductList(invIndex,billIndex);
 												}
-												
 											}
-											invIndex++;
-											if (invIndex < invCnt) {
-												displayProductList(invIndex,billIndex);
+											else
+											{
+												productArrays.inventory[invIndex].productName = '<em class="text-danger">(deleted)</em>';
+												productArrays.inventory[invIndex].altProductName = '<em class="text-danger">(deleted)</em>';
+												data[billIndex].displayProduct.push(productArrays.inventory[invIndex]);
+												if (invIndex == invCnt - 1) 
+												{
+													pushedIntoArray(billIndex);
+													billIndex++;
+													if (billIndex < cnt) {
+														billAmountFix(billIndex);
+													}else{
+														loadSorting();
+													}
+
+												}
+												invIndex++;
+												if (invIndex < invCnt) {
+													displayProductList(invIndex,billIndex);
+												}
 											}
-										}
-									});
-								}
-								else
-								{
-									if (invIndex == invCnt - 1) 
+										});
+									}
+									else
 									{
-										pushedIntoArray(billIndex);
-										billIndex++;
-										if (billIndex < cnt) {
-											billAmountFix(billIndex);
-										}else{
-											loadSorting();
+										if (invIndex == invCnt - 1) 
+										{
+											pushedIntoArray(billIndex);
+											billIndex++;
+											if (billIndex < cnt) {
+												billAmountFix(billIndex);
+											}else{
+												loadSorting();
+											}
 										}
 									}
-								}
-								
-							})(0,p);
+
+								})(0,p);
 
 						})(0);
 					}
 				}
 				else{
-				
+
 					vm.pieChartData = [{ "color" : "#6cc539",
-										"data" : "0",
-										"label" : "Debit"
-									  },
-									  { "color" : "#00b4ff",
-										"data" : "0",
-										"label" : "Credit"
-									  }];
-					vm.pieFlotCharts = [{
-								  "label": "Debit",
-								  "color": "#6cc539",
-								  "data": [
-									["Jan", "0"],
-									["Feb", "0"],
-									["Mar", "0"],
-									["Apr", "0"],
-									["May", "0"],
-									["Jun", "0"],
-									["Jul", "0"],
-									["Aug", "0"],
-									["Sep", "0"],
-									["Oct", "0"],
-									["Nov", "0"],
-									["Dec", "0"]
-								  ]
-								},{
-								  "label": "Credit",
-								  "color": "#00b4ff",
-								  "data": [
-									["Jan", "0"],
-									["Feb", "0"],
-									["Mar", "0"],
-									["Apr", "0"],
-									["May", "0"],
-									["Jun", "0"],
-									["Jul", "0"],
-									["Aug", "0"],
-									["Sep", "0"],
-									["Oct", "0"],
-									["Nov", "0"],
-									["Dec", "0"]
-								  ]
-								}];
-		  			if ($scope.headerType == 'payment' || $scope.headerType == 'receipt') {
-		  				var dataCnt = data.length;
-		  				var i = 0;
-		  				(function paymentReceiptLoop(i) {
+					"data" : "0",
+					"label" : "Debit"
+				},
+				{ "color" : "#00b4ff",
+				"data" : "0",
+				"label" : "Credit"
+			}];
+			vm.pieFlotCharts = [{
+				"label": "Debit",
+				"color": "#6cc539",
+				"data": [
+				["Jan", "0"],
+				["Feb", "0"],
+				["Mar", "0"],
+				["Apr", "0"],
+				["May", "0"],
+				["Jun", "0"],
+				["Jul", "0"],
+				["Aug", "0"],
+				["Sep", "0"],
+				["Oct", "0"],
+				["Nov", "0"],
+				["Dec", "0"]
+				]
+			},{
+				"label": "Credit",
+				"color": "#00b4ff",
+				"data": [
+				["Jan", "0"],
+				["Feb", "0"],
+				["Mar", "0"],
+				["Apr", "0"],
+				["May", "0"],
+				["Jun", "0"],
+				["Jul", "0"],
+				["Aug", "0"],
+				["Sep", "0"],
+				["Oct", "0"],
+				["Nov", "0"],
+				["Dec", "0"]
+				]
+			}];
+			if ($scope.headerType == 'payment' || $scope.headerType == 'receipt') {
+				var dataCnt = data.length;
+				var i = 0;
+				(function paymentReceiptLoop(i) {
 		  					// for (var j = 0; j < data[i].creditArray.length; j++) {
 		  						vm.pieChartData[0]["data"] = parseInt(vm.pieChartData[0]["data"]) + parseFloat(data[i].creditAmount);
-								var date = data[i].entryDate;
-								var splitedate = date.split("-").reverse().join("-");
-								var getdate = new Date(splitedate);
-								var month = getdate.getMonth();
-								vm.pieFlotCharts[0]["data"][month][1] = parseInt(vm.pieFlotCharts[0]["data"][month][1]) + parseFloat(data[i].creditAmount);
+		  						var date = data[i].entryDate;
+		  						var splitedate = date.split("-").reverse().join("-");
+		  						var getdate = new Date(splitedate);
+		  						var month = getdate.getMonth();
+		  						vm.pieFlotCharts[0]["data"][month][1] = parseInt(vm.pieFlotCharts[0]["data"][month][1]) + parseFloat(data[i].creditAmount);
 		  					// }
 		  					// for (var k = 0; k < data[i].debitArray.length; k++) {
 		  						vm.pieChartData[1]["data"] = parseInt(vm.pieChartData[1]["data"]) + parseFloat(data[i].debitAmount);
-								
-								var date2 = data[i].entryDate;
-								var splitedate2 = date2.split("-").reverse().join("-");
-								var getdate2 = new Date(splitedate2);
-								var month2 = getdate2.getMonth();
-								vm.pieFlotCharts[1]["data"][month2][1] = parseInt(vm.pieFlotCharts[1]["data"][month2][1]) + parseFloat(data[i].debitAmount);
+
+		  						var date2 = data[i].entryDate;
+		  						var splitedate2 = date2.split("-").reverse().join("-");
+		  						var getdate2 = new Date(splitedate2);
+		  						var month2 = getdate2.getMonth();
+		  						vm.pieFlotCharts[1]["data"][month2][1] = parseInt(vm.pieFlotCharts[1]["data"][month2][1]) + parseFloat(data[i].debitAmount);
 		  					// }
 		  					i++;
 		  					if (i < dataCnt) {
@@ -1027,19 +1027,19 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 		  			}
 		  			else{
 		  				for (var i = 0; i < data.length; i++) {
-						
-							if(data[i].amountType=='debit'){
-							  
-								vm.pieChartData[0]["data"] = parseInt(vm.pieChartData[0]["data"]) + parseFloat(data[i].amount);
-								var date = data[i].entryDate;
-								var splitedate = date.split("-").reverse().join("-");
-								var getdate = new Date(splitedate);
-								var month = getdate.getMonth();
-								
-									vm.pieFlotCharts[0]["data"][month][1] = parseInt(vm.pieFlotCharts[0]["data"][month][1]) + parseFloat(data[i].amount);
-									
+
+		  					if(data[i].amountType=='debit'){
+
+		  						vm.pieChartData[0]["data"] = parseInt(vm.pieChartData[0]["data"]) + parseFloat(data[i].amount);
+		  						var date = data[i].entryDate;
+		  						var splitedate = date.split("-").reverse().join("-");
+		  						var getdate = new Date(splitedate);
+		  						var month = getdate.getMonth();
+
+		  						vm.pieFlotCharts[0]["data"][month][1] = parseInt(vm.pieFlotCharts[0]["data"][month][1]) + parseFloat(data[i].amount);
+
 								//console.log(vm.pieFlotCharts[0]["data"][0][1] = parseInt(vm.pieFlotCharts[0]["data"][0][1]) + parseInt(data[i].amount));
-							
+
 							}
 							else{
 								vm.pieChartData[1]["data"] = parseInt(vm.pieChartData[1]["data"]) + parseFloat(data[i].amount);
@@ -1049,12 +1049,12 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 								var getdate = new Date(splitedate);
 								var month = getdate.getMonth();
 								
-									vm.pieFlotCharts[1]["data"][month][1] = parseInt(vm.pieFlotCharts[1]["data"][month][1]) + parseFloat(data[i].amount);
-								   
+								vm.pieFlotCharts[1]["data"][month][1] = parseInt(vm.pieFlotCharts[1]["data"][month][1]) + parseFloat(data[i].amount);
+
 								//vm.pieFlotCharts[1]["data"] = parseInt(vm.pieFlotCharts[1]["data"]) + parseInt(data[i].amount);
 							}
 						}
-		  			}
+					}
 					
 					//console.log(vm.pieFlotCharts);
 					
@@ -1076,68 +1076,68 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 					  // data[i].cityName = data[i].city.cityName;  //set the data from nested obj into new property
 					// }
 				}
-			 
+
 			}
 		}
-	/** End Reaload Pdf Data **/
-	
-	function pushedIntoArray (p) {
-		var fileCnt = data[p].file.length;
-						
-		var flag = 0;
-		var imageFlag = 0;
-		
-		for(var k=0;k<fileCnt;k++) {
-		
-			if(data[p].file[k].documentFormat == 'pdf' && (data[p].file[k].documentType == 'bill' ||data[p].file[k].documentType == 'quotation'))
+		/** End Reaload Pdf Data **/
+
+		function pushedIntoArray (p) {
+			var fileCnt = data[p].file.length;
+
+			var flag = 0;
+			var imageFlag = 0;
+
+			for(var k=0;k<fileCnt;k++) {
+
+				if(data[p].file[k].documentFormat == 'pdf' && (data[p].file[k].documentType == 'bill' ||data[p].file[k].documentType == 'quotation'))
+				{
+					flag++;
+				}
+
+				if(data[p].file[k].documentFormat == 'jpg' || data[p].file[k].documentFormat == 'jpeg' || data[p].file[k].documentFormat == 'png'){
+
+					imageFlag = 1;
+				}
+			}
+
+			if(flag == 0){
+				data[p].repeatIcon = true;
+			}
+			else if(flag == 1){
+				data[p].singlePdfIcon = true;
+			}
+			else{
+				data[p].pdfIcon = true;
+			}
+
+			if(imageFlag == 1){
+				data[p].imageIcon = true;
+			}
+
+			if ($scope.headerType != 'Tax-Purchase'){
+				data[p].invoiceNumber = data[p].invoiceNumber;
+				data[p].clientName = data[p].client.clientName;
+			}
+			else{
+				data[p].ledgerName = data[p].vendor.ledgerName;
+			}
+
+			if(data[p].balance >= 1)
 			{
-				flag++;
+				$scope.unPaidData.push(data[p]);
 			}
-			
-			if(data[p].file[k].documentFormat == 'jpg' || data[p].file[k].documentFormat == 'jpeg' || data[p].file[k].documentFormat == 'png'){
-				
-				imageFlag = 1;
+			else{
+				$scope.paidData.push(data[p]);
 			}
 		}
-		
-		if(flag == 0){
-			data[p].repeatIcon = true;
-		}
-		else if(flag == 1){
-			data[p].singlePdfIcon = true;
-		}
-		else{
-			data[p].pdfIcon = true;
-		}
-		
-		if(imageFlag == 1){
-			data[p].imageIcon = true;
-		}
 
-		if ($scope.headerType != 'Tax-Purchase'){
-			data[p].invoiceNumber = data[p].invoiceNumber;
-			data[p].clientName = data[p].client.clientName;
-		}
-		else{
-			data[p].ledgerName = data[p].vendor.ledgerName;
-		}
-
-		if(data[p].balance >= 1)
+		function loadSorting () 
 		{
-			$scope.unPaidData.push(data[p]);
-		}
-		else{
-			$scope.paidData.push(data[p]);
-		}
-	}
+			$scope.contents1 = data;
 
-	function loadSorting () 
-	{
-		$scope.contents1 = data;
+			if ($scope.headerType != 'Tax-Purchase') {
 
-		if ($scope.headerType != 'Tax-Purchase') {
-
-			$scope.contents1.sort(function(a, b) {
+				$scope.contents1.sort(function(a, b) {
 				// var entDate = a.entryDate.split("-").reverse().join("-");
 				// var toDate = b.entryDate.split("-").reverse().join("-");
 				// var dateA=new Date(entDate), dateB=new Date(toDate);
@@ -1145,26 +1145,13 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 				var parseB = parseInt(b.invoiceNumber);
 				return parseA - parseB;
 			});
-			
-			data= $scope.contents1;
-			$scope.allSalesData = $scope.contents1;
 
-			$scope.contents2 = $scope.unPaidData;
-			
-			$scope.contents2.sort(function(a, b) {
-				// var entDate = a.entryDate.split("-").reverse().join("-");
-				// var toDate = b.entryDate.split("-").reverse().join("-");
-				// var dateA=new Date(entDate), dateB=new Date(toDate);
-				var parseA = parseInt(a.invoiceNumber);
-				var parseB = parseInt(b.invoiceNumber);
-				return parseA - parseB; 
-			});
-			
-			$scope.unPaidData = $scope.contents2;
+				data= $scope.contents1;
+				$scope.allSalesData = $scope.contents1;
 
-			$scope.contents3 = $scope.paidData;
-			
-			$scope.contents3.sort(function(a, b) {
+				$scope.contents2 = $scope.unPaidData;
+
+				$scope.contents2.sort(function(a, b) {
 				// var entDate = a.entryDate.split("-").reverse().join("-");
 				// var toDate = b.entryDate.split("-").reverse().join("-");
 				// var dateA=new Date(entDate), dateB=new Date(toDate);
@@ -1173,43 +1160,56 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 				return parseA - parseB; 
 			});
 
-			$scope.paidData= $scope.contents3;
-		}
-		else if($scope.headerType == 'Tax-Purchase')
-		{
-			$scope.contents1.sort(function(a, b){
-				var parseA = parseInt(a.billNumber);
-				var parseB = parseInt(b.billNumber);
-				return parseA - parseB; 
-			});
-			
-			data= $scope.contents1;
-			$scope.allSalesData = angular.copy($scope.contents1);
-			
-			$scope.contents2 = $scope.unPaidData;
-			
-			$scope.contents2.sort(function(a, b){
-				var parseA = parseInt(a.billNumber);
-				var parseB = parseInt(b.billNumber);
-				return parseA - parseB; 
-			});
-			
-			$scope.unPaidData = $scope.contents2;
+				$scope.unPaidData = $scope.contents2;
 
-			$scope.contents3 = $scope.paidData;
-			
-			$scope.contents3.sort(function(a, b){
-				var parseA = parseInt(a.billNumber);
-				var parseB = parseInt(b.billNumber);
+				$scope.contents3 = $scope.paidData;
+
+				$scope.contents3.sort(function(a, b) {
+				// var entDate = a.entryDate.split("-").reverse().join("-");
+				// var toDate = b.entryDate.split("-").reverse().join("-");
+				// var dateA=new Date(entDate), dateB=new Date(toDate);
+				var parseA = parseInt(a.invoiceNumber);
+				var parseB = parseInt(b.invoiceNumber);
 				return parseA - parseB; 
 			});
 
-			$scope.paidData= $scope.contents3;
-		}
+				$scope.paidData= $scope.contents3;
+			}
+			else if($scope.headerType == 'Tax-Purchase')
+			{
+				$scope.contents1.sort(function(a, b){
+					var parseA = parseInt(a.billNumber);
+					var parseB = parseInt(b.billNumber);
+					return parseA - parseB; 
+				});
 
-		if(vm.tableParams)
-		{
-			var activeTab = $scope.currentActiveSalestab;
+				data= $scope.contents1;
+				$scope.allSalesData = angular.copy($scope.contents1);
+
+				$scope.contents2 = $scope.unPaidData;
+
+				$scope.contents2.sort(function(a, b){
+					var parseA = parseInt(a.billNumber);
+					var parseB = parseInt(b.billNumber);
+					return parseA - parseB; 
+				});
+
+				$scope.unPaidData = $scope.contents2;
+
+				$scope.contents3 = $scope.paidData;
+
+				$scope.contents3.sort(function(a, b){
+					var parseA = parseInt(a.billNumber);
+					var parseB = parseInt(b.billNumber);
+					return parseA - parseB; 
+				});
+
+				$scope.paidData= $scope.contents3;
+			}
+
+			if(vm.tableParams)
+			{
+				var activeTab = $scope.currentActiveSalestab;
 			// if (activeTab == 0){
 			// 	$scope.onSalesBillTabSelect(activeTab+1);
 			// } else if (activeTab == 1) {
@@ -1228,15 +1228,15 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 		}
 	}
 	/** Regenerate Pdf **/
-		
-		$scope.reGeneratePdf = function(sId){
-			
+
+	$scope.reGeneratePdf = function(sId){
+
 			//alert(sId);
 			var reFormData = new FormData();
 			reFormData.append('saleId',sId);
 			
 			apiCall.postCall(apiPath.reGeneratePdf,reFormData).then(function(response){
-			
+
 				//console.log(response);
 				
 				if(angular.isObject(response)){
@@ -1257,8 +1257,8 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 			
 		}
 		
-	/** End Regenerate Pdf **/
-	
+		/** End Regenerate Pdf **/
+
 	/**
 	Image Gallery  Modal 
 	**/
@@ -1275,39 +1275,39 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 		}
 		// console.log('ddaaattaaa',$scope.singleBillData);
 		var modalInstance = $modal.open({
-		  templateUrl: 'app/views/PopupModal/Accounting/imageGalleryModal/imageGalleryModalContent.html',
-		  controller: imageGalleryModalCtrl,
-		  size: size,
-		  resolve:{
-			  billData: function(){
-				 
-				return $scope.singleBillData;
-			  },
-			  formatType: function(){
-				  
-				 return 'image';
-			  },
-			  transType: function(){
-				  
-				  return 'none';
-			  }
-		  }
+			templateUrl: 'app/views/PopupModal/Accounting/imageGalleryModal/imageGalleryModalContent.html',
+			controller: imageGalleryModalCtrl,
+			size: size,
+			resolve:{
+				billData: function(){
+
+					return $scope.singleBillData;
+				},
+				formatType: function(){
+
+					return 'image';
+				},
+				transType: function(){
+
+					return 'none';
+				}
+			}
 		});
-	
+
 		Modalopened = true;
-	   
+
 		modalInstance.result.then(function () {
-		 
+
 			Modalopened = false;
 			
 		}, function () {
 			
 			console.log('Cancel');	
 			Modalopened = false;
-		  
+
 		});
 		
-	
+
 	};
 	
 	/**
@@ -1325,39 +1325,39 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 		$scope.singleBillData = $scope.returnSingleData(saleId);
 		
 		var modalInstance = $modal.open({
-		  templateUrl: 'app/views/PopupModal/Accounting/imageGalleryModal/imageGalleryModalContent.html',
-		  controller: imageGalleryModalCtrl,
-		  size: size,
-		  resolve:{
-			  billData: function(){
-				 
-				return $scope.singleBillData;
-			  },
-			  formatType: function(){
-				  
-				 return 'pdf';
-			  },
-			  transType: function(){
-				  
-				  return 'none';
-			  }
-		  }
+			templateUrl: 'app/views/PopupModal/Accounting/imageGalleryModal/imageGalleryModalContent.html',
+			controller: imageGalleryModalCtrl,
+			size: size,
+			resolve:{
+				billData: function(){
+
+					return $scope.singleBillData;
+				},
+				formatType: function(){
+
+					return 'pdf';
+				},
+				transType: function(){
+
+					return 'none';
+				}
+			}
 		});
 
-	   Modalopened = true;
-	   
+		Modalopened = true;
+
 		modalInstance.result.then(function () {
-		 
+
 			Modalopened = false;
-		
+
 		}, function () {
 			
-		  console.log('Cancel');	
-		  Modalopened = false;
-		  
+			console.log('Cancel');	
+			Modalopened = false;
+
 		});
 		
-	
+
 	};
 	
 	/**
@@ -1376,29 +1376,29 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 		$scope.singleBillData = $scope.returnSingleData(saleId);
 		
 		var modalInstance = $modal.open({
-		  templateUrl: 'app/views/PopupModal/Accounting/imageGalleryModal/imageGalleryModalContent.html',
-		  controller: 'imageGalleryModalCtrl as fromData',
-		  size: size,
-		  resolve:{
-			  billData: function(){
-				 
-				return $scope.singleBillData;
-			  },
-			  formatType: function(){
-				  
-				 return 'payment';
-			  },
-			  transType: function(){
-				  
-				  return transaction;
-			  }
-		  }
+			templateUrl: 'app/views/PopupModal/Accounting/imageGalleryModal/imageGalleryModalContent.html',
+			controller: 'imageGalleryModalCtrl as fromData',
+			size: size,
+			resolve:{
+				billData: function(){
+
+					return $scope.singleBillData;
+				},
+				formatType: function(){
+
+					return 'payment';
+				},
+				transType: function(){
+
+					return transaction;
+				}
+			}
 		});
 
-	   Modalopened = true;
-	   
+		Modalopened = true;
+
 		modalInstance.result.then(function (msg) {
-		 
+
 			if(msg == 'payment'){
 				
 				msg = 'Payment';
@@ -1409,7 +1409,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 			
 			toaster.pop('success', 'Title', msg+' Successfully Done');
 			/** Reload Load Data **/
-				$scope.loadInit('yes');
+			$scope.loadInit('yes');
 			/** End **/
 			
 			console.log('success');
@@ -1422,7 +1422,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 			
 		});
 		
-	
+
 	};
 	
 	/**
@@ -1431,82 +1431,82 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	
 	$scope.sortComment = function(comment) {
 		var getResdate = comment.entryDate;
-			var splitedate = getResdate.split("-").reverse().join("-");
-	    var date = new Date(splitedate);
-	    return date;
+		var splitedate = getResdate.split("-").reverse().join("-");
+		var date = new Date(splitedate);
+		return date;
 	};
 
 	/* Date-picker Filter */
 
 		// Datepicker
 	  // ----------------------------------- 
-		this.minStart = new Date(0,0,1);
-		this.maxStart = new Date();
-		
+	  this.minStart = new Date(0,0,1);
+	  this.maxStart = new Date();
+
 	  this.today = function() {
-		 
+
 	    // this.dt1 = new Date();
 	    this.dt1 = new Date(moment($rootScope.accView.fromDate,apiDateFormate).format('YYYY-MM-DD'));
-		if($scope.viewDataTypePath == 'CrmClientFilterView'){
-			this.dt1 = null;
-		}
-	  };
-	   
-	  
-	  this.today();
-	  
-	  this.today2 = function() {
+	    if($scope.viewDataTypePath == 'CrmClientFilterView'){
+	    	this.dt1 = null;
+	    }
+	};
+
+
+	this.today();
+
+	this.today2 = function() {
 		if($scope.viewDataTypePath == 'GST Return'){
 			this.dt2 = new Date();
-			 this.dt1.setMonth( this.dt1.getMonth() - 1);
+			this.dt1.setMonth( this.dt1.getMonth() - 1);
 		}
 		else{
 			 // this.dt2 = this.dt1;
 			 this.dt2 = new Date(moment($rootScope.accView.toDate,apiDateFormate).format('YYYY-MM-DD'));
-		}
-		if($scope.viewDataTypePath == 'CrmClientFilterView'){
-			this.dt2 = null;
-		}
-	  };
-	  this.today2();
+			}
+			if($scope.viewDataTypePath == 'CrmClientFilterView'){
+				this.dt2 = null;
+			}
+		};
+		this.today2();
 		
 		/** JObcard **/
 		
-			this.todayJobcard = function() {
-				this.jobcardDate1 = new Date();
-				if($scope.viewDataTypePath == 'CrmClientFilterView'){
-					this.jobcardDate1 = null;
-				}
-			};
-		   
-		  
-			this.todayJobcard();
-		  
-			this.todayJobcard2 = function() {
-				this.jobcardDate2 = this.jobcardDate1;
-				if($scope.viewDataTypePath == 'CrmClientFilterView'){
-					this.jobcardDate2 = null;
-				}
-			};
-			this.todayJobcard2();
-	  
+		this.todayJobcard = function() {
+			this.jobcardDate1 = new Date();
+			if($scope.viewDataTypePath == 'CrmClientFilterView'){
+				this.jobcardDate1 = null;
+			}
+		};
+
+
+		this.todayJobcard();
+
+		this.todayJobcard2 = function() {
+			this.jobcardDate2 = this.jobcardDate1;
+			if($scope.viewDataTypePath == 'CrmClientFilterView'){
+				this.jobcardDate2 = null;
+			}
+		};
+		this.todayJobcard2();
+
 		/** End **/
 		
 		this.check = function()
-	  {
-		  
-		 this.dt2 = this.dt1;
-	  };
-	  
-	  this.clear = function () {
-	    this.dt1 = null;
-	  };
+		{
+
+			this.dt2 = this.dt1;
+		};
+
+		this.clear = function () {
+			this.dt1 = null;
+		};
 
 	  // Disable weekend selection
 	  this.disabled = function(date, mode) {
-		
+
 	    return false; //( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
-	  };
+	};
 
 	  // this.toggleMin = function() {
 	    // this.minDate = this.minDate ? null : new Date();
@@ -1514,39 +1514,39 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	  // this.toggleMin();
 
 	  this.openStart = function($event) {
-		  
-	    $event.preventDefault();
-	    $event.stopPropagation();
 
-	    this.openedStart = true;
+	  	$event.preventDefault();
+	  	$event.stopPropagation();
+
+	  	this.openedStart = true;
 	  };
 	  
 	  this.openEnd = function($event) {
-	    $event.preventDefault();
-	    $event.stopPropagation();
+	  	$event.preventDefault();
+	  	$event.stopPropagation();
 
-	    this.openedEnd = true;
+	  	this.openedEnd = true;
 	  };
 	  
 	  /** JObcard **/
-	   this.openStartJobcard = function($event) {
-		  
-	    $event.preventDefault();
-	    $event.stopPropagation();
+	  this.openStartJobcard = function($event) {
 
-	    this.openedStartJobcard = true;
+	  	$event.preventDefault();
+	  	$event.stopPropagation();
+
+	  	this.openedStartJobcard = true;
 	  };
 	  
 	  this.openEndJobcard = function($event) {
-	    $event.preventDefault();
-	    $event.stopPropagation();
+	  	$event.preventDefault();
+	  	$event.stopPropagation();
 
-	    this.openedEndJobcard = true;
+	  	this.openedEndJobcard = true;
 	  };
-	/** End **/
+	  /** End **/
 	  this.dateOptions = {
-	    formatYear: 'yy',
-	    startingDay: 1
+	  	formatYear: 'yy',
+	  	startingDay: 1
 	  };
 
 	  this.initDate = new Date('2016-15-20');
@@ -1554,11 +1554,11 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	  // this.formats = ['dd-MMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
 	  this.format = dateFormats;
 
-	/* End */
-	
-	/* Print Multiple PDF */
-		$scope.selectedBoxArray = [];
-		$scope.clientFlag=0;
+	  /* End */
+
+	  /* Print Multiple PDF */
+	  $scope.selectedBoxArray = [];
+	  $scope.clientFlag=0;
 		// $scope.parentCheckBox = false;
 
 		$scope.changeBox = function(box,pData){
@@ -1615,7 +1615,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 		$scope.directPrintPdf = function(pdfUrlPath)
 		{
 			/** Print **/
-			 $http({
+			$http({
 				url : pdfUrlPath,
 				method : 'GET',
 				headers : {
@@ -1637,6 +1637,6 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 			/** End **/
 		}
 
-	/* End */
-}
-AccViewDataController.$inject = ["$rootScope","$scope", "$filter","$http", "ngTableParams","apiCall","apiPath","flotOptions","colors","$timeout","getSetFactory","$state","headerType","$modal","$window","toaster","apiResponse","apiDateFormate","productFactory"];
+		/* End */
+	}
+	AccViewDataController.$inject = ["$rootScope","$scope", "$filter","$http", "ngTableParams","apiCall","apiPath","flotOptions","colors","$timeout","getSetFactory","$state","headerType","$modal","$window","toaster","apiResponse","apiDateFormate","productFactory"];
