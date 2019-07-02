@@ -41,7 +41,7 @@
 				   
 					  <label class="col-sm-1 control-label">*Name</label>
 					  <div class="col-sm-5">
-						 <input  tabindex="2" name="ledgerName" ng-model="ledgerForm.ledgerName" ng-change="changeLedgerData('ledgerName',ledgerForm.ledgerName)" ng-disabled="form.disableValue" type="text" placeholder="Ledger Name" class="form-control" ng-required="true" ng-pattern="/^[a-zA-Z0-9 &_`#().\'-\/]*$/" ng-maxlength="50" ng-minlength="1" auto-focus/>
+						 <input  tabindex="2" name="ledgerName" ng-model="ledgerForm.ledgerName" ng-change="changeLedgerData('ledgerName',ledgerForm.ledgerName)" ng-disabled="form.disableValue || defaultLedger" type="text" placeholder="Ledger Name" class="form-control" ng-required="true" ng-pattern="/^[a-zA-Z0-9 &_`#().\'-\/]*$/" ng-maxlength="50" ng-minlength="1" auto-focus/>
 						<span ng-messages="formLedger.ledgerName.$error" ng-if="formLedger.ledgerName.$dirty || formLedger.ledgerName.$touched"  role="alert">
 							<span ng-messages-include="errorRequired"></span>
 							<span ng-messages-include="errorLonglength"></span>
@@ -124,7 +124,7 @@
 					<a><span bind-html-unsafe="match.label | typeaheadHighlight:query"></span> ( {{match.model.underWhat}} ) </a>
 				</script>
 				
-					 <input ng-model="ledgerForm.under" name="under" tabindex="2"  typeahead="state.ledgerGroupName for state in form.underWhat | filter:$viewValue | limitTo:10" typeahead-on-select="setPcode('ledgerGroupId',$item)" ng-model="selected" typeahead-editable="false" typeahead-template-url="underCustomTemplate.html" ng-disabled="form.disableValue"  type="text" placeholder="Under" class="form-control autocomplete" ng-required="true"  />
+					 <input ng-model="ledgerForm.under" name="under" tabindex="2"  typeahead="state.ledgerGroupName for state in form.underWhat | filter:$viewValue | limitTo:10" typeahead-on-select="setPcode('ledgerGroupId',$item)" ng-model="selected" typeahead-editable="false" typeahead-template-url="underCustomTemplate.html" ng-disabled="form.disableValue || defaultLedger"  type="text" placeholder="Under" class="form-control autocomplete" ng-required="true"  />
 					 
 					<span ng-messages="formLedger.under.$error" ng-if="formLedger.under.$dirty || formLedger.under.$touched"  role="alert">
 						<span ng-messages-include="errorRequired"></span>
@@ -134,7 +134,7 @@
 			  
 				  <label class="col-sm-2 control-label">Inventory Affected</label>
 				  <div class="col-sm-2">
-					 <select chosen data-ng-model="ledgerForm.invAffect" tabindex="2" data-ng-options="s for s in form.invAffectDrop" ng-change="changeLedgerData('inventoryAffected',ledgerForm.invAffect)" ng-disabled="form.disableValue"  class="form-control chosen-select" >
+					 <select chosen data-ng-model="ledgerForm.invAffect" tabindex="2" data-ng-options="s for s in form.invAffectDrop" ng-change="changeLedgerData('inventoryAffected',ledgerForm.invAffect)" ng-disabled="form.disableValue || defaultLedger"  class="form-control chosen-select" >
 						 <option value=""></option>
 					 </select>
 				  </div>
@@ -235,6 +235,7 @@
                     <label  class="col-sm-1 control-label">GST</label>
                   <div class="col-sm-3">
                      <input ng-model="ledgerForm.cgst" tabindex="2" ng-change="changeLedgerData('cgst',ledgerForm.cgst)"  masked="" type="text" ng-disabled="form.disableValue" placeholder="GST Number" class="form-control"   />
+                     <a href="https://services.gst.gov.in/services/searchtp" target="_blank" class="pull-right">Verify GST</a>
                   </div>
 
                </div>

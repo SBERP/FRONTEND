@@ -17,19 +17,14 @@ function AddStaffController($scope,$rootScope,toaster,apiCall,apiPath,$state,api
 	$scope.allowedType = $rootScope.$storage.authUser.userType; //Logged user Type (Admin/Staff)
 	$scope.allowedId = $rootScope.$storage.authUser.userId; //Logged user Type (Admin/Staff)
 	
-		if($scope.allowedType == 'staff'){
-			
+		if($scope.allowedType == 'staff') {
 			$state.go('app.Staff');
 		}
 	
 	$scope.updatedId;
 	/* VALIDATION */
-	
 		$scope.errorMessage = validationMessage; //Error Messages In Constant
-	
 	/* VALIDATION END */
-	
-	
 	
 	//Get State
 	// vm.statesDrop=[];
@@ -129,7 +124,7 @@ function AddStaffController($scope,$rootScope,toaster,apiCall,apiPath,$state,api
 			//Staff EmailID
 			$scope.addStaff.emailId = editStaffData.emailId;
 			//Staff Password
-			$scope.addStaff.password = editStaffData.password;
+			// $scope.addStaff.password = editStaffData.password;
 			//Staff Contact
 			$scope.addStaff.contact = editStaffData.contactNo;
 			//Staff Address
@@ -185,9 +180,7 @@ function AddStaffController($scope,$rootScope,toaster,apiCall,apiPath,$state,api
 		var getAllBranch = apiPath.getOneBranch+state;
 		//Get Branch
 		apiCall.getCall(getAllBranch).then(function(response4){
-			
 			vm.branchDrop = response4;
-		
 		});
 		
 		if(formdata.has(Fname))
@@ -196,9 +189,7 @@ function AddStaffController($scope,$rootScope,toaster,apiCall,apiPath,$state,api
 		}
 		formdata.set(Fname,state);
 	}
-	
-	
-	
+
 	$scope.ChangeState = function(Fname,state)
 	{
 		//console.log(apiPath.getAllCity+state);
@@ -260,8 +251,6 @@ function AddStaffController($scope,$rootScope,toaster,apiCall,apiPath,$state,api
 					toaster.pop('success', 'Title', popUp);
 					$state.go("app.Staff");
 				});
-
-				
 			}
 			else{
 				

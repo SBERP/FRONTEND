@@ -292,7 +292,20 @@
 							   </div>
 							</fieldset >
 						</div>
-						
+						<div class="col-lg-2 col-sm-2">
+							<fieldset class="my-fieldset-paddingBottom">
+							   <div class="form-group">
+							   	<label class="col-sm-2 col-xs-6 col-md-4 control-label pt-sm">Product Delete</label>
+								    <div class="col-sm-2 col-xs-6 col-md-4">
+										<label class="switch switch-lg switch-success pull-right ph-lg">
+				                       		 <input type="checkbox" data-ng-model="enableDisableProductDelete" ng-change="changeInProduct('enableDisableProductDelete',enableDisableProductDelete)"/>
+				                       		 <span></span>
+				                    	 </label>
+									</div>
+								  
+							   </div>
+							</fieldset >
+						</div>
 						<div class="col-sm-1">
 							<fieldset class="my-fieldset-paddingBottom">
 							   <div class="form-group">
@@ -501,6 +514,7 @@
 			</div>
 		</div >
 	</div>
+	<div class="clearfix"></div>
 	<!-- inventory setting -->
 	<div class="col-md-6" >
 		<div class="panel panel-primary" >
@@ -537,7 +551,43 @@
 			</div>
 		</div >
 	</div>
-
+	<!-- Workflow setting -->
+	<div class="col-md-6" >
+		<div class="panel panel-primary" >
+			<div class="panel-heading" data-ng-class="app.theme.brand">
+				<div class="panel-title">
+					<i class="fa fa-sitemap" ></i> Work Flow
+				</div>
+			</div>
+			<div class="panel-body">
+				<form  action="#" name="formWorkFlow" class="form-validate form-horizontal">
+					<div class="col-sm-4">
+						<fieldset class="my-fieldset-paddingBottom">
+						   	<div class="form-group">
+						   		<label class="col-sm-2 col-xs-6 col-md-6 control-label pt-sm">Quatation Flow </label>
+							    <div class="col-sm-2 col-xs-6 col-md-4">
+									<label class="switch switch-lg switch-success pull-right ph-lg">
+			                       		 <input type="checkbox" data-ng-model="enableworkFlowQuotation" ng-change="changeInWorkFlow('enableworkFlowQuotation',enableworkFlowQuotation)"/>
+			                       		 <span></span>
+			                    	</label>
+								</div>
+						   	</div>
+						</fieldset>
+					</div>
+					<div class="col-sm-3">
+					</div>
+					<div class="col-sm-3" ng-if="enableDisableValue">
+						<fieldset class="my-fieldset-paddingBottom">
+						   	<div class="form-group">
+							  	<button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="AddUpdateWorkFlowSetting()" ng-disabled="formWorkFlow.$invalid"  data-ng-class="app.theme.brand" >{{insertUpdateWorkFlowLabel}}</button>
+						   	</div>
+						</fieldset>
+					</div>
+				</form>
+			</div>
+		</div >
+	</div>
+	<div class="clearfix"></div>
 	<!-- Measurement of Unit -->
 	<div class="col-md-6">
 		<div class="panel panel-purple">
@@ -568,6 +618,44 @@
 			</div>
 		</div >
 	</div>
+
+	<!-- Language setting -->
+	<div class="col-md-6" >
+		<div class="panel panel-primary" >
+			<div class="panel-heading" data-ng-class="app.theme.brand">
+				<div class="panel-title">
+					<i class="fa fa-language" ></i> Language
+				</div>
+			</div>
+			<div class="panel-body">
+				<form  action="#" name="formLanguage" class="form-validate form-horizontal">
+					<div class="col-sm-4">
+						<fieldset class="my-fieldset-paddingBottom">
+						   	<div class="form-group">
+						   		<label class="col-sm-2 col-xs-6 col-md-6 control-label pt-sm">Hindi </label>
+							    <div class="col-sm-2 col-xs-6 col-md-4">
+									<label class="switch switch-lg switch-success pull-right ph-lg">
+			                       		 <input type="checkbox" data-ng-model="enableLanguageHindi" ng-change="changeInLanguage('languageSettingType',enableLanguageHindi)"/>
+			                       		 <span></span>
+			                    	</label>
+								</div>
+						   	</div>
+						</fieldset>
+					</div>
+					<div class="col-sm-3">
+					</div>
+					<div class="col-sm-3" ng-if="enableDisableValue">
+						<fieldset class="my-fieldset-paddingBottom">
+						   	<div class="form-group">
+							  	<button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="AddUpdateLanguageSetting()" ng-disabled="formLanguage.$invalid"  data-ng-class="app.theme.brand" >{{insertUpdateLanguageLabel}}</button>
+						   	</div>
+						</fieldset>
+					</div>
+				</form>
+			</div>
+		</div >
+	</div>
+	<div class="clearfix"></div>
 
    <!-- END panel-->
 </div>

@@ -7,6 +7,9 @@
 }
 .imageAncher{position:relative;vertical-align:middle;display:inline-block}
 .myCrossDesign{position:absolute;top:0;right:0;height:20px;width:20px;color:#eb615f;font-size:20px}.myCrossDesign:hover{color:red}.documentRight{display:block;position:absolute;top:10%;right:60%;font-size:40px;color:#88bf57}.documentRight:hover{color:green}.documentCross{display:block;position:absolute;font-size:40px;color:#eb615f;top:10%;right:20%}.documentCross:hover{color:red}
+.inputapi-transliterate-indic-suggestion-menu{
+	z-index: 9999999999 !important;
+}
 </style>
 <h3 ng-if="!mergeProduct">
    <small>
@@ -33,7 +36,7 @@
 		</div>
       <div class="panel-body">
 	  
-         <form action="#" name="formProduct" class="form-validate form-horizontal" autocomplete="off">
+         <form action="#" name="formProduct" class="form-validate form-horizontal">
 		
 			<div class="col-md-12" >
 			<h4 class="panel-heading bg-default myHeading">Basic Details</h4>
@@ -49,7 +52,10 @@
 							<div class="form-group">
 							  <label class="col-sm-3 control-label">*Brand</label>
 							  <div class="col-sm-9">
-								 <select chosen="" data-ng-model="addInvProduct.category" data-ng-options="s.productCategoryName for s in form.categoryDrop track by s.productCategoryId" ng-change="changeInvProductData('productCategoryId',addInvProduct.category.productCategoryId)" class="form-control chosen-select" ng-required="true" tabindex="4" ></select>
+								 <select chosen="" data-ng-model="addInvProduct.category" data-ng-options="s.productCategoryName for s in form.categoryDrop track by s.productCategoryId" ng-change="changeInvProductData('productCategoryId',addInvProduct.category.productCategoryId)" class="form-control chosen-select" name="brand" ng-required="true" tabindex="4" ></select>
+								 <span ng-messages="formProduct.brand.$error" ng-if="formProduct.brand.$dirty || formProduct.brand.$touched"  role="alert">
+									<span ng-messages-include="errorRequired"></span>
+								</span>
 							  </div>
 						   </div>
 						
@@ -58,14 +64,20 @@
 						   <div class="form-group">
 							  <label class="col-sm-3 control-label">*Branch</label>
 							  <div class="col-sm-9">
-								 <select chosen="" data-ng-model="addInvProduct.branch" data-ng-options="s.branchName for s in form.branchDrop track by s.branchId" ng-change="changeInvProductData('branchId',addInvProduct.branch.branchId)" class="form-control chosen-select" ng-required="true" tabindex="3" ></select>
+								 <select chosen="" data-ng-model="addInvProduct.branch" data-ng-options="s.branchName for s in form.branchDrop track by s.branchId" ng-change="changeInvProductData('branchId',addInvProduct.branch.branchId)" class="form-control chosen-select" ng-required="true" name="branch" tabindex="3" ></select>
+								  <span ng-messages="formProduct.branch.$error" ng-if="formProduct.branch.$dirty || formProduct.branch.$touched"  role="alert">
+									<span ng-messages-include="errorRequired"></span>
+								</span>
 							  </div>
 						   </div>
 							
 							 <div class="form-group">
 							  <label class="col-sm-3 control-label">*Category</label>
 							  <div class="col-sm-9">
-								 <select chosen="" data-ng-model="addInvProduct.group" data-ng-options="s.productGroupName for s in form.groupDrop track by s.productGroupId" ng-change="changeInvProductData('productGroupId',addInvProduct.group.productGroupId)" class="form-control chosen-select" size='5' tabindex="5" ng-required="true"></select>
+								 <select chosen="" data-ng-model="addInvProduct.group" data-ng-options="s.productGroupName for s in form.groupDrop track by s.productGroupId" ng-change="changeInvProductData('productGroupId',addInvProduct.group.productGroupId)" class="form-control chosen-select" size='5' tabindex="5" name="category"  ng-required="true"></select>
+								  <span ng-messages="formProduct.category.$error" ng-if="formProduct.category.$dirty || formProduct.category.$touched"  role="alert">
+									<span ng-messages-include="errorRequired"></span>
+								</span>
 							  </div>
 						   </div>
 					</div>
@@ -73,24 +85,29 @@
 				</div>
 			<h4 class="panel-heading bg-default myHeading">Product Information</h4>
 			<div class="panel-body">
-				<div class="col-md-6" >
+				<div class="col-md-6" id="translControl" >
 					   <div class="form-group">
 						  <label  class="col-sm-3 control-label">*Product Name</label>
-						  <div class="col-sm-9">
-							 <input id="input-id-1" name="productName" ng-model="addInvProduct.name" ng-change="changeInvProductData('productName',addInvProduct.name)" type="text" placeholder="Product Name" class="form-control" ng-required="true" ng-pattern="/^[a-zA-Z0-9 &,\/_`#().\'-]+$/" ng-maxlength="100" tabindex="6" auto-focus/>
+						  <div class="col-sm-9" > 
+							 <input name="productName" ng-model="addInvProduct.name" ng-change="changeInvProductData('productName',addInvProduct.name)" type="text" placeholder="Product Name" class="form-control" ng-required="true" ng-pattern="/^[a-zA-Z0-9 &,\/_`#().\'-]+$/" ng-maxlength="100" tabindex="6" auto-focus/>
 							 
 							<span ng-messages="formProduct.productName.$error" ng-if="formProduct.productName.$dirty || formProduct.productName.$touched"  role="alert">
 								<span ng-messages-include="errorRequired"></span>
 								<span ng-messages-include="errorLonglength"></span>
 								<span ng-messages-include="errorPatternThisSpecial"></span>
-							 </span>
-							
+							</span>
 						  </div>
 					    </div>
+						<div class="form-group" ng-if="languageSettingType == 'hindi'">
+							<label class="col-sm-3 control-label">*उत्पाद का नाम</label>
+							<div class="col-sm-9">
+								<input id="hindiProduct" name="altProductName" ng-model="addInvProduct.altProductName" ng-change="changeInvProductData('altProductName',addInvProduct.altProductName)" type="text" placeholder="उत्पाद का नाम" class="form-control" ng-required="true" ng-maxlength="100" tabindex="6"/>
+							</div>
+						</div>
 						<div class="form-group">
 							<label  class="col-sm-3 control-label">Product Description</label>
-							<div class="col-sm-9">
-								 <textarea rows="1"  name="productDescription" ng-model="addInvProduct.productDescription" ng-change="changeInvProductData('productDescription',addInvProduct.productDescription)" placeholder="Product Description" class="form-control" tabindex="9" ng-pattern="/^[a-zA-Z0-9 &,\/_`#().\'-]+$/" ng-maxlength="50" ></textarea>
+							<div class="col-sm-9" >
+								 <textarea rows="1"  name="productDescription" ng-model="addInvProduct.productDescription" ng-change="changeInvProductData('productDescription',addInvProduct.productDescription)" placeholder="Product Description" class="form-control editor-box" tabindex="6" ng-pattern="/^[a-zA-Z0-9 &,\/_`#().\'-]+$/" ng-maxlength="50" ></textarea>
 								 
 								<span ng-messages="formProduct.productDescription.$error" ng-if="formProduct.productDescription.$dirty || formProduct.productDescription.$touched"  role="alert">
 									<span ng-messages-include="errorRequired"></span>
@@ -103,7 +120,7 @@
 						<div class="form-group" ng-if="enableDisableVariant">
 							<label class="col-sm-3 control-label">Variant</label>
 							<div class="col-sm-9">
-								 <input  name="productVariant" ng-model="addInvProduct.variant" ng-change="changeInvProductData('variant',addInvProduct.variant)" type="text" placeholder="Variant" class="form-control" tabindex="9" ng-pattern="/^[a-zA-Z0-9 &,\/_`#().\'-]+$/" ng-maxlength="30" auto-focus/>
+								 <input  name="productVariant" ng-model="addInvProduct.variant" ng-change="changeInvProductData('variant',addInvProduct.variant)" type="text" placeholder="Variant" class="form-control" tabindex="6" ng-pattern="/^[a-zA-Z0-9 &,\/_`#().\'-]+$/" ng-maxlength="30"/>
 								
 								<span ng-messages="formProduct.productVariant.$error" ng-if="formProduct.productVariant.$dirty || formProduct.productVariant.$touched"  role="alert">
 									<span ng-messages-include="errorRequired"></span>
@@ -114,22 +131,22 @@
 						</div>
 				</div>
 				<div class="col-md-6" >
-					<div class="form-group">
-							<label  class="col-sm-3 control-label" ng-if="enableDisableColor">Color</label>
-							<div class="col-sm-4" ng-if="enableDisableColor">
-							 	<input id="input-id-1" name="productColor" ng-model="addInvProduct.color" ng-change="changeInvProductData('color',addInvProduct.color)" type="text" placeholder="Color" class="form-control" tabindex="7"  ng-maxlength="30" />
-								<span ng-messages="formProduct.productColor.$error" ng-if="formProduct.productColor.$dirty || formProduct.productColor.$touched"  role="alert">
-									<span ng-messages-include="errorRequired"></span>
-									<span ng-messages-include="errorLonglength"></span>
-									<span ng-messages-include="errorPatternThisSpecial"></span>
-								</span>
-							</div>
-						  	<label  class="col-sm-2" ng-if="addDiv"></label>
-					  		<div ng-if="addDiv">
-					  		</div>	
+					<div class="form-group" ng-if="enableDisableColor || enableDisableSize" >
+						<label  class="col-sm-3 control-label" ng-if="enableDisableColor">Color</label>
+						<div class="col-sm-4" ng-if="enableDisableColor">
+						 	<input id="input-id-1" name="productColor" ng-model="addInvProduct.color" ng-change="changeInvProductData('color',addInvProduct.color)" type="text" placeholder="Color" class="form-control" tabindex="7"  ng-maxlength="30" />
+							<span ng-messages="formProduct.productColor.$error" ng-if="formProduct.productColor.$dirty || formProduct.productColor.$touched"  role="alert">
+								<span ng-messages-include="errorRequired"></span>
+								<span ng-messages-include="errorLonglength"></span>
+								<span ng-messages-include="errorPatternThisSpecial"></span>
+							</span>
+						</div>
+					  	<label  class="col-sm-2" ng-if="addDiv"></label>
+				  		<div ng-if="addDiv">
+				  		</div>	
 
-						  <label  class="col-sm-1 control-label" ng-if="enableDisableSize">Size</label>
-						  <div class="col-sm-4" ng-if="enableDisableSize">
+						<label  class="col-sm-1 control-label" ng-if="enableDisableSize">Size</label>
+						<div class="col-sm-4" ng-if="enableDisableSize">
 							 <input id="input-id-1" name="productSize" ng-model="addInvProduct.size" ng-change="changeInvProductData('size',addInvProduct.size)" type="text" placeholder="Size" class="form-control" tabindex="8"  ng-maxlength="15"/>
 							 
 							<span ng-messages="formProduct.productSize.$error" ng-if="formProduct.productSize.$dirty || formProduct.productSize.$touched"  role="alert">
@@ -137,7 +154,7 @@
 								<span ng-messages-include="errorLonglength"></span>
 								<span ng-messages-include="errorPatternThisSpecial"></span>
 							 </span>
-						  </div>
+						</div>
 					 </div>
 					 <div class="form-group">
 					 	<label class="col-sm-3 control-label">Product-Type</label>
@@ -179,6 +196,12 @@
 							<select chosen="" data-ng-model="addInvProduct.measureUnit" data-ng-options="s.unitName for s in form.advanceMeasureUnitDrop track by s.measurementUnitId" ng-change="changeInvProductData('measurementUnit',addInvProduct.measureUnit.measurementUnitId)" class="form-control chosen-select" tabindex="13" ng-required="true">
 							<option value=""></option>
 							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label">Item Code</label>
+						<div class="col-sm-9">
+							<input name="itemCode" ng-model="addInvProduct.itemCode" ng-change="changeInvProductData('itemCode',addInvProduct.itemCode)" type="text" placeholder="Item Code" class="form-control" tabindex="13" ng-maxlength="20" />
 						</div>
 					</div>
 				</div>
@@ -893,11 +916,12 @@
 						</div>
 					</div>
 			 <button type="button" class="mr mb-sm btn btn-danger pull-right" data-ng-click="cancel()" tabindex="46" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id" >Cancel</button>
-			 <button type="button" class="mr mb-sm btn btn-success pull-right" data-ng-click="pop()" ng-disabled="formProduct.$invalid" tabindex="45" >
+			 <button type="button" class="mr mb-sm btn btn-success pull-right" data-ng-click="pop(formProduct)"  tabindex="45" >
 				 <span ng-if="!addInvProduct.getSetProductId" >Insert</span>
 				 <span ng-if="addInvProduct.getSetProductId && mergeProduct" >Next</span>
 				 <span ng-if="addInvProduct.getSetProductId && !mergeProduct" >Update</span>
 			 </button>
+			 <!-- ng-disabled="formProduct.$invalid" -->
 			</div>
          </form>
       </div>

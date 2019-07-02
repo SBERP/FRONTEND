@@ -14,6 +14,7 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
   	$scope.enableDisableValue=false;
   	$scope.enableDisableChequeNoValue=false;
   	$scope.enableDisableBestBefore=false;
+  	$scope.enableDisableProductDelete=false;
   	$scope.enableDisableColor=false;
   	$scope.enableDisableSize=false;
   	$scope.enableDisableFrameno=false;
@@ -66,6 +67,8 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 				var billFlag=0;
 				var inventoryFlag=0;
 				var advanceBillFlag=0;
+				var languageFlag=0;
+				var workFlowFlag=0;
 				for(var arrayData=0;arrayData<responseLength;arrayData++)
 				{
 					if(angular.isObject(response2) || angular.isArray(response2))
@@ -118,6 +121,7 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 							if ($scope.enableDisableAdvanceMou) {
 								$scope.measurementType = 'Advance Measurement';
 							}
+							$scope.enableDisableProductDelete = arrayData1.productDeleteStatus=="enable" ? true : false;
 						}
 						if(response2[arrayData].settingType=="client")
 						{
@@ -149,9 +153,25 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 							$scope.enableItemizedPurchaseSales = arrayData1.inventoryItemizeStatus=="enable" ? true : false;
 						}
 
+						if(response2[arrayData].settingType=="language")
+						{
+							languageFlag=1;
+							$scope.insertUpdateLanguageLabel = "Update";
+							var arrayData1 = response2[arrayData];
+							$scope.enableLanguageHindi = arrayData1.languageSettingType=="hindi" ? true : false;
+						}
+
+						if(response2[arrayData].settingType=="workflow")
+						{
+							workFlowFlag=1;
+							$scope.insertUpdateWorkFlowLabel = "Update";
+							var arrayData1 = response2[arrayData];
+							$scope.enableworkFlowQuotation = arrayData1.workflowQuotationStatus=="enable" ? true : false;
+						}
+
 						if(response2[arrayData].settingType=="advance")
 						{
-							advanceBillFlag=1;
+							advanceBillFlag=1; 
 							$scope.insertUpdateAdvanceBillLabel = "Update";
 							var arrayData1 = response2[arrayData];
 							$scope.enableDisableAdvanceSales = arrayData1.advanceSalesStatus=="enable" ? true : false;
@@ -187,6 +207,14 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 				{
 					$scope.insertUpdateInventoryLabel = "Insert";
 				}
+				if(languageFlag==0)
+				{
+					$scope.insertUpdateLanguageLabel = "Insert";
+				}
+				if(workFlowFlag==0)
+				{
+					$scope.insertUpdateWorkFlowLabel = "Insert";
+				}
 				if(advanceBillFlag==0)
 				{
 					$scope.insertUpdateAdvanceBillLabel = "Insert";
@@ -201,6 +229,8 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 		$scope.chequeNoflag = 0;
 		$scope.productFlag = 0;
 		$scope.inventoryFlag = 0;
+		$scope.languageFlag = 0;
+		$scope.workFlowFlag = 0;
 		$scope.clientFlag = 0;
 		$scope.billFlag = 0;
 		$scope.advanceBillFlag = 0;
@@ -249,6 +279,12 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 		}
 		$scope.changeInInventory = function(key,value){
 			$scope.inventoryFlag = 1;
+		}
+		$scope.changeInLanguage = function(key,value){
+			$scope.languageFlag = 1;
+		}
+		$scope.changeInWorkFlow = function(key,value){
+			$scope.workFlowFlag = 1;
 		}
 		$scope.changeInClient = function(key,value){
 			
@@ -473,6 +509,14 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 				{
 					productData.append('productVariantStatus','disable');
 				}
+				if($scope.enableDisableProductDelete==true)
+				{
+					productData.append('productDeleteStatus','enable');
+				}
+				else if($scope.enableDisableProductDelete==false)
+				{
+					productData.append('productDeleteStatus','disable');
+				}
 				productData.append('productMeasurementType',$scope.measurementType);
 				if($scope.insertUpdateProductLabel == "Update"){
 					var apiPostPatchCall = apiCall.patchCall;
@@ -532,6 +576,69 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 				});
 			}else{
 				toaster.pop('info','inventory-Data','Please Change Data');
+			}
+		}
+
+		$scope.AddUpdateLanguageSetting = function() {
+			toaster.clear();
+			if($scope.languageFlag == 1){
+				var languageData = new FormData();
+				if($scope.enableLanguageHindi==true)
+				{
+					languageData.append('languageSettingType','hindi');
+				} else {
+					languageData.append('languageSettingType','english');
+				}
+				if ($scope.insertUpdateLanguageLabel == "Update") {
+					var apiPostPatchCall = apiCall.patchCall;
+				}
+				else{
+					var apiPostPatchCall = apiCall.postCall;
+				}
+				apiPostPatchCall(apiPath.settingOption,languageData).then(function(response){
+					if(apiResponse.ok == response){
+						
+						$scope.getOptionSettingData();
+						toaster.pop('success','Language-Data',$scope.insertUpdateLanguageLabel+' Successfull');
+						$scope.languageFlag = 0;
+					}
+					else{
+						toaster.pop('warning','Opps!!',response);
+					}
+				});
+			}else{
+				toaster.pop('info','language-Data','Please Change Data');
+			}
+		}
+		$scope.AddUpdateWorkFlowSetting = function() {
+			toaster.clear();
+			if($scope.workFlowFlag == 1){
+				var workFlowData = new FormData();
+				if($scope.enableworkFlowQuotation==true)
+				{
+					workFlowData.append('workflowQuotationStatus','enable');
+				} else {
+					workFlowData.append('workflowQuotationStatus','disable');
+				}
+				if ($scope.insertUpdateWorkFlowLabel == "Update") {
+					var apiPostPatchCall = apiCall.patchCall;
+				}
+				else{
+					var apiPostPatchCall = apiCall.postCall;
+				}
+				apiPostPatchCall(apiPath.settingOption,workFlowData).then(function(response){
+					if(apiResponse.ok == response){
+						
+						$scope.getOptionSettingData();
+						toaster.pop('success','Language-Data',$scope.insertUpdateWorkFlowLabel+' Successfull');
+						$scope.workFlowFlag = 0;
+					}
+					else{
+						toaster.pop('warning','Opps!!',response);
+					}
+				});
+			}else{
+				toaster.pop('info','workFlow-Data','Please Change Data');
 			}
 		}
 		//Add-Update client data

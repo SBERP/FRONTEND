@@ -4,7 +4,8 @@
 	"sref": "#",
 	"icon": "icon-paper",
 	"subnav": [
-	 {"text": "Police Report","sref": "app.ReportPolice","translate": "" }
+	 {"text": "Police Report","sref": "app.ReportPolice","translate": "" },
+	 {"text": "Commission Report","sref": "app.ReportCommission","translate": "" }
 	],
     "permission": "reports"
 	}

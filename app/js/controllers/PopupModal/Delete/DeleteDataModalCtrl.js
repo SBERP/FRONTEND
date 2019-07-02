@@ -9,12 +9,12 @@
 
 App.controller('deleteDataModalController',deleteDataModalController);
 
-function deleteDataModalController($scope, $modalInstance,$rootScope,$http,apiCall,apiPath,$timeout) {
+function deleteDataModalController($scope, $modalInstance,$rootScope,$http,apiCall,apiPath,$timeout,getSetFactory) {
   'use strict';
   
 	 var data = [];
 	 var vm = this;
-	
+	$scope.modalTitle = ' Are You Sure Want to Delete? ';
 	
 	
 	
@@ -25,6 +25,11 @@ function deleteDataModalController($scope, $modalInstance,$rootScope,$http,apiCa
 		$scope.stockModel.state=$rootScope.ArraystockModel.state;
 		$scope.stockModel.state2=$rootScope.ArraystockModel.state2;
 		$scope.stockModel.state3=$rootScope.ArraystockModel.state3;
+	}
+	if(Object.keys(getSetFactory.get()).length){
+			var temp1 = getSetFactory.get();
+			$scope.modalTitle = temp1.msg;
+			getSetFactory.blank();
 	}
   // $scope.stockModel.state;
 
@@ -53,4 +58,4 @@ function deleteDataModalController($scope, $modalInstance,$rootScope,$http,apiCa
 	
 }
 
-deleteDataModalController.$inject = ["$scope", "$modalInstance","$rootScope","$http","apiCall","apiPath","$timeout"];
+deleteDataModalController.$inject = ["$scope", "$modalInstance","$rootScope","$http","apiCall","apiPath","$timeout","getSetFactory"];

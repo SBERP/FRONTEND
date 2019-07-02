@@ -268,7 +268,7 @@
                             <input  type="text" ng-model="item.qty"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"  ng-required="true" ng-minlength="1" ng-pattern="/^[1-9]+[0-9]*$/" ng-change="changeProductTable();changeQuantity($index)" only-number /> 
                         </td>
                         <td>
-                            <input placeholder="(&#x20b9;)Rate" id="price" type="text" ng-model="item.price"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"  ng-required="true" ng-minlength="1" ng-pattern="/^[1-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage)" only-number /> 
+                            <input placeholder="(&#x20b9;)Rate" id="price" type="text" ng-model="item.price"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"  ng-required="true" ng-minlength="1" ng-pattern="/^\s*(?=.*[1-9])\d*(?:\.\d{1,2})?\s*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage)" only-number /> 
                         </td>
                         <td>
                             <select  ng-model="item.discountType"  class="form-control input-sm" style="padding-left: 3px;padding-right: 3px;width:60%;float:left;" ng-change="changeProductTable();" >

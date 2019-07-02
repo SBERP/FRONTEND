@@ -153,16 +153,12 @@ function CompanyController($rootScope,$scope, $filter, ngTableParams,apiCall,api
 
 				}
 				else{
-					
 					toaster.pop('warning', 'Opps!!', response5);
 				}
-				
 				formdata.delete('isDefault');
-				
 			});
 	  }
 	  else{
-		  
 		  toaster.pop('info', '', 'Company Already Seleted');
 	  }
   }

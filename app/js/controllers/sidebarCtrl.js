@@ -13,7 +13,6 @@ App.controller('SidebarController', ['$rootScope', '$scope', '$location', '$http
 		var $win  = $($window);
 		var $html = $('html');
 		var $body = $('body');
-
 		// Load menu from json file
 		// ----------------------------------- 
 		 var check_flag = angular.copy($rootScope.app.sidebar.sidebar_hide);
@@ -23,16 +22,44 @@ App.controller('SidebarController', ['$rootScope', '$scope', '$location', '$http
 			sidebarMemu.load();
 		}
 		
-		
+		$scope.settingOption = [];
+		apiCall.getCall(apiPath.settingOption).then(function(response2){
+			$scope.settingOption = response2;
+		});
 		// Adjustment on route changes
 		$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
 			currentState = toState.name;
+			if ($scope.settingOption.length == 0) {
+				apiCall.getCall(apiPath.settingOption).then(function(response2) {
+					$scope.settingOption = response2;
+					if (currentState == "app.AccSales") {
+						event.preventDefault();
+						var settingObj = fetchArrayService.getfilteredSingleObject(response2,'advance','settingType');
+						if (settingObj.advanceSalesStatus == "enable") {
+							$state.go('app.AccSales');
+							$('.loading-bar').remove();
+						} else {
+							$state.go('app.WholesaleBill');
+							$('.loading-bar').remove();
+						}
+					}
 
-			apiCall.getCall(apiPath.settingOption).then(function(response2) {
-
+					if (currentState == "app.AccPurchase") {
+						event.preventDefault();
+						var settingObj = fetchArrayService.getfilteredSingleObject(response2,'advance','settingType');
+						if (settingObj.advancePurchaseStatus == "enable") {
+							$state.go('app.AccPurchase');
+							$('.loading-bar').remove();
+						} else {
+							$state.go('app.PurchaseBill');
+							$('.loading-bar').remove();
+						}
+					}
+				});
+			}else{
 				if (currentState == "app.AccSales") {
 					event.preventDefault();
-					var settingObj = fetchArrayService.getfilteredSingleObject(response2,'advance','settingType');
+					var settingObj = fetchArrayService.getfilteredSingleObject($scope.settingOption,'advance','settingType');
 					if (settingObj.advanceSalesStatus == "enable") {
 						$state.go('app.AccSales');
 						$('.loading-bar').remove();
@@ -44,7 +71,7 @@ App.controller('SidebarController', ['$rootScope', '$scope', '$location', '$http
 
 				if (currentState == "app.AccPurchase") {
 					event.preventDefault();
-					var settingObj = fetchArrayService.getfilteredSingleObject(response2,'advance','settingType');
+					var settingObj = fetchArrayService.getfilteredSingleObject($scope.settingOption,'advance','settingType');
 					if (settingObj.advancePurchaseStatus == "enable") {
 						$state.go('app.AccPurchase');
 						$('.loading-bar').remove();
@@ -53,7 +80,8 @@ App.controller('SidebarController', ['$rootScope', '$scope', '$location', '$http
 						$('.loading-bar').remove();
 					}
 				}
-			});
+			}
+			
 			
 			// Hide sidebar automatically on mobile
 			$('body.aside-toggled').removeClass('aside-toggled');
@@ -74,7 +102,14 @@ App.controller('SidebarController', ['$rootScope', '$scope', '$location', '$http
 			$rootScope.$broadcast('closeSidebarMenu');
 			$rootScope.$broadcast('closeSidebarSlide');
 		});
-
+		$scope.checkSubNavPermission = function(setting)
+		{
+			if (setting==false) {
+				return false;
+			}else{
+				return true;
+			}
+		}
 		// Check item and children active state
 		var isActive = function(item) {
 
@@ -130,6 +165,18 @@ App.controller('SidebarController', ['$rootScope', '$scope', '$location', '$http
 			return true;
 
 		};
+		$scope.settingOptionCheck = function(setting) {
+			if (setting == 'workflow') {
+				var settingObj = fetchArrayService.getfilteredSingleObject($scope.settingOption,'workflow','settingType');
+				if (settingObj.workflowQuotationStatus == 'enable') {
+					return true;
+				}else{
+					return false;
+				}
+			}else{
+				return true;
+			}
+		}
 
 		function collapseAllBut($index) {
 			angular.forEach(collapseList, function(v, i) {

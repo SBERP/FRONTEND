@@ -79,7 +79,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
         .state('app.dashboard', {
             url: '/dashboard',
             templateUrl: basepath('dashboard.html'),
-            resolve: requireDeps('ngTable','angular-chosen','flot-chart','flot-chart-plugins','moment','ngLetterAvatar','wysiwyg')
+            resolve: requireDeps('ngTable','ngTableExport','angular-chosen','flot-chart','flot-chart-plugins','moment','ngLetterAvatar','wysiwyg')
         })
         .state('app.buttons', {
             url: '/buttons',
@@ -175,7 +175,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
 		.state('app.Staff', {
             url: '/Staff',
             templateUrl: basepath('Staff/Staff.html'),
-            resolve: requireDeps('ngTable','angular-chosen','toaster')
+            resolve: requireDeps('ngTable','angular-chosen','toaster','ngTableExport')
         })
 		//Add Staff
 		.state('app.AddStaff', {
@@ -268,26 +268,26 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
             .state('app.SettingExpenses', {
                 url: '/SettingExpenses',
                 templateUrl: basepath('Setting/SettingExpenses/SettingExpense.html'),
-                resolve: requireDeps('ngTable','angular-chosen','toaster')
+                resolve: requireDeps('ngTable','ngTableExport','angular-chosen','toaster')
             })
             //Advance Measurement
             .state('app.AdvanceMeasureUnits', {
                 url: '/AdvanceMeasureUnits',
                 templateUrl: basepath('Setting/AdvanceMeasureUnits/AdvanceMeasureUnits.html'),
-                resolve: requireDeps('ngTable','angular-chosen','toaster')
+                resolve: requireDeps('ngTable','ngTableExport','angular-chosen','toaster')
             })
 		/*** End Setting ***/
 		//Add Inventory Product
 		.state('app.AddInvProduct', {
             url: '/AddInvProduct',
             templateUrl: basepath('Inventory/Product/AddInvProduct.html'),
-            resolve: requireDeps('angular-chosen','toaster','ngTableToCsv','importExcel','exportExcel')
+            resolve: requireDeps('angular-chosen','toaster','ngTableToCsv','importExcel','exportExcel','googleKeyboard')
         })
         //Show Inventory Product
         .state('app.InvProduct', {
             url: '/InvProduct',
             templateUrl: basepath('Inventory/Product/InvProduct.html'),
-            resolve: angular.extend(requireDeps('toaster','ngTable','angular-chosen','ngTableToCsv','importExcel','exportExcel'),{
+            resolve: angular.extend(requireDeps('toaster','ngTable','ngTableExport','angular-chosen','ngTableToCsv','importExcel','exportExcel'),{
                  ProductLoad: function(productFactory){
                     return productFactory.getProduct().then(function(response){
                         return response;
@@ -299,7 +299,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
 		.state('app.MergeProduct', {
             url: '/MergeProduct',
             templateUrl: basepath('Inventory/Product/MergeProduct.html'),
-            resolve: angular.extend(requireDeps('toaster','ngTable','angular-chosen'),{
+            resolve: angular.extend(requireDeps('toaster','ngTable','ngTableExport','angular-chosen'),{
                  ProductLoad: function(productFactory){
                     return productFactory.getProduct().then(function(response){
                         return response;
@@ -364,16 +364,16 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
 				}
 			})
         })
-		//Accounting Data Sales
-		.state('app.AccDataSales', {
+        //Accounting Data Sales
+        .state('app.AccDataSales', {
             url: '/AccDataSales',
             templateUrl: basepath('Accounting/viewData/AccDataViews.html'),
-			controller: 'AccViewDataController as table',
+            controller: 'AccViewDataController as table',
             resolve: angular.extend(requireDeps('ngTable', 'ngTableExport','angular-chosen','flot-chart','flot-chart-plugins','toaster'),{
-				headerType: function(){
-					return 'sales';
-				}
-			})
+                headerType: function(){
+                    return 'sales';
+                }
+            })
         })
 		//Accounting View Retail Sales
 		.state('app.AccViewRetailSales', {
@@ -386,27 +386,94 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
 				}
 			})
         })
-		//Accounting Data Retail Sales
-		.state('app.AccDataRetailSales', {
+        //Accounting Data Retail Sales
+        .state('app.AccDataRetailSales', {
             url: '/AccDataRetailSales',
             templateUrl: basepath('Accounting/viewData/AccDataViews.html'),
-			controller: 'AccViewDataController as table',
+            controller: 'AccViewDataController as table',
             resolve: angular.extend(requireDeps('ngTable', 'ngTableExport','angular-chosen','toaster'),{
+                headerType: function(){
+                    return 'Retailsales';
+                }
+            })
+        })
+        //Accounting Data Retail Sales
+        .state('app.AccDataQuotations', {
+            url: '/AccDataQuotations',
+            templateUrl: basepath('Accounting/viewData/AccDataViews.html'),
+            controller: 'AccViewDataController as table',
+            resolve: angular.extend(requireDeps('ngTable', 'ngTableExport','angular-chosen','toaster','moment'),{
+                headerType: function(){
+                    return 'Quotations';
+                }
+            })
+        })
+        //Accounting Data Retail Sales
+        .state('app.AccDataQuotationsFlow', {
+            url: '/AccDataQuotationsFlow',
+            templateUrl: basepath('Accounting/viewData/AccFlowViews.html'),
+            controller: 'AccFlowViewController as table',
+            resolve: angular.extend(requireDeps('ngTable', 'ngTableExport','angular-chosen','toaster','moment'),{
+                headerType: function(){
+                    return 'Quotations Process';
+                }
+            })
+        })
+		//Accounting Data Retail Sales
+		.state('app.AccDataSalesOrders', {
+            url: '/AccDataSalesOrders',
+            templateUrl: basepath('Accounting/viewData/AccDataViews.html'),
+			controller: 'AccViewDataController as table',
+            resolve: angular.extend(requireDeps('ngTable', 'ngTableExport','angular-chosen','toaster','moment'),{
 				headerType: function(){
-					return 'Retailsales';
+					return 'Sales Orders';
 				}
 			})
         })
-		//Accounting View Whole Sales
-		.state('app.AccViewWholeSales', {
+        //Accounting View Whole Sales
+        .state('app.AccViewWholeSales', {
             url: '/AccViewWholeSales',
             templateUrl: basepath('Accounting/viewData/AccView.html'),
-			controller: 'AccViewController as form',
+            controller: 'AccViewController as form',
             resolve: angular.extend(requireDeps('toaster','angular-chosen'),{
+                viewDataType: function(){
+                    return 'Wholesales';
+                }
+            })
+        })
+        //Accounting View Sales Orders
+        .state('app.AccViewSalesOrders', {
+            url: '/AccViewSalesOrders',
+            templateUrl: basepath('Accounting/viewData/AccView.html'),
+            controller: 'AccViewController as form',
+            resolve: angular.extend(requireDeps('ngTable', 'ngTableExport','angular-chosen','toaster','moment'),{
+                viewDataType: function(){
+                    return 'Sales Orders';
+                }
+            })
+        })
+		//Accounting View Quotations
+		.state('app.AccViewQuotations', {
+            url: '/AccViewQuotations',
+            templateUrl: basepath('Accounting/viewData/AccView.html'),
+			controller: 'AccViewController as form',
+            resolve: angular.extend(requireDeps('ngTable', 'ngTableExport','angular-chosen','toaster','moment'),{
 				viewDataType: function(){
-					return 'Wholesales';
+					return 'Quotations';
 				}
 			})
+        })
+
+        //Accounting Data Sales
+        .state('app.QuotationFlowView', {
+            url: '/QuotationFlowView',
+            templateUrl: basepath('Accounting/viewData/AccView.html'),
+            controller: 'AccViewController as form',
+            resolve: angular.extend(requireDeps('ngTable', 'ngTableExport','angular-chosen','flot-chart','flot-chart-plugins','toaster'),{
+                viewDataType: function(){
+                    return 'Quotations Process';
+                }
+            })
         })
 		//Accounting Data Whole Sales
 		.state('app.AccDataWholeSales', {
@@ -588,7 +655,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
             url: '/AccDataReceipt',
              templateUrl: basepath('Accounting/viewData/AccDataViews.html'),
 			controller: 'AccViewDataController as table',
-            resolve: angular.extend(requireDeps('ngTable', 'ngTableExport','angular-chosen','flot-chart','flot-chart-plugins','toaster'),{
+            resolve: angular.extend(requireDeps('ngTable', 'ngTableExport','angular-chosen','flot-chart','flot-chart-plugins','toaster','moment'),{
 				headerType: function(){
 					return 'receipt';
 				}
@@ -641,7 +708,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
 				url: '/AccSalesTaxation',
 				templateUrl: basepath('Accounting/Taxation/AccSalesTaxation.html'),
 				controller: 'AccTaxationController as table',
-				resolve: angular.extend(requireDeps('ngTable','angular-chosen','toaster'),{
+				resolve: angular.extend(requireDeps('ngTable','ngTableExport','angular-chosen','toaster'),{
 					headerType: function(){
 						return 'salesTaxation';
 					}
@@ -663,7 +730,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
 				url: '/AccPurchaseTaxation',
 				templateUrl: basepath('Accounting/Taxation/AccPurchaseTaxation.html'),
 				controller: 'AccTaxationController as table',
-				resolve: angular.extend(requireDeps('ngTable','angular-chosen','toaster'),{
+				resolve: angular.extend(requireDeps('ngTable','ngTableExport','angular-chosen','toaster'),{
 					headerType: function(){
 						return 'purchaseTaxation';
 					}
@@ -685,7 +752,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
 				url: '/AccPurchaseDetailTaxation',
 				templateUrl: basepath('Accounting/Taxation/AccPurchaseDetailTaxation.html'),
 				controller: 'AccTaxationController as table',
-				resolve: angular.extend(requireDeps('ngTable','angular-chosen','toaster'),{
+				resolve: angular.extend(requireDeps('ngTable','ngTableExport','angular-chosen','toaster'),{
 					headerType: function(){
 						return 'purchaseDetailTaxation';
 					}
@@ -708,7 +775,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
                 url: '/AccDataGstReturn',
                 templateUrl: basepath('Accounting/Taxation/AccGstReturn.html'),
                 controller: 'AccTaxationController as table',
-                resolve: angular.extend(requireDeps('ngTable','angular-chosen','toaster'),{
+                resolve: angular.extend(requireDeps('ngTable','ngTableExport','angular-chosen','toaster'),{
                     headerType: function(){
                         return 'GST Return';
                     }
@@ -731,7 +798,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
                 url: '/AccDataGstReturn2',
                 templateUrl: basepath('Accounting/Taxation/AccGstR2.html'),
                 controller: 'AccTaxationController as table',
-                resolve: angular.extend(requireDeps('ngTable','angular-chosen','toaster'),{
+                resolve: angular.extend(requireDeps('ngTable','ngTableExport','angular-chosen','toaster'),{
                     headerType: function(){
                         return 'GST Return2';
                     }
@@ -755,7 +822,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
 				url: '/AccDataGstReturn3',
 				templateUrl: basepath('Accounting/Taxation/AccGstR3.html'),
 				controller: 'AccTaxationController as table',
-				resolve: angular.extend(requireDeps('ngTable','angular-chosen','toaster'),{
+				resolve: angular.extend(requireDeps('ngTable','ngTableExport','angular-chosen','toaster'),{
 					headerType: function(){
 						return 'GST Return3';
 					}
@@ -779,7 +846,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
                 url: '/AccDataGstReturn3b',
                 templateUrl: basepath('Accounting/Taxation/AccGstR3b.html'),
                 controller: 'AccTaxationController as table',
-                resolve: angular.extend(requireDeps('ngTable','angular-chosen','toaster'),{
+                resolve: angular.extend(requireDeps('ngTable','ngTableExport','angular-chosen','toaster'),{
                     headerType: function(){
                         return 'GST Return3b';
                     }
@@ -791,7 +858,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
 		.state('app.AccLedger', {
             url: '/AccLedger',
             templateUrl: basepath('Accounting/Ledger/Ledger.html'),
-            resolve: requireDeps('inputmask', 'angular-chosen','ngTable','toaster')
+            resolve: requireDeps('inputmask', 'angular-chosen','ngTable','ngTableExport','toaster')
         })
 		//Accounting Data Ledger
 		.state('app.AccDataLedger', {
@@ -816,7 +883,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
 				url: '/WholesaleBill',
 				templateUrl: basepath('QuickMenu/RetailsaleBill.html'), 
 				controller: 'RetailsaleBillController as form',
-				resolve: angular.extend(requireDeps('taxInvoice','twain','toaster','angular-chosen','ngTable','uiCropper','moment','jquery-ui'),{
+				resolve: angular.extend(requireDeps('taxInvoice','twain','toaster','angular-chosen','ngTable','ngTableExport','uiCropper','moment','jquery-ui','googleKeyboard'),{
 					saleType: function(){
 						return 'WholesaleBill';
 					}
@@ -827,7 +894,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
 				url: '/PurchaseBill',
 				templateUrl: basepath('QuickMenu/PurchaseBill.html'),
 				controller: 'PurchaseBillController as form',
-				resolve: angular.extend(requireDeps('purchaseBill','toaster','angular-chosen','twain','ngTable','uiCropper','jquery-ui'),{
+				resolve: angular.extend(requireDeps('purchaseBill','toaster','angular-chosen','twain','ngTable','ngTableExport','uiCropper','jquery-ui','googleKeyboard'),{
                     purchaseType: function(){
                         return 'purchaseBill';
                     }
@@ -838,7 +905,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
                 url: '/AccSalesReturn',
                 templateUrl: basepath('QuickMenu/salesReturnBill.html'), 
                 controller: 'SalesReturnBillController as form',
-                resolve: angular.extend(requireDeps('twain','toaster','angular-chosen','ngTable','uiCropper','moment','jquery-ui'),{
+                resolve: angular.extend(requireDeps('twain','toaster','angular-chosen','ngTable','ngTableExport','uiCropper','moment','jquery-ui','googleKeyboard'),{
                     saleType: function(){
                         return 'SalesReturn';
                     }
@@ -849,7 +916,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
                 url: '/PurchaseOrder',
                 templateUrl: basepath('QuickMenu/PurchaseBill.html'),
                 controller: 'PurchaseBillController as form',
-                resolve: angular.extend(requireDeps('purchaseBill','toaster','angular-chosen','twain','ngTable','uiCropper','jquery-ui'),{
+                resolve: angular.extend(requireDeps('purchaseBill','toaster','angular-chosen','twain','ngTable','ngTableExport','uiCropper','jquery-ui'),{
                     purchaseType: function(){
                         return 'purchaseOrder';
                     }
@@ -860,7 +927,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
 				url: '/QuotationPrint',
 				templateUrl: basepath('QuickMenu/RetailsaleBill.html'),
 				controller: 'RetailsaleBillController as form',
-				resolve: angular.extend(requireDeps('taxInvoice','angular-chosen','toaster','ngTable','uiCropper','moment','jquery-ui'),{
+				resolve: angular.extend(requireDeps('taxInvoice','angular-chosen','toaster','ngTable','ngTableExport','uiCropper','moment','jquery-ui','googleKeyboard'),{
 					saleType: function(){
 						return 'QuotationPrint';
 					}
@@ -875,7 +942,7 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
                     saleType: function(){
                         return 'SalesOrder';
                     }
-                },requireDeps('taxInvoice','twain','toaster','angular-chosen','ngTable','uiCropper','moment','jquery-ui'))
+                },requireDeps('taxInvoice','twain','toaster','angular-chosen','ngTable','ngTableExport','uiCropper','moment','jquery-ui','googleKeyboard'))
             })
 		/*** End Quick Menu ***/
 		
@@ -922,14 +989,14 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
 				url: '/CrmClientFilterData',
 				templateUrl: basepath('CRM/Client/CrmClientFilterData.html'),
 				controller: 'CrmClientFilterDataController as table',
-				resolve: requireDeps('toaster','ngTable','angular-chosen','wysiwyg')
+				resolve: requireDeps('toaster','ngTable','ngTableExport','angular-chosen','wysiwyg')
 			})
 			//Client History
 			.state('app.CrmClientHistory', {
 				url: '/CrmClientHistory',
 				 templateUrl: basepath('CRM/Client/CrmClientHistory.html'),
 				controller: 'CrmClientHistoryController as table',
-				resolve: requireDeps('ngTable','angular-chosen','toaster')
+				resolve: requireDeps('ngTable','ngTableExport','angular-chosen','toaster')
 			})
 		
 			 .state('app.CrmClientHistory.compose', {
@@ -1017,17 +1084,39 @@ App.config(['$stateProvider','$urlRouterProvider', '$controllerProvider', '$comp
 				}
 			})
         })
+
+        .state('app.ReportCommission', {
+            url: '/ReportCommission',
+            templateUrl: basepath('Accounting/viewData/AccView.html'),
+            controller: 'AccViewController as form',
+            resolve: angular.extend(requireDeps('toaster','angular-chosen'),{
+                viewDataType: function(){
+                    return 'Commission Report';
+                }
+            })
+        })
 		//Data Plice Reports
 		.state('app.ReportPoliceData', {
 			url: '/ReportPoliceData',
 			templateUrl: basepath('Analyzer/Reports/ReportPoliceData.html'),
 			controller: 'PoliceReportController as table',
-			resolve: angular.extend(requireDeps('ngTable','angular-chosen','toaster'),{
+			resolve: angular.extend(requireDeps('ngTable','angular-chosen','toaster','ngTableExport'),{
 				headerType: function(){
 					return 'PoliceReport';
 				}
 			})
 		})
+        //Data Plice Reports
+        .state('app.ReportCommissionData', {
+            url: '/ReportCommissionData',
+            templateUrl: basepath('Analyzer/Reports/ReportCommissionData.html'),
+            controller: 'ReportCommissionController as table',
+            resolve: angular.extend(requireDeps('ngTable','angular-chosen','toaster','ngTableExport'),{
+                headerType: function(){
+                    return 'Commission Report';
+                }
+            })
+        })
 		/*** End Analyzer Reports **/
         .state('app.form-validation', {
             url: '/form-validation',

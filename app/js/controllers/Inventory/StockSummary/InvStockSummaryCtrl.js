@@ -14,6 +14,8 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 	$scope.enableDisableColor = true;
 	$scope.enableDisableSize = true;
 	$scope.enableItemizedPurchaseSales = true;
+	$scope.enableAlterLanguage = false;
+	$scope.alterLanguageKey = "productName";
 	var Modalopened = false;
 	// $scope.enableDisableBestBefore = true;
 	//get setting data
@@ -24,6 +26,7 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 		{
 			var product_setting = fetchArrayService.getfilteredSingleObject($rootScope.$storage.settingOptionArray,'product','settingType');
 			var inventory_setting = fetchArrayService.getfilteredSingleObject($rootScope.$storage.settingOptionArray,'inventory','settingType');
+			var language_setting = fetchArrayService.getfilteredSingleObject($rootScope.$storage.settingOptionArray,'language','settingType');
 			if (angular.isObject(product_setting))
 			{
 				if(product_setting.settingType=="product")
@@ -37,6 +40,13 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 			if (angular.isObject(inventory_setting)) {
 				var arrayData1 = inventory_setting;
 				$scope.enableItemizedPurchaseSales = arrayData1.inventoryItemizeStatus=="enable" ? true : false;
+			}
+			if (angular.isObject(language_setting)) {
+				var arrayData1 = language_setting;
+				$scope.enableAlterLanguage = arrayData1.languageSettingType=="hindi" ? true : false;
+				if ($scope.enableAlterLanguage) {
+					$scope.alterLanguageKey = "altProductName";
+				}
 			}
 		}
 		else
@@ -57,6 +67,13 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 						if (response[arrayData].settingType=="inventory") {
 							var arrayData1 = response[arrayData];
 							$scope.enableItemizedPurchaseSales = arrayData1.inventoryItemizeStatus=="enable" ? true : false;
+						}
+						if (response[arrayData].settingType=="language") {
+							var arrayData1 = response[arrayData];
+							$scope.enableAlterLanguage = arrayData1.languageSettingType=="hindi" ? true : false;
+							if ($scope.enableAlterLanguage) {
+								$scope.alterLanguageKey = "altProductName";
+							}
 						}
 					}
 				}
@@ -94,7 +111,7 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 			data[iIndex].size = ""; 
 			data[iIndex].size = data[iIndex].product.size;
 			
-			data[iIndex].qty = parseInt(data[iIndex].qty);
+			data[iIndex].qty = $filter('setDecimal')(parseFloat(data[iIndex].qty),2);
 			
 			iIndex++;
 		}
@@ -106,12 +123,16 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 	$scope.calculateQty = function(){
 		// console.log("viewwwwwwwwwwwww");
 		$scope.pageQty=0;
-		var dataLength = $scope.filteredItems.length;
-		for(var index=0;index<dataLength;index++)
+		if (angular.isArray($scope.filteredItems)) 
 		{
-			$scope.pageQty = $scope.pageQty+$scope.filteredItems[index].qty;
+			var dataLength = $scope.filteredItems.length;
+			for(var index=0;index<dataLength;index++)
+			{
+				$scope.pageQty = $scope.pageQty+$scope.filteredItems[index].qty;
+			}
 		}
-		return $scope.pageQty;
+		
+		return $filter('setDecimal')($scope.pageQty,2);
 	}
 
 	//calculate total qty
@@ -123,7 +144,7 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 		{
 			$scope.totalQty = $scope.totalQty+data[index].qty;
 		}
-		return $scope.totalQty;
+		return $filter('setDecimal')($scope.totalQty,2);
 	}
 
 	$scope.showProduct = function(){
@@ -221,7 +242,7 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 		  //counts: [],
 		  total: data.length, // length of data
 		  getData: function($defer, params) {
-			 
+			 $scope.searchQty = '';
 			  // use build-in angular filter
 			  if(!$.isEmptyObject(params.$params.filter) && ((typeof(params.$params.filter.productName) != "undefined" && params.$params.filter.productName != "")  || (typeof(params.$params.filter.productCategoryName) != "undefined" && params.$params.filter.productCategoryName != "") || (typeof(params.$params.filter.productGroupName) != "undefined" && params.$params.filter.productGroupName != "") || (typeof(params.$params.filter.color) != "undefined" && params.$params.filter.color != "") || (typeof(params.$params.filter.size) != "undefined" && params.$params.filter.size != "") || (typeof(params.$params.filter.qty) != "undefined" && params.$params.filter.qty != "")))
 			  {
@@ -237,7 +258,7 @@ function InvStockSummaryController($rootScope,$scope, $filter, ngTableParams,api
 					    //calculate search qty
 						for(var index=0;index<dataLength1;index++)
 						{
-							$scope.searchQty = $scope.searchQty+orderedData[index].qty;
+							$scope.searchQty = $filter('setDecimal')($scope.searchQty+orderedData[index].qty,2);
 						}
 			  }
 			else

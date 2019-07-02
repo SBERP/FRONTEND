@@ -6,7 +6,7 @@
 
 App.controller('AccViewDataController', AccViewDataController);
 
-function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,apiCall,apiPath,flotOptions, colors,$timeout,getSetFactory,$state,headerType,$modal,$window,toaster,apiResponse,apiDateFormate) {
+function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,apiCall,apiPath,flotOptions, colors,$timeout,getSetFactory,$state,headerType,$modal,$window,toaster,apiResponse,apiDateFormate, productFactory) {
   'use strict';
   var vm = this;
   var data = [];
@@ -71,6 +71,16 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 		var getJrnlPath = apiPath.getBill+$rootScope.accView.companyId;
 		var headerData = {'Content-Type': undefined,'fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate,'salestype':'retail_sales'};
 	}
+	else if($scope.headerType == 'Sales Orders'){
+		
+		var getJrnlPath = apiPath.getBill+$rootScope.accView.companyId;
+		var headerData = {'Content-Type': undefined,'fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate,'salestype':'whole_sales','isSalesOrder': 'ok'};
+	}
+	else if($scope.headerType == 'Quotations'){
+		
+		var getJrnlPath = apiPath.postQuotationBill;
+		var headerData = {'Content-Type': undefined,'fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate,'companyId':$rootScope.accView.companyId};
+	}
 	else if($scope.headerType == 'purchase'){
 		
 		var getJrnlPath = apiPath.getLedgerJrnl+$rootScope.accView.companyId;
@@ -83,12 +93,12 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	}
 	else if($scope.headerType == 'payment'){
 		
-		var getJrnlPath = apiPath.getJrnlByCompany+$rootScope.accView.companyId;
+		var getJrnlPath = apiPath.getJrnlTrnByCompany+$rootScope.accView.companyId;
 		 var headerData = {'Content-Type': undefined,'journalType':'payment','fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate};
 	}
 	else if($scope.headerType == 'receipt'){
 		
-		var getJrnlPath = apiPath.getJrnlByCompany+$rootScope.accView.companyId;
+		var getJrnlPath = apiPath.getJrnlTrnByCompany+$rootScope.accView.companyId;
 		// var headerData = {'Content-Type': undefined,'fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate,'type':'sales'};
 		var headerData = {'Content-Type': undefined,'journalType':'receipt','fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate};
 	}
@@ -98,14 +108,35 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 		var headerData = {'Content-Type': undefined,'journalType':'special_journal','fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate};
 	}
   
-	  // console.log($rootScope.accView.companyId);
-	  // console.log($rootScope.accView.fromDate);
-	  // console.log($rootScope.accView.toDate);
+	// console.log($rootScope.accView.companyId);
+	// console.log($rootScope.accView.fromDate);
+	// console.log($rootScope.accView.toDate);
+	var settingResponse = [];
+	$scope.isLanguageHindi = false;
+
+	$scope.getOptionSettingData = function() {
+		apiCall.getCall(apiPath.settingOption).then(function(response) {
+			settingResponse = response;
+			var responseLength = settingResponse.length;
+			for(var arrayData=0;arrayData<responseLength;arrayData++)
+			{
+				if(angular.isObject(response) || angular.isArray(response))
+				{
+					if(response[arrayData].settingType=="language")
+					{
+						var arrayData1 = response[arrayData];
+						$scope.isLanguageHindi = arrayData1.languageSettingType=="hindi" ? true : false;
+					}
+				}
+			}
+		});
+	}
 
 	function getTotalValue (fData)
 	{
 		$scope.totalAmountDisplay = $filter('setDecimal')(fData.reduce((a, b) => a + parseFloat(b['total']), 0),2);
-
+		$scope.totalAdvanceDisplay = $filter('setDecimal')(fData.reduce((a, b) => a + parseFloat(b['advance']), 0),2);
+		$scope.totalBalanceDisplay = $filter('setDecimal')(fData.reduce((a, b) => a + parseFloat(b['balance']), 0),2);
 	}
 
 	$scope.currentActiveSalestab = 0;  // Currently Open Tab is "All" Tab
@@ -115,17 +146,18 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 
 	  	$scope.onSalesBillTabSelect = function(index)
 	  	{
-	  		console.log(index);
 	  		$scope.totalAmountDisplay = 0;
+	  		$scope.totalAdvanceDisplay = 0;
+	  		$scope.totalBalanceDisplay = 0;
 	  		/* Uncheck all Checkbox */
 	  			$scope.clientFlag=0;
 				$scope.selectedBoxArray = [];
 				var cnt  = data.length;
-				for(var k=0;k<cnt;k++){
+				for(var k=0;k<cnt;k++) {
 					data[k].selected = false;
 				}
 	  		/* End  */
-	  		data = [];
+	  		// data = [];
 	  		vm.tableParams.total(data.length);
 	  		vm.tableParams.reload();
 	  		vm.tableParams.page(1);
@@ -203,6 +235,8 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	  		toaster.clear();
 			toaster.pop('wait', 'Please Wait', 'Data Loading....',30000);
 
+			$scope.getOptionSettingData(); //Load Setting Data
+
 	  		if (onDateChange != null)
 	  		{
 	  			$rootScope.accView.fromDate = moment(vm.dt1).format(apiDateFormate);
@@ -227,6 +261,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	  	}
 		
 		$scope.loadInit();
+
 
 	$scope.displayProduct = function(productArray)
 	{
@@ -322,14 +357,15 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 
 			} else if(!params.sorting().date){
 
-			  if (params.filter().term) {
-				orderedData = params.filter() ? $filter('filter')(data, params.filter().term) : data;
-			  } else {
-				orderedData = params.sorting() ? $filter('orderBy')(data, params.orderBy()) : data;
-			  }
+			  // if (params.filter().term) {
+				orderedData = params.filter() ? $filter('filter')(data, params.filter()) : data;
+			  // } else {
+				orderedData = params.sorting() ? $filter('orderBy')(orderedData, params.orderBy()) : orderedData;
+			  // }
 			  
 			}
-
+			orderedData = params.filter() ? $filter('filter')(orderedData, params.filter()) : orderedData;
+			getTotalValue(orderedData);
 			$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
 			
 			$scope.totalData = data.length;
@@ -367,7 +403,6 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 		  dataset: data,
 		  total: data.length, // length of data
 		  getData: function($defer, params) {
-			 
 			params.total(data.length);
 
 			if(!$scope.displayBranch)
@@ -379,6 +414,9 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 			}
 
 			params.productsFlag = $scope.columnHideShow[1].productCheckbox;
+			if ($scope.headerType == 'Sales Orders' || $scope.headerType == 'Quotations') {
+				params.refundFlag = false;
+			}
 
 			  var orderedData;
 
@@ -408,14 +446,15 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 			}
 			else if(!params.sorting().date){
 
-			  if (params.filter().term) {
-				orderedData = params.filter() ? $filter('filter')(data, params.filter().term) : data;
-			  } else {
-				orderedData = params.sorting() ? $filter('orderBy')(data, params.orderBy()) : data;
-			  }
+			  // if (params.filter()) {
+				orderedData = params.filter() ? $filter('filter')(data, params.filter()) : data;
+			  // } else {
+				orderedData = params.sorting() ? $filter('orderBy')(orderedData, params.orderBy()) : orderedData;
+			  // }
 			  
 			}
-
+			orderedData = params.filter() ? $filter('filter')(orderedData, params.filter()) : orderedData;
+			getTotalValue(orderedData);
 			$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
 			
 			  /** New Sort Code **/
@@ -502,7 +541,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 				  	var orderedData = params.sorting() ?
 						$filter('orderBy')(filteredData, params.orderBy()) :
 						data;
-						  
+					getTotalValue(orderedData);
 				  	params.total(orderedData.length); // set total for recalc pagination
 				  	$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
 			  /** End **/
@@ -575,7 +614,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 					var filteredData = params.filter() ?
 	             	$filter('filter')(data, params.filter()) :
 	              	data;
-
+	              	getTotalValue(filteredData);
 	              	// console.log('fill',filteredData);
 				  	var orderedData = params.sorting() ?
 						$filter('orderBy')(filteredData, params.orderBy()) :
@@ -606,6 +645,12 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 			$state.go("app.AccSales");
 			
 		}
+		if($scope.headerType == 'Sales Orders'){
+			$state.go("app.AccSalesOrder");
+		}
+		if($scope.headerType == 'Quotations'){
+			$state.go("app.QuotationPrint");
+		}
 		else if($scope.headerType == 'purchase'){
 			
 			$state.go("app.AccPurchase");
@@ -627,7 +672,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 	
 	/** Edit Bill **/
 	
-	if($scope.headerType == 'Wholesales' || $scope.headerType == 'Retailsales' || $scope.headerType == 'Tax-Purchase'){
+	if($scope.headerType == 'Wholesales' || $scope.headerType == 'Retailsales' || $scope.headerType == 'Tax-Purchase' || $scope.headerType == 'Sales Orders' || $scope.headerType == 'Quotations'){
 		
 		$scope.editDataViewSales = function(id){
 			
@@ -653,6 +698,12 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 			}
 			else if($scope.headerType == 'Tax-Purchase'){
 				$state.go("app.PurchaseBill");
+			}
+			else if($scope.headerType == 'Sales Orders'){
+				$state.go("app.AccSalesOrder");
+			}
+			else if($scope.headerType == 'Quotations'){
+				$state.go("app.QuotationPrint");
 			}
 			
 			//getSetFactory.blank();
@@ -689,12 +740,12 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 		
 		modalInstance.result.then(function () {
 		 
-		 console.log('ok');
-		 
 		// return false;
 		 /**Delete Code **/
 		 	if (isPurchaseBill == 'yes'){
 		 		var deletePath = apiPath.postPurchaseBill+'/'+id;
+		 	}else if (isPurchaseBill == 'quote') {
+		 		var deletePath = apiPath.postQuotationBill+'/'+id+'/quote';
 		 	}
 		 	else{
 		 		var deletePath = apiPath.postBill+'/'+id;
@@ -775,6 +826,8 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 			$scope.paidData = [];
 			$scope.unPaidData = [];
 			$scope.totalAmountDisplay = 0;
+			$scope.totalAdvanceDisplay = 0;
+			$scope.totalBalanceDisplay = 0;
 			
 			if(apiResponse.notFound == response)
 			{
@@ -790,214 +843,126 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 
 				data = response;
 				// console.log('refresh');
-				if($scope.headerType == 'Wholesales' || $scope.headerType == 'Retailsales' || $scope.headerType == 'Tax-Purchase'){
+				if($scope.headerType == 'Wholesales' || $scope.headerType == 'Retailsales' || $scope.headerType == 'Tax-Purchase' || $scope.headerType == 'Sales Orders' || $scope.headerType == 'Quotations') {
 					
-					if ($scope.headerType == 'Tax-Purchase'){
+					if ($scope.headerType == 'Tax-Purchase') {
 						$scope.purchaseBillData = response;
 					} else {
 						$scope.billData = response;
 					}
-					
 					var cnt = data.length;
-					for(var p=0;p<cnt;p++)
-					{
-						$scope.totalAmountDisplay = $filter('setDecimal')( parseFloat($scope.totalAmountDisplay) + parseFloat(data[p].total),2);
-
-						if ($scope.headerType == 'Wholesales') {
-							if (!$rootScope.accView.branchId)  {
-								if (angular.isObject(data[p].branch)) {
-									data[p].branchName = data[p].branch.branchName;
-								}
-								else{
-									data[p].branchName = '-';
-								}
-							}
-						}
-
-						data[p].repeatIcon = false;
-						data[p].imageIcon = false;
-						data[p].pdfIcon = false;
-						data[p].singlePdfIcon = false;
-						var productArrays = JSON.parse(data[p].productArray);
-
-						data[p].displayProduct = productArrays.inventory;
-
-						// var invCnt = productArrays.inventory.length;
-						// var invIndex = 0;
-						// while(invIndex < invCnt)
-						// {
-						// 	console.log(productArrays.inventory[0].productId);
-						// 	if(productArrays.inventory[invIndex].productId)
-						// 	{
-						// 		var proId = productArrays.inventory[invIndex].productId;
-						// 		productFactory.getSingleProduct(proId,function(proResponse){
-						// 			console.log("here",proResponse);
-						// 			if(angular.isObject(proResponse)){
-						// 				console.log(proResponse);
-						// 				data[p].displayProduct.push(angular.copy(proResponse));
-						// 			}
-						// 		});
-						// 	}
-						// 	invIndex++;
-						// }
-
-						var fileCnt = data[p].file.length;
-						
-						var flag = 0;
-						var imageFlag = 0;
-						
-						for(var k=0;k<fileCnt;k++){
-						
-							if(data[p].file[k].documentFormat == 'pdf' && data[p].file[k].documentType == 'bill')
-							{
-								flag++;
-							}
-							
-							if(data[p].file[k].documentFormat == 'jpg' || data[p].file[k].documentFormat == 'jpeg' || data[p].file[k].documentFormat == 'png'){
-								
-								imageFlag = 1;
-							}
-						}
-						
-						if(flag == 0){
-							data[p].repeatIcon = true;
-						}
-						else if(flag == 1){
-							data[p].singlePdfIcon = true;
-						}
-						else{
-							data[p].pdfIcon = true;
-						}
-						
-						if(imageFlag == 1){
-							data[p].imageIcon = true;
-						}
-
-						if ($scope.headerType != 'Tax-Purchase'){
-							data[p].invoiceNumber = data[p].invoiceNumber;
-							data[p].clientName = data[p].client.clientName;
-						}
-						else{
-							data[p].ledgerName = data[p].vendor.ledgerName;
-						}
-
-						if(data[p].balance >= 1)
+					if (cnt > 0) {
+						(function billAmountFix(p)
 						{
-							$scope.unPaidData.push(data[p]);
-						}
-						else{
-							$scope.paidData.push(data[p]);
-						}
+							$scope.totalAmountDisplay = $filter('setDecimal')( parseFloat($scope.totalAmountDisplay) + parseFloat(data[p].total),2);
+							$scope.totalAdvanceDisplay = $filter('setDecimal')( parseFloat($scope.totalAdvanceDisplay) + parseFloat(data[p].balance),2);
+							$scope.totalBalanceDisplay = $filter('setDecimal')( parseFloat($scope.totalBalanceDisplay) + parseFloat(data[p].advance),2);
+							if ($scope.headerType == 'Wholesales' || $scope.headerType == 'Sales Orders' || $scope.headerType == 'Quotations') {
+								if (!$rootScope.accView.branchId)  {
+									if (angular.isObject(data[p].branch)) {
+										data[p].branchName = data[p].branch.branchName;
+									}
+									else{
+										data[p].branchName = '-';
+									}
+								}
+							}
+							data[p].repeatIcon = false;
+							data[p].imageIcon = false;
+							data[p].pdfIcon = false;
+							data[p].singlePdfIcon = false;
+							data[p].displayProduct = [];
+							var productArrays = JSON.parse(data[p].productArray);
+							var invCnt = productArrays.inventory.length;
+							(function displayProductList(invIndex,billIndex){
+								if("productId" in productArrays.inventory[invIndex] && productArrays.inventory[invIndex].productId)
+								{
+									productFactory.getSingleProduct(productArrays.inventory[invIndex].productId).then(function(proResponse) {
+										if(angular.isObject(proResponse)) 
+										{
+											if ("displayProduct" in data[billIndex]) 
+											{
+												if (angular.isArray(data[billIndex].displayProduct)) 
+												{
+													data[billIndex].displayProduct.push(angular.copy(proResponse));
+												} 
+												else 
+												{
+													data[billIndex].displayProduct = [];
+												}
+											} 
+											else 
+											{
+												data[billIndex].displayProduct = [];
+											}
+											if (invIndex == invCnt - 1) 
+											{
+												pushedIntoArray(billIndex);
+												billIndex++;
+												if (billIndex < cnt) {
+													billAmountFix(billIndex);
+												}else{
+													loadSorting();
+												}
+												
+											}
+											invIndex++;
+											if (invIndex < invCnt) {
+												displayProductList(invIndex,billIndex);
+											}
+										}
+										else
+										{
+											productArrays.inventory[invIndex].productName = '<em class="text-danger">(deleted)</em>';
+											productArrays.inventory[invIndex].altProductName = '<em class="text-danger">(deleted)</em>';
+											data[billIndex].displayProduct.push(productArrays.inventory[invIndex]);
+											if (invIndex == invCnt - 1) 
+											{
+												pushedIntoArray(billIndex);
+												billIndex++;
+												if (billIndex < cnt) {
+													billAmountFix(billIndex);
+												}else{
+													loadSorting();
+												}
+												
+											}
+											invIndex++;
+											if (invIndex < invCnt) {
+												displayProductList(invIndex,billIndex);
+											}
+										}
+									});
+								}
+								else
+								{
+									if (invIndex == invCnt - 1) 
+									{
+										pushedIntoArray(billIndex);
+										billIndex++;
+										if (billIndex < cnt) {
+											billAmountFix(billIndex);
+										}else{
+											loadSorting();
+										}
+									}
+								}
+								
+							})(0,p);
+
+						})(0);
 					}
-					
-					$scope.contents1 = data;
-					
-					if ($scope.headerType != 'Tax-Purchase'){
-
-						$scope.contents1.sort(function(a, b){
-							// var entDate = a.entryDate.split("-").reverse().join("-");
-							// var toDate = b.entryDate.split("-").reverse().join("-");
-							// var dateA=new Date(entDate), dateB=new Date(toDate);
-							var parseA = parseInt(a.invoiceNumber);
-							var parseB = parseInt(b.invoiceNumber);
-							return parseA - parseB; 
-						});
-						
-						data= $scope.contents1;
-						$scope.allSalesData = angular.copy($scope.contents1);
-
-						$scope.contents2 = $scope.unPaidData;
-						
-						$scope.contents2.sort(function(a, b){
-							// var entDate = a.entryDate.split("-").reverse().join("-");
-							// var toDate = b.entryDate.split("-").reverse().join("-");
-							// var dateA=new Date(entDate), dateB=new Date(toDate);
-							var parseA = parseInt(a.invoiceNumber);
-							var parseB = parseInt(b.invoiceNumber);
-							return parseA - parseB; 
-						});
-						
-						$scope.unPaidData = $scope.contents2;
-
-						$scope.contents3 = $scope.paidData;
-						
-						$scope.contents3.sort(function(a, b){
-							// var entDate = a.entryDate.split("-").reverse().join("-");
-							// var toDate = b.entryDate.split("-").reverse().join("-");
-							// var dateA=new Date(entDate), dateB=new Date(toDate);
-							var parseA = parseInt(a.invoiceNumber);
-							var parseB = parseInt(b.invoiceNumber);
-							return parseA - parseB; 
-						});
-
-						$scope.paidData= $scope.contents3;
-					}
-					else if($scope.headerType == 'Tax-Purchase')
-					{
-						$scope.contents1.sort(function(a, b){
-							var parseA = parseInt(a.billNumber);
-							var parseB = parseInt(b.billNumber);
-							return parseA - parseB; 
-						});
-						
-						data= $scope.contents1;
-						$scope.allSalesData = angular.copy($scope.contents1);
-						
-						$scope.contents2 = $scope.unPaidData;
-						
-						$scope.contents2.sort(function(a, b){
-							var parseA = parseInt(a.billNumber);
-							var parseB = parseInt(b.billNumber);
-							return parseA - parseB; 
-						});
-						
-						$scope.unPaidData = $scope.contents2;
-
-						$scope.contents3 = $scope.paidData;
-						
-						$scope.contents3.sort(function(a, b){
-							var parseA = parseInt(a.billNumber);
-							var parseB = parseInt(b.billNumber);
-							return parseA - parseB; 
-						});
-
-						$scope.paidData= $scope.contents3;
-					}
-
-					//data.slice().reverse();
-					if(vm.tableParams)
-					{
-						var activeTab = $scope.currentActiveSalestab;
-						if (activeTab == 0){
-							$scope.onSalesBillTabSelect(activeTab+1);
-						} else if (activeTab == 1) {
-							$scope.onSalesBillTabSelect(activeTab+1);
-						} else if (activeTab == 2) {
-							$scope.onSalesBillTabSelect(activeTab-1);
-						}
-
-						setTimeout(function() {
-							$scope.onSalesBillTabSelect(activeTab);
-						}, 1000);
-						
-					}
-					else{
-						$scope.saleTableData();
-					}
-					
 				}
 				else{
-					
-					// console.log(data);
 				
 					vm.pieChartData = [{ "color" : "#6cc539",
-									"data" : "0",
-									"label" : "Debit"
-								  },
-								  { "color" : "#00b4ff",
-									"data" : "0",
-									"label" : "Credit"
-								  }];
+										"data" : "0",
+										"label" : "Debit"
+									  },
+									  { "color" : "#00b4ff",
+										"data" : "0",
+										"label" : "Credit"
+									  }];
 					vm.pieFlotCharts = [{
 								  "label": "Debit",
 								  "color": "#6cc539",
@@ -1033,35 +998,64 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 									["Dec", "0"]
 								  ]
 								}];
-		  
-					for (var i = 0; i < data.length; i++) {
-						
-						if(data[i].amountType=='debit'){
-						  
-							vm.pieChartData[0]["data"] = parseInt(vm.pieChartData[0]["data"]) + parseFloat(data[i].amount);
-							var date = data[i].entryDate;
-							var splitedate = date.split("-").reverse().join("-");
-							var getdate = new Date(splitedate);
-							var month = getdate.getMonth();
-							
-								vm.pieFlotCharts[0]["data"][month][1] = parseInt(vm.pieFlotCharts[0]["data"][month][1]) + parseFloat(data[i].amount);
+		  			if ($scope.headerType == 'payment' || $scope.headerType == 'receipt') {
+		  				var dataCnt = data.length;
+		  				var i = 0;
+		  				(function paymentReceiptLoop(i) {
+		  					// for (var j = 0; j < data[i].creditArray.length; j++) {
+		  						vm.pieChartData[0]["data"] = parseInt(vm.pieChartData[0]["data"]) + parseFloat(data[i].creditAmount);
+								var date = data[i].entryDate;
+								var splitedate = date.split("-").reverse().join("-");
+								var getdate = new Date(splitedate);
+								var month = getdate.getMonth();
+								vm.pieFlotCharts[0]["data"][month][1] = parseInt(vm.pieFlotCharts[0]["data"][month][1]) + parseFloat(data[i].creditAmount);
+		  					// }
+		  					// for (var k = 0; k < data[i].debitArray.length; k++) {
+		  						vm.pieChartData[1]["data"] = parseInt(vm.pieChartData[1]["data"]) + parseFloat(data[i].debitAmount);
 								
-							//console.log(vm.pieFlotCharts[0]["data"][0][1] = parseInt(vm.pieFlotCharts[0]["data"][0][1]) + parseInt(data[i].amount));
+								var date2 = data[i].entryDate;
+								var splitedate2 = date2.split("-").reverse().join("-");
+								var getdate2 = new Date(splitedate2);
+								var month2 = getdate2.getMonth();
+								vm.pieFlotCharts[1]["data"][month2][1] = parseInt(vm.pieFlotCharts[1]["data"][month2][1]) + parseFloat(data[i].debitAmount);
+		  					// }
+		  					i++;
+		  					if (i < dataCnt) {
+		  						paymentReceiptLoop(i);
+		  					}
+		  				})(0);
+		  			}
+		  			else{
+		  				for (var i = 0; i < data.length; i++) {
 						
-						}
-						else{
-							vm.pieChartData[1]["data"] = parseInt(vm.pieChartData[1]["data"]) + parseFloat(data[i].amount);
+							if(data[i].amountType=='debit'){
+							  
+								vm.pieChartData[0]["data"] = parseInt(vm.pieChartData[0]["data"]) + parseFloat(data[i].amount);
+								var date = data[i].entryDate;
+								var splitedate = date.split("-").reverse().join("-");
+								var getdate = new Date(splitedate);
+								var month = getdate.getMonth();
+								
+									vm.pieFlotCharts[0]["data"][month][1] = parseInt(vm.pieFlotCharts[0]["data"][month][1]) + parseFloat(data[i].amount);
+									
+								//console.log(vm.pieFlotCharts[0]["data"][0][1] = parseInt(vm.pieFlotCharts[0]["data"][0][1]) + parseInt(data[i].amount));
 							
-							var date = data[i].entryDate;
-							var splitedate = date.split("-").reverse().join("-");
-							var getdate = new Date(splitedate);
-							var month = getdate.getMonth();
-							
-								vm.pieFlotCharts[1]["data"][month][1] = parseInt(vm.pieFlotCharts[1]["data"][month][1]) + parseFloat(data[i].amount);
-							   
-							//vm.pieFlotCharts[1]["data"] = parseInt(vm.pieFlotCharts[1]["data"]) + parseInt(data[i].amount);
+							}
+							else{
+								vm.pieChartData[1]["data"] = parseInt(vm.pieChartData[1]["data"]) + parseFloat(data[i].amount);
+								
+								var date = data[i].entryDate;
+								var splitedate = date.split("-").reverse().join("-");
+								var getdate = new Date(splitedate);
+								var month = getdate.getMonth();
+								
+									vm.pieFlotCharts[1]["data"][month][1] = parseInt(vm.pieFlotCharts[1]["data"][month][1]) + parseFloat(data[i].amount);
+								   
+								//vm.pieFlotCharts[1]["data"] = parseInt(vm.pieFlotCharts[1]["data"]) + parseInt(data[i].amount);
+							}
 						}
-					}
+		  			}
+					
 					//console.log(vm.pieFlotCharts);
 					
 					$scope.contents = data;
@@ -1087,6 +1081,152 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 		}
 	/** End Reaload Pdf Data **/
 	
+	function pushedIntoArray (p) {
+		var fileCnt = data[p].file.length;
+						
+		var flag = 0;
+		var imageFlag = 0;
+		
+		for(var k=0;k<fileCnt;k++) {
+		
+			if(data[p].file[k].documentFormat == 'pdf' && (data[p].file[k].documentType == 'bill' ||data[p].file[k].documentType == 'quotation'))
+			{
+				flag++;
+			}
+			
+			if(data[p].file[k].documentFormat == 'jpg' || data[p].file[k].documentFormat == 'jpeg' || data[p].file[k].documentFormat == 'png'){
+				
+				imageFlag = 1;
+			}
+		}
+		
+		if(flag == 0){
+			data[p].repeatIcon = true;
+		}
+		else if(flag == 1){
+			data[p].singlePdfIcon = true;
+		}
+		else{
+			data[p].pdfIcon = true;
+		}
+		
+		if(imageFlag == 1){
+			data[p].imageIcon = true;
+		}
+
+		if ($scope.headerType != 'Tax-Purchase'){
+			data[p].invoiceNumber = data[p].invoiceNumber;
+			data[p].clientName = data[p].client.clientName;
+		}
+		else{
+			data[p].ledgerName = data[p].vendor.ledgerName;
+		}
+
+		if(data[p].balance >= 1)
+		{
+			$scope.unPaidData.push(data[p]);
+		}
+		else{
+			$scope.paidData.push(data[p]);
+		}
+	}
+
+	function loadSorting () 
+	{
+		$scope.contents1 = data;
+
+		if ($scope.headerType != 'Tax-Purchase') {
+
+			$scope.contents1.sort(function(a, b) {
+				// var entDate = a.entryDate.split("-").reverse().join("-");
+				// var toDate = b.entryDate.split("-").reverse().join("-");
+				// var dateA=new Date(entDate), dateB=new Date(toDate);
+				var parseA = parseInt(a.invoiceNumber);
+				var parseB = parseInt(b.invoiceNumber);
+				return parseA - parseB;
+			});
+			
+			data= $scope.contents1;
+			$scope.allSalesData = $scope.contents1;
+
+			$scope.contents2 = $scope.unPaidData;
+			
+			$scope.contents2.sort(function(a, b) {
+				// var entDate = a.entryDate.split("-").reverse().join("-");
+				// var toDate = b.entryDate.split("-").reverse().join("-");
+				// var dateA=new Date(entDate), dateB=new Date(toDate);
+				var parseA = parseInt(a.invoiceNumber);
+				var parseB = parseInt(b.invoiceNumber);
+				return parseA - parseB; 
+			});
+			
+			$scope.unPaidData = $scope.contents2;
+
+			$scope.contents3 = $scope.paidData;
+			
+			$scope.contents3.sort(function(a, b) {
+				// var entDate = a.entryDate.split("-").reverse().join("-");
+				// var toDate = b.entryDate.split("-").reverse().join("-");
+				// var dateA=new Date(entDate), dateB=new Date(toDate);
+				var parseA = parseInt(a.invoiceNumber);
+				var parseB = parseInt(b.invoiceNumber);
+				return parseA - parseB; 
+			});
+
+			$scope.paidData= $scope.contents3;
+		}
+		else if($scope.headerType == 'Tax-Purchase')
+		{
+			$scope.contents1.sort(function(a, b){
+				var parseA = parseInt(a.billNumber);
+				var parseB = parseInt(b.billNumber);
+				return parseA - parseB; 
+			});
+			
+			data= $scope.contents1;
+			$scope.allSalesData = angular.copy($scope.contents1);
+			
+			$scope.contents2 = $scope.unPaidData;
+			
+			$scope.contents2.sort(function(a, b){
+				var parseA = parseInt(a.billNumber);
+				var parseB = parseInt(b.billNumber);
+				return parseA - parseB; 
+			});
+			
+			$scope.unPaidData = $scope.contents2;
+
+			$scope.contents3 = $scope.paidData;
+			
+			$scope.contents3.sort(function(a, b){
+				var parseA = parseInt(a.billNumber);
+				var parseB = parseInt(b.billNumber);
+				return parseA - parseB; 
+			});
+
+			$scope.paidData= $scope.contents3;
+		}
+
+		if(vm.tableParams)
+		{
+			var activeTab = $scope.currentActiveSalestab;
+			// if (activeTab == 0){
+			// 	$scope.onSalesBillTabSelect(activeTab+1);
+			// } else if (activeTab == 1) {
+			// 	$scope.onSalesBillTabSelect(activeTab+1);
+			// } else if (activeTab == 2) {
+			// 	$scope.onSalesBillTabSelect(activeTab-1);
+			// }
+
+			setTimeout(function() {
+				$scope.onSalesBillTabSelect(activeTab);
+			}, 1000);
+			
+		}
+		else{
+			$scope.saleTableData();
+		}
+	}
 	/** Regenerate Pdf **/
 		
 		$scope.reGeneratePdf = function(sId){
@@ -1423,7 +1563,6 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 
 		$scope.changeBox = function(box,pData){
 			
-			//console.log(box+'...'+pData);
 			if(box == true){
 				$scope.selectedBoxArray.push(pData);
 			}
@@ -1434,9 +1573,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 		}
 
 		$scope.changeAllBox = function(box){
-			// console.log("innn change all box");
 			if(box == false){
-				// console.log("iff");
 				$scope.clientFlag=0;
 				$scope.selectedBoxArray = [];
 				var cnt  = data.length;
@@ -1445,11 +1582,9 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 				}
 			}
 			else{
-				// console.log("else");
 				$scope.clientFlag=1;
 				$scope.selectedBoxArray = [];
 				$scope.selectedBoxArray = $scope.filteredItems;
-				// console.log("consoldeeeeadsada  ",$scope.selectedBoxArray);
 				if(Array.isArray($scope.selectedBoxArray))
 				{
 					var cnt  = $scope.selectedBoxArray.length;
@@ -1463,7 +1598,6 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 
 		$scope.multiPdfPrint = function()
 		{
-			console.log("$scope.selectedBoxArray..",$scope.selectedBoxArray);
 			var selectedArray = $scope.selectedBoxArray;
 			var uniqueArray = selectedArray.map(function(obj) { return obj['saleId']; });
 			var saleIds = uniqueArray.join(',');
@@ -1505,4 +1639,4 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
 
 	/* End */
 }
-AccViewDataController.$inject = ["$rootScope","$scope", "$filter","$http", "ngTableParams","apiCall","apiPath","flotOptions","colors","$timeout","getSetFactory","$state","headerType","$modal","$window","toaster","apiResponse","apiDateFormate"];
+AccViewDataController.$inject = ["$rootScope","$scope", "$filter","$http", "ngTableParams","apiCall","apiPath","flotOptions","colors","$timeout","getSetFactory","$state","headerType","$modal","$window","toaster","apiResponse","apiDateFormate","productFactory"];

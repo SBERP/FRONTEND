@@ -172,7 +172,7 @@
 			</div>
 			<!-- Crm End -->
 			
-			<div class="col-sm-12">
+			<div class="col-sm-12" ng-if="viewDataTypePath != 'Commission Report'">
 				<div class="col-sm-6">
 					<fieldset class="my-fieldset-paddingBottom ">
 					   <div class="form-group">
@@ -213,7 +213,15 @@
 					</fieldset>
 				</div>
 			</div>
-			
+			<div class="col-sm-12" ng-if="viewDataTypePath == 'Commission Report'">
+				<div class="col-sm-6">
+			 		<label  class="col-sm-3 control-label" style="padding-left: 2px;">SalesMan</label>
+					<div class="col-sm-9 contentOfForm" >
+						<select chosen="" data-ng-model="accViewSales.salesmanDropdown" data-ng-options="s.userName for s in form.salesmanDrop | filter : filterStaff track by s.userId" class="form-control chosen-select" tabindex="2"></select>
+					</div>
+					
+				</div>
+			</div>
 			<div class="col-sm-12" ng-if="viewDataTypePath == 'CrmClientFilterView'" >
 				<div class="col-sm-6">
 					<fieldset class="my-fieldset-paddingBottom ">

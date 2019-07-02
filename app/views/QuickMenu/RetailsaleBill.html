@@ -5,7 +5,7 @@
 }
 .chosen-container .chosen-drop{
 	display: block !imporatant;
-}
+} 
 #selectId_chzn .chosen-drop {
     bottom: 20px;
     top: auto !important;
@@ -82,6 +82,14 @@
 .myTable td{
 	vertical-align: top !important;
 }
+.paddignBtn {
+	padding: 3px 7px !important;
+	font-size: 12px !important;
+}
+.halfPadding{
+	padding-left: 5px !important;
+    padding-right: 5px !important;
+}
 </style>
 <!-- START panel-->
 <div class="container-fluid"  >
@@ -98,19 +106,27 @@
 				 <span style="font-size:16px">[ {{quickBill.invoiceNumber}} ]</span></label>
 				<label  class="control-label" style="font-size: 20px !important;float: left;text-align: left;padding-top: 3px;padding-left: 5px;padding-right: 5px;" ng-if="saleType == 'QuotationPrint'">Quotation <span style="font-size:16px;padding-top: 3px;padding-left: 5px;padding-right: 5px;">({{quickBill.invoiceNumber}})</span></label>
 			 </div>
-			 <div style="padding: 0 5px 0 5px;"  ng-class="col-sm-2" >
+			 <div style="padding: 0 5px 0 5px;"  class="col-sm-2" >
 			 	<label  class="control-label" style="font-size:18px !important;text-align: right;padding-top: 3px;padding-left: 1px;padding-right: 0px;">
 				 	<button type="button" class="btn btn-default btn-md" data-ng-class="app.theme.brand"  >{{displayDefaultCompanyName}} ({{getCurrentFinancialYear()}})</button>
 				</label>
 			 </div>
-		</h4>
-		 <h4 class="panel-heading col-sm-12" style="padding:5px 1px;" >	
-		 	<div class="col-sm-2" >
-				<div class="input-group m-b">
+			 <div class="col-sm-2 pull-right" >
+		 		<div class="input-group m-b">
 					<input  type="text" ng-model="quickBill.searchInvoiceNumber" placeholder="Search" class="form-control input-sm" tooltip="Search By Invoice#/Contact#/Name/Email" tooltip-trigger="focus" tooltip-placement="top" ng-keyup="$event.keyCode == 13 ? goInvoiceNumber() : null" />
 					<span class="input-group-btn">
 					<button type="button" class="btn btn-sm" data-ng-class="app.theme.brand"  ng-click="goInvoiceNumber()" ><em class="fa fa-search" ></em></span>
 					</span>
+				</div>
+		 	</div>
+		 	<label class="control-label col-sm-2 pull-right">&nbsp;&nbsp;Closing Balance: 
+		 		<span ng-if="closingBalance.length != 0" style="font-weight: 100;">{{closingBalance[0].closingBalance}} <span ng-if="closingBalance[0].closingBalanceType == 'credit'">Cr</span><span ng-if="closingBalance[0].closingBalanceType == 'debit'">Dr</span></span> <span ng-if="closingBalance.length == 0" style="font-weight: 100;">0 Dr</span></label>
+		</h4>
+		 <h4 class="panel-heading col-sm-12" style="padding:5px 1px;" >	
+		 	<div class="col-sm-3" ng-if="enableDisableSalesman">
+		 		<label  class="col-sm-3 control-label" style="padding-left: 2px;">SalesMan</label>
+				<div class="col-sm-9 contentOfForm" >
+					<select chosen="" data-ng-model="quickBill.userId" name="userDropDown" data-ng-options="s.userName for s in form.userDrop | filter : filterStaff track by s.userId " ng-change="changeInBill('userId',quickBill.userId)" class="form-control input-sm chosen-select btn-sm" ></select>
 				</div>
 			</div>
 			<div class="col-sm-3">
@@ -136,41 +152,33 @@
 					</span>
 				 </div>
 			</div>
-				<div ng-class="saleType == 'QuotationPrint' ? 'col-sm-2': 'col-sm-3'" >
-					<div class="col-sm-4" ng-if="saleType == 'WholesaleBill' || saleType == 'SalesOrder'">
-						<input  type="text" ng-model="quickBill.poNumber" ng-change="changeInBill('poNumber',quickBill.poNumber)" placeholder="PO No." tooltip="Purchase Order Number" tooltip-trigger="focus" tooltip-placement="top" class="form-control input-sm" />
-					</div>
-					<div class="col-sm-7">
-						<!--span class="input-group-btn" ng-if="saleType == 'WholesaleBill'">
-							<a  class="mr-sm mb-sm btn btn-default btn-sm pull-left goButton"  data-ng-class="app.theme.brand" ui-sref="." tooltip="Get Data From Draft" tooltip-trigger="focus" tooltip-placement="top" ng-click="form.getFromDraft()" >Get Draft</a>
-						</span-->
-						<div dropdown="dropdown" class="btn-group btn-sm pl0 pr0 pt0" ng-if="saleType == 'WholesaleBill'">
-			               <button type="button" class="btn btn-sm" data-ng-class="app.theme.brand" tooltip="Get Data From Draft OR SalesOrder" tooltip-trigger="focus" tooltip-placement="top" ng-click="form.getFromDraft()">Get</button>
-			               <button type="button" dropdown-toggle="" class="btn dropdown-toggle btn-sm" data-ng-class="app.theme.brand" >
-			                  <span class="caret"></span>
-			                  <span class="sr-only">primary</span>
-			               </button>
-			               <ul role="menu" class="dropdown-menu">
-			                  <li><a href="#" ng-click="form.getFromDraft()">Get Draft</a>
-			                  </li>
-			                  <li><a href="#" ng-click="form.getFromSalesOrder()">Get SalesOrder</a>
-			                  </li>
-			               </ul>
-			            </div>
+			<div ng-class="saleType == 'QuotationPrint' ? 'col-sm-2': 'col-sm-2'" >
+				<div class="col-sm-4 halfPadding" ng-if="saleType == 'WholesaleBill' || saleType == 'SalesOrder'">
+					<input  type="text" ng-model="quickBill.poNumber" ng-change="changeInBill('poNumber',quickBill.poNumber)" placeholder="PO No." tooltip="Purchase Order Number" tooltip-trigger="focus" tooltip-placement="top" class="form-control input-sm" />
+				</div>
+				<div class="col-sm-8">
+					<!--span class="input-group-btn" ng-if="saleType == 'WholesaleBill'">
+						<a  class="mr-sm mb-sm btn btn-default btn-sm pull-left goButton"  data-ng-class="app.theme.brand" ui-sref="." tooltip="Get Data From Draft" tooltip-trigger="focus" tooltip-placement="top" ng-click="form.getFromDraft()" >Get Draft</a>
+					</span-->
+					<div dropdown="dropdown" class="btn-group btn-sm pl0 pr0 pt0" ng-if="saleType == 'WholesaleBill'">
+		               <button type="button" class="btn btn-sm" data-ng-class="app.theme.brand" tooltip="Get Data From Draft OR SalesOrder" tooltip-trigger="focus" tooltip-placement="top" ng-click="form.getFromDraft()">Get</button>
+		               <button type="button" dropdown-toggle="" class="btn dropdown-toggle btn-sm" data-ng-class="app.theme.brand" >
+		                  <span class="caret"></span>
+		                  <span class="sr-only">primary</span>
+		               </button>
+		               <ul role="menu" class="dropdown-menu">
+		                  <li><a href="#" ng-click="form.getFromDraft()">Get Draft</a>
+		                  </li>
+		                  <li><a href="#" ng-click="form.getFromSalesOrder()">Get SalesOrder</a>
+		                  </li>
+		               </ul>
+		            </div>
+		            <div class="btn-group m-b">
 						<button type="button" class="btn btn-sm pb-sm pt-sm mb-sm"  data-ng-class="app.theme.brand"   ui-sref="app.AccViewWholeSales"  ><i class="fa fa-search"></i>
 						</button>
-					<div>
-					
-				</div>
-				
-		 </h4>
-		 <h4 class="panel-heading col-sm-12">
-		 	<div class="col-sm-3" ng-if="enableDisableSalesman">
-		 		<label  class="col-sm-4 control-label" style="padding-left: 2px;">SalesMan</label>
-				<div class="col-sm-8 contentOfForm" >
-					<select chosen="" data-ng-model="quickBill.userId" name="userDropDown" data-ng-options="s.userName for s in form.userDrop | filter : filterStaff track by s.userId " ng-change="changeInBill('userId',quickBill.userId)" class="form-control input-sm chosen-select btn-sm" ></select>
-				</div>
-		 	</div>
+					</div>
+				<div>
+			</div>
 		 </h4>
 		<div class="panel-body" style="padding:0px">
 			<div class="col-sm-12">
@@ -180,7 +188,7 @@
 						  <label  class="col-sm-2 control-label" style="padding-left: 2px;">*Contact</label>
 						 	 <div class="col-sm-10">
 							  	<div class="input-group mytypeDrop">
-									 <input  typeahead="s.contactNo for s in form.clientSuggest | filter:$viewValue | limitTo:10" ng-model="quickBill.contactNo" typeahead-on-select="setClientSuggest('contactNo',$item);" ng-change="changeInBill('contactNo',quickBill.contactNo)" type="text" placeholder="Contact Number" class="form-control input-sm" dir="ltr" name="contactNo" id="contactNoSelect"  auto-focus="true" ng-required="true" ng-maxlength="12" ng-pattern="/^[0-9]+$/"  ng-minlength="10"   only-number style="font-size:15px;" />
+									 <input  typeahead="s.contactNo for s in form.clientSuggest | filter:$viewValue | limitTo:10" ng-model="quickBill.contactNo" typeahead-on-select="setClientSuggest('contactNo',$item);" ng-change="changeInBill('contactNo',quickBill.contactNo)" type="text" placeholder="Contact Number" class="form-control input-sm" dir="ltr" name="contactNo" id="contactNoSelect"  auto-focus="true" ng-required="true" ng-maxlength="12" ng-pattern="/^[0-9]+$/" ng-disabled="form.stateDataLoaded" ng-minlength="10"   only-number style="font-size:15px;" />
 									<span class="input-group-btn" >
 									   <button type="button" class="btn btn-default btn-sm"  data-ng-click="editClientData('lg')"><i class="fa fa-edit fa-lg" style="color:#17A1E5;" ></i></button>
 									   <button type="button" class="btn btn-default btn-sm" data-ng-click="openClient('lg',$index)"><i class="fa fa-plus fa-lg" style="color:#17A1E5;"></i></button>
@@ -222,7 +230,7 @@
 					   <div class="form-group" style="margin-bottom: 0px">
 						  <label  class="col-sm-2 control-label">*Name</label>
 						  <div class="col-sm-10">
-							 <input ng-model="quickBill.clientName" name="clientName"  type="text" placeholder="Client Name" class="form-control input-sm"  ng-required="true" ng-pattern="/^[a-zA-Z0-9 &_`#().\'-]*$/" ng-maxlength="100" ng-change="changeInBill('clientName',quickBill.clientName)" />
+							 <input typeahead="s.clientName for s in form.clientSuggest | filter:$viewValue | limitTo:10"  typeahead-on-select="setClientSuggest('clientName',$item);" ng-model="quickBill.clientName" name="clientName"  type="text" placeholder="Client Name" class="form-control input-sm"  ng-required="true" ng-pattern="/^[a-zA-Z0-9 &_`#().\'-]*$/"  ng-disabled="form.stateDataLoaded" ng-maxlength="100" ng-change="changeInBill('clientName',quickBill.clientName)" />
 							 <!-- <span  only-alpha ></span> -->
 							  <span ng-messages="formBill.clientName.$error" ng-if="formBill.clientName.$dirty || formBill.clientName.$touched" role="alert">
 								<span ng-messages-include="errorRequired"></span>
@@ -254,7 +262,7 @@
 				<div class="col-md-3" ng-if="enableDisableState">
 					<!-- <fieldset class="my-fieldset-paddingBottom my-fieldset-marginBottom"> -->
 						<div class="form-group" style="margin-bottom: 0px">
-							<label class="col-sm-2 control-label style="padding-left: 2px"> *State </label>
+							<label class="col-sm-2 control-label" style="padding-left: 2px"> *State </label>
 							<div class="col-sm-10">
 								<select chosen="" data-ng-model="quickBill.stateAbb" data-ng-options="s.stateName for s in form.statesDrop track by s.stateAbb" ng-change="ChangeState('stateAbb',quickBill.stateAbb.stateAbb)"  class="form-control input-sm chosen-select" ng-required="true" style="font-size:15px;"></select>
 							</div>
@@ -330,7 +338,7 @@
 					<th class="header" style="width:28%;padding-top:5px !important;padding-bottom:5px !important;min-width:150px;" >
 						<span>Name of Item</span>
 						<span class="pull-right">
-							<button type="button" class="btn btn-default btn-xs" data-ng-click="openProduct('lg',0,'header')">
+							<button type="button" class="btn btn-default btn-sm" data-ng-click="openProduct('lg',0,'header')">
 								<i class="fa fa-plus fa-lg" style="color:#17A1E5;"></i>
 							</button>
 							<button type="button" class="btn btn-default btn-sm" data-ng-click="openProductList('lg')">
@@ -353,15 +361,20 @@
 					<th class="header" style="width:4%;padding-top:5px !important;padding-bottom:5px !important;" >Qty.</th>
 					<th class="header" style="width:8%;padding-top:5px !important;padding-bottom:5px !important;" >Rate</th>
 					<th class="header" style="width:9%;padding-top:5px !important;padding-bottom:5px !important;">Discount</th>
-					<th class="header" style="width:4%;padding-top:5px !important;padding-bottom:5px !important;" >CGST</th>
-					<th class="header" style="width:4%;padding-top:5px !important;padding-bottom:5px !important;" >SGST</th>
-					<th class="header" style="width:4%;padding-top:5px !important;padding-bottom:5px !important;" >IGST</th>
+					<th class="header" style="width:3%;padding-top:5px !important;padding-bottom:5px !important;" >CGST</th>
+					<th class="header" style="width:3%;padding-top:5px !important;padding-bottom:5px !important;" >SGST</th>
+					<th class="header" style="width:3%;padding-top:5px !important;padding-bottom:5px !important;" >IGST</th>
 					<th class="header" style="width:9%;padding-top:5px !important;padding-bottom:5px !important;" >Amount</th>
-					<th class="header" style="width:7%;padding-top:5px !important;padding-bottom:5px !important;">Action</th>
+					<th class="header" style="width:4%;padding-top:5px !important;padding-bottom:5px !important;">Action</th>
 				</tr>
 			</thead>
 			<script type="text/ng-template" id="customTemplate.html">
-				<a><span ng-bind-html="match.label | typeaheadHighlight:query"></span> ({{match.model.color}} | {{match.model.size}} | {{match.model.variant}})</a>
+				<a ng-if="match.label != null && match.label != ''">
+					<span ng-bind-html="match.label | typeaheadHighlight:query"></span> 
+					<span ng-if="match.model.isColor || match.model.isSize || match.model.isVariant">
+						(<span ng-if="match.model.isColor">{{match.model.color}} </span> <span ng-if="match.model.isSize">{{match.model.size}} </span> <span ng-if="match.model.isVariant">{{match.model.variant}}</span>)
+					</span>
+				</a>
 			</script>
 			<tbody portlet="" >
 				<tr id="panelPortlet{{$index+1}}" ng-repeat="item in form.AccBillTable track by $index" class="myTable" data-ng-class="app.tableAnimation">
@@ -369,11 +382,12 @@
 						<strong ng-bind="$index+1"></strong>
 					</td>
 					<td>
-						<div class="input-group mytypeDrop">
-							<input typeahead="item.productName for item in form.productNameDrop | filter:$viewValue | limitTo:10" ng-model="item.productName" typeahead-on-select="setProductData($item,$index);quickBill.advance = ((total) + (quickBill.extraCharge ? quickBill.extraCharge*1 : 0) | setDecimal: noOfDecimalPoints)" type="text" class="form-control input-sm" autocomplete="off" placeholder="*Enter Product Name"  typeahead-editable="false" ng-required="true" style="padding-left: 6px;padding-right: 6px;" typeahead-template-url="customTemplate.html" ng-disabled="form.loadData" ng-keypress="presssuburb($event)"/>
+						<div class="input-group mytypeDrop" >
+							<!-- <input ng-attr-id="{{displayProductName=='altProductName' && 'productNameId' || ''}}" > -->
+							<input  typeahead="item[displayProductName] for item in getfilterProductDataForSuggestion() | filter:$viewValue | limitTo:10"  ng-model="item.productName" typeahead-on-select="setProductData($item,$index);quickBill.advance = ((total) + (quickBill.extraCharge ? quickBill.extraCharge*1 : 0) | setDecimal: noOfDecimalPoints)" type="text" class="form-control input-sm productNameClass" autocomplete="off" placeholder="*Enter Product Name" typeahead-editable="false" ng-required="true" style="padding-left: 6px;padding-right: 6px;" typeahead-template-url="customTemplate.html" ng-disabled="form.loadData" ng-keypress="presssuburb($event)" />
 							<span class="input-group-btn">
-								 <button type="button" class="btn btn-default btn-sm" ng-if="item.productId" ng-click="editProductWithRedirect($index)"><i class="fa fa-edit fa-lg" style="color:#17A1E5;"></i></button>
-							   <button type="button" class="btn btn-default btn-sm" data-ng-click="openProduct('lg',$index)" ng-if="!item.productId"><i class="fa fa-plus fa-lg" style="color:#17A1E5;"></i></button>
+								<button type="button" class="btn btn-default btn-sm" ng-if="item.productId" ng-click="editProductWithRedirect($index)"><i class="fa fa-edit fa-lg" style="color:#17A1E5;"></i></button>
+							   	<button type="button" class="btn btn-default btn-sm" data-ng-click="openProduct('lg',$index)" ng-if="!item.productId"><i class="fa fa-plus fa-lg" style="color:#17A1E5;"></i></button>
 							   	<button ng-if="enableItemizedPurchaseSales && item.productId" type="button" class="btn btn-default btn-sm" tooltip="IMEI/Serial No"  tooltip-trigger="mouseenter" tooltip-placement="top" data-ng-click="openBarcodeModal('lg',$index)"><i class="fa fa-barcode" style="font-size:15px;color:#17A1E5;"></i></button>
 							</span>
 						</div>
@@ -398,6 +412,8 @@
 						<input ng-if="enableDisableLWHArray[$index].lengthStatus" ng-required="true" ng-minlength="1" ng-pattern="/^(0*[1-9][0-9]*([\.][0-9]+)?|0+[\.][0-9]*[1-9][0-9]*)$/" ng-model="item.lengthValue" placeholder="Length" ng-change="changeProductTable();changeQuantity($index);" ng-style="enableDisableLWHArray[$index].styleObj" type="text" class="form-control input-sm" only-number/>
 						<input ng-if="enableDisableLWHArray[$index].widthStatus" ng-required="true" ng-minlength="1" ng-pattern="/^(0*[1-9][0-9]*([\.][0-9]+)?|0+[\.][0-9]*[1-9][0-9]*)$/" ng-model="item.widthValue" ng-change="changeProductTable();changeQuantity($index);" ng-style="enableDisableLWHArray[$index].styleObj" type="text" class="form-control input-sm" placeholder="Width" only-number/>
 						<input ng-if="enableDisableLWHArray[$index].heightStatus" ng-required="true" ng-minlength="1" ng-pattern="/^(0*[1-9][0-9]*([\.][0-9]+)?|0+[\.][0-9]*[1-9][0-9]*)$/" ng-model="item.heightValue" ng-change="changeProductTable();changeQuantity($index);" ng-style="enableDisableLWHArray[$index].styleObj" type="text" class="form-control input-sm" placeholder="Height" only-number/>
+						<span class="pull-right" ng-show="enableDisableLWHArray[$index].lengthStatus || enableDisableLWHArray[$index].heightStatus || enableDisableLWHArray[$index].widthStatus">{{item.totalFt}} Ft</span>
+
 					</td>
 					<td style="text-align:center;" ng-if="divTag">
 						<input  ng-if="enableDisableColor" placeholder="Color" type="text" ng-model="item.color"  class="form-control input-sm " ng-class="ProductColorSizeVarDesign"  ng-change="changeProductTable()" /> 
@@ -410,36 +426,38 @@
 						<input placeholder="Frame No" type="text" ng-model="item.frameNo"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"   ng-pattern="/^[a-z-A-Z0-9 ]*$/" ng-change="changeProductTable()" /> 
 					</td>
 					<td>
-						<input  type="text" ng-model="item.qty"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"  ng-required="true" ng-minlength="1" ng-pattern="/^[1-9]+[0-9]*$/" ng-change="changeProductTable();changeQuantity($index)" only-number /> 
+						<input  type="text" ng-model="item.qty"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"  ng-required="true" ng-minlength="1" ng-pattern="/^\s*(?=.*[1-9])\d*(?:\.\d{1,2})?\s*$/" ng-change="changeProductTable();changeQuantity($index)" only-number /> 
 					</td>
 					
 					<td>
 						<!--span style="float:right">{{item.price}}</span-->
-						<input placeholder="(&#x20b9;)Rate" id="price" type="text" ng-model="item.price"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"  ng-required="true" ng-minlength="1" ng-pattern="/^[1-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage)" only-number /> 
+						<input placeholder="(&#x20b9;)Rate" id="price" type="text" ng-model="item.price"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"  ng-required="true" ng-minlength="1" ng-pattern="/^\s*(?=.*[1-9])\d*(?:\.\d{1,2})?\s*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage,$index)" only-number /> 
 					</td>
 					<td>
 						<select  ng-model="item.discountType"  class="form-control input-sm" style="padding-left: 3px;padding-right: 3px;width:60%;float:left;" ng-change="changeProductTable();" >
 							<option value="flat" selected="selected">Flat</option>
 							<option value="percentage">%</option>
 						</select>
-						<input  type="text" ng-model="item.discount"  class="form-control input-sm" style="padding-left: 5px;padding-right: 5px;width:40%;" ng-pattern="/^[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage)"  ng-attr-max="{{item.discountType == 'percentage' && '100' || ''}}" only-number /> 
+						<input  type="text" ng-model="item.discount"  class="form-control input-sm" style="padding-left: 5px;padding-right: 5px;width:40%;" ng-pattern="/^[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage,$index)"  ng-attr-max="{{item.discountType == 'percentage' && '100' || ''}}" only-number /> 
 						
 					</td>
 					<td style="text-align:right">
-						<input id="price" type="text" ng-disabled="csgstDisable" ng-model="item.cgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%"  ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage);zeroSingleGst()" only-number /> 
+						<input id="price" type="text" ng-disabled="csgstDisable" ng-model="item.cgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%"  ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage,$index);zeroSingleGst()" only-number /> 
 						<span ng-if="item.cgstAmount > 0 && !csgstDisable" ng-disabled="csgstDisable" ng-bind="item.cgstAmount"></span>
+						<span class="pull-left" ng-if="item.cgstAmount > 0 && !csgstDisable" ng-disabled="csgstDisable">({{item.cgstAmount/item.qty | setDecimal: noOfDecimalPoints}}/psq)</span>
 					</td>
 					<td style="text-align:right">
-						<input id="price" type="text" ng-disabled="csgstDisable" ng-model="item.sgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%"  ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage);zeroSingleGst()" only-number /> 
+						<input id="price" type="text" ng-disabled="csgstDisable" ng-model="item.sgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%"  ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage,$index);zeroSingleGst()" only-number /> 
 						<span ng-if="item.sgstAmount > 0 && !csgstDisable" ng-disabled="csgstDisable" ng-bind="item.sgstAmount" ></span>
+						<span title="Per Single Quantity" class="pull-left" ng-if="item.sgstAmount > 0 && !csgstDisable" ng-disabled="csgstDisable" >({{item.sgstAmount/item.qty | setDecimal: noOfDecimalPoints}}/psq)</span>
 					</td>
 					<td style="text-align:right">
-						<input id="price" type="text" ng-disabled="igstDisable" ng-model="item.igstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%" ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage);zeroSingleGst()" only-number /> 
+						<input id="price" type="text" ng-disabled="igstDisable" ng-model="item.igstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%" ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage,$index);zeroSingleGst()" only-number />
 						<span ng-if="item.igstAmount > 0" ng-disabled="igstDisable" ng-bind="item.igstAmount"></span>
+						<span class="pull-left" ng-if="item.igstAmount > 0" ng-disabled="igstDisable">({{item.igstAmount/item.qty | setDecimal: noOfDecimalPoints}}/psq)</span>
 					</td>
 					<td>
 						<input placeholder="(&#x20b9;)Amount" type="text" ng-model="item.amount"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"  ng-required="true" ng-minlength="1" ng-pattern="/^[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverseTwo(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage,$index);" only-number /> 
-						
 					</td>
 					<td >
 						<center>
@@ -501,7 +519,7 @@
 					<!-- <td style="text-align:right"><span style="visibility:hidden" ng-bind="grandTotalTable = (total | setDecimal: noOfDecimalPoints)" ><span>
 					</td> -->
 					<td colspan="1">
-						<button type="button" class="btn btn-sm" data-ng-class="app.theme.brand"  ng-click="openExpenseRaw()">Expense</button>
+						<button type="button" class="btn btn-sm paddignBtn" data-ng-class="app.theme.brand" ng-if="saleType != 'QuotationPrint'" ng-click="openExpenseRaw()">Expense</button>
 					</td>
 				</tr>
 				<tr  ng-repeat="item in form.AccExpense track by $index" ng-if="openExpenseRawData">
@@ -533,10 +551,11 @@
 						<input  type="text" ng-model="item.expenseValue"  class="form-control input-sm" style="padding-left: 5px;padding-right: 5px;width:40%;" ng-pattern="/^[0-9 .]*$/" ng-change="changeProductTable();advanceValueUpdate();" ng-required="true"  only-number /> 
 					</td>
 					<td colspan="3">
+						<input type="text" placeholder="GST(%)" ng-model="item.expenseTax" ng-change="changeProductTable();advanceValueUpdate();" class="form-control input-sm pull-left"  style="padding-left: 5px;padding-right: 5px;width:40%;" only-number>
+						<span class="pull-right" ng-bind='item.expenseAmt | setDecimal: noOfDecimalPoints'></span>
 					</td>
 					<td colspan="1" style="text-align:right">
 						<span ng-bind='expenseAmount[$index] = getExpenseValue($index) | setDecimal: noOfDecimalPoints'></span>
-						
 					</td>
 					<td colspan="1">
 						<center>
@@ -561,11 +580,10 @@
 							   </button>
 							</span>
 						</div>
-
 					</td>
 					<td style="text-align:right" colspan="{{colspanAdvanceValue}}" > <strong> Advance </strong> </td>
 					<td colspan="2"> 
-						<input placeholder="(&#x20b9;)Advance" type="text" name="advance"  ng-model="quickBill.advance"  class="form-control input-sm"   ng-pattern="/^[0-9 .]*$/" ng-change="changeProductTable()" style="height:30px;padding-left: 6px;padding-right: 6px;padding-bottom: 8px;padding-top: 8px;" only-number /> 
+						<input placeholder="(&#x20b9;)Advance" type="text" name="advance"  ng-model="quickBill.advance"  class="form-control input-sm"   ng-pattern="/^\s*(?=.*[0-9])\d*(?:\.\d{1,2})?\s*$/" ng-change="changeProductTable()" style="height:30px;padding-left: 6px;padding-right: 6px;padding-bottom: 8px;padding-top: 8px;" only-number /> 
 						<span ng-messages="formBill.advance.$error" ng-if="formBill.advance.$dirty || formBill.advance.$touched"  role="alert">
 							<span ng-messages-include="errorPatternNumber"></span>
 						</span>

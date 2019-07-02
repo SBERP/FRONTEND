@@ -1,11 +1,20 @@
 [
+
+  {
+    "text": "Quotation Flow",
+    "sref": "app.QuotationFlowView",
+    "icon": "fa fa-sitemap",
+    "permission":"sales",
+    "setting":"workflow"
+  },
   {
     "text": "Sales",
     "sref": "#",
     "icon": "icon-outbox",
     "subnav": [
       { "text": "Add/Edit", "sref": "app.AccSales", "translate": "" },
-      { "text": "Tax Invoice", "sref": "app.AccViewWholeSales", "translate": "" }
+      { "text": "Tax Invoice", "sref": "app.AccViewWholeSales", "translate": "" },
+      { "text": "Sales Return", "sref": "app.AccSalesReturn", "translate": "" }
     ],
     "permission":"sales"
   },
@@ -20,15 +29,13 @@
     "permission":"purchase"
   },
   {
-    "text": "Sales Return",
-    "sref": "app.AccSalesReturn",
-    "icon": "fa fa-mail-forward",
-    "permission":"sales"
-  },
-  {
     "text": "Sales Order",
-    "sref": "app.AccSalesOrder",
+    "sref": "#",
     "icon": "fa fa-credit-card",
+    "subnav": [
+      { "text": "Add/Edit", "sref": "app.AccSalesOrder", "translate": "" },
+      { "text": "Sales Orders", "sref": "app.AccViewSalesOrders", "translate": "" }
+    ],
     "permission":"salesOrder"
   },
   {
@@ -39,8 +46,12 @@
   },
   {
     "text": "Quotation",
-    "sref": "app.QuotationPrint",
+    "sref": "#",
     "icon": "fa fa-quora",
+    "subnav": [
+      { "text": "Add/Edit", "sref": "app.QuotationPrint", "translate": "" },
+      { "text": "Quotations", "sref": "app.AccViewQuotations", "translate": "" }
+    ],
     "permission":"quotation"
   },
   {

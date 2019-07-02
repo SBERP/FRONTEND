@@ -115,26 +115,17 @@ function permissionModalController($rootScope,$scope,$modalInstance,apiCall,apiP
 				commissionFormData.set('commissionStatus','off');
 			}
 			apiCall.postCall(apiPath.getStaffCommission+userData.userId,commissionFormData).then(function(response){
-				if(response==apiResponse.ok)
-				{
-					$modalInstance.close();
-				}
-				else
-				{
-					$modalInstance.dismiss();
-				}
 			});
-			return false;
 			var formdata = undefined;
 			 	formdata = new FormData();
 
-			angular.forEach($scope.permissionArray[0],function(value,key){
+			/*angular.forEach($scope.permissionArray[0],function(value,key){
 				angular.forEach(value,function(subValue,subKey){
 					if(subValue == false){
 						delete $scope.permissionArray[0][key][subKey];
 					}
 				});
-			});
+			});*/
 
 			formdata.set('permissionArray',angular.toJson($scope.permissionArray));
 
@@ -142,8 +133,6 @@ function permissionModalController($rootScope,$scope,$modalInstance,apiCall,apiP
 				if(response==apiResponse.ok)
 				{
 					$modalInstance.close();
-					
-					
 				}
 				else
 				{

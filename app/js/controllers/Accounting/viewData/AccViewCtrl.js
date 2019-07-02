@@ -6,7 +6,7 @@
 
 App.controller('AccViewController', AccViewController);
 
-function AccViewController($rootScope,$scope,apiCall,apiPath,$state,viewDataType,validationMessage,toaster,clientFactory,stateCityFactory,fetchArrayService) {
+function AccViewController($rootScope,$scope,apiCall,apiPath,$state,viewDataType,apiResponse,validationMessage,toaster,clientFactory,stateCityFactory,fetchArrayService,productFactory) {
   'use strict';
   
   var vm = this; 
@@ -19,7 +19,8 @@ function AccViewController($rootScope,$scope,apiCall,apiPath,$state,viewDataType
 $scope.enableDisableAddress = false;
 $scope.enableDisableEmailId = false;
   var settingResponse = [];
-
+  	productFactory.getProduct();
+  	
   	if ($scope.viewDataTypePath == 'CrmClientFilterView'){
 
   		//get setting data
@@ -51,6 +52,26 @@ $scope.enableDisableEmailId = false;
 			}
 		}
 
+  	}
+  	vm.salesmanDrop = [];
+  	if ($scope.viewDataTypePath == 'Commission Report') {
+  		// var headerDataOnLoad = {'Content-Type': undefined,'companyId':companyId};
+		apiCall.getCall(apiPath.getAllStaff).then(function(response2){
+			toaster.clear();
+			if(apiResponse.noContent == response2){
+				toaster.pop('alert', 'Opps!!', 'No Staff Available');
+			}
+			else{
+				vm.salesmanDrop = response2;
+			}
+		});
+  		$scope.filterStaff = function(value , index , array ){
+			if ((value.userType == "salesman" || $rootScope.$storage.authUser.userId == value.userId) && 
+				value.company.companyId == $scope.accViewSales.companyDropDown.companyId)
+			{
+				return true;
+			}
+	    }
   	}
 	
 	/* VALIDATION */
@@ -159,6 +180,7 @@ $scope.enableDisableEmailId = false;
 			var getAllBranch = apiPath.getOneBranch+id;
 			// Get Branch
 			apiCall.getCall(getAllBranch).then(function(response4){
+				toaster.clear();
 				vm.branchDrop = response4;
 				if(angular.isArray(response4)){
 					if (response4.length > 0){
@@ -192,7 +214,6 @@ $scope.enableDisableEmailId = false;
 		if($scope.accViewSales.companyDropDown){
 			$rootScope.accView.companyId = $scope.accViewSales.companyDropDown.companyId;
 		}
-
 		if ($scope.accViewSales.branchDropDown) {
 			$rootScope.accView.branchId = $scope.accViewSales.branchDropDown.branchId;
 		} else {
@@ -218,7 +239,9 @@ $scope.enableDisableEmailId = false;
 			$rootScope.accView.jobCardToDate = jobcardModifyToDate; // Jobcard TODate
 			
 		}
-		
+		if ($scope.viewDataTypePath == 'Commission Report') {
+			$rootScope.accView.userData = $scope.accViewSales.salesmanDropdown;
+		}
 		$rootScope.accView.fromDate = modifyFromDate; // FromDate
 		$rootScope.accView.toDate = modifyToDate; // TODate
 		
@@ -251,6 +274,16 @@ $scope.enableDisableEmailId = false;
 		else if($scope.viewDataTypePath == 'Wholesales'){
 			
 			$state.go("app.AccDataWholeSales");
+		}
+		else if($scope.viewDataTypePath == 'Sales Orders'){
+			
+			$state.go("app.AccDataSalesOrders");
+		}
+		else if($scope.viewDataTypePath == 'Quotations'){
+			$state.go("app.AccDataQuotations");
+		}
+		else if($scope.viewDataTypePath == 'Quotations Process'){
+			$state.go("app.AccDataQuotationsFlow");
 		}
 		else if($scope.viewDataTypePath == 'purchase'){
 			
@@ -303,6 +336,10 @@ $scope.enableDisableEmailId = false;
 		else if($scope.viewDataTypePath == 'PoliceReport'){
 			
 			$state.go("app.ReportPoliceData");
+		}
+		else if($scope.viewDataTypePath == 'Commission Report'){
+			
+			$state.go("app.ReportCommissionData");
 		}
 		else if($scope.viewDataTypePath == 'CrmClientFilterView'){
 			
@@ -533,4 +570,4 @@ $scope.enableDisableEmailId = false;
   
   
 }
-AccViewController.$inject = ["$rootScope","$scope","apiCall","apiPath","$state","viewDataType","validationMessage","toaster","clientFactory","stateCityFactory","fetchArrayService"];
+AccViewController.$inject = ["$rootScope","$scope","apiCall","apiPath","$state","viewDataType","apiResponse","validationMessage","toaster","clientFactory","stateCityFactory","fetchArrayService","productFactory"];

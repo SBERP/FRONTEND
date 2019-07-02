@@ -85,6 +85,7 @@ function SettingAdvanceMeasurementController($rootScope,$scope,$filter,$modal,ng
 			res1.widthStatus = res1.widthStatus == 'enable' ? true : false;
 			res1.heightStatus = res1.heightStatus == 'enable' ? true : false;
 			res1.devideFactor = $filter('number')(res1.devideFactor, 2);
+			res1.moduloFactor = $filter('number')(res1.moduloFactor, 0);
 			return res1;
 		});
 		data = response;
@@ -101,6 +102,7 @@ function SettingAdvanceMeasurementController($rootScope,$scope,$filter,$modal,ng
 		formdata.set('widthStatus',measurementForm.widthStatus ? 'enable' : 'disable');
 		formdata.set('heightStatus',measurementForm.heightStatus ? 'enable' : 'disable');
 		formdata.set('devideFactor',measurementForm.devideFactor);
+		formdata.set('moduloFactor',measurementForm.moduloFactor);
 		var newMeasurementGetApiPath = measurementGetApiPath;
 		if($scope.addUpdateLabel=="Update")
 		{
@@ -124,6 +126,7 @@ function SettingAdvanceMeasurementController($rootScope,$scope,$filter,$modal,ng
 						res1.widthStatus = res1.widthStatus == 'enable' ? true : false;
 						res1.heightStatus = res1.heightStatus == 'enable' ? true : false;
 						res1.devideFactor = $filter('number')(res1.devideFactor, 2);
+						res1.moduloFactor = $filter('number')(res1.moduloFactor, 0);
 						return res1;
 					});
 					data = angular.copy(response);
@@ -143,6 +146,7 @@ function SettingAdvanceMeasurementController($rootScope,$scope,$filter,$modal,ng
 			formdata.delete('widthStatus');
 			formdata.delete('heightStatus');
 			formdata.delete('devideFactor');
+			formdata.delete('moduloFactor');
 		});
 	}
 	$scope.cancel = function(){
@@ -152,6 +156,7 @@ function SettingAdvanceMeasurementController($rootScope,$scope,$filter,$modal,ng
 		$scope.measurementForm.heightStatus = false;
 		$scope.measurementForm.measurementUnitId = '';
 		$scope.measurementForm.devideFactor = 1;
+		$scope.measurementForm.moduloFactor = 0;
 	}
 
 	//Edit Measurement
@@ -170,6 +175,7 @@ function SettingAdvanceMeasurementController($rootScope,$scope,$filter,$modal,ng
 					$scope.measurementForm.heightStatus = response.heightStatus == 'enable' ? true : false;
 					$scope.measurementForm.widthStatus = response.widthStatus == 'enable' ? true : false;
 					$scope.measurementForm.devideFactor = $filter('number')(response.devideFactor, 2);
+					$scope.measurementForm.moduloFactor = $filter('number')(response.moduloFactor, 0);
 					$scope.measurementForm.measurementUnitId = response.measurementUnitId;
 				}
 			}

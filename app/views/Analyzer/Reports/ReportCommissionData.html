@@ -1,0 +1,43 @@
+<h3>
+   <small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+   Reports >>
+    <a ui-sref="app.ReportCommission" >View</a> >>
+   {{headerType}}</small>
+</h3>
+<div  class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true,'time-out': 10000}"></toaster-container>
+	
+   <div class="panel panel-default">
+      <div class="panel-heading myHeading" >
+		  <div class="panel-title"> 
+	  		<h5 style="display: inline-block;">{{headerType}} of <b>{{displayCompany}}</b> for {{filterSaleman.userName}} </h5> 
+	  		<a ng-click='commissionCsv.generate($event, "commission-report.csv",table.tableParams)' class="pull-right btn btn-sm btn-primary">Export to CSV</a>
+		  </div>
+      </div>
+	   <div class="table-responsive">
+	   	
+		  <table data-ng-table="table.tableParams" show-filter="true" export-csv="commissionCsv" class="table table-bordered table-striped">
+			 <tbody>
+				<tr data-ng-repeat="user in $data">
+					<td data-title="'#'"  style="text-align:center">{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td>
+					<td data-title="'Invoice#'" filter="{'invoiceNumber': 'text'}" >
+						<a href="javascript:void(0)" ng-click="goToBillPage(user.jfId)">{{user.invoiceNumber}}</a>
+					</td>
+					<td data-title="'Date'" sortable="'date'" filter="{ 'entryDate': 'text' }" >{{dateConvert(user.entryDate) | date:dateFormat}}</td>
+					<td data-title="'Total'" style="text-align: right;">{{user.total | number:2}}</td>
+					<td data-title="'Commission'"  style="text-align: right;">{{user.commissionAmount | number:2}}</td>
+				</tr>
+				 <tfooter>
+		          	<tr style="background-color: #f5f5f5;">
+						<td colspan="2"><b>Grand Total</b></td>
+						<td></td>
+						<td style="text-align: right;">{{totalBillAmount | number:2}}</td>
+						<td style="text-align: right;">{{totalCommissionAmount | number:2}}</td>
+					</tr>
+		        </tfooter>
+			 </tbody>
+		  </table>
+		 </div>
+	   <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" ></span>
+   </div>
+</div>

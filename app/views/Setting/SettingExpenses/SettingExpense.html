@@ -62,9 +62,27 @@
 					  </div>
 				   </div>
 				</fieldset>
+				<div class="row">
+					<div class="col-md-7">
+						<div class="form-group">
+							<label for="input-id-1" class="col-sm-3 control-label">*Group Under</label>
+							<div class="col-sm-9">
+								<select  ng-model="expenseForm.expenseGroupType"  class="form-control input-sm" style="padding-left: 3px;padding-right: 3px;width:100%;float:left;"  > 
+									<option value="indirect" selected="selected">Indirect</option>
+									<option value="direct">Direct</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-5">
+						<button type="button" class="mr mb-sm btn btn-danger pull-right" tabindex="4" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="cancel()" >Cancel</button>
+						<button type="button" class="mr mb-sm btn btn-success pull-right" ng-disabled="formExpense.$invalid" tabindex="3" ng-click="insertExpenseData(expenseForm)">{{addUpdateLabel}}</button>
+					</div>
+				</div>
 				
-				<button type="button" class="mr mb-sm btn btn-danger pull-right" tabindex="4" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="cancel()" >Cancel</button>
-				<button type="button" class="mr mb-sm btn btn-success pull-right" ng-disabled="formExpense.$invalid" tabindex="3" ng-click="insertExpenseData(expenseForm)">{{addUpdateLabel}}</button>
+				
+				
+				
 			</div>
          </form>
       </div>

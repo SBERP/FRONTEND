@@ -49,6 +49,7 @@ function AccItemizeStockModalController($scope,toaster,$modalInstance,stockType,
         }, {
           total: data.length,
           getData: function($defer, params) {
+              orderedData = data;
               orderedData = params.filter() ?
                      $filter('filter')(data, params.filter()) :
                      data;
@@ -57,36 +58,6 @@ function AccItemizeStockModalController($scope,toaster,$modalInstance,stockType,
               $defer.resolve(vm.users);
           }
       });
-    }
-    $scope.totalQty = function(){
-        var total = 0;
-        var count = data.length;
-        for(var i = 0; i < count; i++)
-        {
-            total += parseFloat(data[i].stock);
-        }
-        return isNaN(total) ? 0 : total;
-    }
-    $scope.visibleQty = function(){
-        var total = 0;
-        var count = vm.users.length;
-        for(var i = 0; i < count; i++)
-        {
-            total += parseFloat(vm.users[i].stock);
-        }
-        return isNaN(total) ? 0 : total;
-    }
-    $scope.filteredQty = function(){
-        var total = 0;
-        var count = orderedData.length;
-        for(var i = 0; i < count; i++)
-        {
-            total += parseFloat(orderedData[i].stock);
-        }
-        return isNaN(total) ? 0 : total;
-    }
-    $scope.parsedStock = function(qty){
-        return parseInt(qty);
     }
     $scope.ok = function () {
         $modalInstance.close('close');

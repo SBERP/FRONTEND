@@ -75,13 +75,13 @@ function SettingExpenseController($rootScope,$scope,$filter,ngTableParams,apiCal
 	var expenseGetApiPath = apiPath.settingExpense;
 	// Get All Expense Call 
 	apiCall.getCall(expenseGetApiPath).then(function(response){
-		console.log(response);
 		$scope.expenseData = response;
 		filterDataForTable();
 		 $scope.TableData();
 	});
 
 	$scope.expenseForm.expenseType = 'flat';
+	$scope.expenseForm.expenseGroupType = 'indirect';
 	$scope.expenseForm.expenseValue = '0';
 	
 	//Insert Expense
@@ -108,6 +108,8 @@ function SettingExpenseController($rootScope,$scope,$filter,ngTableParams,apiCal
 			formdata.append('expenseType','flat');
 		}
 		formdata.append('expenseName',expenseForm.expenseName);
+		formdata.append('expenseGroupType',expenseForm.expenseGroupType);
+
 		var newExpenseGetApiPath = expenseGetApiPath;
 		if($scope.addUpdateLabel=="Update")
 		{
@@ -134,6 +136,7 @@ function SettingExpenseController($rootScope,$scope,$filter,ngTableParams,apiCal
 				$scope.expenseForm.companyDrop.companyId='';
 				$scope.expenseForm.expenseName = '';
 				$scope.expenseForm.expenseType = 'flat';
+				$scope.expenseForm.expenseGroupType = 'indirect';
 				$scope.expenseForm.expenseValue = '0';
 				defaultCompany();
 			}
@@ -144,6 +147,7 @@ function SettingExpenseController($rootScope,$scope,$filter,ngTableParams,apiCal
 			// toaster.pop('success', 'Title', 'Message');
 			formdata.delete('companyId');
 			formdata.delete('expenseType');
+			formdata.delete('expenseGroupType');
 			formdata.delete('expenseName');
 			formdata.delete('expenseValue');
 		});
@@ -153,10 +157,12 @@ function SettingExpenseController($rootScope,$scope,$filter,ngTableParams,apiCal
 		$scope.expenseForm.expenseName = '';
 		$scope.expenseForm.expenseValue = '';
 		$scope.expenseForm.expenseType = 'flat';
+		$scope.expenseForm.expenseGroupType = 'indirect';
 		defaultCompany();
 		formdata.delete('companyId');
 		formdata.delete('expenseValue');
 		formdata.delete('expenseType');
+		formdata.delete('expenseGroupType');
 		formdata.delete('expenseName');
 	}
 	$scope.editExpense= function(id)
@@ -173,6 +179,7 @@ function SettingExpenseController($rootScope,$scope,$filter,ngTableParams,apiCal
 					$scope.expenseForm.expenseName = response.expenseName;
 					$scope.expenseForm.expenseValue = response.expenseValue;
 					$scope.expenseForm.expenseType = response.expenseType;
+					$scope.expenseForm.expenseGroupType = response.expenseGroupType;
 					$scope.expenseForm.expenseId = response.expenseId;
 				}
 			}

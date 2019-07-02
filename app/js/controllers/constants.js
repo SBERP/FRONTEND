@@ -50,7 +50,8 @@ App
                              'app/js/customeJS/excel/ods.js',
                              'app/js/customeJS/excel/ui-grid.min.js',
                              'app/js/customeJS/excel/ui-grid.min.css'],
-      'exportExcel':        ['https://cdn.jsdelivr.net/alasql/0.3/alasql.min.js']
+      'exportExcel':        ['https://cdn.jsdelivr.net/alasql/0.3/alasql.min.js'],
+      'googleKeyboard':     ['app/js/customeJS/googleKeyboard.js']
     },
     // Angular based script (use the right module name)
     modules: [
@@ -145,6 +146,7 @@ App
   'getLatestInvoice2'     : '/latest',
   'getLatestQuotation'    : 'settings/quotation-numbers/company/',
   'getJrnlByCompany'      : 'accounting/journals/company/',
+  'getJrnlTrnByCompany'   : 'accounting/journals/transaction/',
   'getOneJrnl'            : 'accounting/journals/',
   'getLedgerJrnl'         : 'accounting/ledgers/company/',
   'getAllStaff'           : 'users',
@@ -247,7 +249,8 @@ App
     'arnknits':  'http://api.prabandhak.co.in/',
     'demoPrabandhak': 'http://api.prabandhak.co.in/',
     'stageErp': 'http://stageapi.siliconbraintechnosoft.com/',
-    'vastu':'http://api.vastuinteriorsolution.com/'
+    'vastu':'http://api.vastuinteriorsolution.com/',
+    'vastu2':'http://api.vaastuinterio.in/'
   })
   // front-end Url
   .constant('hostFrontUrl', {
@@ -265,7 +268,8 @@ App
   'arnknits':  'http://arnknits.prabandhak.co.in/',
   'demoPrabandhak': 'http://demo.prabandhak.co.in/',
   'stageErp': 'http://stage.siliconbraintechnosoft.com/',
-  'vastu':'http://erp.vastuinteriorsolution.com/'
+  'vastu':'http://erp.vastuinteriorsolution.com/',
+  'vastu2':'http://erp.vaastuinterio.in/'
   })
   // Google Captcha Site Key
   .constant('googleSiteKey', {
@@ -283,7 +287,8 @@ App
   'arnknits':  '6LcNHDAUAAAAAGSxm7_laHly5BVFrzNNDckUIBb9',
   'demoPrabandhak': '6LddYzAUAAAAAFby3EOjaHBvNDI9p4nVbq8R1MIi',
   'stageErp': '6LfBqosUAAAAAOWfCStKdw3Nnjq5Nzq7ThfSglyF',
-  'vastu': '6Lczw3YUAAAAAOtoh04wnIew3yRbhx_wC6H4LOM2'
+  'vastu': '6Lczw3YUAAAAAOtoh04wnIew3yRbhx_wC6H4LOM2',
+  'vastu2': '6LdsK6EUAAAAAMwjRC04WVHVQ02XNLaC6NKzJL6B'
   })
   // front-end Url
   .constant('pusherKey', {

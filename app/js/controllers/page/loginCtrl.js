@@ -15,6 +15,7 @@ function loginController($rootScope,$scope,hostFrontUrl,$http,apiPath,apiCall,$s
 	$scope.loginData = [];
 	$scope.notMatch = false; // True when Email or password will Be Wrong.
 	$scope.errorCaptcha = false;
+	$scope.logged = false;
 	
 	var googleSiteKeys = $rootScope.googleSiteKey;
 	 var hostName = "http://"+window.location.hostname+"/";
@@ -81,42 +82,57 @@ function loginController($rootScope,$scope,hostFrontUrl,$http,apiPath,apiCall,$s
 						//if($rootScope.$storage.authToken){
 						if(angular.isObject(response))
 						{
-							//$rootScope.$storage.authToken = response.authenticationToken;
-							$rootScope.$storage.authToken = response.token;
-							$rootScope.$storage.authUser = response.user;
-							defaultCompany();
-							if(response.user['userType']=='superadmin' || response.user['userType']=='admin')
+							if (response.hasOwnProperty('error')) 
 							{
-								$rootScope.$storage.permissionArray = [{"configuration":{"dashboard":true,"companies":true,"branches":true,"staff":true,"invoiceNumber":true,"quotationNumber":true,"template":true,"setting":true},"accounting":{"sales":true,"purchase":true,"salesOrder":true,"purchaseOrder":true,"quotation":true,"creditNote":true,"debitNote":true,"specialJournal":true,"payment":true,"receipt":true,"statements":true,"taxation":true,"ledger":true},"inventory":{"brand":true,"category":true,"product":true,"barcodePrint":true,"stockRegister":true,"stockSummary":true},"crm":{"jobcard":true,"clients":true},"analyzer":{"reports":true},"pricelist":{"tax":true},"quickMenu":{"taxInvoice":true,"taxPurchase":true}}];
-								//$rootScope.loggedUser = $rootScope.$storage.authUser;
-								//console.log($rootScope.loggedUser);
-								// $state.go("app.Company");
+								vm.loaderIcon = false;
+								$scope.disableValue = false;
+								$scope.notMatch = false;
+								$scope.logged = true;
 							}
 							else
 							{
-								$rootScope.$storage.permissionArray = response.user['permissionArray'];
-								$rootScope.loggedUser = $rootScope.$storage.authUser;
-								//console.log($rootScope.loggedUser);
-								// $state.go("app.Company");
-							}
-
-							$rootScope.$storage.settingOptionArray = [];
-
-							apiCall.getCall(apiPath.settingOption).then(function(response2)
-							{
-								if (angular.isArray(response2)) {
-									$rootScope.$storage.settingOptionArray = response2;
+								//$rootScope.$storage.authToken = response.authenticationToken;
+								$rootScope.$storage.authToken = response.token;
+								$rootScope.$storage.authUser = response.user;
+								defaultCompany();
+								if(response.user['userType']=='superadmin' || response.user['userType']=='admin')
+								{
+									$rootScope.$storage.permissionArray = [{"configuration":{"dashboard":true,"companies":true,"branches":true,"staff":true,"invoiceNumber":true,"quotationNumber":true,"template":true,"setting":true},"accounting":{"sales":true,"purchase":true,"salesOrder":true,"purchaseOrder":true,"quotation":true,"creditNote":true,"debitNote":true,"specialJournal":true,"payment":true,"receipt":true,"statements":true,"taxation":true,"ledger":true},"inventory":{"brand":true,"category":true,"product":true,"barcodePrint":true,"stockRegister":true,"stockSummary":true},"crm":{"jobcard":true,"clients":true},"analyzer":{"reports":true},"pricelist":{"tax":true},"quickMenu":{"taxInvoice":true,"taxPurchase":true}}];
+									//$rootScope.loggedUser = $rootScope.$storage.authUser;
+									//console.log($rootScope.loggedUser);
+									// $state.go("app.Company");
 								}
-							});
-							$rootScope.app.sidebar.isCollapsed = true;
-							$rootScope.app.sidebar.sidebar_hide = false;
-							$rootScope.app.sidebar.sidebar_from_topbar = true;
-							$state.go("app.dashboard");
+								else
+								{
+									$rootScope.$storage.permissionArray = response.user['permissionArray'];
+									$rootScope.loggedUser = $rootScope.$storage.authUser;
+									//console.log($rootScope.loggedUser);
+									// $state.go("app.Company");
+								}
+								if (response.user['userType']=='superadmin') {
+									$rootScope.$storage.permissionArray[0].configuration.erpOptions = true;
+								}else{
+									$rootScope.$storage.permissionArray[0].configuration.erpOptions = false;
+								}
+								$rootScope.$storage.settingOptionArray = [];
+
+								apiCall.getCall(apiPath.settingOption).then(function(response2)
+								{
+									if (angular.isArray(response2)) {
+										$rootScope.$storage.settingOptionArray = response2;
+									}
+								});
+								$rootScope.app.sidebar.isCollapsed = true;
+								$rootScope.app.sidebar.sidebar_hide = false;
+								$rootScope.app.sidebar.sidebar_from_topbar = true;
+								$state.go("app.dashboard");
+							}
 						}
 						else{
 							vm.loaderIcon = false;
 							$scope.disableValue = false;
 							$scope.notMatch = true;
+							$scope.logged = false;
 						}
 					
 					});
@@ -133,6 +149,7 @@ function loginController($rootScope,$scope,hostFrontUrl,$http,apiPath,apiCall,$s
 	$scope.changeIt = function(){
 		
 		$scope.notMatch = false;
+		$scope.logged = false;
 	}
 
 	$scope.getUserData = function()
