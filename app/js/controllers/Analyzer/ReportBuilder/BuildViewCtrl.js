@@ -1,13 +1,39 @@
 App.controller('BuildViewController', BuildViewController);
+App.directive('myEnter', function () {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if(event.which === 13) {
+                scope.$apply(function (){
+                    scope.$eval(attrs.myEnter);
+                });
 
-
+                event.preventDefault();
+            }
+        });
+    };
+});
+App.directive('ngRightClick', function($parse) {
+    return function(scope, element, attrs) {
+        var fn = $parse(attrs.ngRightClick);
+        element.bind('contextmenu', function(event) {
+            scope.$apply(function() {
+                event.preventDefault();
+                fn(scope, {$event:event});
+            });
+        });
+    };
+});
 function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiResponse, toaster, getSetFactory) {
 	var vm = this;
 	$scope.headers = {};
+
+	var reloadingDt = true;
 	$scope.filters = {
 		conditions : [],
 		editIndex: undefined
 	};
+	vm.previewInputIndex = -1;
+	vm.previewContextIndex = -1;
 	$scope.treeOptions = {
 	    nodeChildren: "children",
 	    dirSelectable: true
@@ -50,11 +76,15 @@ function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiR
 	];
 	$scope.reloadDt = function()
 	{
-		var fields = angular.copy($scope.fields);
-		$scope.fields = [];
-		setTimeout(function(){
-			$scope.fields = fields;
-		},100);
+		if (reloadingDt) {
+			reloadingDt = false;
+			var fields = angular.copy($scope.fields);
+			$scope.fields = [];
+			setTimeout(function(){
+				reloadingDt = true;
+				$scope.fields = fields;
+			},100);
+		}
 	}
 	$scope.saveReport = function() {
 		console.log({
@@ -92,15 +122,13 @@ function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiR
 		$scope.filters.filterValue = item.filterValue;
 		$scope.filters.editIndex = index;
 	}
-
+	$scope.removePreviewColumn = function(index) {
+		$scope.preview.columns.splice(index,1);
+		table.previewInputIndex = -1;
+		table.previewContextIndex = -1;
+	}
 	$scope.showSelected = function(argument) {
 		console.log(argument)
 	}
-	$scope.sortableOptions = {
-	    update: function(e, ui) {
-	        console.log(e);
-	    },
-	    axis: 'x'
-	  };
 }
 BuildViewController.$inject = ["$rootScope","$scope", "$filter", "apiCall", "apiPath", "apiResponse", "toaster", "getSetFactory"];
