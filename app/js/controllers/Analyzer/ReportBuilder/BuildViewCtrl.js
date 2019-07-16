@@ -23,9 +23,9 @@ App.directive('ngRightClick', function($parse) {
         });
     };
 });
-
 function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiResponse, toaster, getSetFactory, ReportGroupFactory) {
     var vm = this;
+    $scope.dateFormat = 'DD-MM-YYYY';
     $scope.headers = {};
     $scope.reportGroups = [];
     var reloadingDt = true;
@@ -33,12 +33,52 @@ function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiR
         conditions: [],
         editIndex: undefined
     };
+    $scope.dataTypeInput = 0;
     vm.previewInputIndex = -1;
     vm.previewContextIndex = -1;
     $scope.treeOptions = {
         nodeChildren: "children",
         dirSelectable: true
     }
+    $scope.fields = [];
+    $scope.filterDrop = [];
+    $scope.filterTypes = {
+        'varchar' : [
+            "=",
+            "STARTS WITH",
+            "ENDS WITH",
+            "CONTAINS",
+            "NOT CONTAINT"
+        ],
+        'decimal' : [
+            "EQUALS TO",
+            "NOT EQUALS TO",
+            "GREATER THAN",
+            "LESS THAN",
+            "LESS OR EQUALS TO",
+            "GREATER OR EQUALS TO"
+        ],
+        'date' : [
+            "DATE EQUALS",
+            "MONTH EQUALS",
+            "YEAR EQUALS"
+        ],
+        'int' : [
+            "EQUALS TO",
+            "NOT EQUALS TO",
+            "GREATER THAN",
+            "LESS THAN",
+            "LESS OR EQUALS TO",
+            "GREATER OR EQUALS TO"
+        ],
+        'enum' : [
+        "EQUALS TO",
+        "NOT EQUALS TO"
+        ]
+    };
+    $scope.enumValues = [];
+    $scope.selectedFilterType = 'enum';
+
     $scope.preview = {
         groupBy: {},
         orderBy: {},
@@ -66,6 +106,7 @@ function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiR
             { 'invoice_no': 'Tg-125', 'total': 126.75 },
         ]
     };
+
     toaster.pop('waiting', 'Please Wait..');
     ReportGroupFactory.getReportGroups().then(resp => {
         toaster.clear();
@@ -76,21 +117,72 @@ function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiR
         }
     });
 
+    $scope.loadFields = function(reportGroup) {
+        toaster.pop('waiting', 'Please Wait..');
+        ReportGroupFactory.getGroupTable(reportGroup.rbGroupId).then(resp => {
+            toaster.clear();
+             if (angular.isArray(resp)) {
+                $scope.fields = resp;
+                let dropLength = resp.length;
+                $scope.filterDrop = [];
+                (function appendTableInList(iterate){
+                    let dropdown = resp[iterate].children.map(res => {
+                        // push children with table name in one whole array
+                        res.table = resp[iterate].label;
+                        return res;
+                    });
+                    $scope.filterDrop.push(...dropdown);
+                    iterate++;
+                    if (iterate < dropLength) {
+                        appendTableInList(iterate);
+                    }
+                })(0);
+            } else {
+                toaster.pop('warning', resp);
+            }
+        });
+    }
 
-    $scope.fields = [{
-        "label": "Sales Bill",
-        "id": "sale_bill",
-        "children": [{
-                "label": "Sales",
-                "id": "bill",
-                "children": [
-                    { "label": "Invoice", "id": "invoice_no" },
-                    { "label": "Total", "id": "total" }
-                ]
-            },
-            { "label": "Total", "id": "total" },
-        ]
-    }];
+    $scope.selectFilterValue = function(field) {
+        $scope.enumValues = [];
+        $scope.filters.filterValue = '';
+        if ($scope.filterTypes.hasOwnProperty(field.type.trim())) {
+            $scope.selectedFilterType = field.type.trim();
+            if (field.type.trim() == 'varchar')
+                $scope.dataTypeInput = 0;
+            if (field.type.trim() == 'decimal')
+                $scope.dataTypeInput = 1;
+            if (field.type.trim() == 'int')
+                $scope.dataTypeInput = 1;
+            if (field.type.trim() == 'date')
+                $scope.dataTypeInput = 2;
+        } else if (field.type.indexOf('enum') > -1) {
+            let enums = field.type.split(':');
+            if (enums.length > 1) {
+                let opts = enums[1].split('/');
+                $scope.selectedFilterType = "enum";
+                $scope.enumValues = opts;
+                $scope.dataTypeInput = 3;
+            }
+        } else {
+            $scope.selectedFilterType = "enum";
+        }
+    }
+
+    // $scope.fields = [{
+    //     "label": "Sales Bill",
+    //     "id": "sale_bill",
+    //     "children": [{
+    //             "label": "Sales",
+    //             "id": "bill",
+    //             "children": [
+    //                 { "label": "Invoice", "id": "invoice_no" },
+    //                 { "label": "Total", "id": "total" }
+    //             ]
+    //         },
+    //         { "label": "Total", "id": "total" },
+    //     ]
+    // }];
     $scope.reloadDt = function() {
         if (reloadingDt) {
             reloadingDt = false;
@@ -145,5 +237,26 @@ function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiR
     $scope.showSelected = function(argument) {
         console.log(argument)
     }
+
+
+// Date Picker
+
+      // Disable weekend selection
+      $scope.disabled = function(date, mode) {
+        return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+      };
+      $scope.pickDate = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        $scope.opened = true;
+      };
+
+      $scope.dateOptions = {
+        formatYear: 'yy',
+        startingDay: 1
+      };
+
+      $scope.initDate = new Date();
 }
 BuildViewController.$inject = ["$rootScope", "$scope", "$filter", "apiCall", "apiPath", "apiResponse", "toaster", "getSetFactory", "ReportGroupFactory"];

@@ -49,7 +49,7 @@
                     <div class="form-group clearfix">
                         <label class="col-sm-3 control-label">*Report Group</label>
                         <div class="col-sm-9">
-                            <select chosen="" data-ng-model="headers.reportGroup" class="form-control chosen-select" ng-required="true" tabindex="2" ng-options="item.rbGroupName group by item.rbGroupCategory for item in reportGroups">
+                            <select chosen="" data-ng-model="headers.reportGroup" class="form-control chosen-select" ng-required="true" tabindex="2"data-ng-options="s.rbGroupName group by s.rbGroupCategory for s in reportGroups track by s.rbGroupId" ng-change="loadFields(headers.reportGroup)">
 							</select>
                         </div>
                     </div>
@@ -94,25 +94,38 @@
                 <div class="panel-body clearfix">
                     <form action="#" method="get" accept-charset="utf-8" name="fieldForm">
                         <div class="col-sm-3">
-                            <select chosen="" data-ng-model="filters.field" class="form-control chosen-select" ng-required="true">
-								<option value="summary">Summary</option>
-								<option value="details">Details</option>
+                            <select chosen="" data-ng-model="filters.field" class="form-control chosen-select" ng-required="true" ng-options="s.label group by s.table for s in filterDrop track by s.id" ng-change="selectFilterValue(filters.field)">
 							</select>
                         </div>
                         <div class="col-sm-3">
-                            <select chosen="" data-ng-model="filters.conditionType" class="form-control chosen-select" ng-required="true">
-								<option value="summary">Summary</option>
-								<option value="details">Details</option>
+                            <select chosen="" data-ng-model="filters.conditionType" class="form-control chosen-select" ng-required="true" ng-options="s for s in filterTypes[selectedFilterType] track by $index">
 							</select>
                         </div>
                         <div class="col-sm-3">
-                            <input type="text" name="" data-ng-model="filters.filterValue" class="form-control" ng-required="true">
+                            <input type="text" name="filter_val" data-ng-model="filters.filterValue" class="form-control" ng-required="true" ng-readonly="!filters.field || !filters.conditionType" ng-if="dataTypeInput == 0">
+                            <input type="text" name="filter_val" data-ng-model="filters.filterValue" class="form-control" ng-required="true" ng-readonly="!filters.field || !filters.conditionType" only-number ng-if="dataTypeInput == 1">
+
+                            
+
+                            <div class="input-group" ng-if="dataTypeInput == 2">
+                                <input type="text" datepicker-popup="dd-MMMM-yyyy" data-ng-model="filters.filterValue" is-open="opened" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" data-ng-required="true" close-text="Close"
+                                class="form-control" />
+                                <span class="input-group-btn">
+                                   <button type="button" data-ng-click="pickDate($event)" class="btn btn-default">
+                                      <em class="fa fa-calendar"></em>
+                                   </button>
+                                </span>
+                             </div>
+
+                            <select chosen="" data-ng-model="filters.filterValue" class="form-control chosen-select" ng-required="true" ng-options="s for s in enumValues track by $index" ng-if="dataTypeInput == 3">
+                            </select>
                         </div>
                         <div class="col-sm-3">
                             <button type="button" class="btn btn-primary" ng-disabled="fieldForm.$invalid" ng-click="addFilter()">
 								<span ng-if="filters.editIndex == undefined">Add</span>
 								<span ng-if="filters.editIndex != undefined">Update</span>
 							</button>
+
                         </div>
                     </form>
                 </div>
@@ -128,7 +141,7 @@
                         </thead>
                         <tbody>
                             <tr ng-repeat="(index, item) in filters.conditions">
-                                <td>{{ item.field }}</td>
+                                <td>{{ item.field.label }} - {{item.field.table}}</td>
                                 <td>{{ item.conditionType }}</td>
                                 <td>{{ item.filterValue }}</td>
                                 <td>
