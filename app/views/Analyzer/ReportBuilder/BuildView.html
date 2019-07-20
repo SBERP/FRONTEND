@@ -46,41 +46,38 @@
                     </div>
                 </div>
                 <div class="panel-body">
-                    <div class="form-group clearfix">
-                        <label class="col-sm-3 control-label">*Report Group</label>
-                        <div class="col-sm-9">
-                            <select chosen="" data-ng-model="headers.reportGroup" class="form-control chosen-select" ng-required="true" tabindex="2"data-ng-options="s.rbGroupName group by s.rbGroupCategory for s in reportGroups track by s.rbGroupId" ng-change="loadFields(headers.reportGroup)">
-							</select>
+                    <form action="#" method="post" accept-charset="utf-8" name="headerForm">
+                        <div class="form-group clearfix">
+                            <label class="col-sm-3 control-label">*Report Group</label>
+                            <div class="col-sm-9">
+                                <select chosen="" data-ng-model="headers.reportGroup" class="form-control chosen-select" ng-required="true" tabindex="2"data-ng-options="s.rbGroupName group by s.rbGroupCategory for s in reportGroups track by s.rbGroupId" ng-change="loadFields(headers.reportGroup)">
+    							</select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group clearfix">
-                        <label class="col-sm-3 control-label">*Report Name</label>
-                        <div class="col-sm-9">
-                            <input class="form-control" data-ng-model="headers.reportName" ng-required="true" placeholder="Report name">
+                        <div class="form-group clearfix">
+                            <label class="col-sm-3 control-label">*Report Name</label>
+                            <div class="col-sm-9">
+                                <input class="form-control" data-ng-model="headers.reportName" ng-required="true" placeholder="Report name">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group clearfix">
-                        <label class="col-sm-3 control-label">*Report Title</label>
-                        <div class="col-sm-6">
-                            <input class="form-control" data-ng-model="headers.reportTitle" ng-required="true" placeholder="Report title">
+                        <div class="form-group clearfix">
+                            <label class="col-sm-3 control-label">*Report Title</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" data-ng-model="headers.reportTitle" ng-required="true" placeholder="Report title">
+                            </div>
+                            <div class="col-sm-3">
+                                <select chosen ng-model="headers.position" class="form-control chosen-select" ng-required="true" ng-options="s for s in table.positionDrop track by ($index+s)">
+    							</select>
+                            </div>
                         </div>
-                        <div class="col-sm-3">
-                            <select chosen="" data-ng-model="headers.position" class="form-control chosen-select" ng-required="true">
-								<option value="left">Left</option>
-								<option value="right">Right</option>
-								<option value="center">Center</option>
-							</select>
+                        <div class="form-group clearfix">
+                            <label class="col-sm-3 control-label">*Report Type</label>
+                            <div class="col-sm-9">
+                                <select chosen ng-model="headers.reportType" class="form-control chosen-select" ng-required="true" ng-options="s for s in table.reportTypeDrop track by ($index+s)">
+    							</select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group clearfix">
-                        <label class="col-sm-3 control-label">*Report Type</label>
-                        <div class="col-sm-9">
-                            <select chosen="" data-ng-model="headers.reportType" class="form-control chosen-select" ng-required="true">
-								<option value="summary">Summary</option>
-								<option value="details">Details</option>
-							</select>
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -94,18 +91,16 @@
                 <div class="panel-body clearfix">
                     <form action="#" method="get" accept-charset="utf-8" name="fieldForm">
                         <div class="col-sm-3">
-                            <select chosen="" data-ng-model="filters.field" class="form-control chosen-select" ng-required="true" ng-options="s.label group by s.table for s in filterDrop track by s.id" ng-change="selectFilterValue(filters.field)">
+                            <select chosen="" data-ng-model="filters.field" class="form-control chosen-select" ng-required="true" ng-options="s.label group by s.table for s in filterDrop track by ($index+s.id+s.table)" ng-change="selectFilterValue(filters.field)">
 							</select>
                         </div>
                         <div class="col-sm-3">
-                            <select chosen="" data-ng-model="filters.conditionType" class="form-control chosen-select" ng-required="true" ng-options="s for s in filterTypes[selectedFilterType] track by $index">
+                            <select chosen="" ng-model="filters.conditionType" class="form-control chosen-select" ng-required="true" ng-options="it for it in filterTypes track by ($index+it)" ng-change="filterTypeChange(filters.conditionType)">
 							</select>
                         </div>
                         <div class="col-sm-3">
                             <input type="text" name="filter_val" data-ng-model="filters.filterValue" class="form-control" ng-required="true" ng-readonly="!filters.field || !filters.conditionType" ng-if="dataTypeInput == 0">
                             <input type="text" name="filter_val" data-ng-model="filters.filterValue" class="form-control" ng-required="true" ng-readonly="!filters.field || !filters.conditionType" only-number ng-if="dataTypeInput == 1">
-
-                            
 
                             <div class="input-group" ng-if="dataTypeInput == 2">
                                 <input type="text" datepicker-popup="dd-MMMM-yyyy" data-ng-model="filters.filterValue" is-open="opened" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" data-ng-required="true" close-text="Close"
@@ -117,7 +112,7 @@
                                 </span>
                              </div>
 
-                            <select chosen="" data-ng-model="filters.filterValue" class="form-control chosen-select" ng-required="true" ng-options="s for s in enumValues track by $index" ng-if="dataTypeInput == 3">
+                            <select chosen="" data-ng-model="filters.filterValue" class="form-control chosen-select" ng-required="true" ng-options="s for s in enumValues track by ($index+s)" ng-if="dataTypeInput == 3">
                             </select>
                         </div>
                         <div class="col-sm-3">
@@ -165,7 +160,7 @@
                     </div>
                 </div>
                 <div class="panel-body" data-drop="false" data-jqyoui-options="{accept : false}" jqyoui-droppable="false">
-                    <treecontrol class="tree-classic" tree-model="fields" on-selection="showSelected(node)" options="treeOptions">
+                    <treecontrol class="tree-classic" tree-model="fields" options="treeOptions">
                         <span ng-if="node.children == undefined" data-drag="true" data-jqyoui-options="{revert: true}" ng-model="node" jqyoui-draggable="{animate:true}" ng-hide="!node.label" style="z-index: 99">{{node.label}}</span>
                         <span ng-if="node.children != undefined">{{node.label}}</span>
                     </treecontrol>
@@ -175,7 +170,7 @@
         <div class="col-md-9">
             <div class="panel panel-default">
                 <div class="panel-heading panel-heading bg-primary my-font-white">
-                    <button type="button" class="btn btn-default pull-right btn-sm" data-ng-class="app.theme.brand" ng-click="saveReport()"> Save </button>
+                    <button type="button" class="btn btn-default pull-right btn-sm" ng-disabled="headerForm.$invalid || !preview.columns.length" data-ng-class="app.theme.brand" ng-click="saveReport()"> Save </button>
                     <div class="panel-title">Preview</div>
                 </div>
                 <div class="panel-body">
@@ -208,7 +203,7 @@
                         </thead>
                         <tbody>
                             <tr ng-if="preview.columns.length != 0" ng-repeat="item in preview.data track by $index">
-                                <td ng-repeat="field in preview.columns track by $index">{{ item[field.id] }}</td>
+                                <td ng-repeat="field in preview.columns track by $index">{{ item['field'+field.id] }}</td>
                             </tr>
                         </tbody>
                     </table>

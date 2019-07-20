@@ -1232,9 +1232,9 @@ App.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
         // Report Builder Paths
         .state('app.ReportsList', {
             url: '/ReportsList',
-            templateUrl: basepath('Accounting/viewData/AccView.html'),
-            controller: 'AccViewController as form',
-            resolve: angular.extend(requireDeps('toaster', 'angular-chosen'), {
+            templateUrl: basepath('Accounting/viewData/BuildList.html'),
+            controller: 'BuildListController as table',
+            resolve: angular.extend(requireDeps('toaster', 'angular-chosen', 'builtList'), {
                 viewDataType: function() {
                     return 'ReportsList';
                 }
