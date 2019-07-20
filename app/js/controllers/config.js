@@ -1232,13 +1232,9 @@ App.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
         // Report Builder Paths
         .state('app.ReportsList', {
             url: '/ReportsList',
-            templateUrl: basepath('Accounting/viewData/BuildList.html'),
+            templateUrl: basepath('Analyzer/ReportBuilder/BuildList.html'),
             controller: 'BuildListController as table',
-            resolve: angular.extend(requireDeps('toaster', 'angular-chosen', 'builtList'), {
-                viewDataType: function() {
-                    return 'ReportsList';
-                }
-            })
+            resolve: angular.extend(requireDeps('ngTable', 'ngTableExport', 'toaster', 'angular-chosen', 'builtList')),
         })
 
         .state('app.ReportBuilder', {
@@ -1246,6 +1242,13 @@ App.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
             templateUrl: basepath('Analyzer/ReportBuilder/BuildView.html'),
             controller: 'BuildViewController as table',
             resolve: requireDeps('toaster', 'angular-chosen', 'reportBuilder', 'treeControl', 'dragNdrop', 'jquery-ui', 'angular-ui-sortable')
+        })
+
+        .state('app.generateReport', {
+            url: '/GenerateReport',
+            templateUrl: basepath('Analyzer/ReportBuilder/BuiltView.html'),
+            controller: 'BuiltViewController as table',
+            resolve: requireDeps('toaster', 'angular-chosen', 'builtView', 'ngTable', 'ngTableExport')
         })
 
         // 

@@ -1,21 +1,21 @@
 App.controller('AccFlowViewController', AccFlowViewController);
 
 function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,apiCall,apiPath,flotOptions,fetchArrayService, colors,$timeout,getSetFactory,$state,headerType,$modal,$window,toaster,apiResponse,apiDateFormate) {
-  	'use strict';
-  	var vm = this;
-  	var data = [];
-  	var saleData = [];
-   	$scope.filteredItems;
-  	var Modalopened = false;
-  	var finalStatus = {};
+	'use strict';
+	var vm = this;
+	var data = [];
+	var saleData = [];
+	$scope.filteredItems;
+	var Modalopened = false;
+	var finalStatus = {};
 	$scope.erpPath = $rootScope.erpPath; //Erp Path
 	$scope.headerType = headerType;
 	$scope.dateFormat =  $rootScope.dateFormats; //Date Format
-   	$scope.statusCounts = [];
-   	$scope.activeStatus = {statusId : 1};
-   	if ($rootScope.accView.companyId == undefined) {
-   		$rootScope.accView.companyId = $rootScope.$storage.authUser.defaultCompanyId;
-   	}
+	$scope.statusCounts = [];
+	$scope.activeStatus = {statusId : 1};
+	if ($rootScope.accView.companyId == undefined) {
+		$rootScope.accView.companyId = $rootScope.$storage.authUser.defaultCompanyId;
+	}
 	/** Display Company and date **/
 	apiCall.getCall(apiPath.getAllCompany+'/'+$rootScope.accView.companyId).then(function(res)
 	{
@@ -34,41 +34,41 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 	$scope.displaytoDate = $rootScope.accView.toDate;
 
 	$scope.loadInit = function(onDateChange = null) 
-  	{
-  		if (onDateChange != null)
-  		{
-  			$rootScope.accView.fromDate = moment(vm.dt1).format(apiDateFormate);
-  			$rootScope.accView.toDate = moment(vm.dt2).format(apiDateFormate);
-  		}
+	{
+		if (onDateChange != null)
+		{
+			$rootScope.accView.fromDate = moment(vm.dt1).format(apiDateFormate);
+			$rootScope.accView.toDate = moment(vm.dt2).format(apiDateFormate);
+		}
 		var headerData = {'Content-Type': undefined,'fromDate':$rootScope.accView.fromDate,'companyId':$rootScope.accView.companyId,'toDate':$rootScope.accView.toDate,'isQuotationProcess':'yes'};
 		var getJrnlPath = apiPath.postQuotationBill;
 		toaster.clear();
 		toaster.pop('wait', 'Please Wait', 'Data Loading....',30000);
 		$scope.loadCounts();
-  		
+		
 		toaster.pop('wait', 'Please Wait', 'Data Loading....',30000);
-  		apiCall.getCallHeader(getJrnlPath,headerData).then(function(response){
+		apiCall.getCallHeader(getJrnlPath,headerData).then(function(response){
 			$scope.reLoadPdfData(response);
 			toaster.clear();
 		}).catch(function (reason) {
-			 if (reason.status === 500) {
+			if (reason.status === 500) {
 				alert('Encountered server error');
-			 }
+			}
 		});
-  		toaster.clear();
-  		var getSalesPath = apiPath.getBill+$rootScope.accView.companyId;
-  		var salesHeader = {'Content-Type': undefined,'fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate,'salestype':'whole_sales'};
+		toaster.clear();
+		var getSalesPath = apiPath.getBill+$rootScope.accView.companyId;
+		var salesHeader = {'Content-Type': undefined,'fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate,'salestype':'whole_sales'};
 		toaster.pop('wait', 'Please Wait', 'Data Loading....',30000);
-  		apiCall.getCallHeader(getSalesPath,salesHeader).then(function(response){
+		apiCall.getCallHeader(getSalesPath,salesHeader).then(function(response){
 			$scope.reLoadPdfData2(response);
 			toaster.clear();
 		}).catch(function (reason) {
-			 if (reason.status === 500) {
+			if (reason.status === 500) {
 				alert('Encountered server error');
-			 }
+			}
 		});
-  	}
-  	$scope.goToBillPage = function(trnType,bill)
+	}
+	$scope.goToBillPage = function(trnType,bill)
 	{
 		var gotoUrl;
 		if (trnType == 'quotation') {
@@ -77,10 +77,10 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 			gotoUrl = 'app.WholesaleBill';
 		}
 		getSetFactory.set(bill);
-      	$state.go(gotoUrl);
+		$state.go(gotoUrl);
 	}
-  	$scope.loadCounts = function() {
-  		if($scope.headerType == 'Quotations Process'){
+	$scope.loadCounts = function() {
+		if($scope.headerType == 'Quotations Process'){
 			var getStatusPath = apiPath.postQuotationBill+'/status/'+$rootScope.accView.companyId;
 			var headerData = {'Content-Type': undefined,'fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate,'isQuotationProcess':'yes'};
 			var getJrnlPath = apiPath.postQuotationBill;
@@ -90,52 +90,52 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 			finalStatus = fetchArrayService.getfilteredSingleObject(response,'finalized','statusPosition');
 			toaster.clear();
 		});
-  	}
-  	$scope.loadInit();
-  	$scope.deleteBill = function(size,id,isPurchaseBill = 'no')
+	}
+	$scope.loadInit();
+	$scope.deleteBill = function(size,id,isPurchaseBill = 'no')
 	{
 		toaster.clear();
 		if (Modalopened) return;
 		
 		var modalInstance = $modal.open({
-			  templateUrl: 'app/views/PopupModal/Delete/deleteDataModal.html',
-			  controller: deleteDataModalController,
-			  size: size
-			});
+			templateUrl: 'app/views/PopupModal/Delete/deleteDataModal.html',
+			controller: deleteDataModalController,
+			size: size
+		});
 
 		Modalopened = true;
 		modalInstance.result.then(function () {
 		// return false;
-		 /**Delete Code **/
-		 	if (isPurchaseBill == 'yes'){
-		 		var deletePath = apiPath.postPurchaseBill+'/'+id;
-		 	}else if (isPurchaseBill == 'quote') {
-		 		var deletePath = apiPath.postQuotationBill+'/'+id+'/quote';
-		 	}
-		 	else{
-		 		var deletePath = apiPath.postBill+'/'+id;
-		 	}
-			apiCall.deleteCall(deletePath).then(function(deleteres){
-				
+		/**Delete Code **/
+		if (isPurchaseBill == 'yes'){
+			var deletePath = apiPath.postPurchaseBill+'/'+id;
+		}else if (isPurchaseBill == 'quote') {
+			var deletePath = apiPath.postQuotationBill+'/'+id+'/quote';
+		}
+		else{
+			var deletePath = apiPath.postBill+'/'+id;
+		}
+		apiCall.deleteCall(deletePath).then(function(deleteres){
+			
 				//console.log(deleteres);
 				if(apiResponse.ok == deleteres){
 					
 					$scope.loadInit();
-				
+					
 					toaster.pop('success', 'Title', 'Data Successfully Deleted');
 				}
 				else{
 					toaster.pop('warning', '', deleteres);
 				}
 			});
-		 /** End **/
-		 
-		 Modalopened = false;
+		/** End **/
 		
-		}, function () {	
-		  Modalopened = false;
-		  
-		});
+		Modalopened = false;
+		
+	}, function () {	
+		Modalopened = false;
+		
+	});
 	}
 	$scope.finishEditing = function(billObj) {
 		
@@ -143,21 +143,21 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 		if (Modalopened) return;
 		getSetFactory.set({msg: 'Do you want to set Bill as Edited?'});
 		var modalInstance = $modal.open({
-			  templateUrl: 'app/views/PopupModal/Delete/deleteDataModal.html',
-			  controller: deleteDataModalController,
-			  size: 'sm'
-			});
+			templateUrl: 'app/views/PopupModal/Delete/deleteDataModal.html',
+			controller: deleteDataModalController,
+			size: 'sm'
+		});
 		Modalopened = true;
 		modalInstance.result.then(function () {
 		// return false;
-		 /**Delete Code **/
-		 	var jrnPath = apiPath.postBill+'/'+billObj.saleId+'/status';
-		 	var formd = new FormData();
-		 	formd.set('statusType','finalized');
-		 	formd.set('statusId',finalStatus.statusId);
-		 	formd.set('status',finalStatus.status);
-		 	formd.set('companyId',$rootScope.accView.companyId);
-			apiCall.postCall(jrnPath,formd).then(function(statusres){
+		/**Delete Code **/
+		var jrnPath = apiPath.postBill+'/'+billObj.saleId+'/status';
+		var formd = new FormData();
+		formd.set('statusType','finalized');
+		formd.set('statusId',finalStatus.statusId);
+		formd.set('status',finalStatus.status);
+		formd.set('companyId',$rootScope.accView.companyId);
+		apiCall.postCall(jrnPath,formd).then(function(statusres){
 				//console.log(deleteres);
 				if(apiResponse.ok == statusres){
 					$scope.loadCounts();
@@ -170,14 +170,14 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 					toaster.pop('warning', '', statusres);
 				}
 			});
-		 /** End **/
-		 
-		 Modalopened = false;
+		/** End **/
 		
-		}, function () {	
-		  Modalopened = false;
-		  
-		});
+		Modalopened = false;
+		
+	}, function () {	
+		Modalopened = false;
+		
+	});
 	}
 	$scope.dateConvert = function(entryDate){
 		
@@ -221,7 +221,7 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 				var flag = 0;
 				
 				for(var k=0;k<fileCnt;k++){
-				
+					
 					if(data[p].file[k].documentFormat == 'pdf' && data[p].file[k].documentType == 'quotation')
 					{
 						flag++;
@@ -256,39 +256,39 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 		if (Modalopened) return;
 		
 		var modalInstance = $modal.open({
-		  templateUrl: 'app/views/PopupModal/Accounting/imageGalleryModal/imageGalleryModalContent.html',
-		  controller: imageGalleryModalCtrl,
-		  size: size,
-		  resolve:{
-			  billData: function(){
-				 
-				return singleBillData;
-			  },
-			  formatType: function(){
-				  
-				 return 'pdf';
-			  },
-			  transType: function(){
-				  
-				  return 'none';
-			  }
-		  }
+			templateUrl: 'app/views/PopupModal/Accounting/imageGalleryModal/imageGalleryModalContent.html',
+			controller: imageGalleryModalCtrl,
+			size: size,
+			resolve:{
+				billData: function(){
+					
+					return singleBillData;
+				},
+				formatType: function(){
+					
+					return 'pdf';
+				},
+				transType: function(){
+					
+					return 'none';
+				}
+			}
 		});
 
-	   Modalopened = true;
-	   
-		modalInstance.result.then(function () {
-		 
-			Modalopened = false;
+		Modalopened = true;
 		
+		modalInstance.result.then(function () {
+			
+			Modalopened = false;
+			
 		}, function () {
 			
-		  console.log('Cancel');	
-		  Modalopened = false;
-		  
+			console.log('Cancel');	
+			Modalopened = false;
+			
 		});
 		
-	
+		
 	};
 	/** Reload Load Data **/
 	$scope.reLoadPdfData2 = function(response)
@@ -340,7 +340,7 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 				var flag = 0;
 				
 				for(var k=0;k<fileCnt;k++){
-				
+					
 					if(saleData[p].file[k].documentFormat == 'pdf' && saleData[p].file[k].documentType == 'bill')
 					{
 						flag++;
@@ -416,34 +416,34 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 					data.sort(function (a, b) {
 						
 						var entDate = a.entryDate.split("-").reverse().join("-");
-								var toDate = b.entryDate.split("-").reverse().join("-");
-								var dateA=new Date(entDate), dateB=new Date(toDate);
+						var toDate = b.entryDate.split("-").reverse().join("-");
+						var dateA=new Date(entDate), dateB=new Date(toDate);
 						return dateA - dateB; //sort by date descending
 					});
 					// orderedData = data;
 
 				} else if(params.sorting().date === 'desc') {
 
-				data.sort(function (a, b) {
-					var entDate = a.entryDate.split("-").reverse().join("-");
-							var toDate = b.entryDate.split("-").reverse().join("-");
-							var dateA=new Date(entDate), dateB=new Date(toDate);
+					data.sort(function (a, b) {
+						var entDate = a.entryDate.split("-").reverse().join("-");
+						var toDate = b.entryDate.split("-").reverse().join("-");
+						var dateA=new Date(entDate), dateB=new Date(toDate);
 					return dateB - dateA; //sort by date descending
 				});
 				// orderedData = data;
-				} else if(!params.sorting().date){
-					orderedData = params.sorting() ? $filter('orderBy')(data, params.orderBy()) : data;
-				}
-				orderedData = params.filter() ? $filter('filter')(orderedData, params.filter()) : orderedData;
-				orderedData = $filter('filter')(orderedData, $scope.activeStatus);
-				vm.tableParams.total(orderedData.length);
-				$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-				$scope.totalData = data.length;
-				$scope.pageNumber = params.page();
-	          	$scope.itemsPerPage = params.count();
-	          	$scope.totalPages = Math.ceil($scope.totalData/params.count());
+			} else if(!params.sorting().date){
+				orderedData = params.sorting() ? $filter('orderBy')(data, params.orderBy()) : data;
 			}
-		});
+			orderedData = params.filter() ? $filter('filter')(orderedData, params.filter()) : orderedData;
+			orderedData = $filter('filter')(orderedData, $scope.activeStatus);
+			vm.tableParams.total(orderedData.length);
+			$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+			$scope.totalData = data.length;
+			$scope.pageNumber = params.page();
+			$scope.itemsPerPage = params.count();
+			$scope.totalPages = Math.ceil($scope.totalData/params.count());
+		}
+	});
 	}
 	$scope.TableData2 = function(){
 		vm.tableParams2 = undefined;
@@ -464,21 +464,21 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 					saleData.sort(function (a, b) {
 						
 						var entDate = a.entryDate.split("-").reverse().join("-");
-								var toDate = b.entryDate.split("-").reverse().join("-");
-								var dateA=new Date(entDate), dateB=new Date(toDate);
+						var toDate = b.entryDate.split("-").reverse().join("-");
+						var dateA=new Date(entDate), dateB=new Date(toDate);
 						return dateA - dateB; //sort by date descending
 					});
 					orderedData2 = saleData;
 
 				} else if(params.sorting().date === 'desc') {
 
-				saleData.sort(function (a, b) {
-					var entDate = a.entryDate.split("-").reverse().join("-");
-							var toDate = b.entryDate.split("-").reverse().join("-");
-							var dateA=new Date(entDate), dateB=new Date(toDate);
+					saleData.sort(function (a, b) {
+						var entDate = a.entryDate.split("-").reverse().join("-");
+						var toDate = b.entryDate.split("-").reverse().join("-");
+						var dateA=new Date(entDate), dateB=new Date(toDate);
 					return dateB - dateA; //sort by date descending
 				});
-				orderedData2 = $filter('filter')(saleData,$scope.activeStatus);
+					orderedData2 = $filter('filter')(saleData,$scope.activeStatus);
 				} else if(!params.sorting().date){
 					orderedData2 = params.sorting() ? $filter('orderBy')(saleData, params.orderBy()) : saleData;
 				}
@@ -488,8 +488,8 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 				$defer.resolve(orderedData2.slice((params.page() - 1) * params.count(), params.page() * params.count()));
 				$scope.totalData2 = saleData.length;
 				$scope.pageNumber2 = params.page();
-	          	$scope.itemsPerPage2 = params.count();
-	          	$scope.totalPages2 = Math.ceil($scope.totalData2/params.count());
+				$scope.itemsPerPage2 = params.count();
+				$scope.totalPages2 = Math.ceil($scope.totalData2/params.count());
 			}
 		});
 	}
@@ -523,12 +523,12 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 			backdrop  : 'static',
 			keyboard  : false,
 			resolve:{
-			  companyId: function(){
-				return $rootScope.accView.companyId;
-			  },
-			  transactionType: function(){
-			  	return 'SalesOrder';
-			  }
+				companyId: function(){
+					return $rootScope.accView.companyId;
+				},
+				transactionType: function(){
+					return 'SalesOrder';
+				}
 			}
 		});
 
@@ -564,29 +564,29 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 	}
 	$scope.itemListModel = function(sale){
 		if (Modalopened) return;
-	  	toaster.pop('wait', 'Please Wait', 'popup opening....',600000);
-	  	var statusType = 'list';
-	  	if (sale.dispatchStatus == 0)
-	  	{
-	  		statusType = 'list';
-	  	}
-	  	else
-	  	{
-	  		statusType = 'dispatch';
-	  	}
+		toaster.pop('wait', 'Please Wait', 'popup opening....',600000);
+		var statusType = 'list';
+		if (sale.dispatchStatus == 0)
+		{
+			statusType = 'list';
+		}
+		else
+		{
+			statusType = 'dispatch';
+		}
 		var modalInstance = $modal.open({
-		  templateUrl: 'app/views/PopupModal/Accounting/itemCheckListModal.html',
-		  controller: 'AccDispatchItemModalController as form',
-		  size: 'md',
-		  resolve:
-		  {
-			  billData: function(){
-				return sale;
-			  },
-			  statusType: function(){
-			  	return statusType;
-			  }
-		  }
+			templateUrl: 'app/views/PopupModal/Accounting/itemCheckListModal.html',
+			controller: 'AccDispatchItemModalController as form',
+			size: 'md',
+			resolve:
+			{
+				billData: function(){
+					return sale;
+				},
+				statusType: function(){
+					return statusType;
+				}
+			}
 		});
 		Modalopened = true;
 		
@@ -645,6 +645,6 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 	this.today2();
 
 	this.initDate = new Date('2016-15-20');
-  	var dateFormats = $rootScope.dateFormats;
+	var dateFormats = $rootScope.dateFormats;
 }
 AccFlowViewController.$inject = ["$rootScope","$scope", "$filter","$http", "ngTableParams","apiCall","apiPath","flotOptions","fetchArrayService","colors","$timeout","getSetFactory","$state","headerType","$modal","$window","toaster","apiResponse","apiDateFormate"];

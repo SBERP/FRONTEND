@@ -124,6 +124,7 @@
 		{ name: 'purchaseBill', files: ['app/js/controllers/QuickMenu/PurchaseBillCtrl.js'] },
 		{ name: 'reportBuilder', files: ['app/js/controllers/Analyzer/ReportBuilder/BuildViewCtrl.js'] },
 		{ name: 'builtList', files: ['app/js/controllers/Analyzer/ReportBuilder/BuildListCtrl.js'] },
+		{ name: 'builtView', files: ['app/js/controllers/Analyzer/ReportBuilder/BuiltViewCtrl.js'] },
 		{
 			name: 'treeControl',
 			files: [
@@ -275,7 +276,8 @@
 		'postItemwiseCommission': 'users/commissions/item-wise',
 		'reportBuilderGroups': 'reports/report-builder/groups',
 		'reportBuilderPreview': 'reports/report-builder/preview',
-		'reportBuilder': 'reports/report-builder'
+		'reportBuilder': 'reports/report-builder',
+		'generateBuiltReport': 'reports/report-builder/generate/'
 	})
 	//Api Path
 	.constant('apiResponse', {
