@@ -25,7 +25,8 @@ App.directive('ngRightClick', function($parse) {
 });
 function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiResponse, toaster, getSetFactory, ReportGroupFactory) {
 	var vm = this;
-	$scope.dateFormat = 'DD-MM-YYYY';
+	var Modalopened = false;
+	$scope.dateFormat = 'dd-MM-yyyy';
 	$scope.headers = {
 		reportType: 'details'
 	};
@@ -36,6 +37,7 @@ function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiR
 		conditions: [],
 		editIndex: undefined
 	};
+	var editReportId = 0;
 	$scope.dataTypeInput = 0;
 	vm.previewInputIndex = -1;
 	vm.previewContextIndex = -1;
@@ -82,8 +84,8 @@ function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiR
 		]
 	};
 	$scope.filterTypes = [];
-	this.positionDrop = ["Left", "Center", "Right"];
-	this.reportTypeDrop = ["Summary", "Details"];
+	this.positionDrop = ["left", "center", "right"];
+	this.reportTypeDrop = ["summary", "details"];
 	$scope.enumValues = [];
 	// $scope.selectedFilterType = 'enum';
 
@@ -99,6 +101,33 @@ function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiR
 		toaster.clear();
 		if (angular.isArray(resp)) {
 			$scope.reportGroups = resp;
+			if (Object.keys(getSetFactory.get()).length) {
+				toaster.pop('waiting', "Please Wait...");
+				let editModeReport = getSetFactory.get();
+				getSetFactory.blank();
+				apiCall.getCall(apiPath.reportBuilder+'/'+editModeReport.reportId).then(response => {
+					toaster.clear();
+					if (angular.isObject(response)) {
+						$scope.filters.conditions = response.filters;
+						$scope.preview.columns = response.fields;
+						$scope.preview.groupBy = response.headers.groupBy;
+						$scope.preview.orderBy = response.headers.orderBy;
+
+						$scope.headers.position = response.headers.titlePosition;
+						$scope.headers.reportType = response.headers.reportType;
+						$scope.headers.reportTitle = response.headers.reportTitle;
+						$scope.headers.reportName = response.headers.reportName;
+						editReportId = response.headers.reportId;
+						$scope.headers.reportGroup = $scope.reportGroups.find((grp) => {
+							return grp.rbGroupId == response.headers.rbGroupId;
+						});
+						$scope.loadFields($scope.headers.reportGroup);
+						$scope.reloadDt(false);
+					} else {
+						toaster.pop('warning', response);
+					}
+				});
+			}
 		} else {
 			toaster.pop('warning', resp);
 		}
@@ -114,7 +143,6 @@ function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiR
 				$scope.filterDrop = [];
 				(function appendTableInList(iterate){
 					let dropdown = resp[iterate].children.map(res => {
-						// push children with table name in one whole array
 						res.table = resp[iterate].label;
 						return res;
 					});
@@ -129,7 +157,19 @@ function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiR
 			}
 		});
 	}
+	// Check if report is in edit mode
 	
+	$scope.filterTypeChange = function (condType) {
+		if (condType == 'DATE EQUALS' || condType == 'BEFORE' || condType == 'AFTER') {
+			$scope.dateFormat = 'dd-MM-yyyy';
+		} else if (condType == 'MONTH EQUALS') {
+			$scope.dateFormat = 'MM-yyyy';
+			$scope.filters.filterValue = '';
+		} else if (condType == 'YEAR EQUALS') {
+			$scope.dateFormat = 'yyyy';
+			$scope.filters.filterValue = '';
+		}
+	}
 	$scope.selectFilterValue = function(field) {
 		$scope.enumValues = [];
 		
@@ -158,18 +198,21 @@ function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiR
 		}
 	}
 
-	$scope.reloadDt = function() {
+	$scope.reloadDt = function(reloadField = true) {
 		
 		if (!reloadingDt) {
 			return false;
 		}
 		reloadingDt = false;
-		var fields = angular.copy($scope.fields);
-		$scope.fields = [];
+		if (reloadField) {
+			var fields = angular.copy($scope.fields);
+			$scope.fields = [];
+		}
 		setTimeout(function() {
 			reloadingDt = true;
-			$scope.fields = fields;
-
+			if (reloadField) {
+				$scope.fields = fields;
+			}
 			if(preview_ajax) {
 				return false;
 			}
@@ -208,6 +251,7 @@ function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiR
 			});
 		}, 500);
 	}
+	
 	$scope.saveReport = function() {
 		if (!$scope.preview.columns.length) {
 			toaster.clear();
@@ -242,13 +286,15 @@ function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiR
 		form.set('groupBy', JSON.stringify($scope.preview.groupBy));
 		form.set('orderBy', JSON.stringify($scope.preview.orderBy));
 		form.set('filters', JSON.stringify(filters));
-		
-
-		apiCall.postCall(apiPath.reportBuilder, form).then(function(response) {
+		let path = apiPath.reportBuilder;
+		if (editReportId != 0) {
+			path += '/'+editReportId;
+		}
+		apiCall.postCall(path, form).then(function(response) {
 			preview_ajax = false;
 			if (apiResponse.ok == response) {
 				toaster.clear();
-				toaster.pop('success', 'Report Template Successfully!');
+				toaster.pop('success', 'Report Template Saved Successfully!');
 				$scope.preview = {
 					groupBy: {},
 					orderBy: {},
@@ -314,15 +360,25 @@ function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiR
 	$scope.pickDate = function($event) {
 	  	$event.preventDefault();
 	  	$event.stopPropagation();
-
 	  	$scope.opened = true;
 	};
 
 	$scope.dateOptions = {
-	  	formatYear: 'yy',
+	  	formatYear: 'yyyy',
 	  	startingDay: 1
 	};
-
+	function pad(n) {return n < 10 ? "0"+n : n;}
+	$scope.changeDate = function(date) {
+		let dateObj = new Date(date);
+		$scope.opened = false;
+		if ($scope.filters.conditionType == 'MONTH EQUALS') {
+			$scope.filters.filterValue = pad(dateObj.getMonth()+1)+"-"+dateObj.getFullYear();
+		} else if ($scope.filters.conditionType == 'YEAR EQUALS') {
+			$scope.filters.filterValue = dateObj.getFullYear().toString();
+		}else {
+			$scope.filters.filterValue = pad(dateObj.getDate())+"-"+pad(dateObj.getMonth()+1)+"-"+dateObj.getFullYear();
+		}
+	}
 	$scope.initDate = new Date();
 }
 BuildViewController.$inject = ["$rootScope", "$scope", "$filter", "apiCall", "apiPath", "apiResponse", "toaster", "getSetFactory", "ReportGroupFactory"];

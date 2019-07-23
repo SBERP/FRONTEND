@@ -1,34 +1,27 @@
 <h3>
 	<small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
-		Report Builder >>
+		<a ui-sref="app.ReportsList">Build Report List</a> >>
 	{{::reportData.reportName}}</small>
 </h3>
 <div class="container-fluid">
 	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true,'time-out': 10000}"></toaster-container>
 	<div class="panel panel-default">
-		<div class="panel-heading bg-primary my-font-white">
+		<div class="panel-heading bg-gray-light">
 			<div class="panel-title">
-				<h5 style="display: block;" class="text-{{::reportData.titlePosition}}">{{::reportData.reportTitle}}</h5>
+				<h2 style="display: block;" class="text-{{::reportData.titlePosition}}">{{::reportData.reportTitle}}</h2>
 			</div>
 		</div>
 		<div class="panel-body">
 			<div class="table-responsive">
 				<table ng-table="table.tableParams" show-filter="true" class="table table-bordered table-striped">
+					<thead>
+						<tr>
+							<th ng-repeat="field in fields" class="header">{{ field.label }}</th>
+						</tr>
+					</thead>
 					<tbody>
-						<tr ng-repeat="user in $data track by ($index)">
-							
-							<td data-title="'#'"  style="text-align:center">{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td>
-							<td title="'Report Name'"  sortable="'reportName'" filter="{ 'reportName': 'text' }" >
-								{{::user.reportName}}
-							</td>
-							<td title="'Report Title'"  sortable="'reportTitle'" filter="{ 'reportTitle': 'text' }" >
-								{{::user.reportTitle}}
-							</td>
-							<td title="'Actions'" sortable="false">
-								<center>
-									<i class="fa fa-share-square-o myCursorPointer" style="font-size:17px;color:#10709f" title="Convert to Sales Order" ng-click="generateReport(user)"></i>
-								</center>
-							</td>
+						<tr ng-repeat="user in $data">
+							<td ng-repeat="field in fields">{{ user['field'+field.id] }}</td>
 						</tr>
 					</tbody>
 				</table>

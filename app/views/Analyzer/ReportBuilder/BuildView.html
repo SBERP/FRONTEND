@@ -103,8 +103,8 @@
 							<input type="text" name="filter_val" data-ng-model="filters.filterValue" class="form-control" ng-required="true" ng-readonly="!filters.field || !filters.conditionType" only-number ng-if="dataTypeInput == 1">
 
 							<div class="input-group" ng-if="dataTypeInput == 2">
-								<input type="text" datepicker-popup="dd-MMMM-yyyy" data-ng-model="filters.filterValue" is-open="opened" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" data-ng-required="true" close-text="Close"
-								class="form-control" />
+								<input type="text" datepicker-popup="{{dateFormat}}" data-ng-model="filters.filterValue" is-open="opened" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" data-ng-required="true" close-text="Close"
+								class="form-control" ng-change="changeDate(filters.filterValue)"/>
 								<span class="input-group-btn">
 									<button type="button" data-ng-click="pickDate($event)" class="btn btn-default">
 										<em class="fa fa-calendar"></em>

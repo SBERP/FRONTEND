@@ -1,6 +1,6 @@
 <h3>
 	<small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
-		Report Builder >>
+		<a ui-sref="app.ReportBuilder" >Report Builder</a> >>
 	Built Reports</small>
 </h3>
 <div class="container-fluid">
@@ -18,14 +18,16 @@
 						<tr ng-repeat="user in $data track by (user.reportId+user.reportName+$index)">
 							<td data-title="'#'"  style="text-align:center">{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td>
 							<td title="'Report Name'"  sortable="'reportName'" filter="{ 'reportName': 'text' }" >
-								{{::user.reportName}}
+								{{user.reportName}}
 							</td>
 							<td title="'Report Title'"  sortable="'reportTitle'" filter="{ 'reportTitle': 'text' }" >
-								{{::user.reportTitle}}
+								{{user.reportTitle}}
 							</td>
 							<td title="'Actions'" sortable="false">
 								<center>
-									<i class="fa fa-share-square-o myCursorPointer" style="font-size:17px;color:#10709f" title="Convert to Sales Order" ng-click="generateReport(user)"></i>
+									<i class="fa fa-share-square-o myCursorPointer" style="font-size:17px;color:#10709f" title="Generate Report" ng-click="generateReport(user)"></i>
+									<i title="Edit" ng-click="editReport(user)" class="fa fa-edit myCursorPointer" style="font-size:17px;color:#00af26"> </i>
+									<i title="Delete" ng-click="deleteReport(user)" class="fa fa-times-circle myCursorPointer" style="font-size:17px;color:#e80020"> </i>
 								</center>
 							</td>
 						</tr>

@@ -1248,7 +1248,7 @@ App.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
             url: '/GenerateReport',
             templateUrl: basepath('Analyzer/ReportBuilder/BuiltView.html'),
             controller: 'BuiltViewController as table',
-            resolve: requireDeps('toaster', 'angular-chosen', 'builtView', 'ngTable', 'ngTableExport')
+            resolve: requireDeps('toaster', 'angular-chosen', 'builtView', 'ngTable')
         })
 
         // 

@@ -4,6 +4,7 @@ function BuiltViewController($rootScope, $scope, $state, $filter, apiCall, apiPa
 	var vm = this;
 	var data = [];
 	$scope.reportData = {};
+	$scope.fields = [];
 	$scope.loadReports = function() {
 		toaster.clear();
 		toaster.pop('waiting','Please wait....');
@@ -16,8 +17,10 @@ function BuiltViewController($rootScope, $scope, $state, $filter, apiCall, apiPa
 		getSetFactory.blank();
 
 		apiCall.getCall(apiPath.generateBuiltReport+$scope.reportData.reportId).then((res) => {
-			if (angular.isArray(res)) {
-				data = res;
+			if (angular.isObject(res)) {
+				$scope.fields = res.fields;
+				console.log($scope.fields);
+				data = res.data;
 				loadngTable();
 			} else {
 				toaster.clear();
@@ -29,10 +32,7 @@ function BuiltViewController($rootScope, $scope, $state, $filter, apiCall, apiPa
 	function loadngTable() {
 		vm.tableParams = new ngTableParams({
 			page: 1,            // show first page
-			count: 10,          // count per page
-			sorting: {
-				reportName: 'asc'     // initial sorting
-			}
+			count: 10
 		}, {
 			// counts: [],
 			total: data.length, // length of saleData
@@ -51,7 +51,6 @@ function BuiltViewController($rootScope, $scope, $state, $filter, apiCall, apiPa
 			}
 		});
 	}
-
 	$scope.generateReport = function(report) {
 		getSetFactory.set(report);
       	$state.go("app.generateReport");

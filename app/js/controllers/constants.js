@@ -87,7 +87,7 @@
 		{
 			name: 'ngTable',
 			files: ['app/vendor/ng-table/ng-table.min.js',
-			'app/vendor/ng-table/ng-table.min.css'
+			'app/vendor/ng-table/ng-table.min.css',
 			]
 		},
 		{ name: 'ngTableExport', files: ['app/vendor/ng-table-export/ng-table-export.js'] },
@@ -161,7 +161,14 @@
 			'//cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js',
 			'//cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js',
 			]
-		}
+		},
+		// {
+		// 	name: 'ngTableDynamic',
+		// 	files: [
+		// 	'//unpkg.com/ng-table@3.0.1/bundles/ng-table.min.js',
+		// 	'//unpkg.com/ng-table@3.0.1/bundles/ng-table.min.css',
+		// 	]
+		// }
 		]
 
 	})

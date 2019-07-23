@@ -7,8 +7,11 @@ App.factory('ReportGroupFactory', ['apiCall', 'apiPath', function(apiCall, apiPa
 	function getReportGroups() {
 		if (ajax_currently_loading)
 			return;
-		if (savedGroups.length)
-			return savedGroups;
+		if (savedGroups.length) {
+			return new Promise(function(resolve) {
+				resolve(savedGroups);
+			});
+		}
 		ajax_currently_loading = true;
 		return apiCall.getCall(apiPath.reportBuilderGroups).then(response => {
 			ajax_currently_loading = false;
@@ -23,7 +26,6 @@ App.factory('ReportGroupFactory', ['apiCall', 'apiPath', function(apiCall, apiPa
 			return res;
 		});
 	}
-
 	// function getReportGroupCategories() {
 	//     if (ajax_currently_loading)
 	//         return;
@@ -41,8 +43,11 @@ App.factory('ReportGroupFactory', ['apiCall', 'apiPath', function(apiCall, apiPa
 	function getGroupTable(groupId) {
 		if (ajax_currently_loading)
 			return;
-		if (savedReportGroupTable.length && savedReportGroupTable.hasOwnProperty(groupId))
-			return savedReportGroupTable[groupId];
+		if (savedReportGroupTable.length && savedReportGroupTable.hasOwnProperty(groupId)) {
+			return new Promise(function(resolve) {
+				resolve(savedReportGroupTable[groupId]);
+			});
+		}
 		ajax_currently_loading = true;
 		return apiCall.getCall(apiPath.reportBuilderGroups+'/'+groupId).then(response => {
 			ajax_currently_loading = false;
