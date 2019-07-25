@@ -1,7 +1,7 @@
 App.controller('SalesReturnBillController', SalesReturnBillController);
 function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$window,$modal,validationMessage,saleType,productArrayFactory,getSetFactory,toaster,apiResponse,$anchorScroll,maxImageSize,$sce,$templateCache,getLatestNumber,productFactory,stateCityFactory,$filter,$state,clientFactory,fetchArrayService,bankFactory) {
 	'use strict';
- 	
+
 	var vm = this;
 	var formdata = new FormData();
 	var Modalopened = false;
@@ -31,20 +31,20 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 	// Get Current Financial Year to display
 	$scope.getCurrentFinancialYear = function() 
 	{
-	  var fiscalyear = "";
-	  var today = new Date();
-	  if ((today.getMonth() + 1) <= 3) {
-	    fiscalyear = (today.getFullYear() - 1) + "-" + today.getFullYear()
-	  } else {
-	    fiscalyear = today.getFullYear() + "-" + (today.getFullYear() + 1)
-	  }
-	  return fiscalyear
+		var fiscalyear = "";
+		var today = new Date();
+		if ((today.getMonth() + 1) <= 3) {
+			fiscalyear = (today.getFullYear() - 1) + "-" + today.getFullYear()
+		} else {
+			fiscalyear = today.getFullYear() + "-" + (today.getFullYear() + 1)
+		}
+		return fiscalyear
 	}
 	$scope.defaultComapny = function()
 	{
 		toaster.clear();
-			toaster.pop('wait', 'Please Wait', 'Data Loading....',600000);
-			
+		toaster.pop('wait', 'Please Wait', 'Data Loading....',600000);
+
 		vm.loadData = true;
 		
 		//Set default Company
@@ -53,15 +53,15 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 		$scope.displayDefaultCompanyName = response2.companyName;
 		
 		/* Branch */
-			loadBranchesOfCompany(id,function(branchres){
-				toaster.clear();
-				if(angular.isArray(branchres)){
-					if (branchres.length > 0){
-						$scope.quickBill.branchId = branchres[0];
-						formdata.set('branchId',branchres[0].branchId);
-					}
+		loadBranchesOfCompany(id,function(branchres){
+			toaster.clear();
+			if(angular.isArray(branchres)){
+				if (branchres.length > 0){
+					$scope.quickBill.branchId = branchres[0];
+					formdata.set('branchId',branchres[0].branchId);
 				}
-			});
+			}
+		});
 		/* End */
 
 		$scope.quickBill.companyId = response2;
@@ -79,21 +79,21 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 	function loadBranchesOfCompany(companyId,callback)
 	{
 		/* Branch */
-			vm.branchDrop = [];
-			var getAllBranch = apiPath.getOneBranch+companyId;
+		vm.branchDrop = [];
+		var getAllBranch = apiPath.getOneBranch+companyId;
 			//Get Branch
 			apiCall.getCall(getAllBranch).then(function(response4){
 				vm.branchDrop = response4;
 				callback(response4);
 			});
-		/* End */
-	}
+			/* End */
+		}
 	// Pre Defined Functions ends
 	apiCall.getCall(apiPath.getAllCompany).then(function(response2){		
 		toaster.clear();
 		toaster.pop('wait', 'Please Wait', 'Data Loading....',600000);
-			vm.companyDrop = response2;
-			$scope.defaultComapny();
+		vm.companyDrop = response2;
+		$scope.defaultComapny();
 	});
 	$scope.enableDisableAdvanceMou = false;
 	$scope.enableDisableColor = false;
@@ -111,7 +111,7 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 	$scope.enableDisableSalesman = false;
 
 	$scope.enableItemizedPurchaseSales = false;
-
+	$scope.enableDisableTaxReadOnly = false;
 	$scope.divTag = false;
 	$scope.divAdvanceMou = false;
 	$scope.colspanValue = '6';
@@ -153,8 +153,8 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 					{
 						$scope.ProductColorSizeVarDesign = 'productColorSizeVarDesign';
 					}else if (($scope.enableDisableColor && $scope.enableDisableSize) || 
-							($scope.enableDisableVariant && $scope.enableDisableColor) ||
-							($scope.enableDisableVariant && $scope.enableDisableSize)) {
+						($scope.enableDisableVariant && $scope.enableDisableColor) ||
+						($scope.enableDisableVariant && $scope.enableDisableSize)) {
 						$scope.ProductColorSizeVarDesign = 'productColorSizeDesign';
 					}
 					// $scope.colspanValue = $scope.divTag==false ? '5' : '6';
@@ -218,6 +218,11 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 					$scope.enableItemizedPurchaseSales = arrayData1.inventoryItemizeStatus=="enable" ? true : false;
 					
 				}
+				else if (response[arrayData].settingType=="advance") 
+				{
+					var arrayData1 = response[arrayData];
+					$scope.enableDisableTaxReadOnly = arrayData1.advanceTaxReadOnlyStatus=="enable" ? true : false;
+				}
 			}
 		}
 	}
@@ -247,7 +252,7 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 			var BillPath = apiPath.getBill+$scope.quickBill.companyId.companyId;
 			var preHeaderData = {'Content-Type': undefined,'invoiceNumber':$scope.quickBill.searchInvoiceNumber};
 			preHeaderData.salesType = 'whole_sales';
-		 }			 
+		}			 
 		apiCall.getCallHeader(BillPath,preHeaderData).then(function(response){
 			
 			toaster.clear();
@@ -282,86 +287,86 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 			}
 			
 		});
-	
+
 	}
 	/** End **/
 	/** Barcode Modal Start **/
-  $scope.openBarcodeModal = function(size,index){
-  	if (Modalopened) return;
-  	toaster.pop('wait', 'Please Wait', 'popup opening....',600000);
-  	var selectedProduct = vm.AccBillTable[index];
-  			var modalInstance = $modal.open({
-			  templateUrl: 'app/views/PopupModal/Accounting/barcodeModal.html',
-			  controller: 'AccBarcodeModalController as form',
-			  size: size,
-			  resolve:{
-				  productIndex: function(){
-					  return index;
-				  },
-				  productData: function(){
+	$scope.openBarcodeModal = function(size,index){
+		if (Modalopened) return;
+		toaster.pop('wait', 'Please Wait', 'popup opening....',600000);
+		var selectedProduct = vm.AccBillTable[index];
+		var modalInstance = $modal.open({
+			templateUrl: 'app/views/PopupModal/Accounting/barcodeModal.html',
+			controller: 'AccBarcodeModalController as form',
+			size: size,
+			resolve:{
+				productIndex: function(){
+					return index;
+				},
+				productData: function(){
 					return selectedProduct;
-				  },
-				  companyId: function(){
+				},
+				companyId: function(){
 					return $scope.quickBill.companyId;
-				  },
-				  transactionType: function(){
-				  	return 'sales';
-				  }
-			  }
-			});
-			Modalopened = true;
-			
-			modalInstance.opened.then(function() {
-				toaster.clear();
-			});
-			modalInstance.result.then(function (data) {
-				vm.AccBillTable[index].itemizeDetail = data;
-				$scope.changeProductArray = true;
-				Modalopened = false;
-			},function(){
-				Modalopened = false;
-			});
-  }
+				},
+				transactionType: function(){
+					return 'sales';
+				}
+			}
+		});
+		Modalopened = true;
+
+		modalInstance.opened.then(function() {
+			toaster.clear();
+		});
+		modalInstance.result.then(function (data) {
+			vm.AccBillTable[index].itemizeDetail = data;
+			$scope.changeProductArray = true;
+			Modalopened = false;
+		},function(){
+			Modalopened = false;
+		});
+	}
   /**
   Barcode Modal End
   **/
-	$scope.openBillHistoryModal = function (size,responseData,draftOrSalesOrder) {
+  $scope.openBillHistoryModal = function (size,responseData,draftOrSalesOrder) {
 
-			toaster.clear();
-			if (Modalopened) return;
+  	toaster.clear();
+  	if (Modalopened) return;
 
-				toaster.pop('wait', 'Please Wait', 'Modal Data Loading....',60000);
-				
-				var modalInstance = $modal.open({
-				  templateUrl: 'app/views/PopupModal/QuickMenu/myHistorySalesBillModalContent.html',
-				  controller: historySalesBillModaleCtrl,
-				  size: size,
-				  resolve:{
-					  responseData: function(){
-						return responseData;
-					  },
-					  draftOrSalesOrder: function(){
-						return draftOrSalesOrder;
-					  }
-				  }
-				});
+  	toaster.pop('wait', 'Please Wait', 'Modal Data Loading....',60000);
 
-			   Modalopened = true;
-			   
-			   modalInstance.opened.then(function() {
-					toaster.clear();
-				});
+  	var modalInstance = $modal.open({
+  		templateUrl: 'app/views/PopupModal/QuickMenu/myHistorySalesBillModalContent.html',
+  		controller: historySalesBillModaleCtrl,
+  		size: size,
+  		resolve:{
+  			responseData: function(){
+  				return responseData;
+  			},
+  			draftOrSalesOrder: function(){
+  				return draftOrSalesOrder;
+  			}
+  		}
+  	});
 
-				modalInstance.result.then(function () {
-					toaster.clear();
-					Modalopened = false;
-					$scope.EditAddBill();
-					$anchorScroll();
-				}, function () {
-					toaster.clear();
-					Modalopened = false;
-				});
-	};
+  	Modalopened = true;
+
+  	modalInstance.opened.then(function() {
+  		toaster.clear();
+  	});
+
+  	modalInstance.result.then(function () {
+  		toaster.clear();
+  		Modalopened = false;
+  		$scope.EditAddBill();
+  		$anchorScroll();
+  	}, function () {
+  		toaster.clear();
+  		Modalopened = false;
+  	});
+  };
 	/*
 	* Get Set Invoice Product Data
 	*/
@@ -437,8 +442,8 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 			apiCall.getCall(apiPath.getAllCompany).then(function(response2){
 				toaster.clear();
 				toaster.pop('wait', 'Please Wait', 'Data Loading....',600000);
-					vm.companyDrop = response2;
-					$scope.defaultComapny();
+				vm.companyDrop = response2;
+				$scope.defaultComapny();
 			});
 			$scope.quickBill = [];
 			vm.AccBillTable = [{"productId":"","productName":"","color":"","frameNo":"","discountType":"flat","price":0,"discount":"","qty":1,"amount":"","size":"","variant":""}];
@@ -694,17 +699,17 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 		}
 	}
 		// End Table 
-	
-	function checkGSTValue(value){
-		
-		if(angular.isUndefined(value) || value == '' || isNaN(value)){
-			return 0;
+
+		function checkGSTValue(value){
+
+			if(angular.isUndefined(value) || value == '' || isNaN(value)){
+				return 0;
+			}
+			else{
+				return parseFloat(value);
+			}
 		}
-		else{
-			return parseFloat(value);
-		}
-	}
-	
+
 	//Total Quantity For Product Table
 	$scope.getTotalQuantity = function()
 	{
@@ -858,7 +863,7 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 			item.sgstAmount =  0;
 			item.igstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(amount,getIgst,0),$scope.noOfDecimalPoints);
 		}
-			item.amount = $filter('setDecimal')(amount+item.cgstAmount+item.sgstAmount+item.igstAmount+item.cessAmount,$scope.noOfDecimalPoints);
+		item.amount = $filter('setDecimal')(amount+item.cgstAmount+item.sgstAmount+item.igstAmount+item.cessAmount,$scope.noOfDecimalPoints);
 	}
 	/** END **/
 	
@@ -923,16 +928,16 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 			{
 				if(vm.AccExpense[0].expenseValue!=0)
 				{
-					  var json3 = angular.copy(vm.AccExpense);
-						
-					 for(var i=0;i<json3.length;i++){
-						 
+					var json3 = angular.copy(vm.AccExpense);
+
+					for(var i=0;i<json3.length;i++){
+
 						angular.forEach(json3[i], function (value,key) {
 							
 							formdata.set('expense['+i+']['+key+']',value);
 						});
-								
-					 }
+
+					}
 				}
 			}
 			formdata.set('grandTotal',$scope.grandTotalTable);
@@ -1010,9 +1015,9 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 			
 			$scope.printButtonType = item.printType == '' ? 'print':item.printType;
 			
-				formdata.delete('companyId');
+			formdata.delete('companyId');
 			formdata.set('companyId',item.companyId);
-		 }
+		}
 	}
 	//Changed date
 	$scope.changeBillDate = function(Fname){
@@ -1064,8 +1069,8 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 		data.variant = '';
 		vm.AccBillTable.splice(plusOne,0,data);
 		$scope.changeProductArray = true;
-    };
-    $scope.removeRow = function (idx) {
+	};
+	$scope.removeRow = function (idx) {
 		vm.AccBillTable.splice(idx,1);
 		vm.productHsn.splice(idx,1);
 		$scope.changeProductArray = true;
@@ -1085,12 +1090,12 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 		data.expenseOperation = 'plus';
 		vm.AccExpense.splice(plusOne,0,data);
 		$scope.changeProductArray = true;
-    };
+	};
 	$scope.removeExpenseRow = function (idx) {
 		vm.AccExpense.splice(idx,1);
 		$scope.expenseAmount.splice(idx,1);
 		$scope.changeProductArray = true;
-		 $scope.advanceValueUpdate();
+		$scope.advanceValueUpdate();
 	};
 	$scope.advanceValueUpdate = function(){
 		
@@ -1106,7 +1111,7 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 			}
 			$scope.quickBill.advance = $filter('setDecimal')(expenseData,2);
 			$scope.$digest();
-		 }, 1000);
+		}, 1000);
 	}
 	$scope.changePaymentInBill = function(Fname,value) {
 		if(formdata.has(Fname))
@@ -1127,8 +1132,8 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 			$scope.quickBill.bankLedgerId ? formdata.set('bankLedgerId',$scope.quickBill.bankLedgerId.ledgerId) : '';
 		}
 		formdata.set(Fname,value);
-  	}
-  	$scope.changeInBill = function(Fname,value) {
+	}
+	$scope.changeInBill = function(Fname,value) {
 
 		if(formdata.has(Fname))
 		{
@@ -1144,70 +1149,70 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 				formdata.set(Fname,value);
 			}
 		}
-  	}
+	}
 
 	// Datepicker
   // ----------------------------------- 
-	this.minStart = new Date();
+  this.minStart = new Date();
 
   this.today = function() {
-    this.dt1 = new Date();
+  	this.dt1 = new Date();
   };
   
-	if(!$scope.quickBill.EditBillData){
-		  
-		this.today();
-	}
+  if(!$scope.quickBill.EditBillData){
+
+  	this.today();
+  }
 
   this.clear = function () {
     //this.dt1 = null;
-  };
+};
 
   // Disable weekend selection
   this.disabled = function(date, mode) {
     return false; //( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
-  };
+};
 
-  this.toggleMin = function() {
-    this.minDate = this.minDate ? null : new Date();
-  };
-  this.toggleMin();
+this.toggleMin = function() {
+	this.minDate = this.minDate ? null : new Date();
+};
+this.toggleMin();
 
-  this.open = function($event) {
-    $event.preventDefault();
-    $event.stopPropagation();
+this.open = function($event) {
+	$event.preventDefault();
+	$event.stopPropagation();
 
-    this.opened = true;
-  };
-	
-	this.openStart = function($event) {
-	  
-    $event.preventDefault();
-    $event.stopPropagation();
+	this.opened = true;
+};
 
-    this.openedStart = true;
-  };
+this.openStart = function($event) {
 
-  this.openStartServiceDate = function($event) {
-	  
-    $event.preventDefault();
-    $event.stopPropagation();
+	$event.preventDefault();
+	$event.stopPropagation();
 
-    this.openedStartServiceDate = true;
-  };
-  
-  this.dateOptions = {
-    formatYear: 'yy',
-    startingDay: 1
-  };
+	this.openedStart = true;
+};
 
-  this.dateOptions2 = {
-    formatYear: 'yy',
-    startingDay: 1
-  };
+this.openStartServiceDate = function($event) {
 
-  this.initDate = new Date('2016-15-20');
-  this.format = dateFormats;
+	$event.preventDefault();
+	$event.stopPropagation();
+
+	this.openedStartServiceDate = true;
+};
+
+this.dateOptions = {
+	formatYear: 'yy',
+	startingDay: 1
+};
+
+this.dateOptions2 = {
+	formatYear: 'yy',
+	startingDay: 1
+};
+
+this.initDate = new Date('2016-15-20');
+this.format = dateFormats;
 
   // Timepicker
   // ----------------------------------- 
@@ -1217,20 +1222,20 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
   this.mstep = 15;
 
   this.options = {
-    hstep: [1, 2, 3],
-    mstep: [1, 5, 10, 15, 25, 30]
+  	hstep: [1, 2, 3],
+  	mstep: [1, 5, 10, 15, 25, 30]
   };
 
   this.ismeridian = true;
   this.toggleMode = function() {
-    this.ismeridian = ! this.ismeridian;
+  	this.ismeridian = ! this.ismeridian;
   };
 
   this.update = function() {
-    var d = new Date();
-    d.setHours( 14 );
-    d.setMinutes( 0 );
-    this.mytime = d;
+  	var d = new Date();
+  	d.setHours( 14 );
+  	d.setMinutes( 0 );
+  	this.mytime = d;
   };
 
   this.changed = function () {
@@ -1238,63 +1243,63 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 
   this.clear = function() {
     //this.mytime = null;
-  };
+};
 
   // Input mask
   // ----------------------------------- 
 
   this.testoption = {
-        "mask": "99-9999999",
-        "oncomplete": function () {
-        },
-        "onKeyValidation": function () {
-        }
-    };
+  	"mask": "99-9999999",
+  	"oncomplete": function () {
+  	},
+  	"onKeyValidation": function () {
+  	}
+  };
 
   //default value
   this.test1 = new Date();
 
   this.dateFormatOption = {
-      parser: function (viewValue) {
-          return viewValue ? new Date(viewValue) : undefined;
-      },
-      formatter: function (modelValue) {
-          if (!modelValue) {
-              return "";
-          }
-          var date = new Date(modelValue);
-          return (date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate()).replace(/\b(\d)\b/g, "0$1");
-      },
-      isEmpty: function (modelValue) {
-          return !modelValue;
-      }
+  	parser: function (viewValue) {
+  		return viewValue ? new Date(viewValue) : undefined;
+  	},
+  	formatter: function (modelValue) {
+  		if (!modelValue) {
+  			return "";
+  		}
+  		var date = new Date(modelValue);
+  		return (date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate()).replace(/\b(\d)\b/g, "0$1");
+  	},
+  	isEmpty: function (modelValue) {
+  		return !modelValue;
+  	}
   };
 
   this.mask = { regex: ["999.999", "aa-aa-aa"]};
 
   this.regexOption = {
-      regex: "[a-zA-Z0-9._%-]+@[a-zA-Z0-9-]+\\.[a-zA-Z]{2,4}"
+  	regex: "[a-zA-Z0-9._%-]+@[a-zA-Z0-9-]+\\.[a-zA-Z]{2,4}"
   };
 
   this.functionOption = {
-   mask: function () {
-      return ["[1-]AAA-999", "[1-]999-AAA"];
-  }};
+  	mask: function () {
+  		return ["[1-]AAA-999", "[1-]999-AAA"];
+  	}};
 
   // Bootstrap Wysiwyg
   // ----------------------------------- 
- 
+
   this.editorFontFamilyList = [
-    'Serif', 'Sans', 'Arial', 'Arial Black', 'Courier',
-    'Courier New', 'Comic Sans MS', 'Helvetica', 'Impact',
-    'Lucida Grande', 'Lucida Sans', 'Tahoma', 'Times',
-    'Times New Roman', 'Verdana'
+  'Serif', 'Sans', 'Arial', 'Arial Black', 'Courier',
+  'Courier New', 'Comic Sans MS', 'Helvetica', 'Impact',
+  'Lucida Grande', 'Lucida Sans', 'Tahoma', 'Times',
+  'Times New Roman', 'Verdana'
   ];
   
   this.editorFontSizeList = [
-    {value: 1, name: 'Small'},
-    {value: 3, name: 'Normal'},
-    {value: 5, name: 'Huge'}
+  {value: 1, name: 'Small'},
+  {value: 3, name: 'Normal'},
+  {value: 5, name: 'Huge'}
   ];
   
 }

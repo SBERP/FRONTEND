@@ -121,6 +121,8 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 
 	$scope.enableItemizedPurchaseSales = false;
 
+	$scope.enableDisableTaxReadOnly = false;
+
 	$scope.enableQuotationWorkflow = false;
 
 	$scope.divTag = false;
@@ -240,6 +242,11 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 				{
 					var arrayData1 = response[arrayData];
 					$scope.enableQuotationWorkflow = arrayData1.workflowQuotationStatus=="enable" ? true : false;
+				}
+				else if (response[arrayData].settingType=="advance") 
+				{
+					var arrayData1 = response[arrayData];
+					$scope.enableDisableTaxReadOnly = arrayData1.advanceTaxReadOnlyStatus=="enable" ? true : false;
 				}
 			}
 		}

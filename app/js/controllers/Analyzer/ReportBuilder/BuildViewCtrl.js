@@ -162,12 +162,21 @@ function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiR
 	$scope.filterTypeChange = function (condType) {
 		if (condType == 'DATE EQUALS' || condType == 'BEFORE' || condType == 'AFTER') {
 			$scope.dateFormat = 'dd-MM-yyyy';
+			$scope.dateOptions.mode = 'date';
+			$scope.dateOptions.opts.minMode = 'date';
+			$scope.isOpen = false;
 		} else if (condType == 'MONTH EQUALS') {
 			$scope.dateFormat = 'MM-yyyy';
+			$scope.dateOptions.mode = 'month';
+			$scope.dateOptions.opts.minMode = 'month';
 			$scope.filters.filterValue = '';
+			$scope.isOpen = false;
 		} else if (condType == 'YEAR EQUALS') {
 			$scope.dateFormat = 'yyyy';
+			$scope.dateOptions.mode = 'year';
+			$scope.dateOptions.opts.minMode = 'year';
 			$scope.filters.filterValue = '';
+			$scope.isOpen = false;
 		}
 	}
 	$scope.selectFilterValue = function(field) {
@@ -195,6 +204,7 @@ function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiR
 			}
 		} else {
 			$scope.filterTypes = filterTypes.enum;
+			$scope.dataTypeInput = 3;
 		}
 	}
 
@@ -324,15 +334,23 @@ function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiR
 		if ($scope.filters.editIndex != undefined) {
 			currentKey = $scope.filters.editIndex;
 		}
+		var filtValue = '';
+		filtValue = $scope.filters.filterValue;
+		if ($scope.filters.conditionType == 'YEAR EQUALS') {
+			var dd = new Date(filtValue);
+			filtValue = dd.getFullYear();
+		}
 		$scope.filters.conditions[currentKey] = {
 			field: $scope.filters.field,
 			conditionType: $scope.filters.conditionType,
-			filterValue: $scope.filters.filterValue
+			filterValue: filtValue
 		};
 		$scope.filters.field = undefined;
 		$scope.filters.conditionType = undefined;
 		$scope.filters.filterValue = undefined;
 		$scope.filters.editIndex = undefined;
+		$scope.filterTypes = filterTypes.enum;
+		$scope.dataTypeInput = 3;
 	}
 
 	$scope.deleteFilter = function(filterKey) {
@@ -364,8 +382,11 @@ function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiR
 	};
 
 	$scope.dateOptions = {
-	  	formatYear: 'yyyy',
-	  	startingDay: 1
+	  	mode: 'date',
+	  	opts: {
+	  		formatYear: 'yyyy',
+	  		startingDay: 1
+	  	}
 	};
 	function pad(n) {return n < 10 ? "0"+n : n;}
 	$scope.changeDate = function(date) {
@@ -374,7 +395,6 @@ function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiR
 		if ($scope.filters.conditionType == 'MONTH EQUALS') {
 			$scope.filters.filterValue = pad(dateObj.getMonth()+1)+"-"+dateObj.getFullYear();
 		} else if ($scope.filters.conditionType == 'YEAR EQUALS') {
-			$scope.filters.filterValue = dateObj.getFullYear().toString();
 		}else {
 			$scope.filters.filterValue = pad(dateObj.getDate())+"-"+pad(dateObj.getMonth()+1)+"-"+dateObj.getFullYear();
 		}
