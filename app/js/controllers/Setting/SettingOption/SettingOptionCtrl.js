@@ -34,6 +34,7 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 
   	$scope.enableDisableAdvanceSales = false;
   	$scope.enableDisableAdvancePurchase = false;
+  	$scope.enableDisableTaxReadOnly = false;
 
   	$scope.enableItemizedPurchaseSales = false;
 
@@ -176,6 +177,7 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 							var arrayData1 = response2[arrayData];
 							$scope.enableDisableAdvanceSales = arrayData1.advanceSalesStatus=="enable" ? true : false;
 							$scope.enableDisableAdvancePurchase = arrayData1.advancePurchaseStatus=="enable" ? true : false;
+							$scope.enableDisableTaxReadOnly = arrayData1.advanceTaxReadOnlyStatus=="enable" ? true : false;
 						}
 					}
 				}
@@ -773,6 +775,7 @@ function settingOptionController($rootScope,$scope,apiCall,apiPath,toaster,apiRe
 				$scope.enableDisableAdvanceSales==true ? billFormData.append('advanceSalesStatus','enable') : billFormData.append('advanceSalesStatus','disable');
 
 				$scope.enableDisableAdvancePurchase==true ? billFormData.append('advancePurchaseStatus','enable') : billFormData.append('advancePurchaseStatus','disable');
+				$scope.enableDisableTaxReadOnly==true ? billFormData.append('advanceTaxReadOnlyStatus','enable') : billFormData.append('advanceTaxReadOnlyStatus','disable');
 
 				if($scope.insertUpdateAdvanceBillLabel == "Update"){
 					var apiPostPatchCall = apiCall.patchCall;

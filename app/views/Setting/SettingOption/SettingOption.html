@@ -475,7 +475,7 @@
 			</div>
 			<div class="panel-body">
 				<form  action="#" name="formAdvanceBill" class="form-validate form-horizontal">
-					<div class="col-sm-4">
+					<div class="col-sm-3">
 						<fieldset class="my-fieldset-paddingBottom">
 						   	<div class="form-group">
 						   		<label class="col-sm-2 col-xs-6 col-md-6 control-label pt-sm">Sales</label>
@@ -488,13 +488,26 @@
 						   	</div>
 						</fieldset>
 					</div>
-					<div class="col-sm-4">
+					<div class="col-sm-3">
 						<fieldset class="my-fieldset-paddingBottom">
 						   <div class="form-group">
 						   	<label class="col-sm-2 col-xs-6 col-md-6 control-label pt-sm">Purchase</label>
 							    <div class="col-sm-2 col-xs-6 col-md-4">
 									<label class="switch switch-lg switch-success pull-right ph-lg">
 			                       		 <input type="checkbox" data-ng-model="enableDisableAdvancePurchase" ng-change="changeInAdvanceBill('enableDisableAdvancePurchase',enableDisableAdvancePurchase)"/>
+			                       		 <span></span>
+			                    	 </label>
+								</div>
+						   </div>
+						</fieldset>
+					</div>
+					<div class="col-sm-3">
+						<fieldset class="my-fieldset-paddingBottom">
+						   <div class="form-group">
+						   	<label class="col-sm-2 col-xs-6 col-md-6 control-label pt-sm">Tax ReadOnly</label>
+							    <div class="col-sm-2 col-xs-6 col-md-4">
+									<label class="switch switch-lg switch-success pull-right ph-lg">
+			                       		 <input type="checkbox" data-ng-model="enableDisableTaxReadOnly" ng-change="changeInAdvanceBill('enableDisableTaxReadOnly',enableDisableTaxReadOnly)"/>
 			                       		 <span></span>
 			                    	 </label>
 								</div>
