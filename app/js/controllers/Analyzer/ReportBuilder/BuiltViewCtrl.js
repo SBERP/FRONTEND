@@ -19,7 +19,6 @@ function BuiltViewController($rootScope, $scope, $state, $filter, apiCall, apiPa
 		apiCall.getCall(apiPath.generateBuiltReport+$scope.reportData.reportId).then((res) => {
 			if (angular.isObject(res)) {
 				$scope.fields = res.fields;
-				console.log($scope.fields);
 				data = res.data;
 				loadngTable();
 			} else {
