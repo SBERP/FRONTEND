@@ -358,9 +358,17 @@ function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiR
 	}
 
 	$scope.editFilter = function(item, index) {
+		$scope.selectFilterValue(item.field);
 		$scope.filters.field = item.field;
+		$scope.filterTypeChange(item.conditionType);
+		if (item.conditionType == 'YEAR EQUALS') {
+			let dd1 = new Date(item.filterValue, 1);
+			$scope.filters.filterValue = dd1;
+		} else {
+			$scope.filters.filterValue = item.filterValue;
+		}
 		$scope.filters.conditionType = item.conditionType;
-		$scope.filters.filterValue = item.filterValue;
+		
 		$scope.filters.editIndex = index;
 	}
 	$scope.removePreviewColumn = function(index) {
