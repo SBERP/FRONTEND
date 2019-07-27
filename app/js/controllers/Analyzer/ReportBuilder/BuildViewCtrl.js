@@ -162,8 +162,8 @@ function BuildViewController($rootScope, $scope, $filter, apiCall, apiPath, apiR
 	$scope.filterTypeChange = function (condType) {
 		if (condType == 'DATE EQUALS' || condType == 'BEFORE' || condType == 'AFTER') {
 			$scope.dateFormat = 'dd-MM-yyyy';
-			$scope.dateOptions.mode = 'date';
-			$scope.dateOptions.opts.minMode = 'date';
+			$scope.dateOptions.mode = undefined;
+			$scope.dateOptions.opts.minMode = undefined;
 			$scope.isOpen = false;
 		} else if (condType == 'MONTH EQUALS') {
 			$scope.dateFormat = 'MM-yyyy';
