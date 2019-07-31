@@ -910,6 +910,17 @@ App.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
                     }
                 })
             })
+            //Purchase Return
+            .state('app.AccPurchaseReturn', {
+                url: '/AccPurchaseReturn',
+                templateUrl: basepath('QuickMenu/purchaseReturnBill.html'),
+                controller: 'PurchaseReturnController as form',
+                resolve: angular.extend(requireDeps('purchaseReturn', 'twain', 'toaster', 'angular-chosen', 'ngTable', 'ngTableExport', 'uiCropper', 'moment', 'jquery-ui', 'googleKeyboard'), {
+                    purchaseType: function() {
+                        return 'PurchaseReturn';
+                    }
+                })
+            })
             //Purchase Order
             .state('app.PurchaseOrder', {
                 url: '/PurchaseOrder',

@@ -370,9 +370,9 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 	/*
 	* Get Set Invoice Product Data
 	*/
-	$scope.EditAddBill = function(){
+	$scope.EditAddBill = function() {
 		$scope.openedItemizeTree = 0;
-		if(Object.keys(getSetFactory.get()).length){
+		if(Object.keys(getSetFactory.get()).length) {
 			vm.productNameDrop = [];
 			vm.AccBillTable = [{"productId":"","productName":"","color":"","frameNo":"","discountType":"flat","price":0,"discount":"","qty":1,"amount":"","size":"","variant":""}];
 			vm.productHsn = [];

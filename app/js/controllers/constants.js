@@ -125,6 +125,7 @@
 		{ name: 'reportBuilder', files: ['app/js/controllers/Analyzer/ReportBuilder/BuildViewCtrl.js'] },
 		{ name: 'builtList', files: ['app/js/controllers/Analyzer/ReportBuilder/BuildListCtrl.js'] },
 		{ name: 'builtView', files: ['app/js/controllers/Analyzer/ReportBuilder/BuiltViewCtrl.js'] },
+		{ name: 'purchaseReturn', files: ['app/js/controllers/QuickMenu/PurchaseReturnCtrl.js'] },
 		{
 			name: 'treeControl',
 			files: [
