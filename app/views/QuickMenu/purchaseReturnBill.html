@@ -116,7 +116,7 @@
 				</div>
 			</h4>
 			<div class="panel-body" style="padding:0px">
-				<div class="col-sm-12">
+				<div class="col-sm-12" style="margin-bottom: 10px;">
 					<div class="col-sm-3">
 						<fieldset class="my-fieldset-paddingBottom my-fieldset-marginBottom">
 							<div class="form-group">
@@ -139,6 +139,328 @@
 					</div>
 				</div>
 			</div>
+			<div>
+				<table  class="table table-bordered table-striped tableTopCss" >
+					<thead>
+						<tr>
+							<th class="header" style="width:1%;padding-top:5px !important;padding-bottom:5px !important;">#</th>
+							<th class="header" style="width:28%;padding-top:5px !important;padding-bottom:5px !important;min-width:150px;" >
+								<span>Name of Item</span>
+							</th>
+							<th class="header" style="width:3%;padding-top:5px !important;padding-bottom:5px !important;">HSN</th>
+							<th ng-if="divAdvanceMou" class="header" style="width:6%;padding-top:5px !important;padding-bottom:5px !important;">    Unit
+							</th>
+							<th ng-if="divTag" class="header" style="width:11%;padding-top:5px !important;padding-bottom:5px !important;text-align:center">
+								<span ng-if="enableDisableColor">Color  </span> 
+								<span ng-if="(enableDisableColor && enableDisableSize)"> | </span>
+								<span ng-if="enableDisableSize">Size</span>
+								<span ng-if="(enableDisableColor && enableDisableVariant) || (enableDisableSize && enableDisableVariant) "> | </span>
+								<span ng-if="enableDisableVariant">Variant</span>
+							</th>
+							<th ng-if="enableDisableFrameNo" class="header" style="width:8%;padding-top:5px !important;padding-bottom:5px !important;">Frame#</th>
+							<th class="header" style="width:4%;padding-top:5px !important;padding-bottom:5px !important;" >Qty.</th>
+							<th class="header" style="width:8%;padding-top:5px !important;padding-bottom:5px !important;" >Rate</th>
+							<th class="header" style="width:9%;padding-top:5px !important;padding-bottom:5px !important;">Discount</th>
+							<th class="header" style="width:4%;padding-top:5px !important;padding-bottom:5px !important;" >CGST</th>
+							<th class="header" style="width:4%;padding-top:5px !important;padding-bottom:5px !important;" >SGST</th>
+							<th class="header" style="width:4%;padding-top:5px !important;padding-bottom:5px !important;" >IGST</th>
+							<th class="header" style="width:9%;padding-top:5px !important;padding-bottom:5px !important;" >Amount</th>
+							<th class="header" style="width:7%;padding-top:5px !important;padding-bottom:5px !important;">Action</th>
+						</tr>
+					</thead>
+					<script type="text/ng-template" id="customTemplate.html">
+						<a><span ng-bind-html="match.label | typeaheadHighlight:query"></span> ({{match.model.color}} | {{match.model.size}} | {{match.model.variant}})</a>
+					</script>
+					<tbody portlet="" >
+						<tr id="panelPortlet{{$index+1}}" ng-repeat="item in form.AccBillTable track by $index" class="myTable" data-ng-class="app.tableAnimation">
+							<td style="text-align:center" class="portlet-handler" >
+								<strong ng-bind="$index+1"></strong>
+							</td>
+							<td>
+								<div class="input-group mytypeDrop" style="width: 100%">
+									<input typeahead="item.productName for item in form.productNameDrop | filter:$viewValue | limitTo:10" ng-model="item.productName" typeahead-on-select="setProductData($item,$index);" type="text" class="form-control input-sm" autocomplete="off" placeholder="*Enter Product Name"  typeahead-editable="false" ng-required="true" style="padding-left: 6px;padding-right: 6px;" typeahead-template-url="customTemplate.html" ng-disabled="form.loadData"/>
+									<span class="input-group-btn">
+										<button ng-if="enableItemizedPurchaseSales && item.productId" type="button" class="btn btn-default btn-sm" tooltip="IMEI/Serial No"  tooltip-trigger="mouseenter" tooltip-placement="top" data-ng-click="openBarcodeModal('lg',$index)"><i class="fa fa-barcode" style="font-size:15px;color:#17A1E5;"></i></button>
+									</span>
+								</div>
+								<ul class="itemize-expand-tree" ng-if="item.itemizeDetail.length > 0">
+									<li ng-click="expandItemizeTree($index+1)"><i class="fa {{itemizeTreeIcon($index+1)}} fa-lg"></i> IMEI Info
+										<ul class="{{openedItemizeTreeClass($index+1)}}">
+											<li ng-repeat="itemize in item.itemizeDetail" class="clearfix">
+												<span>{{itemize.qty}}x&nbsp;&nbsp;{{itemize.imei_no}}</span>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</td>
+							<td>
+								<h6>{{form.productHsn[$index]}}</h6>
+							</td>
+							<td ng-if="divAdvanceMou">
+								<select  ng-model="item.measurementUnit" data-ng-options="s.unitName for s in form.measurementUnitDrop[$index] track by ($index+s.measurementUnitId+s.unitName)" class="form-control input-sm" style="padding-left: 3px;padding-right: 3px;float:left;" ng-change="changeQuantity($index);" >
+								</select>
+							</td>
+							<td style="text-align:center;" ng-if="divTag">
+								<input  ng-if="enableDisableColor" placeholder="Color" type="text" ng-model="item.color"  class="form-control input-sm " ng-class="ProductColorSizeVarDesign"  /> 
+								<input ng-if="enableDisableSize" placeholder="Size" type="text" ng-model="item.size"  class="form-control input-sm "
+								ng-class="ProductColorSizeVarDesign"   />
+								<input ng-if="enableDisableVariant" placeholder="Variant" type="text" ng-model="item.variant"  class="form-control input-sm "
+								ng-class="ProductColorSizeVarDesign"   />
+							</td>
+							<td ng-if="enableDisableFrameNo">
+								<input placeholder="Frame No" type="text" ng-model="item.frameNo"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"   ng-pattern="/^[a-z-A-Z0-9 ]*$/" /> 
+							</td>
+							<td>
+								<input  type="text" ng-model="item.qty"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"  ng-required="true" ng-minlength="1" ng-pattern="/^[1-9]+[0-9]*$/" ng-change="changeQuantity($index)" only-number /> 
+							</td>
+							<td>
+								<input placeholder="(&#x20b9;)Rate" id="price" type="text" ng-model="item.price" ng-disabled="enableDisableTaxReadOnly"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"  ng-required="true" ng-minlength="1" ng-pattern="/^\s*(?=.*[1-9])\d*(?:\.\d{1,2})?\s*$/" ng-change="calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage)" only-number /> 
+							</td>
+							<td>
+								<select  ng-model="item.discountType" ng-disabled="enableDisableTaxReadOnly" class="form-control input-sm" style="padding-left: 3px;padding-right: 3px;width:60%;float:left;" ng-change="" >
+									<option value="flat" selected="selected">Flat</option>
+									<option value="percentage">%</option>
+								</select>
+								<input  type="text" ng-model="item.discount" ng-disabled="enableDisableTaxReadOnly" class="form-control input-sm" style="padding-left: 5px;padding-right: 5px;width:40%;" ng-pattern="/^[0-9 .]*$/" ng-change="calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage)"  ng-attr-max="{{item.discountType == 'percentage' && '100' || ''}}" only-number />
+							</td>
+							<td style="text-align:right">
+								<input id="price" type="text" ng-disabled="csgstDisable || enableDisableTaxReadOnly" ng-model="item.cgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%"  ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage);zeroSingleGst()" only-number /> 
+								<span ng-if="item.cgstAmount > 0 && !csgstDisable" ng-disabled="csgstDisable" ng-bind="item.cgstAmount"></span>
+							</td>
+							<td style="text-align:right">
+								<input id="price" type="text" ng-disabled="csgstDisable || enableDisableTaxReadOnly" ng-model="item.sgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%"  ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage);zeroSingleGst()" only-number /> 
+								<span ng-if="item.sgstAmount > 0 && !csgstDisable" ng-disabled="csgstDisable" ng-bind="item.sgstAmount" ></span>
+							</td>
+							<td style="text-align:right">
+								<input id="price" type="text" ng-disabled="igstDisable || enableDisableTaxReadOnly" ng-model="item.igstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%" ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage);zeroSingleGst()" only-number /> 
+								<span ng-if="item.igstAmount > 0" ng-disabled="igstDisable" ng-bind="item.igstAmount"></span>
+							</td>
+							<td>
+								<input placeholder="(&#x20b9;)Amount" type="text" ng-model="item.amount"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"  ng-required="true" ng-minlength="1" ng-pattern="/^[0-9 .]*$/" ng-change="calculateTaxReverseTwo(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage,$index);" only-number />
+							</td>
+							<td>
+								<center>
+									<a href="javascript:void(0)" ng-click="addRow($index)"> 
+										<i  class="fa fa-plus myCursorPointer" style="font-size:20px;"   ></i>
+									</a>
+									&nbsp;
+									<a href="javascript:void(0)" class="text-danger"  ng-click="removeRow($index)" ng-if="$index!=0">
+										<i  class="fa fa-times myCursorPointer" style="font-size:20px;" title="Delete"> </i>
+									</a>
+								</center>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="{{totalTd}}"></td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td style="text-align:right" title="Total Quantity" colspan="{{colspanValue}}" >
+								<strong ng-bind="getTotalQuantity()"></strong>
+							</td>
+							<td></td>
+							<td> 
+								<select  ng-model="purchaseBill.totalDiscounttype"  class="form-control input-sm" style="padding-left: 3px;padding-right: 3px;width:60%;float:left;" ng-change="advanceValueUpdate()" >
+									<option value="flat" selected="selected">Flat</option>
+									<option value="percentage">%</option>
+								</select>
+								<input  type="text" ng-model="purchaseBill.totalDiscount"  class="form-control input-sm" style="padding-left: 5px;padding-right: 5px;width:40%;" ng-pattern="/^[0-9 .]*$/" ng-change="advanceValueUpdate()"  ng-attr-max="{{purchaseBill.totalDiscounttype == 'percentage' && '100' || ''}}" only-number /> 
+							</td>
+							<td style="text-align:right">
+								<input id="price" type="text" ng-disabled="totalCSgstDisable" ng-model="purchaseBill.totalCgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%"  ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="zeroGstApply();advanceValueUpdate()" only-number /> 
+								<span ng-if="purchaseBill.totalCgstAmount > 0 && !totalCSgstDisable" ng-disabled="totalCSgstDisable" ng-bind="purchaseBill.totalCgstAmount"></span>
+							</td>
+							<td style="text-align:right">
+								<input id="price" type="text" ng-disabled="totalCSgstDisable" ng-model="purchaseBill.totalSgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%"  ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="zeroGstApply();advanceValueUpdate()" only-number /> 
+								<span ng-if="purchaseBill.totalSgstAmount > 0 && !totalCSgstDisable" ng-disabled="totalCSgstDisable" ng-bind="purchaseBill.totalSgstAmount" ></span>
+							</td>
+							<td style="text-align:right">
+								<input id="price" type="text" ng-disabled="totalIgstDisable" ng-model="purchaseBill.totalIgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%" ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="zeroGstApply();advanceValueUpdate()" only-number /> 
+								<span ng-if="purchaseBill.totalIgstAmount > 0" ng-disabled="totalIgstDisable" ng-bind="purchaseBill.totalIgstAmount"></span>
+							</td>
+							<td ></td>
+							<td colspan="1"></td>
+						</tr>
+						<tr>
+							<td style="text-align:right" title="Extra Charge" colspan="{{colspanValue}}">
+								<strong>E.Charge</strong>
+							</td>
+							<td ng-init="purchaseBill.extraCharge = 0">
+								<input placeholder="(&#x20b9;)Extra Charge" type="text" name="extraCharge" ng-model="purchaseBill.extraCharge"  class="form-control input-sm"   ng-pattern="/^[0-9 .]*$/" ng-change="advanceValueUpdate()" style="padding-left: 6px;padding-right: 6px;" only-number /> 
+								<span ng-messages="formBill.extraCharge.$error" ng-if="formBill.extraCharge.$dirty || formBill.extraCharge.$touched"  role="alert">
+									<span ng-messages-include="errorPatternNumber"></span>
+								</span>
+							</td>
+							<td> 
+							</td>
+							<td colspan="3" style="text-align:right" ng-bind="purchaseBill.tax = getTotalTax() ? (getTotalTax() | setDecimal: noOfDecimalPoints) : 0"></td>
+							<td style="text-align:right" ng-bind="total_without_expense = getTotal() ? (getTotal() | setDecimal: noOfDecimalPoints) : 0;(openExpenseRawData ? total_without_expense : total = total_without_expense)" ></td>
+							<td colspan="1">
+								<button type="button" class="btn btn-sm" data-ng-class="app.theme.brand"  ng-click="openExpenseRaw()">Expense</button>
+							</td>
+						</tr>
+						<tr  ng-repeat="item in form.AccExpense track by $index" ng-if="openExpenseRawData">
+
+							<td colspan="{{colspanAdvanceValue}}">
+								<div class="input-group mytypeDrop" style="width: 30%;float: right;">
+									<select  ng-model="item.expenseOperation"  class="form-control input-sm" style="width:25%;float:right;" ng-required="true">
+										<option value="plus" selected="selected">+</option>
+										<option value="minus">-</option>
+									</select>
+									<input typeahead="item.expenseName for item in expenseData | filter:$viewValue | limitTo:10" ng-model="item.expenseName" typeahead-on-select="setExpenseData($item,$index);" type="text" class="form-control input-sm" autocomplete="off" placeholder="*Enter Expense Name"  typeahead-editable="false" ng-required="true" style="float:right;padding-left: 5px;width:75%;" ng-disabled="form.loadData"/>
+								</div>
+								<label class="control-label" style="width: 30%;float: right;padding-right: 5px;"> Expense Name </label>
+
+							</td>
+
+							<td colspan="1" style="text-align:right;">
+								<select  ng-model="item.expenseType"  class="form-control input-sm" style="padding-left: 3px;padding-right: 3px;width:60%;float:left;" ng-change="advanceValueUpdate();" ng-required="true">
+									<option value="flat" selected="selected">Flat</option>
+									<option value="percentage">%</option>
+								</select>
+								<input  type="text" ng-model="item.expenseValue"  class="form-control input-sm" style="padding-left: 5px;padding-right: 5px;width:40%;" ng-pattern="/^[0-9 .]*$/" ng-change="advanceValueUpdate();" ng-required="true"  only-number /> 
+							</td>
+							<td colspan="3">
+							</td>
+							<td colspan="1" style="text-align:right">
+								<span ng-bind='expenseAmount[$index] = getExpenseValue($index) | setDecimal: noOfDecimalPoints'></span>
+
+							</td>
+							<td colspan="1">
+								<center>
+									<a href="javascript:void(0)" ng-click="addExpenseRow($index)"> 
+										<i  class="fa fa-plus myCursorPointer" style="font-size:20px;"   ></i>
+									</a>
+									&nbsp;
+									<a href="javascript:void(0)" class="text-danger"  ng-click="removeExpenseRow($index)">
+										<i  class="fa fa-times myCursorPointer" style="font-size:20px;" title="Delete"> </i>
+									</a>
+								</center>
+							</td>
+						</tr>
+						<tr ng-if="saleType != 'QuotationPrint'">
+							<td style="text-align:left;" colspan="2" >
+							</td>
+							<td style="text-align:right" colspan="{{colspanAdvanceValue}}" > <strong> Advance </strong> </td>
+							<td colspan="2"> 
+								<input placeholder="(&#x20b9;)Advance" type="text" name="advance"  ng-model="purchaseBill.advance"  class="form-control input-sm"   ng-pattern="/^[0-9 .]*$/" style="height:30px;padding-left: 6px;padding-right: 6px;padding-bottom: 8px;padding-top: 8px;" only-number /> 
+								<span ng-messages="formBill.advance.$error" ng-if="formBill.advance.$dirty || formBill.advance.$touched"  role="alert">
+									<span ng-messages-include="errorPatternNumber"></span>
+								</span>
+							</td>
+							<td style="text-align:left"> <strong> Balance</strong></td>
+							<td style="text-align:right" ng-bind="purchaseBill.balance = ((openExpenseRawData ? total : total_without_expense) - (purchaseBill.advance ? purchaseBill.advance*1 : 0) | setDecimal: noOfDecimalPoints)" ></td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+			<div class="panel-body">
+				<div class="col-sm-12" >
+					<div class="col-sm-3">
+						<fieldset class="my-fieldset-paddingBottom my-fieldset-marginBottom">
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> *P.Mode </label>
+								<div class="col-sm-8">
+									<select chosen="" data-ng-model="purchaseBill.paymentMode" data-ng-options="(s | uppercase) for s in form.paymentModeDrop" class="form-control input-sm chosen-select" ng-required="true" ng-change="changePaymentInBill('paymentMode',purchaseBill.paymentMode);" >
+										<option value=""></option>
+									</select>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+					<div class="col-sm-3">
+						<fieldset class="my-fieldset-paddingBottom my-fieldset-marginBottom">
+							<div class="form-group">
+								<label  class="col-sm-3 control-label">Remark</label>
+								<div class="col-sm-9">
+									<textarea rows="1" ng-model="purchaseBill.remark" name="address"  placeholder="Remark" class="form-control input-sm ng-pristine ng-valid ng-touched" ng-change="changeInBill('remark',purchaseBill.remark)" style="height:38px;" ></textarea>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+					<div class="col-sm-2">
+					</div>
+				</div>
+
+				<div class="col-sm-12" ng-if="purchaseBill.paymentMode=='bank' || purchaseBill.paymentMode=='neft' || purchaseBill.paymentMode=='rtgs' || purchaseBill.paymentMode=='imps' || purchaseBill.paymentMode=='nach' || purchaseBill.paymentMode=='ach' || purchaseBill.paymentMode=='card'" data-ng-class="app.tableAnimation" >
+					<div class="col-sm-4">
+						<fieldset class="my-fieldset-paddingBottom my-fieldset-marginBottom">
+							<div class="form-group">
+								<label  class="col-sm-2 control-label">*Bank</label>
+								<div class="col-sm-10">
+									<select chosen="" id="selectId_chzn" data-ng-model="purchaseBill.bankName" data-ng-options="s for s in form.bankDrop | orderBy:bankName" class="form-control input-sm chosen-select" size="5" ng-required="true" ng-change="changeInBill('bankName',purchaseBill.bankName)"></select>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+					<div class="col-sm-4">
+						<fieldset class="my-fieldset-paddingBottom my-fieldset-marginBottom" >
+							<div class="form-group">
+								<label  class="col-sm-3 control-label">
+									<span ng-if="purchaseBill.paymentMode=='bank'"> *Cheque# </span>
+									<span ng-if="purchaseBill.paymentMode!='bank'"> *Reference# </span>
+								</label>
+								<div class="col-sm-8">
+									<input ng-model="purchaseBill.checkNumber" name="chequeNo"  type="text" placeholder="{{purchaseBill.paymentMode=='bank' ? 'Cheque' : 'Reference'}} Number" class="form-control input-sm" ng-pattern="/^[0-9]*$/" ng-required="true" ng-change="changeInBill('checkNumber',purchaseBill.checkNumber)" only-number />
+									<span ng-messages="formBill.chequeNo.$error" ng-if="formBill.chequeNo.$dirty || formBill.chequeNo.$touched"  role="alert">
+										<span ng-messages-include="errorPatternNumber"></span>
+									</span>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+					<div class="col-sm-4">
+						<fieldset class="my-fieldset-paddingBottom my-fieldset-marginBottom">
+							<div class="form-group">
+								<label  class="col-sm-3 control-label">*Our Bank</label>
+								<div class="col-sm-9">
+									<select chosen="" id="selectId_chzn_bankLedgerId" data-ng-model="purchaseBill.bankLedgerId" data-ng-options="s.ledgerName for s in form.bankLedgerDrop" class="form-control input-sm chosen-select" size="5" ng-required="true" ng-change="changeInBill('bankLedgerId',purchaseBill.bankLedgerId.ledgerId)"></select>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+				</div>
+
+				<div class="col-sm-12">
+					<div class="col-sm-6">
+						<button type="button" class="mr-sm mb-sm btn btn-sm pull-left" data-ng-class="app.theme.brand"  ng-click="pop('not')" ng-disabled="formBill.$invalid || disableButton"  > <span>Save</span> </button>
+
+						<button type="button" class="mr-sm mb-sm btn btn-sm pull-left" data-ng-class="app.theme.brand"   ng-click="cancel()">New</button>
+
+					</div>
+				</div>
+			</div>
 		</div>
 	</form>
 </div>
+<div id="myTwain">
+	<div id="dwtcontrolContainer" ></div>
+</div>
+<script type="text/ng-template" id="errorRequired">
+	<span class="text-danger" ng-message="required">{{errorMessage.require}}</span>
+</script>
+<script type="text/ng-template" id="errorLonglength">
+	<span class="text-danger" ng-message="maxlength">{{errorMessage.longLength}}</span>
+</script>
+<script type="text/ng-template" id="errorShortlength">
+	<span class="text-danger" ng-message="minlength">{{errorMessage.shortLength}}</span>
+</script>
+<script type="text/ng-template" id="errorEmail">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.email}}</span>
+</script>
+<script type="text/ng-template" id="errorPatternAlpha">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.Alphabets}}</span>
+</script>
+<script type="text/ng-template" id="errorPatternNumber">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.Numbers}}</span>
+</script>
+<script type="text/ng-template" id="errorPatternNumberContact">
+	<span class="text-danger" ng-message="pattern">Only Number & Not Start With Zero</span>
+</script>
+<script type="text/ng-template" id="errorPatternAlphaNumeric">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.AlphaNumeric}}</span>
+</script>
+<script type="text/ng-template" id="errorPatternThisSpecial">
+	<span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacter}}</span>
+</script>
