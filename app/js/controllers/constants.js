@@ -285,7 +285,8 @@
 		'reportBuilderGroups': 'reports/report-builder/groups',
 		'reportBuilderPreview': 'reports/report-builder/preview',
 		'reportBuilder': 'reports/report-builder',
-		'generateBuiltReport': 'reports/report-builder/generate/'
+		'generateBuiltReport': 'reports/report-builder/generate/',
+		'purchaseReturn': 'accounting/purchase-returns',
 	})
 	//Api Path
 	.constant('apiResponse', {

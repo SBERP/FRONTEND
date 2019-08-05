@@ -810,6 +810,91 @@ $scope.EditAddBill = function() {
 		}
 		formdata.set(Fname,value);
 	}
+
+	$scope.pop = function(generate)
+	{
+		$scope.disableButton = true;
+		if (angular.isDefined($scope.purchaseBill.EditBillData.purchaseId) && $scope.purchaseBill.EditBillData.purchaseId != 'undefined') {
+			toaster.pop('wait', 'Please Wait', 'Data Inserting....',600000);
+			var  date = new Date(vm.dt1);
+			var fdate  = date.getDate()+'-'+(date.getMonth()+1)+'-'+date.getFullYear();
+			if (!formdata.has('entryDate')) {
+				formdata.set('entryDate',fdate);
+			}
+			formdata.set('transactionDate',fdate);
+			var productJson = angular.copy(vm.AccBillTable);
+			for (var i = 0; i < productJson.length; i++) {
+				angular.forEach(productJson[i], function (value,key) {
+					var setData = value;
+					if(key == 'measurementUnit'){
+						if(angular.isObject(value)){
+							setData = value.measurementUnitId;
+						}
+					}
+					if (key == 'itemizeDetail') {
+						setData = JSON.stringify(value);
+					}
+					formdata.set('inventory['+i+']['+key+']',setData);
+				});
+			}
+			if(vm.AccExpense.length>0)
+			{
+				if(vm.AccExpense[0].expenseValue!=0)
+				{
+					var json3 = angular.copy(vm.AccExpense);
+
+					for(var i=0;i<json3.length;i++){
+
+						angular.forEach(json3[i], function (value,key) {
+							
+							formdata.set('expense['+i+']['+key+']',value);
+						});
+
+					}
+				}
+			}
+			formdata.set('grandTotal',$scope.grandTotalTable);
+			formdata.set('purchaseId',$scope.purchaseBill.EditBillData.purchaseId);
+			formdata.set('invoiceNumber',$scope.purchaseBill.EditBillData.invoiceNumber);
+			formdata.set('vendorId',$scope.purchaseBill.EditBillData.vendor.ledgerId);
+			formdata.set('total',$scope.total);
+			formdata.set('advance',$scope.purchaseBill.advance);
+			formdata.set('balance',$scope.purchaseBill.balance);
+			if (!formdata.has('paymentMode')) {
+				formdata.set('paymentMode',$scope.purchaseBill.paymentMode);
+			}
+			formdata.set('tax',$scope.purchaseBill.tax);
+			formdata.delete('totalDiscounttype');
+			formdata.delete('totalDiscount');
+			$scope.purchaseBill.totalDiscounttype ? formdata.set('totalDiscounttype',$scope.purchaseBill.totalDiscounttype):formdata.set('totalDiscounttype','flat');
+			$scope.purchaseBill.totalDiscount ? formdata.set('totalDiscount',$scope.purchaseBill.totalDiscount):formdata.set('totalDiscount',0);
+			formdata.set('totalCgstPercentage',checkGSTValue($scope.purchaseBill.totalCgstPercentage));
+			formdata.set('totalSgstPercentage',checkGSTValue($scope.purchaseBill.totalSgstPercentage));
+			formdata.set('totalIgstPercentage',checkGSTValue($scope.purchaseBill.totalIgstPercentage));
+			if($scope.purchaseBill.extraCharge){
+				formdata.delete('extraCharge');
+				formdata.set('extraCharge',$scope.purchaseBill.extraCharge);
+			}
+			else{
+				formdata.delete('extraCharge');
+				formdata.set('extraCharge',0);
+			}
+			var headerData = {'Content-Type': undefined};
+			headerData.type = 'purchase_return';
+			apiCall.postCallHeader(apiPath.purchaseReturn+'/'+$scope.purchaseBill.EditBillData.purchaseId,headerData,formdata).then(function(response) {
+				if(apiResponse.ok == response) {
+					$state.go($state.current, {}, {reload: true});
+					toaster.pop('success', 'Data Inserted!!');
+				}
+				else{
+					toaster.pop('warning', 'Opps!!', response);
+				}
+			});
+		}else{
+			toaster.pop('info', 'No Purchase Bill Selected to Accept Return on.');
+			$scope.disableButton = false;
+		}
+	}
 	// ----------------------------------- 
 	this.minStart = new Date();
 
