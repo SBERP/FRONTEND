@@ -871,11 +871,10 @@ $scope.EditAddBill = function() {
 			formdata.set('totalCgstPercentage',checkGSTValue($scope.purchaseBill.totalCgstPercentage));
 			formdata.set('totalSgstPercentage',checkGSTValue($scope.purchaseBill.totalSgstPercentage));
 			formdata.set('totalIgstPercentage',checkGSTValue($scope.purchaseBill.totalIgstPercentage));
-			if($scope.purchaseBill.extraCharge){
+			if($scope.purchaseBill.extraCharge) {
 				formdata.delete('extraCharge');
 				formdata.set('extraCharge',$scope.purchaseBill.extraCharge);
-			}
-			else{
+			} else {
 				formdata.delete('extraCharge');
 				formdata.set('extraCharge',0);
 			}
