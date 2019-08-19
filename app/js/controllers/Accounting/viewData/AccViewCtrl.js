@@ -93,9 +93,7 @@ $scope.enableDisableEmailId = false;
 		loadingStart();
 		//Company Dropdown data
 		vm.companyDrop = [];
-		
 		apiCall.getCall(apiPath.getAllCompany).then(function(responseCompanyDrop){
-			
 			vm.companyDrop = responseCompanyDrop;
 			var  defaultCompanyData = apiCall.getDefaultCompanyFilter(responseCompanyDrop);
 		
@@ -122,11 +120,9 @@ $scope.enableDisableEmailId = false;
 			}
 		});
 	}
-	
+
 	if($scope.viewDataTypePath != 'CrmClientFilterView'){
-		
 		$scope.companyApiLoad();
-		
 	}
 	
 	$scope.clientGetAllFunction = function(){
@@ -344,6 +340,10 @@ $scope.enableDisableEmailId = false;
 		else if($scope.viewDataTypePath == 'CrmClientFilterView'){
 			
 			$state.go("app.CrmClientFilterData");
+		}
+		else if($scope.viewDataTypePath == 'creditNote'){
+			
+			$state.go("app.AccDataCreditNotes");
 		}
 		 //$state.go("app.AccDataSales");
 		

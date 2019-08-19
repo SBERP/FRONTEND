@@ -126,6 +126,8 @@
 		{ name: 'builtList', files: ['app/js/controllers/Analyzer/ReportBuilder/BuildListCtrl.js'] },
 		{ name: 'builtView', files: ['app/js/controllers/Analyzer/ReportBuilder/BuiltViewCtrl.js'] },
 		{ name: 'purchaseReturn', files: ['app/js/controllers/QuickMenu/PurchaseReturnCtrl.js'] },
+		{ name: 'creditNote', files: ['app/js/controllers/Accounting/CreditNotes/CreditNoteCtrl.js'] },
+		{ name: 'debitNote', files: ['app/js/controllers/Accounting/DebitNotes/DebitNoteCtrl.js'] },
 		{
 			name: 'treeControl',
 			files: [
@@ -287,6 +289,8 @@
 		'reportBuilder': 'reports/report-builder',
 		'generateBuiltReport': 'reports/report-builder/generate/',
 		'purchaseReturn': 'accounting/purchase-returns',
+		'creditNote': 'accounting/credit-notes',
+		'debitNote': 'accounting/debit-notes',
 	})
 	//Api Path
 	.constant('apiResponse', {
