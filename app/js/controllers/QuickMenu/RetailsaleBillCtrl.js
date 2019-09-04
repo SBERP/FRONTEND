@@ -1636,6 +1636,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
 							vm.AccBillTable[d].widthValue = setData.widthValue;
 							vm.AccBillTable[d].heightValue = setData.heightValue;
 							vm.AccBillTable[d].devideFactor = setData.devideFactor;
+							vm.AccBillTable[d].moduloFactor = parseInt(setData.moduloFactor);
 							if (angular.isDefined(setData.devideFactor) && 
 								!isNaN(parseFloat(setData.devideFactor)) && 
 								parseFloat(setData.devideFactor) > 0) {

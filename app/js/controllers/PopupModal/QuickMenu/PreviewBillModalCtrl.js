@@ -352,7 +352,11 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
 			cessSummaryArray[productArray] = {};
 			cessSummaryArray[productArray].cessAmt = productData.cessAmount;
 			totalCessAmount += parseFloat(productData.cessAmount);
-			var mainPrice = parseFloat(productData.price)*parseInt(productData.qty);
+			let calcQty = parseFloat(productData.qty);
+			if(settingData.productMeasurementType == 'Unit Measurement') {
+				calcQty = calcQty * parseFloat(productData.totalFt);
+			}
+			var mainPrice = parseFloat(productData.price)*parseFloat(calcQty);
 
 			totalAmount = totalAmount + parseFloat(productData.amount);
 			//productData.amount

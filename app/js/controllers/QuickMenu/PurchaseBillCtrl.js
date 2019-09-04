@@ -994,51 +994,51 @@ $scope.expenseData = [];
 								if (angular.isDefined(EditProducArray[d].devideFactor) &&
 									!isNaN(parseFloat(EditProducArray[d].devideFactor)) &&
 									parseFloat(EditProducArray[d].devideFactor) > 0) {
-									vm.AccBillTable[d].devideFactor = parseFloat(EditProducArray[d].devideFactor);
-							} else if (angular.isDefined(resData.measurementUnit.devideFactor) &&
-								!isNaN(parseFloat(resData.measurementUnit.devideFactor)) &&
-								parseFloat(resData.measurementUnit.devideFactor) > 0) {
-								vm.AccBillTable[d].devideFactor = parseFloat(resData.measurementUnit.devideFactor);
-							} else {
-								vm.AccBillTable[d].devideFactor = 1;
-							}
-							$scope.enableDisableLWHArray[d] = {};
-							$scope.enableDisableLWHArray[d].totalFt = $filter('setDecimal')(parseFloat(EditProducArray[d].lengthValue) * parseFloat(EditProducArray[d].widthValue) * parseFloat(EditProducArray[d].heightValue) * parseFloat(EditProducArray[d].qty) / parseFloat(vm.AccBillTable[d].devideFactor), $scope.noOfDecimalPoints);
-							if (angular.isDefined(vm.AccBillTable[d].stockFt) || vm.AccBillTable[d].stockFt == 'undefined') {
-								vm.AccBillTable[d].stockFt = getCalcQty(EditProducArray[d], $scope.enableDisableLWHArray[d]);
-							} else {
-								vm.AccBillTable[d].stockFt = EditProducArray[d].stockFt;
-							}
-							resData.measurementUnit.lengthStatus == 'enable' ?
-							$scope.enableDisableLWHArray[d].lengthStatus = true : $scope.enableDisableLWHArray[d].lengthStatus = false;
-							$scope.enableDisableLWHArray[d].widthStatus = resData.measurementUnit.widthStatus == 'enable' ? true : false;
-							$scope.enableDisableLWHArray[d].heightStatus = resData.measurementUnit.heightStatus == 'enable' ? true : false;
-							if ($scope.enableDisableLWHArray[d].lengthStatus &&
-								$scope.enableDisableLWHArray[d].widthStatus &&
-								$scope.enableDisableLWHArray[d].heightStatus) {
-								$scope.enableDisableLWHArray[d].styleObj = {
-									"width": "33.33%",
-									"padding-left": "6px",
-									"padding-right": "6px",
-									"float": "left"
-								};
-							} else if ($scope.enableDisableLWHArray[d].lengthStatus && $scope.enableDisableLWHArray[d].widthStatus ||
-								$scope.enableDisableLWHArray[d].lengthStatus && $scope.enableDisableLWHArray[d].heightStatus ||
-								$scope.enableDisableLWHArray[d].heightStatus && $scope.enableDisableLWHArray[d].widthStatus) {
-								$scope.enableDisableLWHArray[d].styleObj = {
-									"width": "50%",
-									"padding-left": "6px",
-									"padding-right": "6px",
-									"float": "left"
-								};
-							} else {
-								$scope.enableDisableLWHArray[d].styleObj = { "width": "100%" };
-							}
+										vm.AccBillTable[d].devideFactor = parseFloat(EditProducArray[d].devideFactor);
+								} else if (angular.isDefined(resData.measurementUnit.devideFactor) &&
+									!isNaN(parseFloat(resData.measurementUnit.devideFactor)) &&
+									parseFloat(resData.measurementUnit.devideFactor) > 0) {
+									vm.AccBillTable[d].devideFactor = parseFloat(resData.measurementUnit.devideFactor);
+								} else {
+									vm.AccBillTable[d].devideFactor = 1;
+								}
+								$scope.enableDisableLWHArray[d] = {};
+								$scope.enableDisableLWHArray[d].totalFt = $filter('setDecimal')(parseFloat(EditProducArray[d].lengthValue) * parseFloat(EditProducArray[d].widthValue) * parseFloat(EditProducArray[d].heightValue) * parseFloat(EditProducArray[d].qty) / parseFloat(vm.AccBillTable[d].devideFactor), $scope.noOfDecimalPoints);
+								if (angular.isDefined(vm.AccBillTable[d].stockFt) || vm.AccBillTable[d].stockFt == 'undefined') {
+									vm.AccBillTable[d].stockFt = getCalcQty(EditProducArray[d], $scope.enableDisableLWHArray[d]);
+								} else {
+									vm.AccBillTable[d].stockFt = EditProducArray[d].stockFt;
+								}
+								resData.measurementUnit.lengthStatus == 'enable' ?
+								$scope.enableDisableLWHArray[d].lengthStatus = true : $scope.enableDisableLWHArray[d].lengthStatus = false;
+								$scope.enableDisableLWHArray[d].widthStatus = resData.measurementUnit.widthStatus == 'enable' ? true : false;
+								$scope.enableDisableLWHArray[d].heightStatus = resData.measurementUnit.heightStatus == 'enable' ? true : false;
+								if ($scope.enableDisableLWHArray[d].lengthStatus &&
+									$scope.enableDisableLWHArray[d].widthStatus &&
+									$scope.enableDisableLWHArray[d].heightStatus) {
+									$scope.enableDisableLWHArray[d].styleObj = {
+										"width": "33.33%",
+										"padding-left": "6px",
+										"padding-right": "6px",
+										"float": "left"
+									};
+								} else if ($scope.enableDisableLWHArray[d].lengthStatus && $scope.enableDisableLWHArray[d].widthStatus ||
+									$scope.enableDisableLWHArray[d].lengthStatus && $scope.enableDisableLWHArray[d].heightStatus ||
+									$scope.enableDisableLWHArray[d].heightStatus && $scope.enableDisableLWHArray[d].widthStatus) {
+									$scope.enableDisableLWHArray[d].styleObj = {
+										"width": "50%",
+										"padding-left": "6px",
+										"padding-right": "6px",
+										"float": "left"
+									};
+								} else {
+									$scope.enableDisableLWHArray[d].styleObj = { "width": "100%" };
+								}
 
-						} else {
-							$scope.enableDisableLWHArray[d] = {};
+							} else {
+								$scope.enableDisableLWHArray[d] = {};
+							}
 						}
-					}
 
 						//$scope.calculateTaxReverseTwo(vm.AccBillTable[d],vm.productTax[d].tax,vm.productTax[d].additionalTax,d);
 						d++;
