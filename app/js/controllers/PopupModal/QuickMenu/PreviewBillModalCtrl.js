@@ -371,7 +371,7 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
 			var discountInPercentage = "-";
 			var discount = 0;
 
-			if(productData.discountType == 'percentage'){
+			if(productData.discountType == 'percentage') {
 				
 				discount = $filter('setDecimal')(productArrayFactory.calculateTax(mainPrice,productData.discount,0),$scope.noOfDecimalPoints);
 
