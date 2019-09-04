@@ -354,7 +354,7 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
 			totalCessAmount += parseFloat(productData.cessAmount);
 			let calcQty = parseFloat(productData.qty);
 			if(settingData.productMeasurementType == 'Unit Measurement') {
-				calcQty = calcQty * parseFloat(productData.totalFt);
+				calcQty = parseFloat(productData.totalFt);
 			}
 			var mainPrice = parseFloat(productData.price)*parseFloat(calcQty);
 
