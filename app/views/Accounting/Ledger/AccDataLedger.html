@@ -1,83 +1,78 @@
 <h3>
 	<small>
-   <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
-   <a ui-sref="app.AccLedger" >Ledger</a>>> 
-   View Data Ledger</small>
+		<a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+		<a ui-sref="app.AccLedger" >Ledger</a>>> 
+	View Data Ledger</small>
 </h3>
 <div   class="container-fluid" >
 	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
 	<div id="panelDemo14" class="panel panel-default">
-         <div class="panel-heading myHeading" style="text-transform:capitalize">{{table.headingName}}
-		 
-		 <i class="fa fa-list pull-right" ui-sref="." ng-click="oneSide()" style="color:#43a8eb;" ></i>
-			 <i class="fa fa-align-center pull-right" ui-sref="." ng-click="twoSide()" style="margin-right: 5px;color:#43a8eb;" ></i>
-			 </div>
-		 
-         <div class="panel-body">
-            <tabset>
-               <tab heading="Table">
+		<div class="panel-heading myHeading" style="text-transform:capitalize">{{table.headingName}}
+
+			<i class="fa fa-list pull-right" ui-sref="." ng-click="oneSide()" style="color:#43a8eb;" ></i>
+			<i class="fa fa-align-center pull-right" ui-sref="." ng-click="twoSide()" style="margin-right: 5px;color:#43a8eb;" ></i>
+		</div>
+
+		<div class="panel-body">
+			<tabset>
+				<tab heading="Table">
 					
 					
 					<div ng-show="secondLayout"> 
-					
-					<table  class="table table-bordered table-striped"  >
-						<!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
-						<thead>
-							<th>Entry Date</th>
-							<th>Perticular</th>
-							<th>Debit</th>
-							<th>Entry Date</th>
-							<th>Perticular</th>
-							<th>Credit</th>
-						</thead>
-		
-						 <tbody>
-							<tr ng-repeat="user in mySecondArrayData">
-						
-							
-								<td  >{{user[1].entryDate}}</td>
-								<td  ng-click="open_bill_ledger()">{{user[1].ledgerName}}</td>
-								<td   style="text-align:right" ><span >{{user[1].debitAmount}}</span></td>
-								
-								<td  >{{user[0].entryDate}}</td>
-								<td    >{{user[0].ledgerName}}</td>
-								<td   style="text-align:right" ><span>{{user[0].creditAmount}}</span></td>
-								
-							</tr>
-						 </tbody>
-						  <tfoot>
-							<tr>
-								<td></td>
-								<td><b>Total</b></td>
-								<td style="text-align:right"><b>{{TotalofDebit | number: noOfDecimalPoints}}</b></td>
-								
-								<td></td>
-								<td><b>Total</b></td>
-								<td style="text-align:right"><b>{{TotalofCredit | number: noOfDecimalPoints}}</b></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td><b>Diffrence</b></td>
-								<td style="text-align:right" ><b ng-if="TotalofDebit > TotalofCredit">{{TotalofDebit - TotalofCredit | number: noOfDecimalPoints}}</b></td>
-								
-								<td></td>
-								<td><b>Diffrence</b></td>
-								<td style="text-align:right"><b ng-if="TotalofDebit < TotalofCredit" >{{TotalofCredit - TotalofDebit | number: noOfDecimalPoints}}</b></td>
-							</tr>
-						 </tfoot>
-		 
-					</table>
+
+						<table  class="table table-bordered table-striped"  >
+							<!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
+							<thead>
+								<th>Entry Date</th>
+								<th>Perticular</th>
+								<th>Debit</th>
+								<th>Entry Date</th>
+								<th>Perticular</th>
+								<th>Credit</th>
+							</thead>
+
+							<tbody>
+								<tr ng-repeat="user in mySecondArrayData">
+									<td>{{user[1].entryDate}}</td>
+									<td ng-click="open_bill_ledger()">{{user[1].ledgerName}}</td>
+									<td style="text-align:right" ><span >{{user[1].debitAmount}}</span></td>
+									<td>{{user[0].entryDate}}</td>
+									<td>{{user[0].ledgerName}}</td>
+									<td style="text-align:right" ><span>{{user[0].creditAmount}}</span></td>
+								</tr>
+							</tbody>
+							<tfoot>
+								<tr>
+									<td></td>
+									<td><b>Total</b></td>
+									<td style="text-align:right"><b>{{TotalofDebit | number: noOfDecimalPoints}}</b></td>
+									<td></td>
+									<td><b>Total</b></td>
+									<td style="text-align:right"><b>{{TotalofCredit | number: noOfDecimalPoints}}</b></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td><b>Diffrence</b></td>
+									<td style="text-align:right" ><b ng-if="TotalofDebit > TotalofCredit">{{TotalofDebit - TotalofCredit | number: noOfDecimalPoints}}</b></td>
+
+									<td></td>
+									<td><b>Diffrence</b></td>
+									<td style="text-align:right"><b ng-if="TotalofDebit < TotalofCredit" >{{TotalofCredit - TotalofDebit | number: noOfDecimalPoints}}</b></td>
+								</tr>
+							</tfoot>
+
+						</table>
 					</div>
 					
 					<div ng-show="firstLayout"> 
 						<table data-ng-table="table.tableParams"  class="table table-bordered table-striped" >
 							<!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
 							
-							 <tbody>
+							<tbody>
 								<tr data-ng-repeat="user in $data">
-								
+
 									<td data-title="'Sr. No.'"  >{{$index+1}}</td>
-								
+
 									<td data-title="'Entry Date'" sortable="'date'" filter="{ 'entryDate': 'text' }" >{{user.entryDate}}</td>
 									<td data-title="'Perticular'"  filter="{ 'ledgerName': 'text' }" >
 										<a href="#" ng-click="open_bill_ledger(user)" >
@@ -87,7 +82,7 @@
 									<td data-title="'Debit'"  filter="{ 'amountTypeDebit': 'text' }" style="text-align:right" ><span ng-if="user.amountType=='debit'">{{user.amount}}</span></td>
 									<td data-title="'Credit'"  filter="{ 'amountTypeCredit': 'text' }" style="text-align:right" ><span ng-if="user.amountType=='credit'">{{user.amount}}</span></td>
 									<!--td data-title="'Amount'" sortable="'amount'" filter="{ 'amount': 'text' }" ><span style="float:right">{{user.amount}}</span></td-->
-								
+
 								   <!--td data-title="'Action'" sortable="'action'">
 										<center>
 											<i ui-sref="" ng-click="edit_comp(user.id)" class="fa fa-edit" style="font-size:17px;color:#10709f"> </i> &nbsp; &nbsp;
@@ -95,60 +90,60 @@
 										</center>
 									</td-->
 								</tr>
-							 </tbody>
+							</tbody>
 						</table>
 						<span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
 					</div> 
 					
 					
-			   </tab>
-				  
-               <tab heading="Chart">
-			   <div class="row">
-					  <div class="col-lg-6">
-						 <div class="panel panel-transparent">
-							<div class="panel-heading">
-							   <div class="panel-title">Pie</div>
+				</tab>
+
+				<tab heading="Chart">
+					<div class="row">
+						<div class="col-lg-6">
+							<div class="panel panel-transparent">
+								<div class="panel-heading">
+									<div class="panel-title">Pie</div>
+								</div>
+								<div class="panel-wrapper">
+									<div class="panel-body">
+										<flot dataset="table.pieChartData" options="table.chartPieFlotChart"></flot>
+									</div>
+								</div>
 							</div>
-							<div class="panel-wrapper">
-							   <div class="panel-body">
-								  <flot dataset="table.pieChartData" options="table.chartPieFlotChart"></flot>
-							   </div>
+						</div>
+						<div class="col-lg-6">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<div class="panel-title">Area</div>
+								</div>
+								<div class="panel-wrapper">
+									<div class="panel-body">
+										<flot dataset="table.pieFlotCharts" options="table.chartAreaFlotChart" series="{'lines': areaSeries}"></flot>
+										<div class="text-center mt-lg">
+											<div class="btn-switch mb btn-switch-success">
+												<input type="checkbox" id="input-btn-switch-10" data-ng-model="areaSeries[0]" />
+												<label for="input-btn-switch-10" class="btn btn-fw btn-warning">
+													<em class="fa fa-check"></em>
+													<strong>Debit</strong>
+												</label>
+											</div>
+											<div class="btn-switch mb btn-switch-blue">
+												<input type="checkbox" id="input-btn-switch-11" data-ng-model="areaSeries[1]" />
+												<label for="input-btn-switch-11" class="btn btn-fw btn-orange">
+													<em class="fa fa-check"></em>
+													<strong>Credit</strong>
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
-						 </div>
-					  </div>
-					<div class="col-lg-6">
-         <div class="panel panel-default">
-            <div class="panel-heading">
-               <div class="panel-title">Area</div>
-            </div>
-            <div class="panel-wrapper">
-               <div class="panel-body">
-                  <flot dataset="table.pieFlotCharts" options="table.chartAreaFlotChart" series="{'lines': areaSeries}"></flot>
-                  <div class="text-center mt-lg">
-                     <div class="btn-switch mb btn-switch-success">
-                        <input type="checkbox" id="input-btn-switch-10" data-ng-model="areaSeries[0]" />
-                        <label for="input-btn-switch-10" class="btn btn-fw btn-warning">
-                           <em class="fa fa-check"></em>
-                           <strong>Debit</strong>
-                        </label>
-                     </div>
-                     <div class="btn-switch mb btn-switch-blue">
-                        <input type="checkbox" id="input-btn-switch-11" data-ng-model="areaSeries[1]" />
-                        <label for="input-btn-switch-11" class="btn btn-fw btn-orange">
-                           <em class="fa fa-check"></em>
-                           <strong>Credit</strong>
-                        </label>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-					 </div>
-			   </tab>
-            </tabset>
-         </div>
-    </div>
-   
+						</div>
+					</div>
+				</tab>
+			</tabset>
+		</div>
+	</div>
+
 </div>
