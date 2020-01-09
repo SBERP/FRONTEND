@@ -614,8 +614,8 @@
 				</div>
 			
 				
-			<h4 class="panel-heading bg-default myHeading">Taxation</h4>
-				<div class="panel-body">
+			<h4 ng-if="enableDisableGST" class="panel-heading bg-default myHeading">Taxation</h4>
+				<div class="panel-body" ng-if="enableDisableGST" >
 					<div class="col-md-4" >
 					   <div class="form-group">
 						  <label  class="col-sm-3 control-label">CGST(%)</label>

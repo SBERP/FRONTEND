@@ -1,0 +1,31 @@
+<h3>
+	<small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+		<a ui-sref="app.ReportsList">Build Report List</a> >>
+	{{::reportData.reportName}}</small>
+</h3>
+<div class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true,'time-out': 10000}"></toaster-container>
+	<div class="panel panel-default">
+		<div class="panel-heading bg-gray-light">
+			<div class="panel-title">
+				<h2 style="display: block;" class="text-{{::reportData.titlePosition}}">{{::reportData.reportTitle}}</h2>
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="table-responsive">
+				<table ng-table="table.tableParams" show-filter="true" class="table table-bordered table-striped">
+					<thead>
+						<tr>
+							<th ng-repeat="field in fields" class="header">{{ field.label }}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="user in $data">
+							<td ng-repeat="field in fields">{{ user['field'+field.id] }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

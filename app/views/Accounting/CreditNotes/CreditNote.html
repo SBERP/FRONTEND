@@ -1,0 +1,185 @@
+<div class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true,'animation-class': 'bounceIn'}"></toaster-container>
+	<form  action="#" name="formCredit" class="form-validate form-horizontal" autocomplete="off" novalidate>
+		<div class="panel panel-default">
+			<h4 class="panel-heading col-sm-12" style="padding:5px 1px;" >	
+				<div style="padding: 0 5px 0 5px;"  ng-class="col-sm-5" >
+
+					<label  class="control-label" style="font-size: 19px !important;float: left;text-align: left;padding-top: 3px;padding-left: 0px;padding-right: 0px;">
+						<span>Credit Note</span>
+					</label>
+				</div>
+				<div style="padding: 0 5px 0 5px;"  ng-class="col-sm-2" >
+					<label  class="control-label" style="font-size:18px !important;text-align: right;padding-top: 3px;padding-left: 1px;padding-right: 0px;margin-left:21%;">
+						<button type="button" class="btn btn-default btn-md" data-ng-class="app.theme.brand"  >{{displayDefaultCompanyName}} ({{getCurrentFinancialYear()}})</button>
+					</label>
+				</div>
+			</h4>
+			<div class="panel-body">
+				<div class="col-sm-3">
+					<div class="input-group m-b">
+						<input  type="text" ng-model="creditNote.searchInvoiceNumber" placeholder="Search" class="form-control input-sm" tooltip="Search By Invoice#/Contact#/Name/Email" tooltip-trigger="focus" tooltip-placement="top" ng-keyup="$event.keyCode == 13 ? goInvoiceNumber() : null" />
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-sm" data-ng-class="app.theme.brand" ng-click="goInvoiceNumber()" ><em class="fa fa-search"></em></button>
+						</span>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<label  class="col-sm-3 control-label">*Company</label>
+					<div class="col-sm-9 contentOfForm">
+						<select chosen="" data-ng-model="creditNote.companyDropDown" name="companyDropDown" data-ng-options="s.companyName for s in form.companyDrop track by s.companyId" ng-change="changeCompany(creditNote.companyDropDown)" ng-disabled="form.disableCompany" class="form-control input-sm chosen-select" ng-required="true"></select>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<label  class="col-sm-2 control-label"> *Date </label>
+					<div class="col-sm-8">
+						<div class="input-group hackyhack">
+							<input type="text" datepicker-popup="{{form.format}}"  data-ng-model="form.dt1" is-open="form.openedStart" min-date="false" max-date="false" datepicker-options="form.dateOptions" date-disabled="form.disabled(form.date, form.mode)" close-text="Close" class="form-control input-sm" id="entryDate" ng-required="true" readonly/>
+							<span class="input-group-btn">
+								<button type="button" data-ng-click="form.openStart($event)" id="datepickerButton"  class="btn btn-sm" data-ng-class="app.theme.brand">
+									<em class="fa fa-calendar"></em>
+								</button>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<fieldset class="my-fieldset-paddingBottom">
+				   <div class="form-group" >
+					  <label for="input-id-1" class="col-sm-1 control-label">No#</label>
+					  <div class="col-sm-4">
+						 <p class="form-control-static">{{creditNote.editData.invoiceNumber}}</p>
+					  </div>
+				   </div>
+				</fieldset>
+			</div>
+		</div>
+		<div class="panel panel-default" ng-if="0">
+			<div class="panel-body">
+				<div class="col-sm-12">
+					<div class="col-md-3">
+						<div class="form-group" style="margin-bottom: 0px";>
+							<label  class="col-sm-3 control-label" style="padding-left: 2px;">*Contact:</label>
+							<label  class="col-sm-9 control-label text-left" style="padding-left: 2px;">{{creditNote.editData.client.contactNo}}</label>
+						</div>
+					</div>
+					<div class="col-md-2" ng-if="enableDisableWorkNo">
+						<div class="form-group" style="margin-bottom: 0px">
+							<label  class="col-sm-3 control-label" style="padding-left: 2px;">Work#:</label>
+							<label  class="col-sm-9 control-label text-left" style="padding-left: 2px;">{{creditNote.editData.client.contactNo1}}</label>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-group" style="margin-bottom: 0px">
+							<label  class="col-sm-3 control-label">*Name:</label>
+							<label  class="col-sm-9 control-label text-left" style="padding-left: 2px;">{{creditNote.editData.client.clientName}}</label>
+						</div>
+					</div>
+					<div class="col-md-3" ng-if="enableDisableAddress">
+						<div class="form-group" style="margin-bottom: 0px">
+							<label  class="col-sm-3 control-label">Address:</label>
+							<label  class="col-sm-9 control-label text-left" style="padding-left: 2px;">{{creditNote.editData.client.address1}}</label>
+						</div>
+						<!-- </fieldset> -->
+					</div>
+					<div class="col-md-3" ng-if="enableDisableState">
+						<div class="form-group" style="margin-bottom: 0px">
+							<label class="col-sm-3 control-label" style="padding-left: 2px"> *State :</label>
+							<label  class="col-sm-9 control-label text-left" style="padding-left: 2px;">{{creditNote.editData.client.stateName}}</label>
+						</div>
+					</div>
+					<div class="col-md-2" ng-if="enableDisableCity">
+						<div class="form-group" style="margin-bottom: 0px">
+							<label class="col-sm-3 control-label" > *City :</label>
+							<label  class="col-sm-9 control-label text-left" style="padding-left: 2px;">{{creditNote.editData.client.cityName}}</label>
+						</div>
+					</div>
+					<div class="col-md-2">
+						<div class="form-group" style="margin-bottom: 0px">
+							<label  class="col-sm-3 control-label">GST# :</label>
+							<label  class="col-sm-9 control-label text-left" style="padding-left: 2px;">{{creditNote.editData.client.gst}}</label>
+						</div>
+					</div>
+					<div class="col-md-2" ng-if="enableDisableEmailId">
+						<div class="form-group" style="margin-bottom: 0px">
+							<label  class="col-sm-3 control-label">Email :</label>
+							<label  class="col-sm-9 control-label text-left" style="padding-left: 2px;">{{creditNote.editData.client.emailId}}</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<table class="table table-bordered table-striped tableTopCss">
+				<thead>
+					<tr>
+						<th style="width:5%;">#</th>
+						<th style="width: 60%;" >
+							<span>Particulars</span>
+						</th>
+						<th style="width: 25%;">
+							<span>Amount</span>
+						</th>
+						<th style="width: 10%;">
+							<span>Action</span>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="item in form.AccBillTable track by ($index+item.clientId+item.ledgerId+item.amount)">
+						<td>{{$index+1}}</td>
+						<td>
+							<input typeahead="s.clientName for s in form.clientNameDrop | filter:$viewValue | orderBy:'clientName' | limitTo:20" ng-model="item.clientName" typeahead-on-select="setClientData($item,$index)" type="text" class="form-control" placeholder="*Enter Name" typeahead-editable="false" ng-disabled="form.loadData" ng-required="true" />
+						</td>
+						<td>
+							<input placeholder="(&#x20b9;)Amount" type="text" ng-model="item.amount"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"  ng-required="true" ng-minlength="1" ng-pattern="/^[0-9 .]*$/" ng-change="changeAmount();" only-number />
+						</td>
+						<td>
+							<center>
+								<a href="javascript:void(0)" ng-click="addRow($index)"> 
+									<i  class="fa fa-plus myCursorPointer" style="font-size:20px;"></i>
+								</a>
+								&nbsp;
+								<a href="javascript:void(0)" class="text-danger"  ng-click="removeRow($index)" ng-if="$index!=0">
+									<i  class="fa fa-times myCursorPointer" style="font-size:20px;" title="Delete"> </i>
+								</a>
+							</center>
+						</td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td class="text-right" colspan="2" style="padding: 10px;">
+							<strong>Total</strong>
+						</td>
+						<td class="text-right" style="padding: 10px;">{{form.totalCredit}}</td>
+						<td></td>
+					</tr>
+				</tfoot>
+			</table>
+			<div class="panel-body">
+				<div class="col-sm-12" >
+					<div class="col-sm-6">
+						<fieldset class="my-fieldset-paddingBottom my-fieldset-marginBottom">
+							<div class="form-group">
+								<label  class="col-sm-3 control-label">Remark</label>
+								<div class="col-sm-9">
+									<textarea rows="1" ng-model="creditNote.remark" name="address"  placeholder="Remark" class="form-control input-sm ng-pristine ng-valid ng-touched" style="height:38px;" ></textarea>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<button type="button" class="mr-sm mb-sm btn btn-sm pull-left" data-ng-class="app.theme.brand"  ng-click="pop()" ng-disabled="formCredit.$invalid || form.totalCredit > creditNote.editData.total || form.totalCredit == 0"  > 
+						<span>Save</span>
+					</button>
+					<button type="button" class="mr-sm mb-sm btn btn-sm pull-left" data-ng-class="app.theme.brand"   ng-click="cancel()">New</button>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

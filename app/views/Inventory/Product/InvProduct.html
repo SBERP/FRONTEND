@@ -1,148 +1,148 @@
 <h3>
-   <small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
-   Inventory >>
-   Product</small>
-</h3>
-<div data-ng-controller="InvProductController as table" class="container-fluid">
-	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true,'time-out': 10000}"></toaster-container>
-	<div class="panel panel-default">
-		<div class="panel-body">
-			<div class="col-md-8">
-				<label class="col-sm-2 control-label"> Company </label>
-				<div class="col-sm-10">
-					<select chosen=""  ng-model="stateCheck" ng-options="s.companyName for s in table.states track by s.companyId" class="form-control chosen-select hightlight-company" >
-					<option value=""> All </option>
-					</select>
-				</div>
-			</div>
-			<div class="col-md-1 myPaddingTop">
-				<div class="col-sm-12">
-					<button type="button" class="mb-sm btn btn-primary pull-right"  ng-click="showProduct()"  data-ng-class="app.theme.brand">Go</button>
-				</div>
-			</div>
-			<div class="col-sm-3">
-			</div>
-		</div>
-	</div>
-   <div class="panel panel-default">
-      <div class="panel-heading myHeading" >
-         <!--button data-ng-click="table.tableParams.sorting({})" class="pull-right btn btn-default btn-sm">Clear sorting</button-->
-		 <button type="button" class="btn btn-primary pull-right btn-sm" ng-click="openProductBatchUpdateModal()"  data-ng-class="app.theme.brand" > Mass Update </button>
-		 <button type="button" class="btn btn-primary pull-right btn-sm" ng-click="openProductBatchModal()"  data-ng-class="app.theme.brand" style="margin-right:5px"> Mass Insertion </button> 
-		 <button class="btn btn-labeled btn-primary pull-right btn-sm" ui-sref="app.AddInvProduct" data-ng-class="app.theme.brand" style="margin-right:5px">
-			<span class="btn-label"><i class="fa fa-plus"></i></span>
-		Add Product</button>
-         <div class="panel-title" id="allPro">All Product  </div>
-      </div>
-	   <div class="table-responsive">
-		  <table ng-table="table.tableParams" show-filter="true" class="table table-bordered table-striped">
-		  <!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
-			<thead>
-				 <th check-all="check-all">
-				   <div data-toggle="tooltip" data-title="Check All" class="checkbox c-checkbox">
-					  <label>
-						 <input type="checkbox" ng-model="parentCheckBox" ng-change="changeAllBox(parentCheckBox)" />
-						 <span class="fa fa-check"></span>
-					  </label>
-				   </div>
-				</th>
-				<th  sortable="'productCategoryName'"  >Brand</th>
-				<th>Category</th>
-				<th>Product Name</th>
-				<th ng-if="enableDisableColor">Color</th>
-				<th ng-if="enableDisableSize">Size</th>
-				<th ng-if="enableDisableVariant">Variant</th>
-				<!-- <th>Purchase-Price</th> -->
-				<th>Selling-Price</th>
-				<th>HSN/SAC</th>
-				<th>Barcode</th>
-				<th>CGST</th>
-				<th>SGST</th>
-				<th>IGST</th>
-				<th>Action</th>
-			</thead>
-			<tbody>
-				<tr>
-					<td>
-					</td>
-					<td>
-						<input type="text" class="input-filter form-control" ng-model="query.productCategoryName"  />
-					</td>
-					<td>
-						<input type="text" class="input-filter form-control" ng-model="query.productGroupName"  />
-					</td>
-					<td>
-						<input type="text" class="input-filter form-control" ng-model="query.productName"  />
-					</td>
-					<td ng-if="enableDisableColor" >
-						<input type="text"  class="input-filter form-control" ng-model="query.color" />
-					</td>
-					<td  ng-if="enableDisableSize" >
-						<input type="text" class="input-filter form-control" ng-model="query.size"/>
-					</td>
-					<td  ng-if="enableDisableVariant" >
-						<input type="text" class="input-filter form-control" ng-model="query.variant"/>
-					</td>
-					<!-- <td>
-						<input type="text" class="input-filter form-control" ng-model="query.purchasePrice"  />
-					</td> -->
-					<td>
-						<input type="text" class="input-filter form-control" ng-model="query.mrp"  />
-					</td>
-					<td>
-						<input type="text" class="input-filter form-control" ng-model="query.hsn"  />
-					</td>
-					<td>
-						<input type="text" class="input-filter form-control" ng-model="query.productCode"  />
-					</td>
-					<td>
-						<input type="text" class="input-filter form-control" ng-model="query.vat"  />
-					</td>
-					<td>
-						<input type="text" class="input-filter form-control" ng-model="query.additionalTax"  />
-					</td>
-					<td>
-						<input type="text" class="input-filter form-control" ng-model="query.igst"  />
-					</td>
-					<td colspan="1">
-					</td>
-				</tr>
-				<tr  data-ng-repeat="user in ($parent.filteredItems = $data) track by user.productId">
-					<td>
-					   <div class="checkbox c-checkbox">
-						  <label>
-							 <input type="checkbox" ng-model="user.selected" name="check" ng-change="changeBox(user.selected,user)" />
-							 <span class="fa fa-check"></span>
-						  </label>
-					   </div>
-					</td>
-					<td sortable="'productCategoryName'" filter="{ 'productCategoryName': 'text' }" ng-bind="::user.productCategoryName" ></td>
-					<td sortable="'productGroupName'" filter="{ 'productGroupName': 'text' }" ng-bind="::user.productGroupName" ></td>
-					<td sortable="'productName'" filter="{ 'productName': 'text' }" ng-if="!enableAlterLanguage" ng-bind="::user.productName" ></td>
-					<td sortable="'productName'" filter="{ 'productName': 'text' }" ng-if="enableAlterLanguage && user.altProductName == null" ng-bind="::user.productName" ></td>
-					<td sortable="'altProductName'" filter="{ 'altProductName': 'text' }" ng-if="enableAlterLanguage && user.altProductName != null" ng-bind="::user.altProductName" ></td>
-					<td  filter="{ 'color': 'text' }" ng-bind="::user.color" ng-if="enableDisableColor"></td>
-					<td  filter="{ 'size': 'text' }" ng-bind="::user.size" ng-if="enableDisableSize"></td>
-					<td  filter="{ 'variant': 'text' }" ng-bind="::user.variant" ng-if="enableDisableVariant"></td>
-					<!-- <td   filter="{ 'purchasePrice': 'text' }" ng-bind="::user.purchasePrice" ></td> -->
-					<td filter="{ 'mrp': 'text' }"  ><span class="pull-right" ng-bind="::user.mrp"></span></td>
-
-					<td   filter="{ 'hsn': 'text' }" ng-bind="::user.hsn" ></td>
-					<td   filter="{ 'productCode': 'text' }" ng-bind="::user.productCode" ></td>
-					<td  filter="{ 'vat': 'text' }" ng-bind="::user.vat | setDecimal: user.company.noOfDecimalPoints" ></td>
-					<td  filter="{ 'additionalTax': 'text' }" ng-bind="::user.additionalTax | setDecimal: user.company.noOfDecimalPoints" ></td>
-					<td  filter="{ 'igst': 'text' }" ng-bind="::user.igst | setDecimal: user.company.noOfDecimalPoints" ></td>
-				   <td style="width:10%"> 
-						<center>
-							<i  title="Edit" ng-click="editProduct(user)" class="fa fa-edit myCursorPointer" style="font-size:17px;color:#10709f"> </i> &nbsp; &nbsp;
-							<i ng-if="enableDisableProductDelete" title="Delete" ng-click="deleteProduct('sm',user.productId)" class="fa fa-times-circle myCursorPointer" style="font-size:17px;color:red"></i>
-						</center>
-					</td>
-
-				</tr>
-			 </tbody>
-		  </table>
-		 </div>
-	   <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
-   </div>
-</div>
+    <small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+        Inventory >>
+        Product</small>
+    </h3>
+    <div data-ng-controller="InvProductController as table" class="container-fluid">
+        <toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true,'time-out': 10000}"></toaster-container>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="col-md-8">
+                    <label class="col-sm-2 control-label"> Company </label>
+                    <div class="col-sm-10">
+                        <select chosen=""  ng-model="stateCheck" ng-options="s.companyName for s in table.states track by s.companyId" class="form-control chosen-select hightlight-company" >
+                            <option value=""> All </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-1 myPaddingTop">
+                    <div class="col-sm-12">
+                        <button type="button" class="mb-sm btn btn-primary pull-right"  ng-click="showProduct()"  data-ng-class="app.theme.brand">Go</button>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading myHeading" >
+                <!--button data-ng-click="table.tableParams.sorting({})" class="pull-right btn btn-default btn-sm">Clear sorting</button-->
+                <button type="button" class="btn btn-primary pull-right btn-sm" ng-click="openProductBatchUpdateModal()"  data-ng-class="app.theme.brand" > Mass Update </button>
+                <button type="button" class="btn btn-primary pull-right btn-sm" ng-click="openProductBatchModal()"  data-ng-class="app.theme.brand" style="margin-right:5px"> Mass Insertion </button> 
+                <button class="btn btn-labeled btn-primary pull-right btn-sm" ui-sref="app.AddInvProduct" data-ng-class="app.theme.brand" style="margin-right:5px">
+                    <span class="btn-label"><i class="fa fa-plus"></i></span>
+                    Add Product</button>
+                    <div class="panel-title" id="allPro">All Product  </div>
+                </div>
+                <div class="table-responsive">
+                    <table ng-table="table.tableParams" show-filter="true" class="table table-bordered table-striped">
+                        <!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
+                        <thead>
+                            <th check-all="check-all">
+                                <div data-toggle="tooltip" data-title="Check All" class="checkbox c-checkbox">
+                                    <label>
+                                        <input type="checkbox" ng-model="parentCheckBox" ng-change="changeAllBox(parentCheckBox)" />
+                                        <span class="fa fa-check"></span>
+                                    </label>
+                                </div>
+                            </th>
+                            <th  sortable="'productCategoryName'"  >Brand</th>
+                            <th>Category</th>
+                            <th>Product Name</th>
+                            <th ng-if="enableDisableColor">Color</th>
+                            <th ng-if="enableDisableSize">Size</th>
+                            <th ng-if="enableDisableVariant">Variant</th>
+                            <!-- <th>Purchase-Price</th> -->
+                            <th>Selling-Price</th>
+                            <th ng-if="enabledisableGST">HSN/SAC</th>
+                            <th>Barcode</th>
+                            <th ng-if="enabledisableGST">CGST</th>
+                            <th ng-if="enabledisableGST">SGST</th>
+                            <th ng-if="enabledisableGST">IGST</th>
+                            <th>Action</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                </td>
+                                <td>
+                                    <input type="text" class="input-filter form-control" ng-model="query.productCategoryName"  />
+                                </td>
+                                <td>
+                                    <input type="text" class="input-filter form-control" ng-model="query.productGroupName"  />
+                                </td>
+                                <td>
+                                    <input type="text" class="input-filter form-control" ng-model="query.productName"  />
+                                </td>
+                                <td ng-if="enableDisableColor" >
+                                    <input type="text"  class="input-filter form-control" ng-model="query.color" />
+                                </td>
+                                <td  ng-if="enableDisableSize" >
+                                    <input type="text" class="input-filter form-control" ng-model="query.size"/>
+                                </td>
+                                <td  ng-if="enableDisableVariant" >
+                                    <input type="text" class="input-filter form-control" ng-model="query.variant"/>
+                                </td>
+                                <!-- <td>
+                                    <input type="text" class="input-filter form-control" ng-model="query.purchasePrice"  />
+                                </td> -->
+                                <td>
+                                    <input type="text" class="input-filter form-control" ng-model="query.mrp"  />
+                                </td>
+                                <td ng-if="enabledisableGST">
+                                    <input type="text" class="input-filter form-control" ng-model="query.hsn"  />
+                                </td>
+                                <td>
+                                    <input type="text" class="input-filter form-control" ng-model="query.productCode"  />
+                                </td>
+                                <td ng-if="enabledisableGST">
+                                    <input type="text" class="input-filter form-control" ng-model="query.vat"  />
+                                </td>
+                                <td ng-if="enabledisableGST">
+                                    <input type="text" class="input-filter form-control" ng-model="query.additionalTax"  />
+                                </td>
+                                <td ng-if="enabledisableGST">
+                                    <input type="text" class="input-filter form-control" ng-model="query.igst"  />
+                                </td>
+                                <td colspan="1">
+                                </td>
+                            </tr>
+                            <tr  data-ng-repeat="user in ($parent.filteredItems = $data) track by user.productId">
+                                <td>
+                                    <div class="checkbox c-checkbox">
+                                        <label>
+                                            <input type="checkbox" ng-model="user.selected" name="check" ng-change="changeBox(user.selected,user)" />
+                                            <span class="fa fa-check"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td sortable="'productCategoryName'" filter="{ 'productCategoryName': 'text' }" ng-bind="::user.productCategoryName" ></td>
+                                <td sortable="'productGroupName'" filter="{ 'productGroupName': 'text' }" ng-bind="::user.productGroupName" ></td>
+                                <td sortable="'productName'" filter="{ 'productName': 'text' }" ng-if="!enableAlterLanguage" ng-bind="::user.productName" ></td>
+                                <td sortable="'productName'" filter="{ 'productName': 'text' }" ng-if="enableAlterLanguage && user.altProductName == null" ng-bind="::user.productName" ></td>
+                                <td sortable="'altProductName'" filter="{ 'altProductName': 'text' }" ng-if="enableAlterLanguage && user.altProductName != null" ng-bind="::user.altProductName" ></td>
+                                <td  filter="{ 'color': 'text' }" ng-bind="::user.color" ng-if="enableDisableColor"></td>
+                                <td  filter="{ 'size': 'text' }" ng-bind="::user.size" ng-if="enableDisableSize"></td>
+                                <td  filter="{ 'variant': 'text' }" ng-bind="::user.variant" ng-if="enableDisableVariant"></td>
+                                <!-- <td   filter="{ 'purchasePrice': 'text' }" ng-bind="::user.purchasePrice" ></td> -->
+                                <td filter="{ 'mrp': 'text' }"  ><span  ng-bind="::user.mrp"></span></td>
+                                
+                                <td ng-if="enabledisableGST" filter="{ 'hsn': 'text' }" ng-bind="::user.hsn" ></td>
+                                <td  filter="{ 'productCode': 'text' }" ng-bind="::user.productCode" ></td>
+                                <td  ng-if="enabledisableGST" filter="{ 'vat': 'text' }" ng-bind="::user.vat | setDecimal: user.company.noOfDecimalPoints" ></td>
+                                <td  ng-if="enabledisableGST" filter="{ 'additionalTax': 'text' }" ng-bind="::user.additionalTax | setDecimal: user.company.noOfDecimalPoints" ></td>
+                                <td  ng-if="enabledisableGST" filter="{ 'igst': 'text' }" ng-bind="::user.igst | setDecimal: user.company.noOfDecimalPoints" ></td>
+                                <td style="width:10%"> 
+                                    <center>
+                                        <i  title="Edit" ng-click="editProduct(user)" class="fa fa-edit myCursorPointer" style="font-size:17px;color:#10709f"> </i> &nbsp; &nbsp;
+                                        <i ng-if="enableDisableProductDelete" title="Delete" ng-click="deleteProduct('sm',user.productId)" class="fa fa-times-circle myCursorPointer" style="font-size:17px;color:red"></i>
+                                    </center>
+                                </td>
+                                
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
+            </div>
+        </div>

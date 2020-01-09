@@ -24,7 +24,8 @@
     "icon": "icon-inbox",
     "subnav": [
       { "text": "Purchase", "sref": "app.AccPurchase", "translate": "" },
-      { "text": "Tax Purchase", "sref": "app.AccTaxPurchase", "translate": "" }
+      { "text": "Tax Purchase", "sref": "app.AccTaxPurchase", "translate": "" },
+      { "text": "Purchase Return", "sref": "app.AccPurchaseReturn", "translate": "" }
     ],
     "permission":"purchase"
   },

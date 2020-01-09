@@ -1,0 +1,218 @@
+<style>
+	.lvl-over {
+		/* applied to a drop target when a draggable object is over it */
+		border: 2px dashed black !important;
+	}
+	
+	.lvl-target {
+		background-color: #ddd;
+		opacity: .5;
+	}
+	
+	[draggable] {
+		-moz-user-select: none;
+		-khtml-user-select: none;
+		-webkit-user-select: none;
+		user-select: none;
+		cursor: move;
+		border: 1px solid black;
+	}
+	
+	.table-input {
+		width: -webkit-fill-available;
+		outline: none;
+		border: 1px solid rgb(219, 217, 217);
+		padding: 5px;
+		border-radius: 5px;
+	}
+	
+	thead {
+		background: #f5f5f5
+	}
+</style>
+<h3>
+	<small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+		Report Builder >>
+	Build Report</small>
+</h3>
+<div class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true,'time-out': 10000}"></toaster-container>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading bg-primary my-font-white">
+					<div class="panel-title">
+						<h5 style="display: inline-block;">Report Headers</h5>
+					</div>
+				</div>
+				<div class="panel-body">
+					<form action="#" method="post" accept-charset="utf-8" name="headerForm">
+						<div class="form-group clearfix">
+							<label class="col-sm-3 control-label">*Report Group</label>
+							<div class="col-sm-9">
+								<select chosen="" data-ng-model="headers.reportGroup" class="form-control chosen-select" ng-required="true" tabindex="2"data-ng-options="s.rbGroupName group by s.rbGroupCategory for s in reportGroups track by s.rbGroupId" ng-change="loadFields(headers.reportGroup)">
+								</select>
+							</div>
+						</div>
+						<div class="form-group clearfix">
+							<label class="col-sm-3 control-label">*Report Name</label>
+							<div class="col-sm-9">
+								<input class="form-control" data-ng-model="headers.reportName" ng-required="true" placeholder="Report name">
+							</div>
+						</div>
+						<div class="form-group clearfix">
+							<label class="col-sm-3 control-label">*Report Title</label>
+							<div class="col-sm-6">
+								<input class="form-control" data-ng-model="headers.reportTitle" ng-required="true" placeholder="Report title">
+							</div>
+							<div class="col-sm-3">
+								<select chosen ng-model="headers.position" class="form-control chosen-select" ng-required="true" ng-options="s for s in table.positionDrop track by ($index+s)">
+								</select>
+							</div>
+						</div>
+						<div class="form-group clearfix">
+							<label class="col-sm-3 control-label">*Report Type</label>
+							<div class="col-sm-9">
+								<select chosen ng-model="headers.reportType" class="form-control chosen-select" ng-required="true" ng-options="s for s in table.reportTypeDrop track by ($index+s)">
+								</select>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading panel-heading bg-primary my-font-white">
+					<div class="panel-title">
+						<h5 style="display: inline-block;">Filters</h5>
+					</div>
+				</div>
+				<div class="panel-body clearfix">
+					<form action="#" method="get" accept-charset="utf-8" name="fieldForm">
+						<div class="col-sm-3">
+							<select chosen="" data-ng-model="filters.field" class="form-control chosen-select" ng-required="true" ng-options="s.label group by s.table for s in filterDrop track by ($index+s.id+s.table)" ng-change="selectFilterValue(filters.field)">
+							</select>
+						</div>
+						<div class="col-sm-3">
+							<select chosen="" ng-model="filters.conditionType" class="form-control chosen-select" ng-required="true" ng-options="it for it in filterTypes track by ($index+it)" ng-change="filterTypeChange(filters.conditionType)">
+							</select>
+						</div>
+						<div class="col-sm-3">
+							<input type="text" name="filter_val" data-ng-model="filters.filterValue" class="form-control" ng-required="true" ng-readonly="!filters.field || !filters.conditionType" ng-if="dataTypeInput == 0">
+							<input type="text" name="filter_val" data-ng-model="filters.filterValue" class="form-control" ng-required="true" ng-readonly="!filters.field || !filters.conditionType" only-number ng-if="dataTypeInput == 1">
+
+							<div class="input-group" ng-if="dataTypeInput == 2 && filters.conditionType">
+								<input type="text" datepicker-popup="{{dateFormat}}" data-ng-model="filters.filterValue" is-open="opened" datepicker-options="dateOptions.opts" date-disabled="disabled(date, mode)" data-ng-required="true" close-text="Close"
+								class="form-control" datepicker-mode="dateOptions.mode" ng-change="changeDate(filters.filterValue)"/>
+								<span class="input-group-btn">
+									<button type="button" data-ng-click="pickDate($event)" class="btn btn-default">
+										<em class="fa fa-calendar"></em>
+									</button>
+								</span>
+							</div>
+
+							<select chosen="" data-ng-model="filters.filterValue" class="form-control chosen-select" ng-required="true" ng-options="s for s in enumValues track by ($index+s)" ng-if="dataTypeInput == 3">
+							</select>
+						</div>
+						<div class="col-sm-3">
+							<button type="button" class="btn btn-primary" ng-disabled="fieldForm.$invalid" ng-click="addFilter()">
+								<span ng-if="filters.editIndex == undefined">Add</span>
+								<span ng-if="filters.editIndex != undefined">Update</span>
+							</button>
+						</div>
+					</form>
+				</div>
+				<div class="table-responsive" style="display: block;max-height: 170px; overflow-y:auto; ">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th>Field</th>
+								<th>Condition</th>
+								<th>Value</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="(index, item) in filters.conditions">
+								<td>{{ item.field.label }} - {{item.field.table}}</td>
+								<td>{{ item.conditionType }}</td>
+								<td>{{ item.filterValue }}</td>
+								<td>
+									<center>
+										<i title="Edit" ng-click="editFilter(item, index)" class="fa fa-edit myCursorPointer" style="font-size:17px;color:#10709f"> </i> &nbsp; &nbsp;
+										<i title="Delete" ng-click="deleteFilter(index)" class="fa fa-times-circle myCursorPointer" style="font-size:17px;color:red"></i>
+									</center>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+		<div class="col-md-3">
+			<div class="panel panel-default">
+				<div class="panel-heading panel-heading bg-primary my-font-white">
+					<div class="panel-title">
+						<h5 style="display: inline-block;">Fields</h5>
+					</div>
+				</div>
+				<div class="panel-body" data-drop="false" data-jqyoui-options="{accept : false}" jqyoui-droppable="false">
+					<treecontrol class="tree-classic" tree-model="fields" options="treeOptions">
+						<span ng-if="node.children == undefined" data-drag="true" data-jqyoui-options="{revert: true}" ng-model="node" jqyoui-draggable="{animate:true}" ng-hide="!node.label" style="z-index: 99">{{node.label}}</span>
+						<span ng-if="node.children != undefined">{{node.label}}</span>
+					</treecontrol>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-9">
+			<div class="panel panel-default">
+				<div class="panel-heading panel-heading bg-primary my-font-white">
+					<button type="button" class="btn btn-default pull-right btn-sm" ng-disabled="headerForm.$invalid || !preview.columns.length" data-ng-class="app.theme.brand" ng-click="saveReport()"> Save </button>
+					<div class="panel-title">Preview</div>
+				</div>
+				<div class="panel-body">
+					<div class="form-group clearfix" ng-model="preview.groupBy" data-drop="true" data-jqyoui-options jqyoui-droppable="{onDrop: reloadDt()}">
+						<label class="col-sm-3 control-label">Group By</label>
+						<div class="col-sm-9">
+							<input type="text" ng-model="preview.groupBy.label" class="form-control" placeholder="Drop field here to apply grouping" readonly>
+						</div>
+					</div>
+					<div class="form-group clearfix" ng-model="preview.orderBy" data-drop="true" data-jqyoui-options jqyoui-droppable="{onDrop: reloadDt()}">
+						<label class="col-sm-3 control-label">Sort By</label>
+						<div class="col-sm-9">
+							<input type="text" ng-model="preview.orderBy.label" class="form-control" placeholder="Drop field here to apply sorting" readonly>
+						</div>
+					</div>
+				</div>
+				<div class="table-responsive">
+					<table class="table table-bordered">
+						<thead>
+							<tr ui-sortable ng-model="preview.columns" data-drop="true" data-jqyoui-options jqyoui-droppable="{multiple:true, stack: true, onDrop: reloadDt()}" ng-style="preview.columns.length == 0 && {'background-color': '#f5f5f5'}">
+								<th ng-repeat="(index, item) in preview.columns track by $index" ng-right-click="table.previewContextIndex = index" context-menu-id="context1" ng-style="{'width': (100 / preview.columns.length)+'%' }" style="vertical-align: middle;">
+									<span ng-if="table.previewInputIndex != index" style="padding: 5px;">{{item.label}}</span>
+									<input ng-if="table.previewInputIndex == index" type="text" ng-model="item.label" my-enter="table.previewInputIndex = -1" class="table-input">
+
+								</th>
+								<td ng-if="preview.columns.length == 0">
+									<h4 class="text-center text-danger p-lg">Drop field here to generate table</h4>
+								</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-if="preview.columns.length != 0" ng-repeat="item in preview.data track by $index">
+								<td ng-repeat="field in preview.columns track by $index">{{ item['field'+field.id] }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+<ul id="context1" class="dropdown-menu" role='menu'>
+	<li><a ng-click="table.previewInputIndex = table.previewContextIndex">Edit</a></li>
+	<li><a ng-click="removePreviewColumn(table.previewContextIndex)">Delete</a></li>
+</ul>

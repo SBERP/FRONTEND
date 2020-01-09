@@ -3,91 +3,92 @@
 <!--[if (gt IE 9)|!(IE)]><!-->
 <html lang="en" data-ng-app="singular">
 <!--<![endif]-->
+
 <head>
-   <meta charset="utf-8">
-   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-   <!--meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"-->
-   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-   <meta name="description" content="{{app.description}}">
-   <meta name="keywords" content="accounting, inventory, stock summary, crm, pricelist, staff">
-   
-	<meta http-equiv="cache-control" content="max-age=0" />
-	<!--meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" /-->
-	<meta http-equiv="cache-control" content="no-cache" />
-	<meta http-equiv="expires" content="0" />
-	<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
-	<meta http-equiv="pragma" content="no-cache" />
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!--meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="{{app.description}}">
+    <meta name="keywords" content="accounting, inventory, stock summary, crm, pricelist, staff">
 
-   <title data-ng-bind="pageTitle()">CRM</title>
+    <meta http-equiv="cache-control" content="max-age=0" />
+    <!--meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" /-->
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+    <meta http-equiv="pragma" content="no-cache" />
 
-   <link rel="shortcut icon" href="app/img/favicon.ico">
-   <!-- App CSS-->
-   <!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    <title data-ng-bind="pageTitle()">CRM</title>
+
+    <link rel="shortcut icon" href="app/img/favicon.ico">
+    <!-- App CSS-->
+    <!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"> -->
-   <link rel="stylesheet" href="app/css/app.css" data-ng-if="!app.layout.isRTL">
-   <!--link rel="stylesheet" href="app/css/apprtl.css" data-ng-if="app.layout.isRTL"-->
+    <link rel="stylesheet" href="app/css/app.css" data-ng-if="!app.layout.isRTL">
+    <!--link rel="stylesheet" href="app/css/apprtl.css" data-ng-if="app.layout.isRTL"-->
 </head>
 
 <body data-ng-class="{ 'layout-fixed' : app.layout.isFixed, 'aside-collapsed' : app.sidebar.isCollapsed, 'layout-boxed' : app.layout.isBoxed, 'aside-slide' : app.sidebar.slide, 'in-app': $state.includes('app')}">
 
-   <div data-ui-view="" data-autoscroll="false" data-ng-class="app.viewAnimation" class="app-container" ></div>
-   <!-- App Scripts-->
-  
-   <script src="app/js/base.js"  ></script>
+    <div data-ui-view="" data-autoscroll="false" data-ng-class="app.viewAnimation" class="app-container"></div>
+    <!-- App Scripts-->
+
+    <script src="app/js/base.js"></script>
     <!--script src="//rawgit.com/angular/angular.js/master/src/ngLocale/angular-locale_hi-in.js"  ></script-->
- 	<!-- pusher-angular (backup CDN)
+    <!-- pusher-angular (backup CDN)
 <script src="//cdnjs.cloudflare.com/ajax/libs/pusher-angular/0.1.7/pusher-angular.min.js"></script>
 -->
-	<script src="app/js/app.js"  ></script>
-	<script src="app/js/controllers/appCtrl.js"  ></script>
-    <script src="app/js/controllers/config.js"  ></script>
-	<script src="app/js/controllers/constants.js"  ></script>
-	<script src="app/js/customeJS/googleReCaptcha.js"  ></script>
-		
-	<script src="app/js/controllers/Branch/getBranchFactory.js"  ></script>
-	
-	<script src="app/js/customeJS/ngMessage.js"  ></script>
-	<script src="app/js/customeJS/ngSanatize.js"  ></script>
-	<script src="app/js/customeJS/ngcsv.js"  ></script>
-	
-	<!--script src="app/js/controllers/calendarCtrl.js"></script>
+    <script src="app/js/app.js"></script>
+    <script src="app/js/controllers/appCtrl.js"></script>
+    <script src="app/js/controllers/config.js"></script>
+    <script src="app/js/controllers/constants.js"></script>
+    <script src="app/js/customeJS/googleReCaptcha.js"></script>
+
+    <script src="app/js/controllers/Branch/getBranchFactory.js"></script>
+
+    <script src="app/js/customeJS/ngMessage.js"></script>
+    <script src="app/js/customeJS/ngSanatize.js"></script>
+    <script src="app/js/customeJS/ngcsv.js"></script>
+
+    <!--script src="app/js/controllers/calendarCtrl.js"></script>
 	<script src="app/js/controllers/mailboxCtrl.js"></script>
 	<script src="app/js/controllers/taskCtrl.js"></script>
 	<script src="app/js/controllers/chartCtrl.js"></script-->
-	<script src="app/js/controllers/flotchartDrt.js"  ></script>
-	<script src="app/js/controllers/flotchartOptionSrv.js"  ></script>
-	<script src="app/js/controllers/sparklineDrt.js"  ></script>
-	<script src="app/js/controllers/flatdocDrt.js"  ></script>
-	<script src="app/js/controllers/dashboardCtrl.js"  ></script>
-	<script src="app/js/controllers/bootstrapSliderDrt.js"  ></script>
-	<!--script src="app/js/controllers/formInputCtrl.js"></script>
+    <script src="app/js/controllers/flotchartDrt.js"></script>
+    <script src="app/js/controllers/flotchartOptionSrv.js"></script>
+    <script src="app/js/controllers/sparklineDrt.js"></script>
+    <script src="app/js/controllers/flatdocDrt.js"></script>
+    <script src="app/js/controllers/dashboardCtrl.js"></script>
+    <script src="app/js/controllers/bootstrapSliderDrt.js"></script>
+    <!--script src="app/js/controllers/formInputCtrl.js"></script>
 	<script src="app/js/controllers/formValidationCtrl.js"></script-->
-	<script src="app/js/controllers/maskDrt.js"  ></script>
-	<!--script src="app/js/controllers/searchFormCtrl.js"></script-->
-	<script src="app/js/controllers/wysiwygDrt.js"  ></script>
-	<script src="app/js/controllers/climaconDrt.js"  ></script>
-	<script src="app/js/controllers/serviceSrv.js"  ></script>
-	<script src="app/js/controllers/headerNavCtrl.js"  ></script>
-	<!--script src="app/js/controllers/settingCtrl.js"></script>
+    <script src="app/js/controllers/maskDrt.js"></script>
+    <!--script src="app/js/controllers/searchFormCtrl.js"></script-->
+    <script src="app/js/controllers/wysiwygDrt.js"></script>
+    <script src="app/js/controllers/climaconDrt.js"></script>
+    <script src="app/js/controllers/serviceSrv.js"></script>
+    <script src="app/js/controllers/headerNavCtrl.js"></script>
+    <!--script src="app/js/controllers/settingCtrl.js"></script>
 	<script src="app/js/controllers/summaryCtrl.js"></script>
 	<script src="app/js/controllers/googleMapCtrl.js"></script>
 	<script src="app/js/controllers/vectorMapCtrl.js"></script>
 	<script src="app/js/controllers/vectorMapDrt.js"></script-->
-	<script src="app/js/controllers/portletCtrl.js"></script>
-	<script src="app/js/controllers/sidebarCtrl.js"  ></script>
-	<script src="app/js/controllers/sidebarDrt.js"  ></script>
-	<script src="app/js/controllers/sidebarMenuSrv.js"  ></script>
-	<!--script src="app/js/controllers/angularTableCtrl.js"></script-->
-	
-	<script src="app/js/controllers/checkallDrt.js"  ></script>
-	<!--script src="app/js/controllers/responsiveTableCtrl.js"></script>
+    <script src="app/js/controllers/portletCtrl.js"></script>
+    <script src="app/js/controllers/sidebarCtrl.js"></script>
+    <script src="app/js/controllers/sidebarDrt.js"></script>
+    <script src="app/js/controllers/sidebarMenuSrv.js"></script>
+    <!--script src="app/js/controllers/angularTableCtrl.js"></script-->
+
+    <script src="app/js/controllers/checkallDrt.js"></script>
+    <!--script src="app/js/controllers/responsiveTableCtrl.js"></script>
 	<script src="app/js/controllers/alertDemoCtrl.js"></script>
 	<script src="app/js/controllers/buttonCtrl.js"></script>
 	<script src="app/js/controllers/carouselCtrl.js"></script>
 	<script src="app/js/controllers/datePickerCtrl.js"></script>
 	<script src="app/js/controllers/paginationCtrl.js"></script-->
-	<script src="app/js/controllers/popoverCtrl.js"  ></script> 
-	<!--<script src="app/js/controllers/progressCtrl.js"></script>
+    <script src="app/js/controllers/popoverCtrl.js"></script>
+    <!--<script src="app/js/controllers/progressCtrl.js"></script>
 	<script src="app/js/controllers/ratingCtrl.js"></script>
 	<script src="app/js/controllers/timePickerCtrl.js"></script>
 	<script src="app/js/controllers/toasterCtrl.js"></script>
@@ -95,219 +96,221 @@
 	<script src="app/js/controllers/typeaheadCtrl.js"></script>
 	<script src="app/js/controllers/modalCtrl.js"></script>
 	<script src="app/js/controllers/notificationCtrl.js"></script>-->
-	<script src="app/js/controllers/scrollDrt.js"  ></script>
-	<script src="app/js/controllers/animateEnableDrt.js"  ></script>
-	<script src="app/js/controllers/hrefDrt.js"  ></script>
-	<script src="app/js/controllers/toggleFullScreenDrt.js"  ></script>
-	<script src="app/js/controllers/resetKeyDrt.js"  ></script>
-	<script src="app/js/controllers/toggleStateDrt.js"  ></script>
-	<script src="app/js/controllers/titleCaseFltr.js"  ></script>
-	<script src="app/js/controllers/browserSrv.js"  ></script>
-	<script src="app/js/controllers/colorFctr.js"  ></script>
-	<script src="app/js/controllers/supportSrv.js"  ></script>
-	<script src="app/js/controllers/toggleStateSrv.js"  ></script>
-	<script src="app/js/controllers/touchDragSrv.js"  ></script>
-   
-    
-	
+    <script src="app/js/controllers/scrollDrt.js"></script>
+    <script src="app/js/controllers/animateEnableDrt.js"></script>
+    <script src="app/js/controllers/hrefDrt.js"></script>
+    <script src="app/js/controllers/toggleFullScreenDrt.js"></script>
+    <script src="app/js/controllers/resetKeyDrt.js"></script>
+    <script src="app/js/controllers/toggleStateDrt.js"></script>
+    <script src="app/js/controllers/titleCaseFltr.js"></script>
+    <script src="app/js/controllers/browserSrv.js"></script>
+    <script src="app/js/controllers/colorFctr.js"></script>
+    <script src="app/js/controllers/supportSrv.js"></script>
+    <script src="app/js/controllers/toggleStateSrv.js"></script>
+    <script src="app/js/controllers/touchDragSrv.js"></script>
 
-   <!-- getter Setter Factory -->
-		<script src="app/js/controllers/Custom/GetSet/fetchArrayService.js"  ></script>
-		<script src="app/js/controllers/Custom/GetSet/uniqueArrayService.js"  ></script>
-		<script src="app/js/controllers/Custom/GetSet/clientFactory.js"  ></script>
-		<script src="app/js/controllers/Custom/GetSet/getSetFactory.js"  ></script>
-		<script src="app/js/controllers/Custom/GetSet/stateFactory.js"  ></script>
-		<script src="app/js/controllers/Custom/GetSet/productFactory.js"  ></script>
-		<script src="app/js/controllers/Custom/GetSet/userPermissionFactory.js"  ></script>
-		<script src="app/js/controllers/Custom/GetSet/bankFactory.js"  ></script>
-   <!-- End -->
-   
-   <!-- Filters -->
-		<script src="app/js/controllers/Custom/Filters/sumOfCreditDebit.js"  ></script>
-		<script src="app/js/controllers/Custom/FocusBox/FocusMe.js"  ></script>
-		<script src="app/js/controllers/Custom/productArray/productArrayFactory.js"  ></script>
-		<script src="app/js/controllers/Custom/onlyNumber&AlphaDirectory/onlyNumber&AlphaDirectory.js"  ></script>
-		<script src="app/js/controllers/Custom/setDecimal/setDecimal.js"  ></script>
-		<script src="app/js/controllers/Custom/minMaxNumber/minMaxNumber.js"  ></script>
-		<script src="app/js/controllers/Custom/InvoiceJobcard/InvoiceJobcard.js"  ></script>
-		
-   <!-- End -->
-   	<script src="app/js/controllers/page/loginCtrl.js"></script>
-	<!--File Upload-->
-	<!--script src="app/js/controllers/fileupload/fileDestroyCtrl.js"></script>
+
+
+
+    <!-- getter Setter Factory -->
+    <script src="app/js/controllers/Custom/GetSet/fetchArrayService.js"></script>
+    <script src="app/js/controllers/Custom/GetSet/uniqueArrayService.js"></script>
+    <script src="app/js/controllers/Custom/GetSet/clientFactory.js"></script>
+    <script src="app/js/controllers/Custom/GetSet/getSetFactory.js"></script>
+    <script src="app/js/controllers/Custom/GetSet/stateFactory.js"></script>
+    <script src="app/js/controllers/Custom/GetSet/productFactory.js"></script>
+    <script src="app/js/controllers/Custom/GetSet/userPermissionFactory.js"></script>
+    <script src="app/js/controllers/Custom/GetSet/bankFactory.js"></script>
+    <script src="app/js/controllers/Custom/ReportBuilder/ReportGroupFactory.js"></script>
+    <!-- End -->
+
+    <!-- Filters -->
+    <script src="app/js/controllers/Custom/Filters/sumOfCreditDebit.js"></script>
+    <script src="app/js/controllers/Custom/FocusBox/FocusMe.js"></script>
+    <script src="app/js/controllers/Custom/productArray/productArrayFactory.js"></script>
+    <script src="app/js/controllers/Custom/onlyNumber&AlphaDirectory/onlyNumber&AlphaDirectory.js"></script>
+    <script src="app/js/controllers/Custom/setDecimal/setDecimal.js"></script>
+    <script src="app/js/controllers/Custom/minMaxNumber/minMaxNumber.js"></script>
+    <script src="app/js/controllers/Custom/InvoiceJobcard/InvoiceJobcard.js"></script>
+
+    <!-- End -->
+    <script src="app/js/controllers/page/loginCtrl.js"></script>
+    <!--File Upload-->
+    <!--script src="app/js/controllers/fileupload/fileDestroyCtrl.js"></script>
 	<script src="app/js/controllers/fileupload/demoCtrl.js"></script-->
-	
-	<script src="app/js/controllers/PopupModal/Delete/DeleteDataModalCtrl.js"  ></script>
-	<script src="app/js/controllers/PopupModal/TopBar/CalculatorModalCtrl.js"  ></script>
-	
-	<!-- Company -->
-    <script src="app/js/controllers/Company/CompanyCtrl.js"  ></script>
-	<script src="app/js/controllers/Company/AddCompanyCtrl.js"  ></script>
-	
-    <!-- Branch -->
-    <script src="app/js/controllers/Branch/BranchCtrl.js"  ></script>
-	<script src="app/js/controllers/Branch/AddBranchCtrl.js"  ></script>
-	 
-	 <!-- Staff -->
-    <script src="app/js/controllers/Staff/StaffCtrl.js"  ></script>
-	<script src="app/js/controllers/Staff/AddStaffCtrl.js"  ></script>
-	<script src="app/js/controllers/PopupModal/Staff/PermissionModalCtrl.js" ></script>
-	
-	<!--Invoice#-->
-	<script src="app/js/controllers/Invoice/InvoiceCtrl.js"  ></script>
-	
-	<!--Quotation#-->
-	<script src="app/js/controllers/Quotation/QuotationCtrl.js">  </script>
-	
-	<!--Template-->
-		<!--General-->
-		
-		<script src="app/js/controllers/Template/GeneralCtrl.js"  ></script>
-	<!-- Template -->
-	
-	<!--Setting-->
-		<!--Option-->
-		<script src="app/js/controllers/Setting/SettingOption/SettingOptionCtrl.js"  ></script>
-		<script src="app/js/controllers/Setting/ItemwiseCommission/ItemwiseCommissionCtrl.js"  ></script>
-		<!--Integration-->
-		<script src="app/js/controllers/Setting/SettingIntegration/SettingIntegrationCtrl.js"  ></script>
-		<!--Jobcard#-->
-		<script src="app/js/controllers/Setting/SettingJobcardNumber/SettingJobcardNumberCtrl.js"  ></script>
-		<!--ClientProfession#-->
-		<script src="app/js/controllers/Setting/SettingClientProfession/SettingClientProfessionCtrl.js"  ></script>
-		<!--Reminders-->
-		<script src="app/js/controllers/Setting/SettingReminders/SettingRemindersCtrl.js"  ></script>
-		<script src="app/js/controllers/Setting/SettingExpenses/SettingExpenseCtrl.js"  ></script>
-		<!--Measurement unit -->
-		<script src="app/js/controllers/Setting/AdvanceMeasureUnits/AdvanceMeasureUnitsCtrl.js" ></script>
 
-	<!-- Setting -->
-	
-	<!--QuickMenu -->
-		<!-- Sales Bill-->
-		<!--script src="app/js/controllers/QuickMenu/RetailsaleBillCtrl.js"  ></script-->
-		<script src="app/js/controllers/QuickMenu/SalesReturnBillCtrl.js"  ></script>
-		<script src="app/js/controllers/PopupModal/QuickMenu/PreviewBillModalCtrl.js"  ></script>
-		<script src="app/js/controllers/PopupModal/QuickMenu/DocumentScanModalCtrl.js"  ></script>
-			<!-- Bill History Modal -->
-					<script src="app/js/controllers/PopupModal/QuickMenu/historySalesBillModaleCtrl.js"  ></script>
-			<!-- End -->
-		<!-- Purchase Bill -->
-		<!--script src="app/js/controllers/QuickMenu/PurchaseBillCtrl.js"  ></script-->
-	<!-- End QuickMenu -->
-	
-	<!--CRM -->
-		<!--View All Jobcard-->
-		<script src="app/js/controllers/CRM/Jobcard/CrmAllJobcardCtrl.js"  ></script>
-		<!-- Add/Edit Jobcard-->
-		<script src="app/js/controllers/CRM/Jobcard/CrmJobcardCtrl.js"  ></script>
-		
-		<!--Client-->
-		<script src="app/js/controllers/CRM/Client/CrmClientFilterDataCtrl.js"  ></script>
-		<script src="app/js/controllers/PopupModal/CRM/emailSmsModalCtrl.js"  ></script>
-		<script src="app/js/controllers/PopupModal/CRM/ClientFormModalCtrl.js"  ></script>
-		<script src="app/js/controllers/PopupModal/Client/ClientModalCtrl.js"  ></script>
-		<!--Client-->
-		<script src="app/js/controllers/CRM/Client/CrmClientHistoryCtrl.js"></script>
-		
-	<!-- End CRM -->
-	
-	<!-- ACCOUNTING -->
-	
-		<!-- Accounting Modals -->
-		<script src="app/js/controllers/PopupModal/Accounting/LedgerModal.js"  ></script>
-		<script src="app/js/controllers/PopupModal/Accounting/ProductModal.js"  ></script>
-		<script src="app/js/controllers/PopupModal/Accounting/barcodeModal.js"  ></script>
-		<script src="app/js/controllers/PopupModal/Accounting/itemCheckListModal.js"  ></script>
-		<script src="app/js/controllers/PopupModal/Accounting/QuotationFlowModal.js"  ></script>
-		<script src="app/js/controllers/PopupModal/Accounting/ItemizeStockModal.js"  ></script>
-		<script src="app/js/controllers/PopupModal/QuickMenu/ProductListModalCtrl.js"  ></script>
-		<script src="app/js/controllers/PopupModal/Accounting/imageGalleryModal/imageGalleryModalCtrl.js"  ></script>
-		
-		<!-- End -->
-		
-		<!-- View Data (With Charts) -->
-		<script src="app/js/controllers/Accounting/viewData/AccViewCtrl.js"  ></script>
-		<script src="app/js/controllers/Accounting/viewData/AccDataViewsCtrl.js"  ></script>
-		<script src="app/js/controllers/Accounting/viewData/AccFlowViewCtrl.js"  ></script>
-		<!-- End -->
-		
-		<!-- Sales -->
-		<script src="app/js/controllers/Accounting/Sales/AccSalesCtrl.js"  ></script>
-		<script src="app/js/controllers/Accounting/Sales/historySalesModaleCtrl.js"  ></script>
-		
-		<!-- Purchase -->
-		<script src="app/js/controllers/Accounting/Purchase/AccPurchaseCtrl.js"  ></script>
-		<script src="app/js/controllers/Accounting/Purchase/historyPurchaseModaleCtrl.js"  ></script>
-		
-		<!-- Credit Notes -->
-		
-		<!-- Debit Notes -->
-		
-		<!-- Special Journal -->
-		<script src="app/js/controllers/Accounting/SpecialJournal/AccSpecialJrnlCtrl.js"  ></script>
-		
-		<!-- Payment -->
-		<script src="app/js/controllers/Accounting/Payment/AccPaymentCtrl.js"  ></script>
-		
-		<!-- Receipt -->
-		<script src="app/js/controllers/Accounting/Receipt/AccReceiptCtrl.js"  ></script>
-		
-		<!-- Statements -->
-		<script src="app/js/controllers/Accounting/Statements/AccTrailBalanceCtrl.js"  ></script>
-		<script src="app/js/controllers/Accounting/Statements/AccBalanceSheetCtrl.js"  ></script>
-		<script src="app/js/controllers/Accounting/Statements/AccProfitLossCtrl.js"  ></script>
-		<script src="app/js/controllers/Accounting/Statements/AccCashFlowCtrl.js"  ></script>
-			<!-- Statements Popup -->
-				<script src="app/js/controllers/PopupModal/Accounting/Statements/balanceSheetModalCtrl.js"  ></script>
-			<!-- End -->
-		<!-- Taxation -->
-		<script src="app/js/controllers/Accounting/Taxation/AccTaxationCtrl.js"  ></script>
-		<!-- Ledger -->
-		<script src="app/js/controllers/Accounting/Ledger/LedgerCtrl.js"  ></script>
-		<script src="app/js/controllers/Accounting/Ledger/AccDataLedgerCtrl.js"  ></script>
-	<!-- End ACCOUNTING -->
-	
-	<!-- INVENTORY -->
-		
-		<!--Product -->
-		<script src="app/js/controllers/Inventory/Product/InvProductCtrl.js"  ></script>
-		<script src="app/js/controllers/Inventory/Product/AddInvProductCtrl.js"  ></script>
-		<script src="app/js/controllers/Inventory/Product/MergeProductCtrl.js"  ></script>
-			<!-- Barcode Popup -->
-			<script src="app/js/controllers/PopupModal/Inventory/productBarcodeModalCtrl.js"  ></script>
-			<!-- End -->
-			<!-- Batch Insert Popup -->
-			<script src="app/js/controllers/PopupModal/Inventory/InventoryBatchModalCtrl.js"  ></script>
-			<script src="app/js/controllers/PopupModal/Inventory/InventoryBatchModalUpdateCtrl.js"  ></script>
-			<!-- End -->
-		<!-- Barcode Print -->
-		<script src="app/js/controllers/Inventory/BarcodePrint/InvBarcodePrintCtrl.js"  ></script>
-		<!--Stock -->
-		<script src="app/js/controllers/Inventory/StockRegister/InvStockCtrl.js"  ></script>
-		<script src="app/js/controllers/Inventory/StockRegister/AddInvStockCtrl.js"  ></script>
-		<script src="app/js/controllers/Inventory/StockRegister/InvStockModalCtrl.js"  ></script>
-		<!--category -->
-		<script src="app/js/controllers/Inventory/Category/InvCategoryCtrl.js"  ></script>
-		<!--Group -->
-		<script src="app/js/controllers/Inventory/Group/InvGroupCtrl.js"  ></script>
-		
-		<!--Srock Summary -->
-		<script src="app/js/controllers/Inventory/StockSummary/InvStockSummaryCtrl.js"  ></script>
-	<!-- End INVENTORY -->
-	
-	<!-- PRICELIST -->
-		<!-- RetailSales -->
-		<script src="app/js/controllers/PriceList/RetailSales/FormPriceListRetailSalesCtrl.js"  ></script>
-		<script src="app/js/controllers/PriceList/RetailSales/PriceListRetailSalesCtrl.js"  ></script>
-	<!-- End PRICELIST -->
-	
-	<!-- ANALYZER -->
-		<!-- Police Reports -->
-		<script src="app/js/controllers/Analyzer/Reports/PoliceReportsCtrl.js"  ></script>
-		<script src="app/js/controllers/Analyzer/Reports/ReportCommissionCtrl.js"  ></script>
-		<script src="app/js/customeJS/image-compress/compress.js"  ></script>
-	<!-- End ANALYZER -->
+    <script src="app/js/controllers/PopupModal/Delete/DeleteDataModalCtrl.js"></script>
+    <script src="app/js/controllers/PopupModal/TopBar/CalculatorModalCtrl.js"></script>
+
+    <!-- Company -->
+    <script src="app/js/controllers/Company/CompanyCtrl.js"></script>
+    <script src="app/js/controllers/Company/AddCompanyCtrl.js"></script>
+
+    <!-- Branch -->
+    <script src="app/js/controllers/Branch/BranchCtrl.js"></script>
+    <script src="app/js/controllers/Branch/AddBranchCtrl.js"></script>
+
+    <!-- Staff -->
+    <script src="app/js/controllers/Staff/StaffCtrl.js"></script>
+    <script src="app/js/controllers/Staff/AddStaffCtrl.js"></script>
+    <script src="app/js/controllers/PopupModal/Staff/PermissionModalCtrl.js"></script>
+
+    <!--Invoice#-->
+    <script src="app/js/controllers/Invoice/InvoiceCtrl.js"></script>
+
+    <!--Quotation#-->
+    <script src="app/js/controllers/Quotation/QuotationCtrl.js">
+    </script>
+
+    <!--Template-->
+    <!--General-->
+
+    <script src="app/js/controllers/Template/GeneralCtrl.js"></script>
+    <!-- Template -->
+
+    <!--Setting-->
+    <!--Option-->
+    <script src="app/js/controllers/Setting/SettingOption/SettingOptionCtrl.js"></script>
+    <script src="app/js/controllers/Setting/ItemwiseCommission/ItemwiseCommissionCtrl.js"></script>
+    <!--Integration-->
+    <script src="app/js/controllers/Setting/SettingIntegration/SettingIntegrationCtrl.js"></script>
+    <!--Jobcard#-->
+    <script src="app/js/controllers/Setting/SettingJobcardNumber/SettingJobcardNumberCtrl.js"></script>
+    <!--ClientProfession#-->
+    <script src="app/js/controllers/Setting/SettingClientProfession/SettingClientProfessionCtrl.js"></script>
+    <!--Reminders-->
+    <script src="app/js/controllers/Setting/SettingReminders/SettingRemindersCtrl.js"></script>
+    <script src="app/js/controllers/Setting/SettingExpenses/SettingExpenseCtrl.js"></script>
+    <!--Measurement unit -->
+    <script src="app/js/controllers/Setting/AdvanceMeasureUnits/AdvanceMeasureUnitsCtrl.js"></script>
+
+    <!-- Setting -->
+
+    <!--QuickMenu -->
+    <!-- Sales Bill-->
+    <!--script src="app/js/controllers/QuickMenu/RetailsaleBillCtrl.js"  ></script-->
+    <script src="app/js/controllers/QuickMenu/SalesReturnBillCtrl.js"></script>
+    <script src="app/js/controllers/PopupModal/QuickMenu/PreviewBillModalCtrl.js"></script>
+    <script src="app/js/controllers/PopupModal/QuickMenu/DocumentScanModalCtrl.js"></script>
+    <!-- Bill History Modal -->
+    <script src="app/js/controllers/PopupModal/QuickMenu/historySalesBillModaleCtrl.js"></script>
+    <!-- End -->
+    <!-- Purchase Bill -->
+    <!--script src="app/js/controllers/QuickMenu/PurchaseBillCtrl.js"  ></script-->
+    <!-- End QuickMenu -->
+
+    <!--CRM -->
+    <!--View All Jobcard-->
+    <script src="app/js/controllers/CRM/Jobcard/CrmAllJobcardCtrl.js"></script>
+    <!-- Add/Edit Jobcard-->
+    <script src="app/js/controllers/CRM/Jobcard/CrmJobcardCtrl.js"></script>
+
+    <!--Client-->
+    <script src="app/js/controllers/CRM/Client/CrmClientFilterDataCtrl.js"></script>
+    <script src="app/js/controllers/PopupModal/CRM/emailSmsModalCtrl.js"></script>
+    <script src="app/js/controllers/PopupModal/CRM/ClientFormModalCtrl.js"></script>
+    <script src="app/js/controllers/PopupModal/Client/ClientModalCtrl.js"></script>
+    <!--Client-->
+    <script src="app/js/controllers/CRM/Client/CrmClientHistoryCtrl.js"></script>
+
+    <!-- End CRM -->
+
+    <!-- ACCOUNTING -->
+
+    <!-- Accounting Modals -->
+    <script src="app/js/controllers/PopupModal/Accounting/LedgerModal.js"></script>
+    <script src="app/js/controllers/PopupModal/Accounting/ProductModal.js"></script>
+    <script src="app/js/controllers/PopupModal/Accounting/barcodeModal.js"></script>
+    <script src="app/js/controllers/PopupModal/Accounting/itemCheckListModal.js"></script>
+    <script src="app/js/controllers/PopupModal/Accounting/QuotationFlowModal.js"></script>
+    <script src="app/js/controllers/PopupModal/Accounting/ItemizeStockModal.js"></script>
+    <script src="app/js/controllers/PopupModal/QuickMenu/ProductListModalCtrl.js"></script>
+    <script src="app/js/controllers/PopupModal/Accounting/imageGalleryModal/imageGalleryModalCtrl.js"></script>
+
+    <!-- End -->
+
+    <!-- View Data (With Charts) -->
+    <script src="app/js/controllers/Accounting/viewData/AccViewCtrl.js"></script>
+    <script src="app/js/controllers/Accounting/viewData/AccDataViewsCtrl.js"></script>
+    <script src="app/js/controllers/Accounting/viewData/AccFlowViewCtrl.js"></script>
+    <!-- End -->
+
+    <!-- Sales -->
+    <script src="app/js/controllers/Accounting/Sales/AccSalesCtrl.js"></script>
+    <script src="app/js/controllers/Accounting/Sales/historySalesModaleCtrl.js"></script>
+
+    <!-- Purchase -->
+    <script src="app/js/controllers/Accounting/Purchase/AccPurchaseCtrl.js"></script>
+    <script src="app/js/controllers/Accounting/Purchase/historyPurchaseModaleCtrl.js"></script>
+
+    <!-- Credit Notes -->
+
+    <!-- Debit Notes -->
+
+    <!-- Special Journal -->
+    <script src="app/js/controllers/Accounting/SpecialJournal/AccSpecialJrnlCtrl.js"></script>
+
+    <!-- Payment -->
+    <script src="app/js/controllers/Accounting/Payment/AccPaymentCtrl.js"></script>
+
+    <!-- Receipt -->
+    <script src="app/js/controllers/Accounting/Receipt/AccReceiptCtrl.js"></script>
+
+    <!-- Statements -->
+    <script src="app/js/controllers/Accounting/Statements/AccTrailBalanceCtrl.js"></script>
+    <script src="app/js/controllers/Accounting/Statements/AccBalanceSheetCtrl.js"></script>
+    <script src="app/js/controllers/Accounting/Statements/AccProfitLossCtrl.js"></script>
+    <script src="app/js/controllers/Accounting/Statements/AccCashFlowCtrl.js"></script>
+    <!-- Statements Popup -->
+    <script src="app/js/controllers/PopupModal/Accounting/Statements/balanceSheetModalCtrl.js"></script>
+    <!-- End -->
+    <!-- Taxation -->
+    <script src="app/js/controllers/Accounting/Taxation/AccTaxationCtrl.js"></script>
+    <!-- Ledger -->
+    <script src="app/js/controllers/Accounting/Ledger/LedgerCtrl.js"></script>
+    <script src="app/js/controllers/Accounting/Ledger/AccDataLedgerCtrl.js"></script>
+    <!-- End ACCOUNTING -->
+
+    <!-- INVENTORY -->
+
+    <!--Product -->
+    <script src="app/js/controllers/Inventory/Product/InvProductCtrl.js"></script>
+    <script src="app/js/controllers/Inventory/Product/AddInvProductCtrl.js"></script>
+    <script src="app/js/controllers/Inventory/Product/MergeProductCtrl.js"></script>
+    <!-- Barcode Popup -->
+    <script src="app/js/controllers/PopupModal/Inventory/productBarcodeModalCtrl.js"></script>
+    <!-- End -->
+    <!-- Batch Insert Popup -->
+    <script src="app/js/controllers/PopupModal/Inventory/InventoryBatchModalCtrl.js"></script>
+    <script src="app/js/controllers/PopupModal/Inventory/InventoryBatchModalUpdateCtrl.js"></script>
+    <!-- End -->
+    <!-- Barcode Print -->
+    <script src="app/js/controllers/Inventory/BarcodePrint/InvBarcodePrintCtrl.js"></script>
+    <!--Stock -->
+    <script src="app/js/controllers/Inventory/StockRegister/InvStockCtrl.js"></script>
+    <script src="app/js/controllers/Inventory/StockRegister/AddInvStockCtrl.js"></script>
+    <script src="app/js/controllers/Inventory/StockRegister/InvStockModalCtrl.js"></script>
+    <!--category -->
+    <script src="app/js/controllers/Inventory/Category/InvCategoryCtrl.js"></script>
+    <!--Group -->
+    <script src="app/js/controllers/Inventory/Group/InvGroupCtrl.js"></script>
+
+    <!--Srock Summary -->
+    <script src="app/js/controllers/Inventory/StockSummary/InvStockSummaryCtrl.js"></script>
+    <!-- End INVENTORY -->
+
+    <!-- PRICELIST -->
+    <!-- RetailSales -->
+    <script src="app/js/controllers/PriceList/RetailSales/FormPriceListRetailSalesCtrl.js"></script>
+    <script src="app/js/controllers/PriceList/RetailSales/PriceListRetailSalesCtrl.js"></script>
+    <!-- End PRICELIST -->
+
+    <!-- ANALYZER -->
+    <!-- Police Reports -->
+    <script src="app/js/controllers/Analyzer/Reports/PoliceReportsCtrl.js"></script>
+    <script src="app/js/controllers/Analyzer/Reports/ReportCommissionCtrl.js"></script>
+    <script src="app/js/customeJS/image-compress/compress.js"></script>
+    <!-- End ANALYZER -->
 </body>
 
 </html>

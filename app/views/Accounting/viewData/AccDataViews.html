@@ -2,386 +2,386 @@
 </style>
 
 <h3>
-	<small>
-   <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
-   <a ui-sref="app.AccViewSales" ng-if="headerType == 'sales'" > {{headerType}} </a>
-   <a ui-sref="app.AccViewWholeSales" ng-if="headerType == 'Wholesales'" > {{headerType}} </a>
-   <a ui-sref="app.AccViewRetailSales" ng-if="headerType == 'Retailsales'" > {{headerType}} </a>
-   <a ui-sref="app.AccViewPurchase" ng-if="headerType == 'purchase'" > {{headerType}} </a>
-   <a ui-sref="app.AccViewPayment" ng-if="headerType == 'payment'" > {{headerType}} </a>
-   <a ui-sref="app.AccViewReceipt" ng-if="headerType == 'receipt'" > {{headerType}} </a>
-   <a ui-sref="app.AccViewSpecialJrnl" ng-if="headerType == 'specialJournal'" > {{headerType}} </a>
-   <a ui-sref="app.AccViewSalesOrders" ng-if="headerType == 'Sales Orders'" > {{headerType}} </a>
-   <a ui-sref="app.AccViewQuotations" ng-if="headerType == 'Quotations'" > {{headerType}} </a>
-   <a ui-sref="app.AccTaxPurchase" ng-if="headerType == 'Tax-Purchase'" > {{headerType}} </a>>>
-   View Data {{headerType}}</small>
-</h3>
-<div   class="container-fluid" >
-	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
-	<div id="panelDemo14" class="panel panel-default">
-         <div class="panel-heading myHeading">
-			<h5>Data of <b>{{displayCompany}}</b> Company <span ng-if="displayBranch"> in <b>{{displayBranch}}</b></span> Between {{accView.fromDate}} to {{accView.toDate}}</h5> 
-		 </div>
-         <div class="panel-body">
-         	<div data-toggle="tooltip" data-title="Show/Hide Column" class="checkbox c-checkbox" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Tax-Purchase' || headerType == 'Sales Orders' || headerType == 'Quotations'" >
-				<label class="mr-lg" ng-repeat="item in columnHideShow track by $index" >
-					<input type="checkbox" ng-model="columnHideShow[$index][item.itemKey]" ng-change="table.tableParams.reload()"  />
-					<span class="fa fa-check"></span>{{::item.displayName}}
-				</label>
-			</div>
-
-         	<!-- To-date -->
-         	<div class="col-md-2 pull-right input-group hackyhack" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Tax-Purchase'" >
-				<input type="text" ng-change="table.changeInvoiceDate();loadInit('yes')" datepicker-popup="{{table.format}}" data-ng-model="table.dt2" is-open="table.openedEnd" min-date="table.dt1" max-date="false" datepicker-options="table.dateOptions" date-disabled="table.disabled(table.date, table.mode)" close-text="Close"
-				class="form-control" tabindex="2" readonly/>
-				<span class="input-group-btn">
-				   <button type="button" tabindex="2" data-ng-click="table.openEnd($event)" class="btn btn-default">
-					  <em class="fa fa-calendar"></em>
-				   </button>
-				</span>
-			</div>
-			
-
-			<!-- From-date -->
-         	<div class="col-md-2 pull-right input-group hackyhack mr-lg" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Sales Orders' || headerType == 'Tax-Purchase' || headerType == 'Quotations'" >
-				<input type="text" ng-change="table.changeInvoiceDate();loadInit('yes')" datepicker-popup="{{table.format}}"  data-ng-model="table.dt1" is-open="table.openedStart" min-date="table.minStart" max-date="false" datepicker-options="table.dateOptions" date-disabled="table.disabled(table.date, table.mode)" close-text="Close"
-				class="form-control" tabindex="2" readonly />
-				<span class="input-group-btn">
-				   <button type="button" tabindex="2" data-ng-click="table.openStart($event)" class="btn btn-default">
-					  <em class="fa fa-calendar"></em>
-				   </button>
-				</span>
-			</div>
-
-            <tabset>
-               <tab heading="All" ng-if="headerType != 'Wholesales' && headerType != 'Retailsales' && headerType != 'Sales Orders' &&  headerType != 'Quotations' && headerType != 'Tax-Purchase' && headerType != 'payment' && headerType != 'receipt'">
-				 <div class="table-responsive">
-				 	<a ng-click='dataCsv.generate($event, "data.csv",table.tableParams)' class="pull-right btn btn-sm btn-primary">Export to CSV</a>
-					<table data-ng-table="table.tableParams" export-csv="dataCsv" show-filter="false" class="table table-bordered table-striped"  >
-						<!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
-						 <tbody>
-							<tr data-ng-repeat="user in $data track by $index ">
-								<td data-title="'#'"  >{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td>
-								<td data-title="'Date'" sortable="'date'" filter="{ 'entryDate': 'text' }" >{{dateConvert(user.entryDate) | date:dateFormat}}</td>
-								<td data-title="'Client Name'"  filter="{ 'ledgerName': 'text' }" >{{user.ledger.ledgerName}}</td>
-								
-								<td data-title="'Debit/Credit'" filter="{ 'amountTypeDebit': 'text' }" style="text-align:right" ><span>{{user.amountType=='debit'? "Debit" : "Credit"}}</span></td>
-
-								<td data-title="'Amount'" filter="{ 'amount': 'text' }" style="text-align:right" ><span>{{user.amount}}</span></td>
-								
-								<!-- <td data-title="'Credit'"  filter="{ 'amountTypeCredit': 'text' }" style="text-align:right"  ><span ng-if="user.amountType=='credit'">{{user.amount}}</span></td> -->
-								
-								<!--td data-title="'Amount'"  filter="{ 'amount': 'text' }" >{{user.amount}}</td-->
-							   <td data-title="'Action'" >
-									<center ng-if="headerType == 'sales' || headerType == 'purchase'" >
-										<i ui-sref="" ng-if="user.ledger.ledgerName != 'sales' && user.ledger.ledgerName != 'purchase'" ng-click="editDataView(user.jfId)" class="fa fa-edit" style="font-size:17px;color:#10709f"> </i> 
-										<!--i ui-sref="" ng-if="user.ledger.ledgerName != 'sales' && user.ledger.ledgerName != 'purchase'" ng-click="deleteDataView(user.jfId)" class="fa fa-times-circle" style="font-size:17px;color:red"></i-->
-									</center>
-									<center ng-if="headerType == 'specialJournal' || headerType == 'payment' || headerType == 'receipt'">
-										<i ui-sref="" ng-click="editDataView(user.journalId)" class="fa fa-edit" style="font-size:17px;color:#10709f"> </i>
-										<!--i ui-sref="" ng-click="deleteDataView(user.journalId)" class="fa fa-times-circle" style="font-size:17px;color:red"></i-->
-									</center>
-								</td>
-							</tr>
-						 </tbody>
-					</table>
-				</div>
-				 <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
-			   </tab>
-			   <tab heading="All"  ng-if="headerType == 'payment' || headerType == 'receipt'">
-			   		<div class="table-responsive">
-					 	<a ng-click='dataCsv.generate($event, "data.csv",table.tableParams)' class="pull-right btn btn-sm btn-primary">Export to CSV</a>
-						<table data-ng-table="table.tableParams" export-csv="dataCsv" show-filter="false" class="table table-bordered table-striped"  >
-							<!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
-							 <tbody>
-								<tr data-ng-repeat="user in $data track by $index ">
-									<td data-title="'#'"  >{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td>
-									<td data-title="'Date'" sortable="'date'" filter="{ 'entryDate': 'text' }" >{{dateConvert(user.entryDate) | date:dateFormat}}</td>
-									<td data-title="'Paid From'"><span ng-repeat="item in user.creditArray">{{item.ledgerName}} <br></span></td>
-									<td data-title="'Paid To'"><span ng-repeat="item in user.debitArray">{{item.ledgerName}} <br></span></td>
-									<td data-title="'Amount'" filter="{ 'creditAmount': 'text' }" style="text-align:right" ><span>{{user.creditAmount | number:2}}</span></td>
-									
-									<!-- <td data-title="'Credit'"  filter="{ 'amountTypeCredit': 'text' }" style="text-align:right"  ><span ng-if="user.amountType=='credit'">{{user.amount}}</span></td> -->
-									
-									<!--td data-title="'Amount'"  filter="{ 'amount': 'text' }" >{{user.amount}}</td-->
-								   <td data-title="'Action'" >
-										<center ng-if="headerType == 'specialJournal' || headerType == 'payment' || headerType == 'receipt'">
-											<i ng-click="editDataView(user.journalId)" class="fa fa-edit" style="font-size:17px;color:#10709f"> </i>
-										</center>
-									</td>
-								</tr>
-							 </tbody>
-						</table>
-					</div>
-					 <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
-			   </tab>
-			    <tab heading="All" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Sales Orders' || headerType == 'Quotations'" ng-click="onSalesBillTabSelect(0)" active="firstTabActive" >
-				 	<div ng-include="'salesBillContentData'" ng-if="currentActiveSalestab == 0">
-				 	</div>
-				</tab>
-
-				<!-- Paid -->
-				 <tab heading="Paid" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Sales Orders'" ng-click="onSalesBillTabSelect(1)" active="secondTabActive" >
-					<div ng-include="'salesBillContentData'" ng-if="currentActiveSalestab == 1">
-				 	</div>
-				</tab>
-				<!-- Paid -->
-
-				<!-- Unpaid -->
-				 <tab heading="Unpaid" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Sales Orders'" ng-click="onSalesBillTabSelect(2)" active="thirdTabActive" >
-				 	<div ng-include="'salesBillContentData'" ng-if="currentActiveSalestab == 2">
-				 	</div>
-				</tab>
-				<!-- Unpaid -->
-				  
-				<!-- Purchase -->
-				<tab heading="All" ng-if="headerType == 'Tax-Purchase'" ng-click="onSalesBillTabSelect(0)" >
-					<div ng-include="'purchaseBillContentData'" ng-if="currentActiveSalestab == 0">
-				 	</div>
-				</tab>
-
-				<!--Paid -->
-				<tab heading="Paid" ng-if="headerType == 'Tax-Purchase'" ng-click="onSalesBillTabSelect(1)" >
-					<div ng-include="'purchaseBillContentData'" ng-if="currentActiveSalestab == 1">
-				 	</div>
-				</tab>
-				<!--End -->
-
-				<!--Paid -->
-				<tab heading="Unpaid" ng-if="headerType == 'Tax-Purchase'" ng-click="onSalesBillTabSelect(2)" >
-				 	<div ng-include="'purchaseBillContentData'" ng-if="currentActiveSalestab == 2">
-				 	</div>
-				</tab>
-				<!--End -->
-
-				<!-- End -->
-               <tab heading="Chart" ng-if="headerType != 'Wholesales' && headerType != 'Sales Orders' && headerType != 'Retailsales' && headerType != 'Quotations' && headerType != 'Tax-Purchase'">
-					<div class="row">
-					  <div class="col-lg-6">
-						 <div class="panel panel-transparent">
-							<div class="panel-heading">
-							   <div class="panel-title">Pie</div>
-							</div>
-							<div class="panel-wrapper">
-							   <div class="panel-body">
-								  <flot dataset="table.pieChartData" options="table.chartPieFlotChart"></flot>
-							   </div>
-							</div>
-						 </div>
-					  </div>
-					<div class="col-lg-6">
-				         <div class="panel panel-default">
-				            <div class="panel-heading">
-				               <div class="panel-title">Area</div>
-				            </div>
-				            <div class="panel-wrapper">
-				               <div class="panel-body">
-				                  <flot dataset="table.pieFlotCharts" options="table.chartAreaFlotChart" series="{'lines': areaSeries}"></flot>
-				                  <div class="text-center mt-lg">
-				                     <div class="btn-switch mb btn-switch-success">
-				                        <input type="checkbox" id="input-btn-switch-10" data-ng-model="areaSeries[0]" />
-				                        <label for="input-btn-switch-10" class="btn btn-fw btn-warning">
-				                           <em class="fa fa-check"></em>
-				                           <strong>Debit</strong>
-				                        </label>
-				                     </div>
-				                     <div class="btn-switch mb btn-switch-blue">
-				                        <input type="checkbox" id="input-btn-switch-11" data-ng-model="areaSeries[1]" />
-				                        <label for="input-btn-switch-11" class="btn btn-fw btn-orange">
-				                           <em class="fa fa-check"></em>
-				                           <strong>Credit</strong>
-				                        </label>
-				                     </div>
-				                  </div>
-				               </div>
-				            </div>
-				         </div>
-				      </div>
-					</div>
-			   </tab>
-            </tabset>
-         </div>
+    <small>
+        <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+        <a ui-sref="app.AccViewSales" ng-if="headerType == 'sales'" > {{headerType}} </a>
+        <a ui-sref="app.AccViewWholeSales" ng-if="headerType == 'Wholesales'" > {{headerType}} </a>
+        <a ui-sref="app.AccViewRetailSales" ng-if="headerType == 'Retailsales'" > {{headerType}} </a>
+        <a ui-sref="app.AccViewPurchase" ng-if="headerType == 'purchase'" > {{headerType}} </a>
+        <a ui-sref="app.AccViewPayment" ng-if="headerType == 'payment'" > {{headerType}} </a>
+        <a ui-sref="app.AccViewReceipt" ng-if="headerType == 'receipt'" > {{headerType}} </a>
+        <a ui-sref="app.AccViewSpecialJrnl" ng-if="headerType == 'specialJournal'" > {{headerType}} </a>
+        <a ui-sref="app.AccViewSalesOrders" ng-if="headerType == 'Sales Orders'" > {{headerType}} </a>
+        <a ui-sref="app.AccViewQuotations" ng-if="headerType == 'Quotations'" > {{headerType}} </a>
+        <a ui-sref="app.AccTaxPurchase" ng-if="headerType == 'Tax-Purchase'" > {{headerType}} </a>>>
+        View Data {{headerType}}</small>
+    </h3>
+    <div   class="container-fluid" >
+        <toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+        <div id="panelDemo14" class="panel panel-default">
+            <div class="panel-heading myHeading">
+                <h5>Data of <b>{{displayCompany}}</b> Company <span ng-if="displayBranch"> in <b>{{displayBranch}}</b></span> Between {{accView.fromDate}} to {{accView.toDate}}</h5> 
+            </div>
+            <div class="panel-body">
+                <div data-toggle="tooltip" data-title="Show/Hide Column" class="checkbox c-checkbox" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Tax-Purchase' || headerType == 'Sales Orders' || headerType == 'Quotations'" >
+                    <label class="mr-lg" ng-repeat="item in columnHideShow track by $index" >
+                        <input type="checkbox" ng-model="columnHideShow[$index][item.itemKey]" ng-change="table.tableParams.reload()"  />
+                        <span class="fa fa-check"></span>{{::item.displayName}}
+                    </label>
+                </div>
+                
+                <!-- To-date -->
+                <div class="col-md-2 pull-right input-group hackyhack" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Tax-Purchase'" >
+                    <input type="text" ng-change="table.changeInvoiceDate();loadInit('yes')" datepicker-popup="{{table.format}}" data-ng-model="table.dt2" is-open="table.openedEnd" min-date="table.dt1" max-date="false" datepicker-options="table.dateOptions" date-disabled="table.disabled(table.date, table.mode)" close-text="Close"
+                    class="form-control" tabindex="2" readonly/>
+                    <span class="input-group-btn">
+                        <button type="button" tabindex="2" data-ng-click="table.openEnd($event)" class="btn btn-default">
+                            <em class="fa fa-calendar"></em>
+                        </button>
+                    </span>
+                </div>
+                
+                
+                <!-- From-date -->
+                <div class="col-md-2 pull-right input-group hackyhack mr-lg" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Sales Orders' || headerType == 'Tax-Purchase' || headerType == 'Quotations'" >
+                    <input type="text" ng-change="table.changeInvoiceDate();loadInit('yes')" datepicker-popup="{{table.format}}"  data-ng-model="table.dt1" is-open="table.openedStart" min-date="table.minStart" max-date="false" datepicker-options="table.dateOptions" date-disabled="table.disabled(table.date, table.mode)" close-text="Close"
+                    class="form-control" tabindex="2" readonly />
+                    <span class="input-group-btn">
+                        <button type="button" tabindex="2" data-ng-click="table.openStart($event)" class="btn btn-default">
+                            <em class="fa fa-calendar"></em>
+                        </button>
+                    </span>
+                </div>
+                
+                <tabset>
+                    <tab heading="All" ng-if="headerType != 'Wholesales' && headerType != 'Retailsales' && headerType != 'Sales Orders' &&  headerType != 'Quotations' && headerType != 'Tax-Purchase' && headerType != 'payment' && headerType != 'receipt'">
+                        <div class="table-responsive">
+                            <a ng-click='dataCsv.generate($event, "data.csv",table.tableParams)' class="pull-right btn btn-sm btn-primary">Export to CSV</a>
+                            <table data-ng-table="table.tableParams" export-csv="dataCsv" show-filter="false" class="table table-bordered table-striped"  >
+                                <!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
+                                <tbody>
+                                    <tr data-ng-repeat="user in $data track by $index ">
+                                        <td data-title="'#'"  >{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td>
+                                        <td data-title="'Date'" sortable="'date'" filter="{ 'entryDate': 'text' }" >{{dateConvert(user.entryDate) | date:dateFormat}}</td>
+                                        <td data-title="'Client Name'"  filter="{ 'ledgerName': 'text' }" >{{user.ledger.ledgerName}}</td>
+                                        
+                                        <td data-title="'Debit/Credit'" filter="{ 'amountTypeDebit': 'text' }" style="text-align:right" ><span>{{user.amountType=='debit'? "Debit" : "Credit"}}</span></td>
+                                        
+                                        <td data-title="'Amount'" filter="{ 'amount': 'text' }" style="text-align:right" ><span>{{user.amount}}</span></td>
+                                        
+                                        <!-- <td data-title="'Credit'"  filter="{ 'amountTypeCredit': 'text' }" style="text-align:right"  ><span ng-if="user.amountType=='credit'">{{user.amount}}</span></td> -->
+                                        
+                                        <!--td data-title="'Amount'"  filter="{ 'amount': 'text' }" >{{user.amount}}</td-->
+                                        <td data-title="'Action'" >
+                                            <center ng-if="headerType == 'sales' || headerType == 'purchase'" >
+                                                <i ui-sref="" ng-if="user.ledger.ledgerName != 'sales' && user.ledger.ledgerName != 'purchase'" ng-click="editDataView(user.jfId)" class="fa fa-edit" style="font-size:17px;color:#10709f"> </i> 
+                                                <!--i ui-sref="" ng-if="user.ledger.ledgerName != 'sales' && user.ledger.ledgerName != 'purchase'" ng-click="deleteDataView(user.jfId)" class="fa fa-times-circle" style="font-size:17px;color:red"></i-->
+                                            </center>
+                                            <center ng-if="headerType == 'specialJournal' || headerType == 'payment' || headerType == 'receipt'">
+                                                <i ui-sref="" ng-click="editDataView(user.journalId)" class="fa fa-edit" style="font-size:17px;color:#10709f"> </i>
+                                                <!--i ui-sref="" ng-click="deleteDataView(user.journalId)" class="fa fa-times-circle" style="font-size:17px;color:red"></i-->
+                                            </center>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
+                    </tab>
+                    <tab heading="All"  ng-if="headerType == 'payment' || headerType == 'receipt'">
+                        <div class="table-responsive">
+                            <a ng-click='dataCsv.generate($event, "data.csv",table.tableParams)' class="pull-right btn btn-sm btn-primary">Export to CSV</a>
+                            <table data-ng-table="table.tableParams" export-csv="dataCsv" show-filter="false" class="table table-bordered table-striped"  >
+                                <!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
+                                <tbody>
+                                    <tr data-ng-repeat="user in $data track by $index ">
+                                        <td data-title="'#'"  >{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td>
+                                        <td data-title="'Date'" sortable="'date'" filter="{ 'entryDate': 'text' }" >{{dateConvert(user.entryDate) | date:dateFormat}}</td>
+                                        <td data-title="'Paid From'"><span ng-repeat="item in user.creditArray">{{item.ledgerName}} <br></span></td>
+                                        <td data-title="'Paid To'"><span ng-repeat="item in user.debitArray">{{item.ledgerName}} <br></span></td>
+                                        <td data-title="'Amount'" filter="{ 'creditAmount': 'text' }" style="text-align:right" ><span>{{user.creditAmount | number:2}}</span></td>
+                                        
+                                        <!-- <td data-title="'Credit'"  filter="{ 'amountTypeCredit': 'text' }" style="text-align:right"  ><span ng-if="user.amountType=='credit'">{{user.amount}}</span></td> -->
+                                        
+                                        <!--td data-title="'Amount'"  filter="{ 'amount': 'text' }" >{{user.amount}}</td-->
+                                        <td data-title="'Action'" >
+                                            <center ng-if="headerType == 'specialJournal' || headerType == 'payment' || headerType == 'receipt'">
+                                                <i ng-click="editDataView(user.journalId)" class="fa fa-edit" style="font-size:17px;color:#10709f"> </i>
+                                            </center>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
+                    </tab>
+                    <tab heading="All" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Sales Orders' || headerType == 'Quotations'" ng-click="onSalesBillTabSelect(0)" active="firstTabActive" >
+                        <div ng-include="'salesBillContentData'" ng-if="currentActiveSalestab == 0">
+                        </div>
+                    </tab>
+                    
+                    <!-- Paid -->
+                    <tab heading="Paid" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Sales Orders'" ng-click="onSalesBillTabSelect(1)" active="secondTabActive" >
+                        <div ng-include="'salesBillContentData'" ng-if="currentActiveSalestab == 1">
+                        </div>
+                    </tab>
+                    <!-- Paid -->
+                    
+                    <!-- Unpaid -->
+                    <tab heading="Unpaid" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Sales Orders'" ng-click="onSalesBillTabSelect(2)" active="thirdTabActive" >
+                        <div ng-include="'salesBillContentData'" ng-if="currentActiveSalestab == 2">
+                        </div>
+                    </tab>
+                    <!-- Unpaid -->
+                    
+                    <!-- Purchase -->
+                    <tab heading="All" ng-if="headerType == 'Tax-Purchase'" ng-click="onSalesBillTabSelect(0)" >
+                        <div ng-include="'purchaseBillContentData'" ng-if="currentActiveSalestab == 0">
+                        </div>
+                    </tab>
+                    
+                    <!--Paid -->
+                    <tab heading="Paid" ng-if="headerType == 'Tax-Purchase'" ng-click="onSalesBillTabSelect(1)" >
+                        <div ng-include="'purchaseBillContentData'" ng-if="currentActiveSalestab == 1">
+                        </div>
+                    </tab>
+                    <!--End -->
+                    
+                    <!--Paid -->
+                    <tab heading="Unpaid" ng-if="headerType == 'Tax-Purchase'" ng-click="onSalesBillTabSelect(2)" >
+                        <div ng-include="'purchaseBillContentData'" ng-if="currentActiveSalestab == 2">
+                        </div>
+                    </tab>
+                    <!--End -->
+                    
+                    <!-- End -->
+                    <tab heading="Chart" ng-if="headerType != 'Wholesales' && headerType != 'Sales Orders' && headerType != 'Retailsales' && headerType != 'Quotations' && headerType != 'Tax-Purchase'">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="panel panel-transparent">
+                                    <div class="panel-heading">
+                                        <div class="panel-title">Pie</div>
+                                    </div>
+                                    <div class="panel-wrapper">
+                                        <div class="panel-body">
+                                            <flot dataset="table.pieChartData" options="table.chartPieFlotChart"></flot>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <div class="panel-title">Area</div>
+                                    </div>
+                                    <div class="panel-wrapper">
+                                        <div class="panel-body">
+                                            <flot dataset="table.pieFlotCharts" options="table.chartAreaFlotChart" series="{'lines': areaSeries}"></flot>
+                                            <div class="text-center mt-lg">
+                                                <div class="btn-switch mb btn-switch-success">
+                                                    <input type="checkbox" id="input-btn-switch-10" data-ng-model="areaSeries[0]" />
+                                                    <label for="input-btn-switch-10" class="btn btn-fw btn-warning">
+                                                        <em class="fa fa-check"></em>
+                                                        <strong>Debit</strong>
+                                                    </label>
+                                                </div>
+                                                <div class="btn-switch mb btn-switch-blue">
+                                                    <input type="checkbox" id="input-btn-switch-11" data-ng-model="areaSeries[1]" />
+                                                    <label for="input-btn-switch-11" class="btn btn-fw btn-orange">
+                                                        <em class="fa fa-check"></em>
+                                                        <strong>Credit</strong>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </tab>
+                </tabset>
+            </div>
+        </div>
     </div>
-</div>
-
-<script type="text/ng-template" id="salesBillContentData">
-	<div class="table-responsive">
-		<a ng-click='salesBillCsv.generate($event, "salesBill.csv",table.tableParams)' class="pull-right btn btn-sm btn-primary">Export to CSV</a>
-      <table ng-table="table.tableParams" export-csv="salesBillCsv" csv-ignore="ignore"  show-filter="true" class="table table-bordered table-striped" >
-          <tbody>
-            <tr data-ng-repeat="user in $data track by (user.saleId+user.total+user.clientName+$index)"  >
-            <!--td data-title="'#'"  style="text-align:center">{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td-->
-            	<td style="text-align: left" header="'ng-table/headers/checkbox.html'"  >
-					<div class="checkbox c-checkbox">
-					  <label>
-						 <input type="checkbox" ng-model="user.selected" ng-change="changeBox(user.selected,user)" />
-						 <span class="fa fa-check"></span>
-					  </label>
-				   </div>
-				</td>
-               	<td title="'Invoice#'"  sortable="'invoiceNumber'" filter="{ 'invoiceNumber': 'text' }" >{{::user.invoiceNumber}}</td>
-               	<td title="'Date'" sortable="'date'" filter="{ 'entryDate': 'text' }" >{{::dateConvert(user.entryDate) | date:dateFormat}}</td>
-               	<td ng-show="table.tableParams.branchNameFlag" title="'Branch Name'" filter="{ 'branchName': 'text' }" >{{user.branchName}}</td>
-               	<td title="'Client Name'"  filter="{ 'clientName': 'text' }" ><span tooltip="No. of Prints: {{user.printCount}}" tooltip-trigger="mouseenter" tooltip-placement="top">{{user.clientName}}</span></td>
-               	<td ng-show="table.tableParams.productsFlag" title="'Products'" width="15%" >
-                  <ul>
-                     <li data-ng-repeat="prt in user.displayProduct track by (prt.productId+prt.productName+prt.amount+$index)">
-                        <span ng-if="!isLanguageHindi || !prt.altProductName"  ng-bind-html="prt.productName"></span>
-                        <span ng-if="isLanguageHindi && prt.altProductName" ng-bind-html="prt.altProductName"></span>
-                     </li>
-                  </ul>
-               	</td>
-               <!--td title="'Company'" filter="{ 'companyName': 'text' }" >{{user.company.companyName}}</td-->
-               
-               <td title="'Tax'" filter="{ 'tax': 'text' }" style="text-align:right">{{::user.tax}}</td>
-               <td title="'Advance'"  filter="{ 'advance': 'text' }" style="text-align:right">{{::user.advance}}</td>
-               <td title="'Balance'"  filter="{ 'balance': 'text' }" style="text-align:right">{{::user.balance}}</td>
-               <td ng-show="table.tableParams.refundFlag" title="'Refund'"  filter="{ 'refund': 'text' }" style="text-align:right">{{::user.refund}}</td>
-               <td title="'Total'" filter="{ 'total': 'text' }" style="text-align:right">{{::user.total}}</td>
-               <td title="'Action'" class="ignore" style="width:20%" header="'ng-table/headers/stickerIcon.html'" >
-                <center>
-                     
-                    <i class="icon-repeat myCursorPointer" style="font-size:17px;color:#10709f" ng-if="user.repeatIcon" ng-click="reGeneratePdf(user.saleId)" > </i>
-                     
-                     &nbsp;
-                     
-                    <a href="{{erpPath}}{{user.file[0].documentUrl}}{{user.file[0].documentName}}" target="_blank"  ng-if="user.singlePdfIcon">
-                        <i  class="fa fa-file" style="font-size:17px;color:#10709f"   > </i>
-                    </a>
-                    &nbsp; 
-                     
-                     <i class="fa fa-file myCursorPointer" style="font-size:17px;color:#10709f" ng-if="user.pdfIcon"  ng-click="openPdf('lg',user.saleId)" > </i>
-                     
-                     &nbsp; 
-                     
-                     <i  class="icon-paper-clip myCursorPointer" style="font-size:17px;color:#10709f" ng-if="user.imageIcon" ng-click="openImageGallery('lg',user.saleId)"> </i>
-                     
-                     &nbsp; 
-                     
-                     <i ng-click="editDataViewSales(user.saleId)" class="fa fa-edit myCursorPointer" style="font-size:17px;color:#10709f"> </i>
-                     
-                     &nbsp; 
-                     
-                     <button type="button" ng-click="openPayment('lg',user.saleId,'both')" class="mr mb-sm btn btn-primary" style="padding:4px 8px;margin-bottom:0px;margin-right:0px;" ng-if="user.balance > 0 && (user.advance-user.refund) > 0">
-                        Payment/Refund
-                     </button>
-                     
-                     <button type="button" ng-click="openPayment('lg',user.saleId,'payment')" class="mr mb-sm btn btn-primary" style="padding:4px 8px;margin-bottom:0px;margin-right:0px;" ng-if="(user.advance-user.refund) == 0 && user.balance > 0">
-                        Payment
-                     </button>
-                     
-                     <button type="button" ng-if="headerType != 'Sales Orders' && headerType != 'Quotations'" ng-click="openPayment('lg',user.saleId,'refund')" class="mr mb-sm btn btn-primary" style="padding:4px 8px;margin-bottom:0px;margin-right:0px;" ng-if="user.balance == 0 && (user.advance-user.refund) > 0">
-                        Refund
-                     </button>
-                     
-                     &nbsp;
-                     
-                    <i ng-click="deleteBill('sm',user.saleId)" ng-if="headerType != 'Quotations'" class="fa fa-times-circle myCursorPointer" style="font-size:17px;color:red"></i>
-
-                    <i ng-click="deleteBill('sm',user.quotationBillId,'quote')" ng-if="headerType == 'Quotations'" class="fa fa-times-circle myCursorPointer" style="font-size:17px;color:red"></i>
-         
-                  	</center>
-               </td>
-            </tr>
-          </tbody>
-          <tfooter>
-	          	<tr style="background-color: #f5f5f5;">
-					<td colspan="2"><b>Grand Total</b></td>
-					<!-- <td ng-show="!table.tableParams.branchNameFlag && !table.tableParams.productsFlag"  colspan="6"></td> -->
-					<td ng-if="!table.tableParams.productsFlag && !table.tableParams.branchNameFlag"  colspan="3"></td>
-					<td ng-if="table.tableParams.productsFlag && !table.tableParams.branchNameFlag" colspan="4" ></td>
-					<td ng-if="!table.tableParams.productsFlag && table.tableParams.branchNameFlag" colspan="4" ></td>
-					<td ng-if="table.tableParams.productsFlag && table.tableParams.branchNameFlag" colspan="5" ></td>
-					<!-- <td ng-show="table.tableParams.branchNameFlag && table.tableParams.productsFlag"  colspan="6"></td> -->
-					<td><span class="pull-right" ng-bind="totalAdvanceDisplay | number : 2"></span></td>
-					<td><span class="pull-right" ng-bind="totalBalanceDisplay | number : 2"></span></td>
-					<td><span class="pull-right" ng-bind="totalAmountDisplay | number : 2"></span></td>
-					<td></td>
-				</tr>
-	        </tfooter>
-      </table>
-   	</div>
-       <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
-</script>
-
-<script type="text/ng-template" id="purchaseBillContentData">
-	<div class="table-responsive">
-		<a ng-click='purchaseBillCsv.generate($event, "purchaseBill.csv",table.tableParams)' class="pull-right btn btn-sm btn-primary">Export to CSV</a>
-	   <table ng-table="table.tableParams" export-csv="purchaseBillCsv" csv-ignore="ignore"  show-filter="true" class="table table-bordered table-striped"  >
-			<!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
-			 <tbody>
-				<tr ng-repeat="user in $data track by (user.purchaseId+user.total+$index)"  >
-				<!--td title="'#'"  style="text-align:center">{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td-->
-					<td title="'Bill#'"  sortable="'billNumber'" filter="{ 'billNumber': 'text' }" >{{::user.billNumber}}</td>
-					<td title="'Date'" sortable="'date'" filter="{ 'entryDate': 'text' }" >{{::dateConvert(user.entryDate) | date:dateFormat}}</td>
-					<td title="'Vendor Name'"  filter="{ 'ledgerName': 'text' }" >{{::user.ledgerName}}</td>
-					<!--td title="'Company'" filter="{ 'companyName': 'text' }" >{{user.company.companyName}}</td-->
-					<td ng-show="table.tableParams.productsFlag" title="'Products'"  width="15%">
-						<ul>
-							<li ng-repeat="prt in user.displayProduct track by (prt.productId+prt.productName+prt.amount+$index)" ng-if="prt.productName">
-								<span ng-if="!isLanguageHindi || !prt.altProductName" ng-bind-html="prt.productName"></span>
-                        		<span ng-if="isLanguageHindi && prt.altProductName" ng-bind-html="prt.altProductName"></span>
-							</li>
-						</ul>
-					</td>
-					
-					<td title="'Tax'" filter="{ 'tax': 'text' }" style="text-align:right">{{::user.tax}}</td>
-					<td title="'Advance'"  filter="{ 'advance': 'text' }" style="text-align:right">{{::user.advance}}</td>
-					<td title="'Balance'"  filter="{ 'balance': 'text' }" style="text-align:right">{{::user.balance}}</td>
-					<td title="'Total'" filter="{ 'total': 'text' }" style="text-align:right">{{::user.total}}</td>
-					<td title="'Action'" style="width:10%" class="ignore">
-						<center>
-							
-							<a href="{{erpPath}}{{user.file[0].documentUrl}}{{user.file[0].documentName}}" target="_blank"  ng-if="user.singlePdfIcon">
-							
-								<i  class="fa fa-file" style="font-size:17px;color:#10709f"   > </i>
-								
-							</a>
-							&nbsp; 
-							
-							<i  class="icon-paper-clip myCursorPointer" style="font-size:17px;color:#10709f" ng-if="user.imageIcon" ng-click="openImageGallery('lg',user.purchaseId,'yes')"> </i>
-							
-							&nbsp; 
-							
-							<i ng-click="editDataViewSales(user.purchaseId)" class="fa fa-edit myCursorPointer" style="font-size:17px;color:#10709f"> </i>
-							
-							&nbsp;
-							
-							<i ng-click="deleteBill('sm',user.purchaseId,'yes')" class="fa fa-times-circle myCursorPointer" style="font-size:17px;color:red"></i>
-			
-						</center>
-					</td>
-				</tr>
-			 </tbody>
-			 
-	        <tfooter>
-	          	<tr style="background-color: #f5f5f5;">
-					<td colspan="2" ><b>Grand Total</b></td>
-					<td colspan="2"></td>
-					<td ng-show="table.tableParams.productsFlag"></td>
-					<td><span class="pull-right" ng-bind="totalAdvanceDisplay | number : 2"></span></td>
-					<td><span class="pull-right" ng-bind="totalBalanceDisplay | number : 2"></span></td>
-					<td><span class="pull-right" ng-bind="totalAmountDisplay | number : 2"></span></td>
-					<td></td>
-				</tr>
-	        </tfooter>
-			
-		</table>
-	</div>
-		 <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
-</script>
-<script type="text/ng-template" id="ng-table/headers/checkbox.html">
-       <div data-toggle="tooltip" data-title="Check All" class="checkbox c-checkbox" check-all="check-all">
-		  <label>
-			 <input type="checkbox" ng-model="parentCheckBox" ng-change="changeAllBox(parentCheckBox)" />
-			 <span class="fa fa-check"></span>
-		  </label>
-	   </div>
- </script>
-
- <script type="text/ng-template" id="ng-table/headers/stickerIcon.html">
-		<center>
-			<i  title="Print" ng-click="multiPdfPrint()" ng-if="selectedBoxArray.length > 0 || clientFlag == true" class="fa fa-print" style="font-size:17px;cursor:pointer"> </i> 
-			<span ng-if="selectedBoxArray.length == 0 && clientFlag == false" >Action</span>
-		</center>
- </script>
+    
+    <script type="text/ng-template" id="salesBillContentData">
+        <div class="table-responsive">
+            <a ng-click='salesBillCsv.generate($event, "salesBill.csv",table.tableParams)' class="pull-right btn btn-sm btn-primary">Export to CSV</a>
+            <table ng-table="table.tableParams" export-csv="salesBillCsv" csv-ignore="ignore"  show-filter="true" class="table table-bordered table-striped" >
+                <tbody>
+                    <tr data-ng-repeat="user in $data track by (user.saleId+user.total+user.clientName+$index)"  >
+                        <!--td data-title="'#'"  style="text-align:center">{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td-->
+                        <td style="text-align: left" header="'ng-table/headers/checkbox.html'"  >
+                            <div class="checkbox c-checkbox">
+                                <label>
+                                    <input type="checkbox" ng-model="user.selected" ng-change="changeBox(user.selected,user)" />
+                                    <span class="fa fa-check"></span>
+                                </label>
+                            </div>
+                        </td>
+                        <td title="'Invoice#'"  sortable="'invoiceNumber'" filter="{ 'invoiceNumber': 'text' }" >{{::user.invoiceNumber}}</td>
+                        <td title="'Date'" sortable="'date'" filter="{ 'entryDate': 'text' }" >{{::dateConvert(user.entryDate) | date:dateFormat}}</td>
+                        <td ng-show="table.tableParams.branchNameFlag" title="'Branch Name'" filter="{ 'branchName': 'text' }" >{{user.branchName}}</td>
+                        <td title="'Client Name'"  filter="{ 'clientName': 'text' }" ><span tooltip="No. of Prints: {{user.printCount}}" tooltip-trigger="mouseenter" tooltip-placement="top">{{user.clientName}}</span></td>
+                        <td ng-show="table.tableParams.productsFlag" title="'Products'" width="15%" >
+                            <ul>
+                                <li data-ng-repeat="prt in user.displayProduct track by (prt.productId+prt.productName+prt.amount+$index)">
+                                    <span ng-if="!isLanguageHindi || !prt.altProductName"  ng-bind-html="prt.productName"></span>
+                                    <span ng-if="isLanguageHindi && prt.altProductName" ng-bind-html="prt.altProductName"></span>
+                                </li>
+                            </ul>
+                        </td>
+                        <!--td title="'Company'" filter="{ 'companyName': 'text' }" >{{user.company.companyName}}</td-->
+                        
+                        <td ng-show="enableDisableGST" title="'Tax'" filter="{ 'tax': 'text' }" style="text-align:right">{{::user.tax}}</td>
+                        <td title="'Advance'"  filter="{ 'advance': 'text' }" style="text-align:right">{{::user.advance}}</td>
+                        <td title="'Balance'"  filter="{ 'balance': 'text' }" style="text-align:right">{{::user.balance}}</td>
+                        <td ng-show="table.tableParams.refundFlag" title="'Refund'"  filter="{ 'refund': 'text' }" style="text-align:right">{{::user.refund}}</td>
+                        <td title="'Total'" filter="{ 'total': 'text' }" style="text-align:right">{{::user.total}}</td>
+                        <td title="'Action'" class="ignore" style="width:20%" header="'ng-table/headers/stickerIcon.html'" >
+                            <center>
+                                
+                                <i class="icon-repeat myCursorPointer" style="font-size:17px;color:#10709f" ng-if="user.repeatIcon" ng-click="reGeneratePdf(user.saleId)" > </i>
+                                
+                                &nbsp;
+                                
+                                <a href="{{erpPath}}{{user.file[0].documentUrl}}{{user.file[0].documentName}}" target="_blank"  ng-if="user.singlePdfIcon">
+                                    <i  class="fa fa-file" style="font-size:17px;color:#10709f"   > </i>
+                                </a>
+                                &nbsp; 
+                                
+                                <i class="fa fa-file myCursorPointer" style="font-size:17px;color:#10709f" ng-if="user.pdfIcon"  ng-click="openPdf('lg',user.saleId)" > </i>
+                                
+                                &nbsp; 
+                                
+                                <i  class="icon-paper-clip myCursorPointer" style="font-size:17px;color:#10709f" ng-if="user.imageIcon" ng-click="openImageGallery('lg',user.saleId)"> </i>
+                                
+                                &nbsp; 
+                                
+                                <i ng-click="editDataViewSales(user.saleId)" class="fa fa-edit myCursorPointer" style="font-size:17px;color:#10709f"> </i>
+                                
+                                &nbsp; 
+                                
+                                <button type="button" ng-click="openPayment('lg',user.saleId,'both')" class="mr mb-sm btn btn-primary" style="padding:4px 8px;margin-bottom:0px;margin-right:0px;" ng-if="user.balance > 0 && (user.advance-user.refund) > 0">
+                                    Payment/Refund
+                                </button>
+                                
+                                <button type="button" ng-click="openPayment('lg',user.saleId,'payment')" class="mr mb-sm btn btn-primary" style="padding:4px 8px;margin-bottom:0px;margin-right:0px;" ng-if="(user.advance-user.refund) == 0 && user.balance > 0">
+                                    Payment
+                                </button>
+                                
+                                <button type="button" ng-if="headerType != 'Sales Orders' && headerType != 'Quotations'" ng-click="openPayment('lg',user.saleId,'refund')" class="mr mb-sm btn btn-primary" style="padding:4px 8px;margin-bottom:0px;margin-right:0px;" ng-if="user.balance == 0 && (user.advance-user.refund) > 0">
+                                    Refund
+                                </button>
+                                
+                                &nbsp;
+                                
+                                <i ng-click="deleteBill('sm',user.saleId)" ng-if="headerType != 'Quotations'" class="fa fa-times-circle myCursorPointer" style="font-size:17px;color:red"></i>
+                                
+                                <i ng-click="deleteBill('sm',user.quotationBillId,'quote')" ng-if="headerType == 'Quotations'" class="fa fa-times-circle myCursorPointer" style="font-size:17px;color:red"></i>
+                                
+                            </center>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfooter>
+                    <tr style="background-color: #f5f5f5;">
+                        <td colspan="2"><b>Grand Total</b></td>
+                        <!-- <td ng-show="!table.tableParams.branchNameFlag && !table.tableParams.productsFlag"  colspan="6"></td> -->
+                        <td ng-if="!table.tableParams.productsFlag && !table.tableParams.branchNameFlag"  colspan="3"></td>
+                        <td ng-if="table.tableParams.productsFlag && !table.tableParams.branchNameFlag" colspan="4" ></td>
+                        <td ng-if="!table.tableParams.productsFlag && table.tableParams.branchNameFlag" colspan="4" ></td>
+                        <td ng-if="table.tableParams.productsFlag && table.tableParams.branchNameFlag" colspan="5" ></td>
+                        <!-- <td ng-show="table.tableParams.branchNameFlag && table.tableParams.productsFlag"  colspan="6"></td> -->
+                        <td><span class="pull-right" ng-bind="totalAdvanceDisplay | number : 2"></span></td>
+                        <td><span class="pull-right" ng-bind="totalBalanceDisplay | number : 2"></span></td>
+                        <td><span class="pull-right" ng-bind="totalAmountDisplay | number : 2"></span></td>
+                        <td></td>
+                    </tr>
+                </tfooter>
+            </table>
+        </div>
+        <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
+    </script>
+    
+    <script type="text/ng-template" id="purchaseBillContentData">
+        <div class="table-responsive">
+            <a ng-click='purchaseBillCsv.generate($event, "purchaseBill.csv",table.tableParams)' class="pull-right btn btn-sm btn-primary">Export to CSV</a>
+            <table ng-table="table.tableParams" export-csv="purchaseBillCsv" csv-ignore="ignore"  show-filter="true" class="table table-bordered table-striped"  >
+                <!--input type="text" class="input-filter form-control fa fa-search" ng-model="query" placeholder="SEARCH FOR ANY KIND OF DETAIL"/-->
+                <tbody>
+                    <tr ng-repeat="user in $data track by (user.purchaseId+user.total+$index)"  >
+                        <!--td title="'#'"  style="text-align:center">{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td-->
+                        <td title="'Bill#'"  sortable="'billNumber'" filter="{ 'billNumber': 'text' }" >{{::user.billNumber}}</td>
+                        <td title="'Date'" sortable="'date'" filter="{ 'entryDate': 'text' }" >{{::dateConvert(user.entryDate) | date:dateFormat}}</td>
+                        <td title="'Vendor Name'"  filter="{ 'ledgerName': 'text' }" >{{::user.ledgerName}}</td>
+                        <!--td title="'Company'" filter="{ 'companyName': 'text' }" >{{user.company.companyName}}</td-->
+                        <td ng-show="table.tableParams.productsFlag" title="'Products'"  width="15%">
+                            <ul>
+                                <li ng-repeat="prt in user.displayProduct track by (prt.productId+prt.productName+prt.amount+$index)" ng-if="prt.productName">
+                                    <span ng-if="!isLanguageHindi || !prt.altProductName" ng-bind-html="prt.productName"></span>
+                                    <span ng-if="isLanguageHindi && prt.altProductName" ng-bind-html="prt.altProductName"></span>
+                                </li>
+                            </ul>
+                        </td>
+                        
+                        <td ng-show="enableDisableGST" title="'Tax'" filter="{ 'tax': 'text' }" style="text-align:right">{{::user.tax}}</td>
+                        <td title="'Advance'"  filter="{ 'advance': 'text' }" style="text-align:right">{{::user.advance}}</td>
+                        <td title="'Balance'"  filter="{ 'balance': 'text' }" style="text-align:right">{{::user.balance}}</td>
+                        <td title="'Total'" filter="{ 'total': 'text' }" style="text-align:right">{{::user.total}}</td>
+                        <td title="'Action'" style="width:10%" class="ignore">
+                            <center>
+                                
+                                <a href="{{erpPath}}{{user.file[0].documentUrl}}{{user.file[0].documentName}}" target="_blank"  ng-if="user.singlePdfIcon">
+                                    
+                                    <i  class="fa fa-file" style="font-size:17px;color:#10709f"   > </i>
+                                    
+                                </a>
+                                &nbsp; 
+                                
+                                <i  class="icon-paper-clip myCursorPointer" style="font-size:17px;color:#10709f" ng-if="user.imageIcon" ng-click="openImageGallery('lg',user.purchaseId,'yes')"> </i>
+                                
+                                &nbsp; 
+                                
+                                <i ng-click="editDataViewSales(user.purchaseId)" class="fa fa-edit myCursorPointer" style="font-size:17px;color:#10709f"> </i>
+                                
+                                &nbsp;
+                                
+                                <i ng-click="deleteBill('sm',user.purchaseId,'yes')" class="fa fa-times-circle myCursorPointer" style="font-size:17px;color:red"></i>
+                                
+                            </center>
+                        </td>
+                    </tr>
+                </tbody>
+                
+                <tfooter>
+                    <tr style="background-color: #f5f5f5;">
+                        <td colspan="2" ><b>Grand Total</b></td>
+                        <td colspan="2"></td>
+                        <td ng-show="table.tableParams.productsFlag"></td>
+                        <td><span class="pull-right" ng-bind="totalAdvanceDisplay | number : 2"></span></td>
+                        <td><span class="pull-right" ng-bind="totalBalanceDisplay | number : 2"></span></td>
+                        <td><span class="pull-right" ng-bind="totalAmountDisplay | number : 2"></span></td>
+                        <td></td>
+                    </tr>
+                </tfooter>
+                
+            </table>
+        </div>
+        <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
+    </script>
+    <script type="text/ng-template" id="ng-table/headers/checkbox.html">
+        <div data-toggle="tooltip" data-title="Check All" class="checkbox c-checkbox" check-all="check-all">
+            <label>
+                <input type="checkbox" ng-model="parentCheckBox" ng-change="changeAllBox(parentCheckBox)" />
+                <span class="fa fa-check"></span>
+            </label>
+        </div>
+    </script>
+    
+    <script type="text/ng-template" id="ng-table/headers/stickerIcon.html">
+        <center>
+            <i  title="Print" ng-click="multiPdfPrint()" ng-if="selectedBoxArray.length > 0 || clientFlag == true" class="fa fa-print" style="font-size:17px;cursor:pointer"> </i> 
+            <span ng-if="selectedBoxArray.length == 0 && clientFlag == false" >Action</span>
+        </center>
+    </script>

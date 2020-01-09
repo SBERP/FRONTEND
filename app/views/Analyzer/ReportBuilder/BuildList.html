@@ -1,0 +1,39 @@
+<h3>
+	<small><a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+		<a ui-sref="app.ReportBuilder" >Report Builder</a> >>
+	Built Reports</small>
+</h3>
+<div class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true,'time-out': 10000}"></toaster-container>
+	<div class="panel panel-default">
+		<div class="panel-heading bg-primary my-font-white">
+			<div class="panel-title">
+				<h5 style="display: inline-block;">Built Reports</h5>
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="table-responsive">
+				<table ng-table="table.tableParams" show-filter="true" class="table table-bordered table-striped">
+					<tbody>
+						<tr ng-repeat="user in $data track by (user.reportId+user.reportName+$index)">
+							<td data-title="'#'"  style="text-align:center">{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td>
+							<td title="'Report Name'"  sortable="'reportName'" filter="{ 'reportName': 'text' }" >
+								{{user.reportName}}
+							</td>
+							<td title="'Report Title'"  sortable="'reportTitle'" filter="{ 'reportTitle': 'text' }" >
+								{{user.reportTitle}}
+							</td>
+							<td title="'Actions'" sortable="false">
+								<center>
+									<i class="fa fa-share-square-o myCursorPointer" style="font-size:17px;color:#10709f" title="Generate Report" ng-click="generateReport(user)"></i>
+									<i title="Edit" ng-click="editReport(user)" class="fa fa-edit myCursorPointer" style="font-size:17px;color:#00af26"> </i>
+									<i title="Delete" ng-click="deleteReport(user)" class="fa fa-times-circle myCursorPointer" style="font-size:17px;color:#e80020"> </i>
+								</center>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

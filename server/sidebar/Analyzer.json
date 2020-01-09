@@ -8,5 +8,15 @@
 	 {"text": "Commission Report","sref": "app.ReportCommission","translate": "" }
 	],
     "permission": "reports"
+	},
+   {
+	"text": "Report Builder",
+	"sref": "#",
+	"icon": "icon-map",
+	"subnav": [
+	 {"text": "List Reports","sref": "app.ReportsList","translate": "" },
+	 {"text": "Build Report","sref": "app.ReportBuilder","translate": "" }
+	],
+    "permission": "reports"
 	}
 ]

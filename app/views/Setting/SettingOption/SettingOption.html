@@ -1,682 +1,730 @@
 <style>
-.chosen-container .chosen-results {
-    max-height:100px;
-}
-.chosen-container .chosen-drop{
-	display: block !imporatant;
-}
+    .chosen-container .chosen-results {
+        max-height:100px;
+    }
+    .chosen-container .chosen-drop{
+        display: block !important;
+    }
 </style>
 <h3>
-   <small>
-   <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
-   Setting >> 
-   Option</small>
-</h3>
-<!-- START panel-->
-<div data-ng-controller="settingOptionController as form" class="row">
-	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
-
-	<div class="col-md-12" >
-		<div class="panel panel-primary" >
-			<div class="panel-heading" data-ng-class="app.theme.brand">
-				<div class="panel-title">
-					<i class="fa fa-barcode" ></i> Barcode 
-				</div>
-			</div>
-			<div class="panel-body">
-				 <form  action="#" name="formBarcode" class="form-validate form-horizontal">
-					
-						<div class="col-sm-4">
-							<fieldset class="my-fieldset-paddingBottom">
-							   <div class="form-group">
-								  <label for="input-id-1" class="col-sm-2 control-label">*Height</label>
-								  <div class="col-sm-8">
-									 <select chosen="" data-ng-model="barcodeData.barcodeHeight" data-ng-options="s for s in form.barcodeHeightDrop" class="form-control chosen-select" ng-required="true" ng-change="changeInBarcodeData('barcodeHeight',barcodeData.barcodeHeight)" name="height" id="height" tabIndex="2" auto-focus  >
-										<option value=""></option>
-									</select>
-									<span ng-messages="formBarcode.height.$error" ng-if="formBarcode.height.$dirty || formBarcode.height.$touched" role="alert">
-										<span ng-messages-include="errorRequired"></span>
-										<span ng-messages-include="errorPatternNumber"></span>
-										<span ng-messages-include="errorLonglength"></span>
-										<span ng-messages-include="errorShortlength"></span>
-									</span>
-											
-								  </div>
-							   </div>
-							</fieldset >
-						</div>
-						<div class="col-sm-4">
-							<fieldset class="my-fieldset-paddingBottom">
-							   <div class="form-group">
-								  <label for="input-id-1" class="col-sm-2 control-label">*Width</label>
-								  <div class="col-sm-8">
-									  <select chosen="" data-ng-model="barcodeData.barcodeWidth" data-ng-options="s for s in form.barcodeWidthDrop" class="form-control chosen-select" ng-required="true" ng-change="changeInBarcodeData('barcodeWidth',barcodeData.barcodeWidth)" name="width" id="width" tabIndex="2"  >
-										<option value=""></option>
-									</select>
-									<span ng-messages="formBarcode.width.$error" ng-if="formBarcode.width.$dirty || formBarcode.width.$touched" role="alert">
-										<span ng-messages-include="errorRequired"></span>
-										<span ng-messages-include="errorPatternNumber"></span>
-										<span ng-messages-include="errorLonglength"></span>
-										<span ng-messages-include="errorShortlength"></span>
-									</span>
-											
-								  </div>
-							   </div>
-							</fieldset >
-						</div>
-						<div class="col-sm-1">
-							<fieldset class="my-fieldset-paddingBottom">
-							   <div class="form-group">
-								   <button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="AddUpdateBarcodeSetting()" ng-disabled="formBarcode.$invalid"  data-ng-class="app.theme.brand" >{{insertUpdateLabel}}</button>
-							   </div>
-							</fieldset>
-						</div>
-						<div class="col-sm-3">
-						</div>
-					
-				</form>
-			</div>
-		</div >
-	</div>
-
-	<div class="col-md-12" >
-		<div class="panel panel-primary" >
-			<div class="panel-heading" data-ng-class="app.theme.brand">
-				<div class="panel-title">
-					<i class="fa fa-barcode" ></i> Service-Date 
-				</div>
-			</div>
-			<div class="panel-body">
-				 <form  action="#" name="formServiceDate" class="form-validate form-horizontal">
-						<div class="col-sm-4">
-							<fieldset class="my-fieldset-paddingBottom">
-							   <div class="form-group">
-							   	<label class="col-sm-2 col-xs-6 col-md-4 control-label pt-sm">Enable/Disable</label>
-								    <div class="col-sm-2 col-xs-6 col-md-4">
-										<label class="switch switch-lg switch-success pull-right ph-lg">
-				                       		 <input type="checkbox" data-ng-model="enableDisableValue" />
-				                       		 <span></span>
-				                    	 </label>
-									</div>
-								  
-							   </div>
-							</fieldset >
-						</div>
-						<div class="col-sm-4" ng-if="enableDisableValue">
-							<fieldset class="my-fieldset-paddingBottom">
-							   <div class="form-group" >
-							   	<label for="input-id-1" class="col-sm-2 col-md-4 control-label" >After no of days</label>
-								  <div class="col-sm-6">
-									<input ng-model="serviceData.noOfDays" name="noOfDays"  type="text" placeholder="0" class="form-control input-sm" ng-pattern="/^[0-9]*$/" ng-maxlength="5" only-number ng-change="changeInServiceData('noOfDays',noOfDays)"/>
-							 		<span ng-messages="formServiceDate.noOfDays.$error" ng-if="formServiceDate.noOfDays.$dirty || formServiceDate.noOfDays.$touched" role="alert">
-										<span ng-messages-include="errorRequired"></span>
-										<span ng-messages-include="errorPatternAlpha"></span>
-										<span ng-messages-include="errorLonglength"></span>
-									</span>		
-								  </div>
-							   </div>
-							</fieldset >
-						</div>
-						
-						<div class="col-sm-1" ng-if="enableDisableValue">
-							<fieldset class="my-fieldset-paddingBottom">
-							   <div class="form-group">
-								   <button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="AddUpdateServiceDateSetting()" ng-disabled="formServiceDate.$invalid"  data-ng-class="app.theme.brand" >{{insertUpdateServiceLabel}}</button>
-							   </div>
-							</fieldset>
-						</div>
-						<div class="col-sm-3">
-						</div>
-					
-				</form>
-			</div>
-		</div >
-	</div>
-
-	<!-- cheque number setting -->
-	<div class="col-md-12" >
-		<div class="panel panel-primary" >
-			<div class="panel-heading" data-ng-class="app.theme.brand">
-				<div class="panel-title">
-					<i class="fa fa-barcode" ></i> Cheque Number Validation
-				</div>
-			</div>
-			<div class="panel-body">
-				 <form  action="#" name="formChequeNo" class="form-validate form-horizontal">
-						<div class="col-sm-4">
-							<fieldset class="my-fieldset-paddingBottom">
-							   <div class="form-group">
-							   	<label class="col-sm-2 col-xs-6 col-md-6 control-label pt-sm">Required/Not Required</label>
-								    <div class="col-sm-2 col-xs-6 col-md-4">
-										<label class="switch switch-lg switch-success pull-right ph-lg">
-				                       		 <input type="checkbox" data-ng-model="enableDisableChequeNoValue" ng-change="changeInChequeNo('enableDisableChequeNoValue',enableDisableChequeNoValue)"/>
-				                       		 <span></span>
-				                    	 </label>
-									</div>
-								  
-							   </div>
-							</fieldset >
-						</div>
-						<div class="col-sm-1" ng-if="enableDisableValue">
-							<fieldset class="my-fieldset-paddingBottom">
-							   <div class="form-group">
-								   <button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="AddUpdateChequeNoSetting()" ng-disabled="formServiceDate.$invalid"  data-ng-class="app.theme.brand" >{{insertUpdateChequeNoLabel}}</button>
-							   </div>
-							</fieldset>
-						</div>
-						<div class="col-sm-3">
-						</div>
-					
-				</form>
-			</div>
-		</div >
-	</div>
-
-		<!-- Product setting -->
-	<!-- <div class="col-md-12" ng-if="allowedPermission == allowedName"> -->
-	<div class="col-md-12" >
-		<div class="panel panel-primary" >
-			<div class="panel-heading" data-ng-class="app.theme.brand">
-				<div class="panel-title">
-					<i class="fa fa-barcode" ></i> Product
-				</div>
-			</div>
-			<div class="panel-body">
-				 <form  action="#" name="formChequeNo" class="form-validate form-horizontal">
-						<div class="col-lg-2 col-sm-2">
-							<fieldset class="my-fieldset-paddingBottom">
-							   <div class="form-group">
-							   	<label class="col-sm-2 col-xs-6 col-md-4 control-label pt-sm">Best Before</label>
-								    <div class="col-sm-2 col-xs-6 col-md-4">
-										<label class="switch switch-lg switch-success pull-right ph-lg">
-				                       		 <input type="checkbox" data-ng-model="enableDisableBestBefore" ng-change="changeInProduct('enableDisableBestBefore',enableDisableBestBefore)"/>
-				                       		 <span></span>
-				                    	 </label>
-									</div>
-								  
-							   </div>
-							</fieldset >
-						</div>
-						<div class="col-lg-2 col-sm-2">
-							<fieldset class="my-fieldset-paddingBottom">
-							   <div class="form-group">
-							   	<label class="col-sm-2 col-xs-6 col-md-4 control-label pt-sm">Color</label>
-								    <div class="col-sm-2 col-xs-6 col-md-4">
-										<label class="switch switch-lg switch-success pull-right ph-lg">
-				                       		 <input type="checkbox" data-ng-model="enableDisableColor" ng-change="changeInProduct('enableDisableColor',enableDisableColor)"/>
-				                       		 <span></span>
-				                    	 </label>
-									</div>
-							   </div>
-							</fieldset >
-						</div>
-						<div class="col-lg-2 col-sm-2">
-							<fieldset class="my-fieldset-paddingBottom">
-							   <div class="form-group">
-							   	<label class="col-sm-2 col-xs-6 col-md-4 control-label pt-sm">Size</label>
-								    <div class="col-sm-2 col-xs-6 col-md-4">
-										<label class="switch switch-lg switch-success pull-right ph-lg">
-				                       		 <input type="checkbox" data-ng-model="enableDisableSize" ng-change="changeInProduct('enableDisableSize',enableDisableSize)"/>
-				                       		 <span></span>
-				                    	 </label>
-									</div>
-							   </div>
-							</fieldset >
-						</div>
-						<div class="col-lg-2 col-sm-2">
-							<fieldset class="my-fieldset-paddingBottom">
-							   <div class="form-group">
-							   	<label class="col-sm-2 col-xs-6 col-md-5 control-label pt-sm">Frame No</label>
-								    <div class="col-sm-2 col-xs-6 col-md-4">
-										<label class="switch switch-lg switch-success pull-right ph-lg">
-				                       		 <input type="checkbox" data-ng-model="enableDisableFrameno" ng-change="changeInProduct('enableDisableFrameno',enableDisableFrameno)"/>
-				                       		 <span></span>
-				                    	 </label>
-									</div>
-								  
-							   </div>
-							</fieldset >
-						</div>
-						<div class="col-lg-2 col-sm-2">
-							<fieldset class="my-fieldset-paddingBottom">
-							   <div class="form-group">
-							   	<label class="col-sm-2 col-xs-6 col-md-4 control-label pt-sm">Variant</label>
-								    <div class="col-sm-2 col-xs-6 col-md-4">
-										<label class="switch switch-lg switch-success pull-right ph-lg">
-				                       		 <input type="checkbox" data-ng-model="enableDisableVariant" ng-change="changeInProduct('enableDisableVariant',enableDisableVariant)"/>
-				                       		 <span></span>
-				                    	 </label>
-									</div>
-								  
-							   </div>
-							</fieldset >
-						</div>
-						<div class="col-lg-2 col-sm-2">
-							<fieldset class="my-fieldset-paddingBottom">
-							   <div class="form-group">
-							   	<label class="col-sm-2 col-xs-6 col-md-5 control-label pt-sm">MRP Required</label>
-								    <div class="col-sm-2 col-xs-6 col-md-4">
-										<label class="switch switch-lg switch-success pull-right ph-lg">
-				                       		 <input type="checkbox" data-ng-model="enableDisableMRPRequire" ng-change="changeInProduct('enableDisableMRPRequire',enableDisableMRPRequire)"/>
-				                       		 <span></span>
-				                    	 </label>
-									</div>
-								  
-							   </div>
-							</fieldset >
-						</div>
-						<div class="clearfix"></div>
-						<div class="col-sm-4">
-							<fieldset class="my-fieldset-paddingBottom">
-							   	<div class="form-group">
-								   	<label class="col-sm-2 control-label pt-sm">Measurement</label>
-								   	<div class="col-sm-8">
-								   		<select chosen="" data-ng-model="measurementType" data-ng-options="s for s in form.measurementOptions" class="form-control chosen-select" ng-required="true" ng-change="changeInProduct('measurementType',measurementType)" name="height" id="height" tabIndex="2" auto-focus  >
-											<option value=""></option>
-										</select>
-								   	</div>
-							   	</div>
-							</fieldset >
-						</div>
-						<div class="col-lg-2 col-sm-2">
-							<fieldset class="my-fieldset-paddingBottom">
-							   <div class="form-group" ng-if="measurementType != 'Advance Measurement'">
-							   	<label class="col-sm-2 col-xs-6 col-md-4 control-label pt-sm">Margins</label>
-								    <div class="col-sm-2 col-xs-6 col-md-4">
-										<label class="switch switch-lg switch-success pull-right ph-lg">
-				                       		 <input type="checkbox" data-ng-model="enableDisableMargin" ng-change="changeInProduct('enableDisableMargin',enableDisableMargin)"/>
-				                       		 <span></span>
-				                    	 </label>
-									</div>
-								  
-							   </div>
-							</fieldset >
-						</div>
-						<div class="col-lg-2 col-sm-2">
-							<fieldset class="my-fieldset-paddingBottom">
-							   <div class="form-group">
-							   	<label class="col-sm-2 col-xs-6 col-md-4 control-label pt-sm">Product Delete</label>
-								    <div class="col-sm-2 col-xs-6 col-md-4">
-										<label class="switch switch-lg switch-success pull-right ph-lg">
-				                       		 <input type="checkbox" data-ng-model="enableDisableProductDelete" ng-change="changeInProduct('enableDisableProductDelete',enableDisableProductDelete)"/>
-				                       		 <span></span>
-				                    	 </label>
-									</div>
-								  
-							   </div>
-							</fieldset >
-						</div>
-						<div class="col-sm-1">
-							<fieldset class="my-fieldset-paddingBottom">
-							   <div class="form-group">
-								   <button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="AddUpdateProductSetting()" ng-disabled="formServiceDate.$invalid"  data-ng-class="app.theme.brand" >{{insertUpdateProductLabel}}</button>
-							   </div>
-							</fieldset>
-						</div>
-				</form>
-			</div>
-		</div >
-	</div>
-
-		<!-- client setting -->
-	<div class="col-md-12" >
-		<div class="panel panel-primary" >
-			<div class="panel-heading" data-ng-class="app.theme.brand">
-				<div class="panel-title">
-					<i class="fa fa-barcode" ></i> Client-Detail Setting
-				</div>
-			</div>
-			<div class="panel-body">
-				 <form  action="#" name="formChequeNo" class="form-validate form-horizontal">
-						<!-- <div class="col-sm-12"> -->
-							<div class="col-sm-2">
-								<fieldset class="my-fieldset-paddingBottom">
-								   <div class="form-group">
-								   	<label class="col-sm-2 col-xs-6 col-md-5 control-label pt-sm">Work No</label>
-									    <div class="col-sm-2 col-xs-6 col-md-4">
-											<label class="switch switch-lg switch-success pull-right ph-lg">
-					                       		 <input type="checkbox" data-ng-model="enableDisableWorkno" ng-change="changeInClient('enableDisableWorkno',enableDisableWorkno)"/>
-					                       		 <span></span>
-					                    	 </label>
-										</div>
-									  
-								   </div>
-								</fieldset >
-							</div>
-							<div class="col-sm-2">
-								<fieldset class="my-fieldset-paddingBottom">
-								   <div class="form-group">
-								   	<label class="col-sm-2 col-xs-6 col-md-5 control-label pt-sm">Address</label>
-									    <div class="col-sm-2 col-xs-6 col-md-4">
-											<label class="switch switch-lg switch-success pull-right ph-lg">
-					                       		 <input type="checkbox" data-ng-model="enableDisableAddress" ng-change="changeInClient('enableDisableAddress',enableDisableAddress)"/>
-					                       		 <span></span>
-					                    	 </label>
-										</div>
-									  
-								   </div>
-								</fieldset >
-							</div>
-							<div class="col-sm-2">
-								<fieldset class="my-fieldset-paddingBottom">
-								   <div class="form-group">
-								   	<label class="col-sm-2 col-xs-6 col-md-5 control-label pt-sm">State</label>
-									    <div class="col-sm-2 col-xs-6 col-md-4">
-											<label class="switch switch-lg switch-success pull-right ph-lg">
-					                       		 <input type="checkbox" data-ng-model="enableDisableState" ng-change="changeInClient('enableDisableState',enableDisableState)"/>
-					                       		 <span></span>
-					                    	 </label>
-										</div>
-									  
-								   </div>
-								</fieldset >
-							</div>
-							<div class="col-sm-2">
-								<fieldset class="my-fieldset-paddingBottom">
-								   <div class="form-group">
-								   	<label class="col-sm-2 col-xs-6 col-md-5 control-label pt-sm">City</label>
-									    <div class="col-sm-2 col-xs-6 col-md-4">
-											<label class="switch switch-lg switch-success pull-right ph-lg">
-					                       		 <input type="checkbox" data-ng-model="enableDisableCity" ng-change="changeInClient('enableDisableCity',enableDisableCity)"/>
-					                       		 <span></span>
-					                    	 </label>
-										</div>
-									  
-								   </div>
-								</fieldset >
-							</div>
-							<div class="col-sm-2">
-								<fieldset class="my-fieldset-paddingBottom">
-								   <div class="form-group">
-								   	<label class="col-sm-2 col-xs-6 col-md-5 control-label pt-sm">Email-id</label>
-									    <div class="col-sm-2 col-xs-6 col-md-4">
-											<label class="switch switch-lg switch-success pull-right ph-lg">
-					                       		 <input type="checkbox" data-ng-model="enableDisableEmailId" ng-change="changeInClient('enableDisableEmailId',enableDisableEmailId)"/>
-					                       		 <span></span>
-					                    	 </label>
-										</div>
-									</div>
-								</fieldset >
-							</div>
-							<div class="col-sm-2">
-								<fieldset class="my-fieldset-paddingBottom">
-								   <div class="form-group">
-								   	<label class="col-sm-2 col-xs-6 col-md-5 control-label pt-sm">Profession</label>
-									    <div class="col-sm-2 col-xs-6 col-md-4">
-											<label class="switch switch-lg switch-success pull-right ph-lg">
-					                       		 <input type="checkbox" data-ng-model="enableDisableProfession" ng-change="changeInClient('enableDisableProfession',enableDisableProfession)"/>
-					                       		 <span></span>
-					                    	 </label>
-										</div>
-									</div>
-								</fieldset>
-							</div>
-						<!-- </div> -->
-						<div class="col-sm-1" ng-if="enableDisableValue">
-							<fieldset class="my-fieldset-paddingBottom">
-							   <div class="form-group">
-								   <button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="AddUpdateClientSetting()" ng-disabled="formServiceDate.$invalid"  data-ng-class="app.theme.brand" >{{insertUpdateClientLabel}}</button>
-							   </div>
-							</fieldset>
-						</div>
-						<div class="col-sm-3">
-						</div>
-					
-				</form>
-			</div>
-		</div >
-	</div>
-
-
-	<!-- Salesman In Bill Validation -->
-	<div class="col-md-6" >
-		<div class="panel panel-primary" >
-			<div class="panel-heading" data-ng-class="app.theme.brand">
-				<div class="panel-title">
-					<i class="fa fa-barcode" ></i> Salesman In Bill Validation
-				</div>
-			</div>
-			<div class="panel-body">
-				<form  action="#" name="formChequeNo" class="form-validate form-horizontal">
-						<div class="col-sm-6">
-							<fieldset class="my-fieldset-paddingBottom">
-							   <div class="form-group">
-							   	<label class="col-sm-2 col-xs-6 col-md-6 control-label pt-sm">Required/Not Required</label>
-								    <div class="col-sm-2 col-xs-6 col-md-4">
-										<label class="switch switch-lg switch-success pull-right ph-lg">
-				                       		 <input type="checkbox" data-ng-model="enableDisableSalesmanValue" ng-change="changeInBill('enableDisableSalesmanValue',enableDisableSalesmanValue)"/>
-				                       		 <span></span>
-				                    	 </label>
-									</div>
-							   </div>
-							</fieldset >
-						</div>
-						<div class="col-sm-3">
-							<fieldset class="my-fieldset-paddingBottom">
-							   <div class="form-group">
-								   <button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="AddUpdateBillSetting()" ng-disabled="formServiceDate.$invalid"  data-ng-class="app.theme.brand" >{{insertUpdateBillLabel}}</button>
-							   </div>
-							</fieldset>
-						</div>
-						<div class="col-sm-3">
-						</div>
-				</form>
-			</div>
-		</div >
-	</div>
-
-	<!-- cheque number setting -->
-	<div class="col-md-6" >
-		<div class="panel panel-primary" >
-			<div class="panel-heading" data-ng-class="app.theme.brand">
-				<div class="panel-title">
-					<i class="fa fa-barcode" ></i> Advance Sales/Purchase Bill in Accounting
-				</div>
-			</div>
-			<div class="panel-body">
-				<form  action="#" name="formAdvanceBill" class="form-validate form-horizontal">
-					<div class="col-sm-4">
-						<fieldset class="my-fieldset-paddingBottom">
-						   	<div class="form-group">
-						   		<label class="col-sm-2 col-xs-6 col-md-6 control-label pt-sm">Sales</label>
-							    <div class="col-sm-2 col-xs-6 col-md-4">
-									<label class="switch switch-lg switch-success pull-right ph-lg">
-			                       		 <input type="checkbox" data-ng-model="enableDisableAdvanceSales" ng-change="changeInAdvanceBill('enableDisableAdvanceSales',enableDisableAdvanceSales)"/>
-			                       		 <span></span>
-			                    	</label>
-								</div>
-						   	</div>
-						</fieldset>
-					</div>
-					<div class="col-sm-4">
-						<fieldset class="my-fieldset-paddingBottom">
-						   <div class="form-group">
-						   	<label class="col-sm-2 col-xs-6 col-md-6 control-label pt-sm">Purchase</label>
-							    <div class="col-sm-2 col-xs-6 col-md-4">
-									<label class="switch switch-lg switch-success pull-right ph-lg">
-			                       		 <input type="checkbox" data-ng-model="enableDisableAdvancePurchase" ng-change="changeInAdvanceBill('enableDisableAdvancePurchase',enableDisableAdvancePurchase)"/>
-			                       		 <span></span>
-			                    	 </label>
-								</div>
-						   </div>
-						</fieldset>
-					</div>
-					<div class="col-sm-3" ng-if="enableDisableValue">
-						<fieldset class="my-fieldset-paddingBottom">
-						   	<div class="form-group">
-							  	<button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="AddUpdateAdvanceBillSetting()" ng-disabled="formAdvanceBill.$invalid"  data-ng-class="app.theme.brand" >{{insertUpdateAdvanceBillLabel}}</button>
-						   	</div>
-						</fieldset>
-					</div>
-					<div class="col-sm-3">
-					</div>
-				</form>
-			</div>
-		</div >
-	</div>
-	<div class="clearfix"></div>
-	<!-- inventory setting -->
-	<div class="col-md-6" >
-		<div class="panel panel-primary" >
-			<div class="panel-heading" data-ng-class="app.theme.brand">
-				<div class="panel-title">
-					<i class="fa fa-barcode" ></i> Inventory
-				</div>
-			</div>
-			<div class="panel-body">
-				<form  action="#" name="formInventory" class="form-validate form-horizontal">
-					<div class="col-sm-4">
-						<fieldset class="my-fieldset-paddingBottom">
-						   	<div class="form-group">
-						   		<label class="col-sm-2 col-xs-6 col-md-6 control-label pt-sm">Itemized Purchase/Sales</label>
-							    <div class="col-sm-2 col-xs-6 col-md-4">
-									<label class="switch switch-lg switch-success pull-right ph-lg">
-			                       		 <input type="checkbox" data-ng-model="enableItemizedPurchaseSales" ng-change="changeInInventory('enableItemizedPurchaseSales',enableItemizedPurchaseSales)"/>
-			                       		 <span></span>
-			                    	</label>
-								</div>
-						   	</div>
-						</fieldset>
-					</div>
-					<div class="col-sm-3">
-					</div>
-					<div class="col-sm-3" ng-if="enableDisableValue">
-						<fieldset class="my-fieldset-paddingBottom">
-						   	<div class="form-group">
-							  	<button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="AddUpdateInventorySetting()" ng-disabled="formInventory.$invalid"  data-ng-class="app.theme.brand" >{{insertUpdateInventoryLabel}}</button>
-						   	</div>
-						</fieldset>
-					</div>
-				</form>
-			</div>
-		</div >
-	</div>
-	<!-- Workflow setting -->
-	<div class="col-md-6" >
-		<div class="panel panel-primary" >
-			<div class="panel-heading" data-ng-class="app.theme.brand">
-				<div class="panel-title">
-					<i class="fa fa-sitemap" ></i> Work Flow
-				</div>
-			</div>
-			<div class="panel-body">
-				<form  action="#" name="formWorkFlow" class="form-validate form-horizontal">
-					<div class="col-sm-4">
-						<fieldset class="my-fieldset-paddingBottom">
-						   	<div class="form-group">
-						   		<label class="col-sm-2 col-xs-6 col-md-6 control-label pt-sm">Quatation Flow </label>
-							    <div class="col-sm-2 col-xs-6 col-md-4">
-									<label class="switch switch-lg switch-success pull-right ph-lg">
-			                       		 <input type="checkbox" data-ng-model="enableworkFlowQuotation" ng-change="changeInWorkFlow('enableworkFlowQuotation',enableworkFlowQuotation)"/>
-			                       		 <span></span>
-			                    	</label>
-								</div>
-						   	</div>
-						</fieldset>
-					</div>
-					<div class="col-sm-3">
-					</div>
-					<div class="col-sm-3" ng-if="enableDisableValue">
-						<fieldset class="my-fieldset-paddingBottom">
-						   	<div class="form-group">
-							  	<button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="AddUpdateWorkFlowSetting()" ng-disabled="formWorkFlow.$invalid"  data-ng-class="app.theme.brand" >{{insertUpdateWorkFlowLabel}}</button>
-						   	</div>
-						</fieldset>
-					</div>
-				</form>
-			</div>
-		</div >
-	</div>
-	<div class="clearfix"></div>
-	<!-- Measurement of Unit -->
-	<div class="col-md-6">
-		<div class="panel panel-purple">
-			<div class="panel-heading">
-				<div class="panel-title">
-					<i class="material-icons" style="font-size: 17px;">&#xE23A;</i> Themes 
-				</div>
-			</div>
-			<div class="panel-body">
-				 <div class="p">
-					<!--p class="text-muted text-thin">THEMES</p-->
-					<div class="clearfix mb">
-					   <div data-ng-repeat="theme in themes" class="pull-left wd-tiny mb">
-						  <div class="setting-color">
-							<label>
-								<input type="radio" name="setting-theme" data-ng-model="app.themeId" data-ng-value="$index" data-ng-change="setTheme($index)" />
-								<span class="icon-check"></span>
-								<ul class="list-table">
-								   <li data-ng-class="theme.sidebar"></li>
-								   <li data-ng-class="theme.brand"></li>
-								   <li data-ng-class="theme.topbar"></li>
-								</ul>
-							</label>
-						  </div>
-					   </div>
-					</div>
-				 </div>
-			</div>
-		</div >
-	</div>
-
-	<!-- Language setting -->
-	<div class="col-md-6" >
-		<div class="panel panel-primary" >
-			<div class="panel-heading" data-ng-class="app.theme.brand">
-				<div class="panel-title">
-					<i class="fa fa-language" ></i> Language
-				</div>
-			</div>
-			<div class="panel-body">
-				<form  action="#" name="formLanguage" class="form-validate form-horizontal">
-					<div class="col-sm-4">
-						<fieldset class="my-fieldset-paddingBottom">
-						   	<div class="form-group">
-						   		<label class="col-sm-2 col-xs-6 col-md-6 control-label pt-sm">Hindi </label>
-							    <div class="col-sm-2 col-xs-6 col-md-4">
-									<label class="switch switch-lg switch-success pull-right ph-lg">
-			                       		 <input type="checkbox" data-ng-model="enableLanguageHindi" ng-change="changeInLanguage('languageSettingType',enableLanguageHindi)"/>
-			                       		 <span></span>
-			                    	</label>
-								</div>
-						   	</div>
-						</fieldset>
-					</div>
-					<div class="col-sm-3">
-					</div>
-					<div class="col-sm-3" ng-if="enableDisableValue">
-						<fieldset class="my-fieldset-paddingBottom">
-						   	<div class="form-group">
-							  	<button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="AddUpdateLanguageSetting()" ng-disabled="formLanguage.$invalid"  data-ng-class="app.theme.brand" >{{insertUpdateLanguageLabel}}</button>
-						   	</div>
-						</fieldset>
-					</div>
-				</form>
-			</div>
-		</div >
-	</div>
-	<div class="clearfix"></div>
-
-   <!-- END panel-->
-</div>
-
-
-<script type="text/ng-template" id="errorRequired">
-	<span class="text-danger" ng-message="required">{{errorMessage.require}}</span>
-</script>
-
-<script type="text/ng-template" id="errorShortlength">
-	<span class="text-danger" ng-message="minlength">{{errorMessage.shortLength}}</span>
-</script>
-
-<script type="text/ng-template" id="errorLonglength">
-	<span class="text-danger" ng-message="maxlength">{{errorMessage.longLength}}</span>
-</script>
-
-<script type="text/ng-template" id="errorPatternNumber">
-	<span class="text-danger" ng-message="pattern">{{errorMessage.Numbers}}</span>
-</script>
-
-<script type="text/ng-template" id="errorPatternThisSpecial">
-	<span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacterAndNumber}}</span>
-</script>
+    <small>
+        <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+        Setting >> 
+        Option</small>
+    </h3>
+    <!-- START panel-->
+    <div data-ng-controller="settingOptionController as form" class="row">
+        <toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+        
+        <div class="col-md-12" >
+            <div class="panel panel-primary" >
+                <div class="panel-heading" data-ng-class="app.theme.brand">
+                    <div class="panel-title">
+                        <i class="fa fa-barcode" ></i> Barcode 
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <form  action="#" name="formBarcode" class="form-validate form-horizontal">
+                        
+                        <div class="col-sm-4">
+                            <fieldset class="my-fieldset-paddingBottom">
+                                <div class="form-group">
+                                    <label for="input-id-1" class="col-sm-2 control-label">*Height</label>
+                                    <div class="col-sm-8">
+                                        <select chosen="" data-ng-model="barcodeData.barcodeHeight" data-ng-options="s for s in form.barcodeHeightDrop" class="form-control chosen-select" ng-required="true" ng-change="changeInBarcodeData('barcodeHeight',barcodeData.barcodeHeight)" name="height" id="height" tabIndex="2" auto-focus  >
+                                            <option value=""></option>
+                                        </select>
+                                        <span ng-messages="formBarcode.height.$error" ng-if="formBarcode.height.$dirty || formBarcode.height.$touched" role="alert">
+                                            <span ng-messages-include="errorRequired"></span>
+                                            <span ng-messages-include="errorPatternNumber"></span>
+                                            <span ng-messages-include="errorLonglength"></span>
+                                            <span ng-messages-include="errorShortlength"></span>
+                                        </span>
+                                        
+                                    </div>
+                                </div>
+                            </fieldset >
+                        </div>
+                        <div class="col-sm-4">
+                            <fieldset class="my-fieldset-paddingBottom">
+                                <div class="form-group">
+                                    <label for="input-id-1" class="col-sm-2 control-label">*Width</label>
+                                    <div class="col-sm-8">
+                                        <select chosen="" data-ng-model="barcodeData.barcodeWidth" data-ng-options="s for s in form.barcodeWidthDrop" class="form-control chosen-select" ng-required="true" ng-change="changeInBarcodeData('barcodeWidth',barcodeData.barcodeWidth)" name="width" id="width" tabIndex="2"  >
+                                            <option value=""></option>
+                                        </select>
+                                        <span ng-messages="formBarcode.width.$error" ng-if="formBarcode.width.$dirty || formBarcode.width.$touched" role="alert">
+                                            <span ng-messages-include="errorRequired"></span>
+                                            <span ng-messages-include="errorPatternNumber"></span>
+                                            <span ng-messages-include="errorLonglength"></span>
+                                            <span ng-messages-include="errorShortlength"></span>
+                                        </span>
+                                        
+                                    </div>
+                                </div>
+                            </fieldset >
+                        </div>
+                        <div class="col-sm-1">
+                            <fieldset class="my-fieldset-paddingBottom">
+                                <div class="form-group">
+                                    <button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="AddUpdateBarcodeSetting()" ng-disabled="formBarcode.$invalid"  data-ng-class="app.theme.brand" >{{insertUpdateLabel}}</button>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-sm-3">
+                        </div>
+                        
+                    </form>
+                </div>
+            </div >
+        </div>
+        
+        <div class="col-md-12" >
+            <div class="panel panel-primary" >
+                <div class="panel-heading" data-ng-class="app.theme.brand">
+                    <div class="panel-title">
+                        <i class="fa fa-barcode" ></i> Service-Date 
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <form  action="#" name="formServiceDate" class="form-validate form-horizontal">
+                        <div class="col-sm-4">
+                            <fieldset class="my-fieldset-paddingBottom">
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-xs-6 col-md-4 control-label pt-sm">Enable/Disable</label>
+                                    <div class="col-sm-2 col-xs-6 col-md-4">
+                                        <label class="switch switch-lg switch-success pull-right ph-lg">
+                                            <input type="checkbox" data-ng-model="enableDisableValue" />
+                                            <span></span>
+                                        </label>
+                                    </div>
+                                    
+                                </div>
+                            </fieldset >
+                        </div>
+                        <div class="col-sm-4" ng-if="enableDisableValue">
+                            <fieldset class="my-fieldset-paddingBottom">
+                                <div class="form-group" >
+                                    <label for="input-id-1" class="col-sm-2 col-md-4 control-label" >After no of days</label>
+                                    <div class="col-sm-6">
+                                        <input ng-model="serviceData.noOfDays" name="noOfDays"  type="text" placeholder="0" class="form-control input-sm" ng-pattern="/^[0-9]*$/" ng-maxlength="5" only-number ng-change="changeInServiceData('noOfDays',noOfDays)"/>
+                                        <span ng-messages="formServiceDate.noOfDays.$error" ng-if="formServiceDate.noOfDays.$dirty || formServiceDate.noOfDays.$touched" role="alert">
+                                            <span ng-messages-include="errorRequired"></span>
+                                            <span ng-messages-include="errorPatternAlpha"></span>
+                                            <span ng-messages-include="errorLonglength"></span>
+                                        </span>		
+                                    </div>
+                                </div>
+                            </fieldset >
+                        </div>
+                        
+                        <div class="col-sm-1" ng-if="enableDisableValue">
+                            <fieldset class="my-fieldset-paddingBottom">
+                                <div class="form-group">
+                                    <button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="AddUpdateServiceDateSetting()" ng-disabled="formServiceDate.$invalid"  data-ng-class="app.theme.brand" >{{insertUpdateServiceLabel}}</button>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-sm-3">
+                        </div>
+                        
+                    </form>
+                </div>
+            </div >
+        </div>
+        
+        <!-- cheque number setting -->
+        <div class="col-md-12" >
+            <div class="panel panel-primary" >
+                <div class="panel-heading" data-ng-class="app.theme.brand">
+                    <div class="panel-title">
+                        <i class="fa fa-barcode" ></i> Cheque Number Validation
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <form  action="#" name="formChequeNo" class="form-validate form-horizontal">
+                        <div class="col-sm-4">
+                            <fieldset class="my-fieldset-paddingBottom">
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-xs-6 col-md-6 control-label pt-sm">Required/Not Required</label>
+                                    <div class="col-sm-2 col-xs-6 col-md-4">
+                                        <label class="switch switch-lg switch-success pull-right ph-lg">
+                                            <input type="checkbox" data-ng-model="enableDisableChequeNoValue" ng-change="changeInChequeNo('enableDisableChequeNoValue',enableDisableChequeNoValue)"/>
+                                            <span></span>
+                                        </label>
+                                    </div>
+                                    
+                                </div>
+                            </fieldset >
+                        </div>
+                        <div class="col-sm-1" ng-if="enableDisableValue">
+                            <fieldset class="my-fieldset-paddingBottom">
+                                <div class="form-group">
+                                    <button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="AddUpdateChequeNoSetting()" ng-disabled="formServiceDate.$invalid"  data-ng-class="app.theme.brand" >{{insertUpdateChequeNoLabel}}</button>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-sm-3">
+                        </div>
+                        
+                    </form>
+                </div>
+            </div >
+        </div>
+        
+        <!-- Product setting -->
+        <!-- <div class="col-md-12" ng-if="allowedPermission == allowedName"> -->
+            <div class="col-md-12" >
+                <div class="panel panel-primary" >
+                    <div class="panel-heading" data-ng-class="app.theme.brand">
+                        <div class="panel-title">
+                            <i class="fa fa-barcode" ></i> Product
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <form  action="#" name="formChequeNo" class="form-validate form-horizontal">
+                            <div class="col-lg-2 col-sm-2">
+                                <fieldset class="my-fieldset-paddingBottom">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 col-xs-6 col-md-4 control-label pt-sm">Best Before</label>
+                                        <div class="col-sm-2 col-xs-6 col-md-4">
+                                            <label class="switch switch-lg switch-success pull-right ph-lg">
+                                                <input type="checkbox" data-ng-model="enableDisableBestBefore" ng-change="changeInProduct('enableDisableBestBefore',enableDisableBestBefore)"/>
+                                                <span></span>
+                                            </label>
+                                        </div>
+                                        
+                                    </div>
+                                </fieldset >
+                            </div>
+                            <div class="col-lg-2 col-sm-2">
+                                <fieldset class="my-fieldset-paddingBottom">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 col-xs-6 col-md-4 control-label pt-sm">Color</label>
+                                        <div class="col-sm-2 col-xs-6 col-md-4">
+                                            <label class="switch switch-lg switch-success pull-right ph-lg">
+                                                <input type="checkbox" data-ng-model="enableDisableColor" ng-change="changeInProduct('enableDisableColor',enableDisableColor)"/>
+                                                <span></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset >
+                            </div>
+                            <div class="col-lg-2 col-sm-2">
+                                <fieldset class="my-fieldset-paddingBottom">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 col-xs-6 col-md-4 control-label pt-sm">Size</label>
+                                        <div class="col-sm-2 col-xs-6 col-md-4">
+                                            <label class="switch switch-lg switch-success pull-right ph-lg">
+                                                <input type="checkbox" data-ng-model="enableDisableSize" ng-change="changeInProduct('enableDisableSize',enableDisableSize)"/>
+                                                <span></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset >
+                            </div>
+                            <div class="col-lg-2 col-sm-2">
+                                <fieldset class="my-fieldset-paddingBottom">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 col-xs-6 col-md-5 control-label pt-sm">Frame No</label>
+                                        <div class="col-sm-2 col-xs-6 col-md-4">
+                                            <label class="switch switch-lg switch-success pull-right ph-lg">
+                                                <input type="checkbox" data-ng-model="enableDisableFrameno" ng-change="changeInProduct('enableDisableFrameno',enableDisableFrameno)"/>
+                                                <span></span>
+                                            </label>
+                                        </div>
+                                        
+                                    </div>
+                                </fieldset >
+                            </div>
+                            <div class="col-lg-2 col-sm-2">
+                                <fieldset class="my-fieldset-paddingBottom">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 col-xs-6 col-md-4 control-label pt-sm">Variant</label>
+                                        <div class="col-sm-2 col-xs-6 col-md-4">
+                                            <label class="switch switch-lg switch-success pull-right ph-lg">
+                                                <input type="checkbox" data-ng-model="enableDisableVariant" ng-change="changeInProduct('enableDisableVariant',enableDisableVariant)"/>
+                                                <span></span>
+                                            </label>
+                                        </div>
+                                        
+                                    </div>
+                                </fieldset >
+                            </div>
+                            <div class="col-lg-2 col-sm-2">
+                                <fieldset class="my-fieldset-paddingBottom">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 col-xs-6 col-md-5 control-label pt-sm">MRP Required</label>
+                                        <div class="col-sm-2 col-xs-6 col-md-4">
+                                            <label class="switch switch-lg switch-success pull-right ph-lg">
+                                                <input type="checkbox" data-ng-model="enableDisableMRPRequire" ng-change="changeInProduct('enableDisableMRPRequire',enableDisableMRPRequire)"/>
+                                                <span></span>
+                                            </label>
+                                        </div>
+                                        
+                                    </div>
+                                </fieldset >
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-sm-4">
+                                <fieldset class="my-fieldset-paddingBottom">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label pt-sm">Measurement</label>
+                                        <div class="col-sm-8">
+                                            <select chosen="" data-ng-model="measurementType" data-ng-options="s for s in form.measurementOptions" class="form-control chosen-select" ng-required="true" ng-change="changeInProduct('measurementType',measurementType)" name="height" id="height" tabIndex="2" auto-focus  >
+                                                <option value=""></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </fieldset >
+                            </div>
+                            <div class="col-lg-2 col-sm-2">
+                                <fieldset class="my-fieldset-paddingBottom">
+                                    <div class="form-group" ng-if="measurementType != 'Advance Measurement'">
+                                        <label class="col-sm-2 col-xs-6 col-md-4 control-label pt-sm">Margins</label>
+                                        <div class="col-sm-2 col-xs-6 col-md-4">
+                                            <label class="switch switch-lg switch-success pull-right ph-lg">
+                                                <input type="checkbox" data-ng-model="enableDisableMargin" ng-change="changeInProduct('enableDisableMargin',enableDisableMargin)"/>
+                                                <span></span>
+                                            </label>
+                                        </div>
+                                        
+                                    </div>
+                                </fieldset >
+                            </div>
+                            <div class="col-lg-2 col-sm-2">
+                                <fieldset class="my-fieldset-paddingBottom">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 col-xs-6 col-md-4 control-label pt-sm">Product Delete</label>
+                                        <div class="col-sm-2 col-xs-6 col-md-4">
+                                            <label class="switch switch-lg switch-success pull-right ph-lg">
+                                                <input type="checkbox" data-ng-model="enableDisableProductDelete" ng-change="changeInProduct('enableDisableProductDelete',enableDisableProductDelete)"/>
+                                                <span></span>
+                                            </label>
+                                        </div>
+                                        
+                                    </div>
+                                </fieldset >
+                            </div>
+                            <div class="col-sm-1">
+                                <fieldset class="my-fieldset-paddingBottom">
+                                    <div class="form-group">
+                                        <button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="AddUpdateProductSetting()" ng-disabled="formServiceDate.$invalid"  data-ng-class="app.theme.brand" >{{insertUpdateProductLabel}}</button>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </form>
+                    </div>
+                </div >
+            </div>
+            
+            <!-- client setting -->
+            <div class="col-md-12" >
+                <div class="panel panel-primary" >
+                    <div class="panel-heading" data-ng-class="app.theme.brand">
+                        <div class="panel-title">
+                            <i class="fa fa-barcode" ></i> Client-Detail Setting
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <form  action="#" name="formChequeNo" class="form-validate form-horizontal">
+                            <!-- <div class="col-sm-12"> -->
+                                <div class="col-sm-2">
+                                    <fieldset class="my-fieldset-paddingBottom">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 col-xs-6 col-md-5 control-label pt-sm">Work No</label>
+                                            <div class="col-sm-2 col-xs-6 col-md-4">
+                                                <label class="switch switch-lg switch-success pull-right ph-lg">
+                                                    <input type="checkbox" data-ng-model="enableDisableWorkno" ng-change="changeInClient('enableDisableWorkno',enableDisableWorkno)"/>
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                            
+                                        </div>
+                                    </fieldset >
+                                </div>
+                                <div class="col-sm-2">
+                                    <fieldset class="my-fieldset-paddingBottom">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 col-xs-6 col-md-5 control-label pt-sm">Address</label>
+                                            <div class="col-sm-2 col-xs-6 col-md-4">
+                                                <label class="switch switch-lg switch-success pull-right ph-lg">
+                                                    <input type="checkbox" data-ng-model="enableDisableAddress" ng-change="changeInClient('enableDisableAddress',enableDisableAddress)"/>
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                            
+                                        </div>
+                                    </fieldset >
+                                </div>
+                                <div class="col-sm-2">
+                                    <fieldset class="my-fieldset-paddingBottom">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 col-xs-6 col-md-5 control-label pt-sm">State</label>
+                                            <div class="col-sm-2 col-xs-6 col-md-4">
+                                                <label class="switch switch-lg switch-success pull-right ph-lg">
+                                                    <input type="checkbox" data-ng-model="enableDisableState" ng-change="changeInClient('enableDisableState',enableDisableState)"/>
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                            
+                                        </div>
+                                    </fieldset >
+                                </div>
+                                <div class="col-sm-2">
+                                    <fieldset class="my-fieldset-paddingBottom">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 col-xs-6 col-md-5 control-label pt-sm">City</label>
+                                            <div class="col-sm-2 col-xs-6 col-md-4">
+                                                <label class="switch switch-lg switch-success pull-right ph-lg">
+                                                    <input type="checkbox" data-ng-model="enableDisableCity" ng-change="changeInClient('enableDisableCity',enableDisableCity)"/>
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                            
+                                        </div>
+                                    </fieldset >
+                                </div>
+                                <div class="col-sm-2">
+                                    <fieldset class="my-fieldset-paddingBottom">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 col-xs-6 col-md-5 control-label pt-sm">Email-id</label>
+                                            <div class="col-sm-2 col-xs-6 col-md-4">
+                                                <label class="switch switch-lg switch-success pull-right ph-lg">
+                                                    <input type="checkbox" data-ng-model="enableDisableEmailId" ng-change="changeInClient('enableDisableEmailId',enableDisableEmailId)"/>
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </fieldset >
+                                </div>
+                                <div class="col-sm-2">
+                                    <fieldset class="my-fieldset-paddingBottom">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 col-xs-6 col-md-5 control-label pt-sm">Profession</label>
+                                            <div class="col-sm-2 col-xs-6 col-md-4">
+                                                <label class="switch switch-lg switch-success pull-right ph-lg">
+                                                    <input type="checkbox" data-ng-model="enableDisableProfession" ng-change="changeInClient('enableDisableProfession',enableDisableProfession)"/>
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <!-- </div> -->
+                                <div class="col-sm-1" ng-if="enableDisableValue">
+                                    <fieldset class="my-fieldset-paddingBottom">
+                                        <div class="form-group">
+                                            <button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="AddUpdateClientSetting()" ng-disabled="formServiceDate.$invalid"  data-ng-class="app.theme.brand" >{{insertUpdateClientLabel}}</button>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="col-sm-3">
+                                </div>
+                                
+                            </form>
+                        </div>
+                    </div >
+                </div>
+                
+                
+                <!-- Salesman In Bill Validation -->
+                <div class="col-md-6" >
+                    <div class="panel panel-primary" >
+                        <div class="panel-heading" data-ng-class="app.theme.brand">
+                            <div class="panel-title">
+                                <i class="fa fa-barcode" ></i> Salesman In Bill Validation
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <form  action="#" name="formChequeNo" class="form-validate form-horizontal">
+                                <div class="col-sm-6">
+                                    <fieldset class="my-fieldset-paddingBottom">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 col-xs-6 col-md-6 control-label pt-sm">Required/Not Required</label>
+                                            <div class="col-sm-2 col-xs-6 col-md-4">
+                                                <label class="switch switch-lg switch-success pull-right ph-lg">
+                                                    <input type="checkbox" data-ng-model="enableDisableSalesmanValue" ng-change="changeInBill('enableDisableSalesmanValue',enableDisableSalesmanValue)"/>
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </fieldset >
+                                </div>
+                                <div class="col-sm-3">
+                                    <fieldset class="my-fieldset-paddingBottom">
+                                        <div class="form-group">
+                                            <button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="AddUpdateBillSetting()" ng-disabled="formServiceDate.$invalid"  data-ng-class="app.theme.brand" >{{insertUpdateBillLabel}}</button>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="col-sm-3">
+                                </div>
+                            </form>
+                        </div>
+                    </div >
+                </div>
+                
+                <!-- cheque number setting -->
+                <div class="col-md-6" >
+                    <div class="panel panel-primary" >
+                        <div class="panel-heading" data-ng-class="app.theme.brand">
+                            <div class="panel-title">
+                                <i class="fa fa-barcode" ></i> Advance Sales/Purchase Bill in Accounting
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <form  action="#" name="formAdvanceBill" class="form-validate form-horizontal">
+                                <div class="col-sm-3">
+                                    <fieldset class="my-fieldset-paddingBottom">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 col-xs-6 col-md-6 control-label pt-sm">Sales</label>
+                                            <div class="col-sm-2 col-xs-6 col-md-4">
+                                                <label class="switch switch-lg switch-success pull-right ph-lg">
+                                                    <input type="checkbox" data-ng-model="enableDisableAdvanceSales" ng-change="changeInAdvanceBill('enableDisableAdvanceSales',enableDisableAdvanceSales)"/>
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="col-sm-3">
+                                    <fieldset class="my-fieldset-paddingBottom">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 col-xs-6 col-md-6 control-label pt-sm">Purchase</label>
+                                            <div class="col-sm-2 col-xs-6 col-md-4">
+                                                <label class="switch switch-lg switch-success pull-right ph-lg">
+                                                    <input type="checkbox" data-ng-model="enableDisableAdvancePurchase" ng-change="changeInAdvanceBill('enableDisableAdvancePurchase',enableDisableAdvancePurchase)"/>
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="col-sm-3">
+                                    <fieldset class="my-fieldset-paddingBottom">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 col-xs-6 col-md-6 control-label pt-sm">Tax ReadOnly</label>
+                                            <div class="col-sm-2 col-xs-6 col-md-4">
+                                                <label class="switch switch-lg switch-success pull-right ph-lg">
+                                                    <input type="checkbox" data-ng-model="enableDisableTaxReadOnly" ng-change="changeInAdvanceBill('enableDisableTaxReadOnly',enableDisableTaxReadOnly)"/>
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="col-sm-3" ng-if="enableDisableValue">
+                                    <fieldset class="my-fieldset-paddingBottom">
+                                        <div class="form-group">
+                                            <button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="AddUpdateAdvanceBillSetting()" ng-disabled="formAdvanceBill.$invalid"  data-ng-class="app.theme.brand" >{{insertUpdateAdvanceBillLabel}}</button>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="col-sm-3">
+                                </div>
+                            </form>
+                        </div>
+                    </div >
+                </div>
+                <div class="clearfix"></div>
+                <!-- inventory setting -->
+                <div class="col-md-6" >
+                    <div class="panel panel-primary" >
+                        <div class="panel-heading" data-ng-class="app.theme.brand">
+                            <div class="panel-title">
+                                <i class="fa fa-barcode" ></i> Inventory
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <form  action="#" name="formInventory" class="form-validate form-horizontal">
+                                <div class="col-sm-4">
+                                    <fieldset class="my-fieldset-paddingBottom">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 col-xs-6 col-md-6 control-label pt-sm">Itemized Purchase/Sales</label>
+                                            <div class="col-sm-2 col-xs-6 col-md-4">
+                                                <label class="switch switch-lg switch-success pull-right ph-lg">
+                                                    <input type="checkbox" data-ng-model="enableItemizedPurchaseSales" ng-change="changeInInventory('enableItemizedPurchaseSales',enableItemizedPurchaseSales)"/>
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="col-sm-3">
+                                </div>
+                                <div class="col-sm-3" ng-if="enableDisableValue">
+                                    <fieldset class="my-fieldset-paddingBottom">
+                                        <div class="form-group">
+                                            <button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="AddUpdateInventorySetting()" ng-disabled="formInventory.$invalid"  data-ng-class="app.theme.brand" >{{insertUpdateInventoryLabel}}</button>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </form>
+                        </div>
+                    </div >
+                </div>
+                <!-- Workflow setting -->
+                <div class="col-md-6" >
+                    <div class="panel panel-primary" >
+                        <div class="panel-heading" data-ng-class="app.theme.brand">
+                            <div class="panel-title">
+                                <i class="fa fa-sitemap" ></i> Work Flow
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <form  action="#" name="formWorkFlow" class="form-validate form-horizontal">
+                                <div class="col-sm-4">
+                                    <fieldset class="my-fieldset-paddingBottom">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 col-xs-6 col-md-6 control-label pt-sm">Quatation Flow </label>
+                                            <div class="col-sm-2 col-xs-6 col-md-4">
+                                                <label class="switch switch-lg switch-success pull-right ph-lg">
+                                                    <input type="checkbox" data-ng-model="enableworkFlowQuotation" ng-change="changeInWorkFlow('enableworkFlowQuotation',enableworkFlowQuotation)"/>
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="col-sm-3">
+                                </div>
+                                <div class="col-sm-3" ng-if="enableDisableValue">
+                                    <fieldset class="my-fieldset-paddingBottom">
+                                        <div class="form-group">
+                                            <button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="AddUpdateWorkFlowSetting()" ng-disabled="formWorkFlow.$invalid"  data-ng-class="app.theme.brand" >{{insertUpdateWorkFlowLabel}}</button>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </form>
+                        </div>
+                    </div >
+                </div>
+                
+                <!-- Language setting -->
+                <div class="col-md-6" >
+                    <div class="panel panel-primary" >
+                        <div class="panel-heading" data-ng-class="app.theme.brand">
+                            <div class="panel-title">
+                                <i class="fa fa-language" ></i> Language
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <form  action="#" name="formLanguage" class="form-validate form-horizontal">
+                                <div class="col-sm-4">
+                                    <fieldset class="my-fieldset-paddingBottom">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 col-xs-6 col-md-6 control-label pt-sm">Hindi </label>
+                                            <div class="col-sm-2 col-xs-6 col-md-4">
+                                                <label class="switch switch-lg switch-success pull-right ph-lg">
+                                                    <input type="checkbox" data-ng-model="enableLanguageHindi" ng-change="changeInLanguage('languageSettingType',enableLanguageHindi)"/>
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="col-sm-3">
+                                </div>
+                                <div class="col-sm-3" ng-if="enableDisableValue">
+                                    <fieldset class="my-fieldset-paddingBottom">
+                                        <div class="form-group">
+                                            <button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="AddUpdateLanguageSetting()" ng-disabled="formLanguage.$invalid"  data-ng-class="app.theme.brand" >{{insertUpdateLanguageLabel}}</button>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </form>
+                        </div>
+                    </div >
+                </div>
+                <!--GST setting-->
+                <div class="col-md-6" >
+                    <div class="panel panel-primary" >
+                        <div class="panel-heading" data-ng-class="app.theme.brand">
+                            <div class="panel-title">
+                                <i class="fa fa-language" ></i> GST
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <form  action="#" name="formLanguage" class="form-validate form-horizontal">
+                                <div class="col-sm-4">
+                                    <fieldset class="my-fieldset-paddingBottom">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 col-xs-6 col-md-6 control-label pt-sm">GST </label>
+                                            <div class="col-sm-2 col-xs-6 col-md-4">
+                                                <label class="switch switch-lg switch-success pull-right ph-lg">
+                                                    <input type="checkbox" data-ng-model="enableTaxationGST" ng-change="changeInTaxation('taxationGstStatus',enableTaxationGST)"/>
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="col-sm-3">
+                                </div>
+                                <div class="col-sm-3" ng-if="enableDisableValue">
+                                    <fieldset class="my-fieldset-paddingBottom">
+                                        <div class="form-group">
+                                            <button type="button" class="mr mb-sm btn btn-primary pull-right" tabIndex="3" onFocus="this.id=this.tabIndex;this.tabIndex=1" onBlur="this.tabIndex=this.id"  ng-click="AddUpdateTaxationSetting()" ng-disabled="formLanguage.$invalid"  data-ng-class="app.theme.brand" >{{insertUpdateLanguageLabel}}</button>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </form>
+                        </div>
+                    </div >
+                </div>
+                <div class="clearfix"></div>
+                
+                <!-- Measurement of Unit -->
+                <div class="col-md-6">
+                    <div class="panel panel-purple">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <i class="material-icons" style="font-size: 17px;">&#xE23A;</i> Themes 
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="p">
+                                <!--p class="text-muted text-thin">THEMES</p-->
+                                <div class="clearfix mb">
+                                    <div data-ng-repeat="theme in themes" class="pull-left wd-tiny mb">
+                                        <div class="setting-color">
+                                            <label>
+                                                <input type="radio" name="setting-theme" data-ng-model="app.themeId" data-ng-value="$index" data-ng-change="setTheme($index)" />
+                                                <span class="icon-check"></span>
+                                                <ul class="list-table">
+                                                    <li data-ng-class="theme.sidebar"></li>
+                                                    <li data-ng-class="theme.brand"></li>
+                                                    <li data-ng-class="theme.topbar"></li>
+                                                </ul>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div >
+                </div>
+                <!-- END panel-->
+            </div>
+            
+            
+            <script type="text/ng-template" id="errorRequired">
+                <span class="text-danger" ng-message="required">{{errorMessage.require}}</span>
+            </script>
+            
+            <script type="text/ng-template" id="errorShortlength">
+                <span class="text-danger" ng-message="minlength">{{errorMessage.shortLength}}</span>
+            </script>
+            
+            <script type="text/ng-template" id="errorLonglength">
+                <span class="text-danger" ng-message="maxlength">{{errorMessage.longLength}}</span>
+            </script>
+            
+            <script type="text/ng-template" id="errorPatternNumber">
+                <span class="text-danger" ng-message="pattern">{{errorMessage.Numbers}}</span>
+            </script>
+            
+            <script type="text/ng-template" id="errorPatternThisSpecial">
+                <span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacterAndNumber}}</span>
+            </script>
