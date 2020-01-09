@@ -374,8 +374,8 @@
                                                                                                     <script type="text/ng-template" id="customTemplate.html">
                                                                                                         <a ng-if="match.label != null && match.label != ''">
                                                                                                             <span ng-bind-html="match.label | typeaheadHighlight:query"></span>
-                                                                                                            <span ng-if="match.model.isColor || match.model.isSize || match.model.isVariant ||match.model.isProductName">
-                                                                                                                (<span ng-if="match.model.isProductName">{{match.model.altProductName}} </span><span ng-if="match.model.isColor">{{match.model.color}} </span> <span ng-if="match.model.isSize">{{match.model.size}} </span> <span ng-if="match.model.isVariant">{{match.model.variant}}</span>)
+                                                                                                            <span ng-if="match.model.isColor || match.model.isSize || match.model.isVariant">
+                                                                                                                (<span ng-if="match.model.isColor">{{match.model.color}} </span> <span ng-if="match.model.isSize">{{match.model.size}} </span> <span ng-if="match.model.isVariant">{{match.model.variant}}</span>)
                                                                                                             </span>
                                                                                                         </a>
                                                                                                     </script>

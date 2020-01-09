@@ -235,9 +235,8 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                 else if (response[arrayData].settingType=="language") 
                 {
                     var arrayData1 = response[arrayData];
-                    $scope.displayProductName = arrayData1.languageSettingType=="hindi" ? "productName" : "productName";
-                    // $scope.displayProductName = arrayData1.languageSettingType=="hindi" ? "productName" : "altProductName";
-                    $scope.enableDisableProductName = arrayData1.languageSettingType=="hindi" ? true : false;
+                    $scope.displayProductName = arrayData1.languageSettingType=="hindi" ? "altProductName" : "productName";
+                    // $scope.enableDisableProductName = arrayData1.languageSettingType=="hindi" ? true : false;
                     if ($scope.displayProductName == "altProductName") {
                         onGoogleInit();
                     }
@@ -1278,7 +1277,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                         item.igstAmount =  $filter('setDecimal')(productArrayFactory.calculateTax(amount,getIgst,0),$scope.noOfDecimalPoints);
                     }
                     
-                // console.log('GST?',$scope.enableDisableGST);
+                    // console.log('GST?',$scope.enableDisableGST);
                     if($scope.enableDisableGST){
                         item.amount = $filter('setDecimal')(amount+item.cgstAmount+item.sgstAmount+item.igstAmount+item.cessAmount,$scope.noOfDecimalPoints);
                     }

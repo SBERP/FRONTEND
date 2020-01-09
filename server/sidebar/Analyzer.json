@@ -18,5 +18,15 @@
 	 {"text": "Build Report","sref": "app.ReportBuilder","translate": "" }
 	],
     "permission": "reports"
-	}
+    },
+    {
+        "text": "Monthwise Registered",
+        "sref": "#",
+        "icon": "icon-paper",
+        "subnav": [
+            {"text": "Sales","sref": "app.SalesReport","translate": "" },
+            {"text": "Purchase","sref": "app.PurchaseReport","translate": "" }
+        ],
+        "permission": "reports"
+    }
 ]
