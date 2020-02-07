@@ -704,6 +704,7 @@ function AddInvProductController($scope,$rootScope,toaster,$filter,apiCall,apiPa
             }
             else 
             {
+                console.log('$scope.addInvProduct',$scope.addInvProduct);
                 if ($scope.addInvProduct.getSetProductId)
                 {
                     toaster.clear();
@@ -768,6 +769,9 @@ function AddInvProductController($scope,$rootScope,toaster,$filter,apiCall,apiPa
                     // formdata.append('bestBeforeType',$scope.addInvProduct.bestBeforeType);
                     formdata.set('isDisplay','yes');
                     if (true) {}
+                    for (var pair of formdata.entries()) {
+                        console.log('formdata',pair[0]+ ', ' + pair[1]);
+                    }
                     apiCall.postCall(apiPath.getAllProduct,formdata).then(function(response5) {
                         toaster.clear();
                         if (apiResponse.ok == response5) {

@@ -1,0 +1,91 @@
+<style>.hackyhack{position:relative}.hackyhack .dropdown-menu{left:auto!important;right:0}h4 .control-label{font-size:13px!important}.contentOfForm{padding-left:11px;padding-right:7px}.goButton{padding:6px 16px}.imageAncher{position:relative;vertical-align:middle;display:inline-block}.myCrossDesign{position:absolute;top:0;right:0;height:20px;width:20px;color:#eb615f;font-size:20px}.myCrossDesign:hover{color:red}.documentRight{display:block;position:absolute;top:10%;right:60%;font-size:40px;color:#88bf57}.documentRight:hover{color:green}.documentCross{display:block;position:absolute;font-size:40px;color:#eb615f;top:10%;right:20%}.documentCross:hover{color:red}.input-file{position:relative;margin:60px 60px 0}.input-file .input-group-addon{border:0;padding:0}.input-file .input-group-addon .btn{border-radius:0 4px 4px 0}.input-file .input-group-addon input{cursor:pointer;position:absolute;width:72px;z-index:2;top:0;right:0;filter:alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent}
+</style>
+
+<h3>
+    <small>
+        <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+        <a ui-sref="app.SalesReport" ng-if="headerType == 'Categorywise'" > Category wise </a>      
+    </small>
+</h3>
+<div   class="container-fluid" >
+    <toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+    <div id="panelDemo14" class="panel panel-default">
+        <div class="panel-body">
+            <!-- <div class="col-md-2 pull-right input-group hackyhack" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Tax-Purchase'" >
+                <input type="text" ng-change="table.changeInvoiceDate();loadInit('yes')" datepicker-popup="{{table.format}}" data-ng-model="table.dt2" is-open="table.openedEnd" min-date="table.dt1" max-date="false" datepicker-options="table.dateOptions" date-disabled="table.disabled(table.date, table.mode)" close-text="Close"
+                class="form-control" tabindex="2" readonly/>
+                <span class="input-group-btn">
+                    <button type="button" tabindex="2" data-ng-click="table.openEnd($event)" class="btn btn-default">
+                        <em class="fa fa-calendar"></em>
+                    </button>
+                </span>
+            </div> -->
+            
+            <!-- From-date -->
+            <!-- <div class="col-md-2 pull-right input-group hackyhack mr-lg" ng-if="headerType == 'Wholesales' || headerType == 'Retailsales' || headerType == 'Sales Orders' || headerType == 'Tax-Purchase' || headerType == 'Quotations'" >
+                <input type="text" ng-change="table.changeInvoiceDate();loadInit('yes')" datepicker-popup="{{table.format}}"  data-ng-model="table.dt1" is-open="table.openedStart" min-date="table.minStart" max-date="false" datepicker-options="table.dateOptions" date-disabled="table.disabled(table.date, table.mode)" close-text="Close"
+                class="form-control" tabindex="2" readonly />
+                <span class="input-group-btn">
+                    <button type="button" tabindex="2" data-ng-click="table.openStart($event)" class="btn btn-default">
+                        <em class="fa fa-calendar"></em>
+                    </button>
+                </span>
+            </div> -->
+            
+            <tabset>
+                <tab heading="Client Name" ng-if="headerType == 'Categorywise'" ng-click="onSalesBillTabSelect(0)" >
+                    <div ng-include="'categorywiseData'" ng-if="currentActiveSalestab == 0">
+                    </div>
+                </tab>
+                
+            </tabset>
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="categorywiseData">
+    <div class="table-responsive">
+        <!-- <a ng-click='salesBillCsv.generate($event, "salesBill.csv",table.tableParams)' class="pull-right btn btn-sm btn-primary">Export to CSV</a> -->
+        <table ng-table="table.tableParams" export-csv="salesBillCsv" csv-ignore="ignore" class="table table-bordered table-striped" >
+            <tbody>
+                <tr data-ng-repeat="user in users track by ($index)">
+                    <td style="text-align: left" header="'ng-table/headers/checkbox.html'"  >
+                        <div class="checkbox c-checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="user.selected" ng-change="changeBox(user.selected,user)" />
+                                <span class="fa fa-check"></span>
+                            </label>
+                        </div>
+                    </td>
+                    <td title="'Product Category'">
+                        <b>Category A</b>
+                        <!-- Category A -->
+                        <div ng-if="user.Month" data-ng-repeat="user in users track by ($index)"><a ng-click="myfunction(user)">{{user.Month}}</a></div>
+                        <b>Total</b>
+                    </td>
+                    <td title="'Product Amount'">
+                        {{user.Total}}
+                        <div data-ng-repeat="user in users track by ($index)">{{user.Total}}</div>
+                        <b>{{user.Total}}</b>
+                    </td>
+                </tr>
+            </tbody>
+            <!-- <tfooter>
+                <tr style="background-color: #f5f5f5;">
+                    <td colspan="3"><b>Grand Total</b></td>
+                    <td ng-if="!table.tableParams.productsFlag && !table.tableParams.branchNameFlag"  colspan="3"></td>
+                    <td ng-if="table.tableParams.productsFlag && !table.tableParams.branchNameFlag" colspan="4" ></td>
+                    <td ng-if="!table.tableParams.productsFlag && table.tableParams.branchNameFlag" colspan="4" ></td>
+                    <td ng-if="table.tableParams.productsFlag && table.tableParams.branchNameFlag" colspan="5" ></td>
+                    <td><span class="pull-right" ng-bind="totalAdvanceDisplay | number : 2"></span></td>
+                    <td><span class="pull-right" ng-bind="totalBalanceDisplay | number : 2"></span></td>
+                    <td><span class="pull-right" ng-bind="totalAmountDisplay | number : 2"></span></td>
+                    <td></td>
+                </tr>
+            </tfooter> -->
+        </table>
+    </div>
+    <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
+</script>
+
+</script>

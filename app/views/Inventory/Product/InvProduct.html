@@ -134,6 +134,8 @@
                                 <td  ng-if="enabledisableGST" filter="{ 'igst': 'text' }" ng-bind="::user.igst | setDecimal: user.company.noOfDecimalPoints" ></td>
                                 <td style="width:10%"> 
                                     <center>
+                                        <!-- <i  title="User" ng-click="userProduct(user)"  class="fa fa-user myCursorPointer" style="font-size:17px;color:#10709f"> </i> &nbsp; &nbsp; -->
+                                        <i  title="Clone" ng-click="cloneProduct(user)"  class="fa fa-clone myCursorPointer" style="font-size:17px;color:#10709f"> </i> &nbsp; &nbsp;
                                         <i  title="Edit" ng-click="editProduct(user)" class="fa fa-edit myCursorPointer" style="font-size:17px;color:#10709f"> </i> &nbsp; &nbsp;
                                         <i ng-if="enableDisableProductDelete" title="Delete" ng-click="deleteProduct('sm',user.productId)" class="fa fa-times-circle myCursorPointer" style="font-size:17px;color:red"></i>
                                     </center>

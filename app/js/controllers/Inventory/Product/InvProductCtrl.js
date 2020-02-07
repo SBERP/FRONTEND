@@ -215,10 +215,20 @@ function InvProductController($scope, $filter, ngTableParams,apiCall,apiPath,$st
         getSetFactory.set(id);
         $state.go('app.AddInvProduct');
     }
+    // $scope.userProduct = function (user){
+    //     console.log('current user',user);
+    // }
+
+    $scope.cloneProduct = function (user){
+        var user2 = user;
+
+        getSetFactory.set(user2);
+        $state.go('app.CloneInvProduct');
+    }
     
     $scope.deleteProduct = function(size,id)
     {
-        //alert(id);
+        // alert(id);
         toaster.clear();
         if (Modalopened) return;
         

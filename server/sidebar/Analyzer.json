@@ -28,5 +28,15 @@
             {"text": "Purchase","sref": "app.PurchaseReport","translate": "" }
         ],
         "permission": "reports"
+    },
+    {
+        "text": "Outstanding",
+        "sref": "#",
+        "icon": "icon-map",
+        "subnav": [
+            {"text": "Receivable","sref": "app.OutstandingSales","translate": "" },
+            {"text": "Payable","sref": "app.OutstandingPurchase","translate": "" }
+        ],
+        "permission": "reports"
     }
 ]

@@ -64,7 +64,10 @@
                             </label>
                         </div>
                     </td>
-                    <td title="'Month'"  sortable="'Month'" filter="{ 'Month': 'text' }" ng-click="myfunction(user)" >{{user.Month}}</td>
+                    <!-- <td title="'Month'"  sortable="'Month'" filter="{ 'Month': 'text' }" ng-click="myfunction(user)" >{{user.Month}}</td> -->
+                    <td title="'Month'"  sortable="'Month'" filter="{ 'Month': 'text' }">
+                        <a ng-click="myfunction(user)" >{{user.Month}}</a>
+                    </td>
                     <td title="'Total'" sortable="'date'" filter="{ 'entryDate': 'text' }" >{{user.Total}}</td>
                     <td title="'Total Discount'"  filter="{ 'totalDiscount': 'text' }" >{{user.totalDiscount}}</td>
                     <td title="'Extra Charge'"  filter="{ 'extraCharge': 'text' }" >{{user.extraCharge}}</td>
@@ -107,7 +110,10 @@
                             </label>
                         </div>
                     </td>
-                    <td title="'Month'"  sortable="'Month'" filter="{ 'Month': 'text' }" ng-click="myfunctionpurchase(user)" >{{user.Month}}</td>
+                    <!-- <td title="'Month'"  sortable="'Month'" filter="{ 'Month': 'text' }" ng-click="myfunctionpurchase(user)" >{{user.Month}}</td> -->
+                    <td title="'Month'"  sortable="'Month'" filter="{ 'Month': 'text' }">
+                        <a ng-click="myfunctionpurchase(user)">{{user.Month}}</a>
+                    </td>
                     <td title="'Total'" sortable="'date'" filter="{ 'entryDate': 'text' }" >{{user.Total}}</td>
                     <td title="'Total Discount'"  filter="{ 'totalDiscount': 'text' }" >{{user.totalDiscount}}</td>
                     <td title="'Extra Charge'"  filter="{ 'extraCharge': 'text' }" >{{user.extraCharge}}</td>

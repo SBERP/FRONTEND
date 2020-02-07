@@ -4,7 +4,7 @@
 		max-height:100px;
 	}
 	.chosen-container .chosen-drop{
-		display: block !imporatant;
+		display: block !important;
 	}
 	#selectId_chzn .chosen-drop {
 		bottom: 20px;
@@ -179,7 +179,7 @@
 							<label  class="col-sm-9 control-label text-left" style="padding-left: 2px;">{{quickBill.EditBillData.client.cityName}}</label>
 						</div>
 					</div>
-					<div class="col-md-2">
+					<div ng-if="enableDisableGST" class="col-md-2">
 						<div class="form-group" style="margin-bottom: 0px">
 							<label  class="col-sm-3 control-label">GST# :</label>
 							<label  class="col-sm-9 control-label text-left" style="padding-left: 2px;">{{quickBill.EditBillData.client.gst}}</label>
@@ -215,9 +215,9 @@
 							<th class="header" style="width:4%;padding-top:5px !important;padding-bottom:5px !important;" >Qty.</th>
 							<th class="header" style="width:8%;padding-top:5px !important;padding-bottom:5px !important;" >Rate</th>
 							<th class="header" style="width:9%;padding-top:5px !important;padding-bottom:5px !important;">Discount</th>
-							<th class="header" style="width:4%;padding-top:5px !important;padding-bottom:5px !important;" >CGST</th>
-							<th class="header" style="width:4%;padding-top:5px !important;padding-bottom:5px !important;" >SGST</th>
-							<th class="header" style="width:4%;padding-top:5px !important;padding-bottom:5px !important;" >IGST</th>
+							<th ng-if="enableDisableGST" class="header" style="width:4%;padding-top:5px !important;padding-bottom:5px !important;" >CGST</th ng-if="enableDisableGST">
+							<th ng-if="enableDisableGST" class="header" style="width:4%;padding-top:5px !important;padding-bottom:5px !important;" >SGST</th>
+							<th ng-if="enableDisableGST" class="header" style="width:4%;padding-top:5px !important;padding-bottom:5px !important;" >IGST</th>
 							<th class="header" style="width:9%;padding-top:5px !important;padding-bottom:5px !important;" >Amount</th>
 							<th class="header" style="width:7%;padding-top:5px !important;padding-bottom:5px !important;">Action</th>
 						</tr>
@@ -277,15 +277,15 @@
 								</select>
 								<input  type="text" ng-model="item.discount" ng-disabled="enableDisableTaxReadOnly" class="form-control input-sm" style="padding-left: 5px;padding-right: 5px;width:40%;" ng-pattern="/^[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage)"  ng-attr-max="{{item.discountType == 'percentage' && '100' || ''}}" only-number />
 							</td>
-							<td style="text-align:right">
+							<td ng-if="enableDisableGST" style="text-align:right">
 								<input id="price" type="text" ng-disabled="csgstDisable || enableDisableTaxReadOnly" ng-model="item.cgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%"  ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage);zeroSingleGst()" only-number /> 
 								<span ng-if="item.cgstAmount > 0 && !csgstDisable" ng-disabled="csgstDisable" ng-bind="item.cgstAmount"></span>
 							</td>
-							<td style="text-align:right">
+							<td ng-if="enableDisableGST" style="text-align:right">
 								<input id="price" type="text" ng-disabled="csgstDisable || enableDisableTaxReadOnly" ng-model="item.sgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%"  ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage);zeroSingleGst()" only-number /> 
 								<span ng-if="item.sgstAmount > 0 && !csgstDisable" ng-disabled="csgstDisable" ng-bind="item.sgstAmount" ></span>
 							</td>
-							<td style="text-align:right">
+							<td ng-if="enableDisableGST" style="text-align:right">
 								<input id="price" type="text" ng-disabled="igstDisable || enableDisableTaxReadOnly" ng-model="item.igstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%" ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverse(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage);zeroSingleGst()" only-number /> 
 								<span ng-if="item.igstAmount > 0" ng-disabled="igstDisable" ng-bind="item.igstAmount"></span>
 							</td>
@@ -322,15 +322,15 @@
 								</select>
 								<input  type="text" ng-model="quickBill.totalDiscount"  class="form-control input-sm" style="padding-left: 5px;padding-right: 5px;width:40%;" ng-pattern="/^[0-9 .]*$/" ng-change="changeProductTable();advanceValueUpdate()"  ng-attr-max="{{quickBill.totalDiscounttype == 'percentage' && '100' || ''}}" only-number /> 
 							</td>
-							<td style="text-align:right">
+							<td  ng-if="enableDisableGST" style="text-align:right">
 								<input id="price" type="text" ng-disabled="totalCSgstDisable" ng-model="quickBill.totalCgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%"  ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();zeroGstApply();advanceValueUpdate()" only-number /> 
 								<span ng-if="quickBill.totalCgstAmount > 0 && !totalCSgstDisable" ng-disabled="totalCSgstDisable" ng-bind="quickBill.totalCgstAmount"></span>
 							</td>
-							<td style="text-align:right">
+							<td ng-if="enableDisableGST" style="text-align:right">
 								<input id="price" type="text" ng-disabled="totalCSgstDisable" ng-model="quickBill.totalSgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%"  ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();zeroGstApply();advanceValueUpdate()" only-number /> 
 								<span ng-if="quickBill.totalSgstAmount > 0 && !totalCSgstDisable" ng-disabled="totalCSgstDisable" ng-bind="quickBill.totalSgstAmount" ></span>
 							</td>
-							<td style="text-align:right">
+							<td ng-if="enableDisableGST" style="text-align:right">
 								<input id="price" type="text" ng-disabled="totalIgstDisable" ng-model="quickBill.totalIgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%" ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();zeroGstApply();advanceValueUpdate()" only-number /> 
 								<span ng-if="quickBill.totalIgstAmount > 0" ng-disabled="totalIgstDisable" ng-bind="quickBill.totalIgstAmount"></span>
 							</td>
@@ -347,7 +347,7 @@
 							</td>
 							<td> 
 							</td>
-							<td colspan="3" style="text-align:right" ng-bind="quickBill.tax = getTotalTax() ? (getTotalTax() | setDecimal: noOfDecimalPoints) : 0"></td>
+							<td ng-if="enableDisableGST" colspan="3" style="text-align:right" ng-bind="quickBill.tax = getTotalTax() ? (getTotalTax() | setDecimal: noOfDecimalPoints) : 0"></td>
 							<td style="text-align:right" ng-bind="total_without_expense = getTotal() ? (getTotal() | setDecimal: noOfDecimalPoints) : 0;(openExpenseRawData ? total_without_expense : total = total_without_expense)" ></td>
 							<td colspan="1">
 								<button type="button" class="btn btn-sm" data-ng-class="app.theme.brand"  ng-click="openExpenseRaw()">Expense</button>
@@ -393,9 +393,9 @@
 							</td>
 						</tr>
 						<tr ng-if="saleType != 'QuotationPrint'">
-							<td style="text-align:left;" colspan="2" >
+							<td ng-if="enableDisableGST" style="text-align:left;" colspan="2" >
 							</td>
-							<td style="text-align:right" colspan="{{colspanAdvanceValue}}" > <strong> Advance </strong> </td>
+							<td style="text-align:right" colspan="{{colspanAdvanceValue-2}}" > <strong> Advance </strong> </td>
 							<td colspan="2"> 
 								<input placeholder="(&#x20b9;)Advance" type="text" name="advance"  ng-model="quickBill.advance"  class="form-control input-sm"   ng-pattern="/^[0-9 .]*$/" ng-change="changeProductTable()" style="height:30px;padding-left: 6px;padding-right: 6px;padding-bottom: 8px;padding-top: 8px;" only-number /> 
 								<span ng-messages="formBill.advance.$error" ng-if="formBill.advance.$dirty || formBill.advance.$touched"  role="alert">

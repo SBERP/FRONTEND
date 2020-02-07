@@ -282,6 +282,11 @@ function($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvid
         templateUrl: basepath('Inventory/Product/AddInvProduct.html'),
         resolve: requireDeps('angular-chosen', 'toaster', 'ngTableToCsv', 'importExcel', 'exportExcel', 'googleKeyboard')
     })
+    .state('app.CloneInvProduct', {
+        url: '/CloneInvProduct',
+        templateUrl: basepath('Inventory/Product/CloneInvProduct.html'),
+        resolve: requireDeps('angular-chosen', 'toaster', 'ngTableToCsv', 'importExcel', 'exportExcel', 'googleKeyboard')
+    })
     //Show Inventory Product
     .state('app.InvProduct', {
         url: '/InvProduct',
@@ -478,6 +483,46 @@ function($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvid
         resolve: angular.extend(requireDeps('ngTable', 'ngTableExport', 'angular-chosen', 'toaster', 'moment'), {
             headerType: function() {
                 return 'purchase';
+            }
+        })
+    })
+    .state('app.OutstandingSales', {
+        url: '/OutstandingReceivable',
+        templateUrl: basepath('Analyzer/Outstanding/Outstanding.html'),
+        controller: 'OutstandingController as table',
+        resolve: angular.extend(requireDeps('ngTable', 'ngTableExport', 'angular-chosen', 'toaster', 'moment'), {
+            headerType: function() {
+                return 'Wholesales';
+            }
+        })
+    })
+    .state('app.OutstandingPurchase', {
+        url: '/OutstandingPayable',
+        templateUrl: basepath('Analyzer/Outstanding/Outstanding.html'),
+        controller: 'OutstandingController as table',
+        resolve: angular.extend(requireDeps('ngTable', 'ngTableExport', 'angular-chosen', 'toaster', 'moment'), {
+            headerType: function() {
+                return 'purchase';
+            }
+        })
+    })
+    .state('app.AccDatacategorywise', {
+        url: '/AccDatacategorywise',
+        templateUrl: basepath('Accounting/viewData/AccView.html'),
+        controller: 'AccViewController as form',
+        resolve: angular.extend(requireDeps('toaster', 'angular-chosen'), {
+            viewDataType: function() {
+                return 'Categorywise';
+            }
+        })
+    })
+    .state('app.Categorywise', {
+        url: '/Categorywise',
+        templateUrl: basepath('Analyzer/Categorywise/CategoryReport.html'),
+        controller: 'CategoryReportController as form',
+        resolve: angular.extend(requireDeps('ngTable', 'ngTableExport', 'angular-chosen', 'toaster', 'moment'), {
+            headerType: function() {
+                return 'Categorywise';
             }
         })
     })
@@ -895,7 +940,7 @@ function($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvid
         resolve: requireDeps('inputmask', 'angular-chosen', 'ngTable', 'ngTableExport', 'toaster')
     })
     //Accounting Data Ledger
-    .state('app.AccDataLedger', {
+    .state('app.AccDataLedger',{
         url: '/AccDataLedger',
         templateUrl: basepath('Accounting/Ledger/AccDataLedger.html'),
         controller: 'AccDataLedgerController as table',

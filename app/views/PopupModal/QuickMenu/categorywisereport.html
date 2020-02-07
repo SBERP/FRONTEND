@@ -1,0 +1,52 @@
+<div class="modal-header" data-ng-class="app.theme.brand">
+    <button type="button" ng-click="closeButton()" aria-hidden="true" class="close text-md" title="close"><i class="fa fa-times" style="color:white"></i></button>  
+    <h4 id="myModalLabel" class="modal-title">
+        <b ng-if="::draftOrSalesOrder===undefined" >Categorywise Bills</b>
+    </h4>
+</div>
+<div class="modal-body my-model-body">
+    <div class="table-responsive">
+        <table data-ng-table="tableParams"   class="table table-bordered table-striped">
+            <tbody >
+                <!-- <td><b>Product Category</b></td> 
+                <td>Product Subcategory</td> -->
+                <tr data-ng-repeat="user in $data track by $index"  >
+                    <td style="text-align: left" header="'ng-table/headers/checkbox.html'" ng-show="tableParams.multiCheckFlag" >
+                        <div class="checkbox c-checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="user.selected" ng-change="changeBox(user.selected,user)" />
+                                <span class="fa fa-check"></span>
+                            </label>
+                        </div>
+                    </td>
+                    <td data-title="'#'"  style="text-align:center" ng-bind="(itemsPerPage * (pageNumber-1)) + $index+1" ></td>
+                    <td data-title="'Bill Date'" sortable="'date'" filter="{ 'entry_date': 'text' }" ng-bind="::user.entry_date" ></td>
+                    <td data-title="'Bill#'"  filter="{ 'invoice_number': 'text' }" style="text-align:center"  ng-bind="user.invoice_number" ></td>
+                    <td data-title="'Rate'" filter="{ 'total': 'number' }" style="text-align:center" ng-bind="user.total"></td>
+                    <td data-title="'Product Amount'" filter="{ 'total': 'number' }" style="text-align:center" ng-bind="user.total"></td>
+                    <td data-title="'Action'" >
+                        <center>
+                            <i  ng-click="editDataViewSales(user.sale_id)" class="fa fa-edit myCursorPointer" style="font-size:17px;color:#10709f"> </i> &nbsp;
+                            <i ng-if="::draftOrSalesOrder == 'draft'" ng-click="deleteDraft(user)" class="fa fa-times-circle myCursorPointer" style="font-size:17px;color:red"> </i>
+                        </center>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span> 
+    </div>
+</div>
+<script type="text/ng-template" id="ng-table/headers/checkbox.html">
+    <div data-toggle="tooltip" data-title="Check All" class="checkbox c-checkbox" check-all="check-all">
+        <label>
+            <input type="checkbox" ng-model="parentCheckBox" ng-change="changeAllBox(parentCheckBox)" />
+            <span class="fa fa-check"></span>
+        </label>
+    </div>
+</script>
+
+<script type="text/ng-template" id="ng-table/headers/stickerIcon.html">
+    <center>
+        <i  title="Print" ng-click="multiPdfPrint()" ng-if="selectedBoxArray.length > 0 || clientFlag == true" class="fa fa-print" style="font-size:17px;cursor:pointer"> </i> 
+    </center>
+</script>

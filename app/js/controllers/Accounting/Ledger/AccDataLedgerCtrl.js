@@ -6,28 +6,24 @@
 
 App.controller('AccDataLedgerController', AccDataLedgerController);
 
-function AccDataLedgerController($rootScope,$scope, headerType,$filter, ngTableParams,$http,$modal,$state,apiCall,apiPath,$location,getSetFactory,flotOptions, colors,$timeout,toaster,clientFactory,productFactory,stateCityFactory) {
-    // console.log('headerType',headerType)
+function AccDataLedgerController($rootScope,$scope,headerType,$filter, ngTableParams,$http,$modal,$state,apiCall,apiPath,$location,getSetFactory,flotOptions, colors,$timeout,toaster,clientFactory,productFactory,stateCityFactory) {
     'use strict';
     var vm = this;
     var data = [];
     $scope.billData = [];
     $scope.purchaseBillData = [];
     $scope.headerType = headerType;
-    
     $scope.myArrayData = [];
     
     var formdata = new FormData();
-    
-    var ledgerId = getSetFactory.get();
-    
+    var ledgerId = $rootScope.$storage.ledgerId
     getSetFactory.blank(); // Empty It
     
     //vm.pieChartData = [];
     vm.headingName;
     
     apiCall.getCall(apiPath.getAllLedger+'/'+ledgerId).then(function(responseDrop){
-        
+        // console.log('responseDrop',responseDrop);
         toaster.pop('wait', 'Please Wait', 'Data Loading....',60000);
         
         vm.headingName = responseDrop.ledgerName;
@@ -221,7 +217,6 @@ for (var i = 0; i < data.length; i++) {
         $scope.TotalofDebit = totaldebit;
         $scope.TotalofCredit = totalcredit;
     }
-    
 }
 //console.log(vm.pieFlotCharts);
 
@@ -238,89 +233,7 @@ data = $scope.contents;
 $scope.mySecondArrayData = secondLayoutArrayData;
 
 $scope.TableData();
-$scope.editDataViewSales = function(id,flag){
-    // console.log(id);
-    
-    if(flag == 0){
-        apiCall.getCall(apiPath.getsalebillbyid+id).then(function(response){
-            // console.log('retailsdata',response);
-            $scope.billData = response;
-            
-            if(flag == 1){
-                getSetFactory.set($scope.returnSinglePurchaseData(id));
-            }
-            else{
-                // console.log('check data',$scope.returnSingleData(id))
-                getSetFactory.set($scope.returnSingleData(id));
-            }
-            
-            $state.go("app.WholesaleBill");  
-        })
-    }
-    
-    else if(flag==1){
-        apiCall.getCall(apiPath.getpurchasebillbyid+id).then(function(response){
-            console.log('purchase data',response);
-            $scope.purchaseBillData = response;
-            
-            if(flag == 1){
-                // console.log('there for purchase');
-                getSetFactory.set($scope.returnSinglePurchaseData(id));
-            }
-            else{
-                // console.log('check data',$scope.returnSingleData(id))
-                getSetFactory.set($scope.returnSingleData(id));
-            }
-            
-            // if($scope.headerType == 'Retailsales'){
-            //     $state.go("app.RetailsaleBill");
-            // }
-            // else if(flag == 0){
-            //     $state.go("app.WholesaleBill");
-            // }
-            // else if(flag == 1){
-            $state.go("app.PurchaseBill");
-            // }
-            // else if($scope.headerType == 'Sales Orders'){
-            //     $state.go("app.AccSalesOrder");
-            // }
-            // else if($scope.headerType == 'Quotations'){
-            //     $state.go("app.QuotationPrint");
-            // }
-            
-            // getSetFactory.blank();
-            
-        })
-    }
-    
-    $scope.returnSingleData = function(saleId)
-    {
-        var tempObject = {};
-        
-        for(var i=0;i<$scope.billData.length;i++)
-        {
-            var billdata = $scope.billData[i];
-            if(billdata.saleId == saleId){
-                tempObject = billdata;
-                // console.log('tempObject',tempObject);
-            }
-        }
-        return tempObject;
-    }
-    $scope.returnSinglePurchaseData = function(purchaseId)
-    {
-        var tempObject = {};
-        
-        for(var i=0;i<$scope.purchaseBillData.length;i++)
-        {
-            var billdata = $scope.purchaseBillData[i];
-            if(billdata.purchaseId == purchaseId){
-                tempObject = billdata;
-            }
-        }
-        return tempObject;
-    }
-}
+
 });
 
 $scope.TableData = function(){
@@ -367,6 +280,7 @@ $scope.TableData = function(){
             // $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
             // }
             /** End Table **/
+            params.total(data.length);
             var orderedData;
             
             if(params.sorting().date === 'asc'){
@@ -527,6 +441,215 @@ $scope.TableData = function(){
     // console.log('Show balance' ,data[ik]['amount'])
     // /*End of closing balance*/ 
 }
+$scope.editDataViewSales = function(id,flag){
+    
+    if(flag == 0){
+        apiCall.getCall(apiPath.getsalebillbyid+id).then(function(response){
+            $scope.billData = response;
+            
+            if(flag == 1){
+                getSetFactory.set($scope.returnSinglePurchaseData(id));
+            }
+            else{
+                getSetFactory.set($scope.returnSingleData(id));
+            }
+            $state.go("app.WholesaleBill");  
+        })
+    }
+    else if(flag==1){
+        apiCall.getCall(apiPath.getpurchasebillbyid+id).then(function(response){
+            // console.log('purchase data',response);
+            $scope.purchaseBillData = response;
+            
+            if(flag == 1){
+                getSetFactory.set($scope.returnSinglePurchaseData(id));
+            }
+            else{
+                getSetFactory.set($scope.returnSingleData(id));
+            }
+            $state.go("app.PurchaseBill");
+            
+        })
+    }
+    
+    $scope.returnSingleData = function(saleId)
+    {
+        var tempObject = {};
+        
+        for(var i=0;i<$scope.billData.length;i++)
+        {
+            var billdata = $scope.billData[i];
+            if(billdata.saleId == saleId){
+                tempObject = billdata;
+            }
+        }
+        return tempObject;
+    }
+    $scope.returnSinglePurchaseData = function(purchaseId)
+    {
+        var tempObject = {};
+        
+        for(var i=0;i<$scope.purchaseBillData.length;i++)
+        {
+            var billdata = $scope.purchaseBillData[i];
+            if(billdata.purchaseId == purchaseId){
+                tempObject = billdata;
+            }
+        }
+        return tempObject;
+    }
+}
+
+/* print ledger */
+
+$scope.ledgerprint =  function(size){
+    var i = [];
+    $scope.ledgerArray = [];
+    var GetTransationPath = apiPath.getAllLedger+'/'+ledgerId+'/transactions';
+    apiCall.getCall(GetTransationPath).then(function(response){ 
+        // console.log('response from API',response);
+        $scope.ledgerArray = response;
+        
+        var data = $scope.ledgerArray.length;
+        
+        var tempData = `
+        <table style="width: 100%; margin: 0 0 0 0; font-family: calibri; border: 1px solid black; border-collapse: collapse; border-padding: 0;" cellspacing="0" cellpadding="0">
+        <tbody style="height: 10px;">
+        <tr style="padding: 0px; padding-top: 5px;">
+        
+        <td style="text-align: center;" colspan="16"><strong><span style="font-size: 10px; vertical-align: top; padding: 0; text-align: top !important; padding-top: 5px;" colspan="16">"SHREE GANESHAY NAMAH"</span></strong></td>
+        </tr>
+        </tbody>
+        <tbody>
+        <tr>
+        <td style="text-align: center; font-size: 20px; height: 120px; padding: 5px 5px 2px 5px;" colspan="16"><strong>Vaastu</strong><br> <span style="font-size: 12px;">1, Radha Krishna Ind Soc,Nr. Navjivan Circle BHATAR</span></td>
+        </tr>
+        </tbody>
+        <tbody>
+        <tr style="height: 20px; padding: 5px; border-bottom;none !important; border-bottom: 1px solid black;">
+        <td style="height: 20px; text-align: center; border-bottom;none !important;padding: 5px;" colspan="16"><span style="font-size: 12px; vertical-align: top; text-align: top !important;"> <strong>Phone : 9327921602 </strong>&nbsp;&nbsp;&nbsp;&nbsp; <strong>Email : account@vaastuinterio.in</strong></span></td>
+        </tr>
+        </tbody>
+        
+        <tbody>
+        <tr>
+        <td>[productInfo]
+        
+        </table>
+        `
+        function getInvoiceHeading () {
+            
+            var productTitleHead = 
+            `
+            </td></tr></tbody>
+            <tbody>
+            <tr style='height: 15px; text-align: left; background-color: transparent; '>
+            <td class='tg-m36b theqp' style='font-size: 0.9em; padding: 10px; height: 15px; text-align: center; border: 1px solid black;' colspan='3'><strong>Entry Date</strong></td>
+            <td class='tg-m36b theqp' style='font-size: 0.9em; padding: 10px; height: 15px; text-align: center; border: 1px solid black;' colspan='3'><strong>Ledger Name</strong></td>
+            <td class='tg-ullm thsrno'style='font-size: 0.9em; padding: 10px; height: 15px; width: 10px; text-align: center; border: 1px solid black;' colspan='2'><strong>Sales Bill</strong></td>
+            <td class='tg-ullm thsrno'style='font-size: 0.9em; padding: 10px; height: 15px; text-align: center; border: 1px solid black;' colspan='2'><strong>Purchase Bill</strong></td>
+            <td class='tg-ullm thsrno'style='font-size: 0.9em; padding: 10px; height: 15px; text-align: center; border: 1px solid black;' colspan='2'><strong>Debit</strong></td>
+            <td class='tg-ullm thsrno'style='font-size: 0.9em; padding: 10px; height: 15px; text-align: center; border: 1px solid black;' colspan='2'><strong>Credit</strong></td>
+            <td class='tg-ullm thsrno'style='font-size: 0.9em; padding: 10px; height: 15px; text-align: center; border: 1px solid black;' colspan='2'><strong>Closing Balance</strong></td>
+            
+            </tr>
+            </tbody>
+            <tbody>
+            <tr style=' height:100%; text-align: border-top: 1px solid black; left; height: 1px; background-color: transparent;'>
+            [Description]
+            `;
+            var output = "";
+            
+            // var count=0;
+            // var cnt=0;
+            // var ij = 0;
+            // var closingbalance1=0.0;
+            // var closingbalance2=0.0;
+            // var cb = 0;
+            
+            for(var Array=0;Array<data;Array++){ 
+                var ledger = $scope.ledgerArray[Array];
+                
+                if(ledger.billNumber==null){
+                    ledger.billNumber = '';
+                }
+                if(ledger.invoiceNumber==null){
+                    ledger.invoiceNumber = '';
+                }
+                if(ledger.amountType =='credit'){
+                    ledger.credit = ledger.amount;
+                    ledger.debit = '';
+                }
+                if(ledger.amountType =='debit'){
+                    ledger.credit = '';
+                    ledger.debit = ledger.amount;
+                    
+                }
+                // var count=0;
+                // var cnt=0;
+                // var ij = 0;
+                // var closingbalance1=0.0;
+                // var closingbalance2=0.0;
+                // var cb = 0;
+                
+                // console.log('data',data)
+                // for (ij=0;ij<ledger.length;ij++){
+                
+                //     if (ledger.amountType == 'credit'){
+                
+                //         count +=  parseFloat(ledger.amount);
+                //         // console.log('count',count);
+                //         closingbalance1 +=  parseFloat(ledger.amount);   //for closing balance
+                //         // console.log('closingbalance1',closingbalance1);
+                //     }
+                //     else{
+                //         cnt +=  parseFloat(ledger.amount);
+                //         // console.log('cnt',cnt);
+                //         closingbalance2 +=  parseFloat(ledger.amount);  //for closing balance
+                //         // console.log('closingbalance2',closingbalance2);
+                //     }
+                //     cb = (closingbalance1-closingbalance2).toFixed(2);
+                //     ledger.currentBalance=cb;
+                // }
+                // console.log('ledger',ledger);
+                
+                output = output+ 
+                "<td colspan='3' style='font-size: 12px; border: 1px solid black; height:  0.7cm; padding:0 0 0 0; text-align:center'>"+ ledger.entryDate +
+                "</td><td colspan='3' style='font-size: 12px; border: 1px solid black; height:  0.7cm; padding:0 0 0 0; text-align:center'>"+ ledger.ledger.ledgerName +
+                "</td><td colspan='2' style='font-size: 12px; border: 1px solid black; height:  0.7cm; padding:0 0 0 0; text-align:center'>"+ ledger.invoiceNumber +
+                "</td><td colspan='2' style='font-size: 12px; border: 1px solid black; height:  0.7cm; padding:0 0 0 0; text-align:center'>"+ ledger.billNumber +
+                "</td><td colspan='2' style='font-size: 12px; border: 1px solid black; height:  0.7cm; padding:0 0 0 0; text-align:center'>"+ ledger.debit +
+                "</td><td colspan='2' style='font-size: 12px; border: 1px solid black; height:  0.7cm; padding:0 0 0 0; text-align:center'>"+ ledger.credit  +
+                "</td><td colspan='2' style='font-size: 12px; border: 1px solid black; height:  0.7cm; padding:0 0 0 0; text-align:center'>"+ ledger.closingBalance  +
+                "</td></tr></tbody>";
+                
+            }
+            productTitleHead = productTitleHead.split('[Description]').join(output);
+            return productTitleHead
+        }
+        var productInfoHtml = getInvoiceHeading();
+        tempData = tempData.replace("[productInfo]",productInfoHtml,"g");
+        
+        var mywindow = window.open('', 'PRINT');
+        var is_chrome = Boolean(mywindow.chrome);
+        mywindow.document.write(tempData);
+        if (is_chrome) {
+            setTimeout(function () { // wait until all resources loaded 
+                mywindow.focus(); // necessary for IE >= 10
+                mywindow.print();  // change window to mywindow
+                mywindow.close();// change window to mywindow
+            }, 2000);
+        }
+        else {
+            mywindow.document.close(); // necessary for IE >= 10
+            mywindow.focus(); // necessary for IE >= 10
+            mywindow.print();
+            mywindow.close();
+        }
+        // return true;
+    });
+}
+/*end print ledger */
 
 $scope.firstLayout = true;
 $scope.secondLayout = false;
@@ -707,7 +830,7 @@ History Modal
 $scope.openBillHistoryModal = function (size,responseData,draftOrSalesOrder) {
     
     toaster.clear();
-    console.log(responseData);
+    // console.log(responseData);
     if (Modalopened) return;
     
     toaster.pop('wait', 'Please Wait', 'Modal Data Loading....',60000);

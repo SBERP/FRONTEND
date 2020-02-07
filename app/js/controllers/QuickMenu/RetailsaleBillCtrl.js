@@ -71,7 +71,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
     /* VALIDATION END */
     vm.paymentModeDrop =['cash','bank','card','credit','neft','rtgs','imps','nach','ach'];
     
-    $scope.quickBill.paymentMode = 'cash';
+    $scope.quickBill.paymentMode = 'credit';
     vm.serviceDate;
     var arrayData1=[];
     
@@ -347,7 +347,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
         else
         {
             var totalExpense = expenseType=="flat" ? 
-            parseFloat(totalData) - parseFloat(expenseAmt)  
+            parseFloat(totalData) - parseFloat(expenseAmt)
             : (  parseFloat(totalData) - ((parseFloat(expenseAmt)/100)*parseFloat($scope.total_without_expense)));
         }
         
@@ -631,7 +631,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
         
         $scope.changeProductArray = true;
         
-        $scope.advanceValueUpdate();
+        // $scope.advanceValueUpdate();
     };
     
     $scope.addExpenseRow = function(index){
@@ -659,13 +659,14 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
         
         // $scope.changeProductArray = true;
         
-        $scope.advanceValueUpdate();
+        // $scope.advanceValueUpdate();
     };
     var expenseGetApiPath = apiPath.settingExpense;
     $scope.expenseData=[];
     // Get All Expense Call 
     apiCall.getCall(expenseGetApiPath).then(function(response){
         $scope.expenseData = response;
+        // console.log('response',response);
     });
     
     //save expense-name in expense-data
@@ -688,7 +689,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
         });
     }
     
-    $scope.myCustomProductFilter = function(item) 
+    $scope.myCustomProductFilter = function(item)
     {
         return item[$scope.displayProductName] != null && item[$scope.displayProductName] != '';
     }
@@ -820,19 +821,38 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                         
                         if($scope.quickBill.companyId.state.stateAbb==$scope.quickBill.stateAbb.stateAbb)
                         {
-                            vm.AccBillTable[index].cgstPercentage = tempCgst;
-                            vm.AccBillTable[index].sgstPercentage = tempSgst;
-                            vm.AccBillTable[index].igstPercentage = 0;
-                            $scope.igstDisable = true;
-                            $scope.csgstDisable = false;
+                            if($scope.enableDisableGST){
+                                vm.AccBillTable[index].cgstPercentage = tempCgst;
+                                vm.AccBillTable[index].sgstPercentage = tempSgst;
+                                vm.AccBillTable[index].igstPercentage = 0;
+                                $scope.igstDisable = true;
+                                $scope.csgstDisable = false;
+                            }
+                            else{
+                                vm.AccBillTable[index].cgstPercentage = 0;
+                                vm.AccBillTable[index].sgstPercentage = 0;
+                                vm.AccBillTable[index].igstPercentage = 0;
+                                $scope.igstDisable = true;
+                                $scope.csgstDisable = true;
+                            }
                         }
                         else
                         {
-                            $scope.igstDisable = false;
-                            $scope.csgstDisable = true;
-                            vm.AccBillTable[index].cgstPercentage = 0;
-                            vm.AccBillTable[index].sgstPercentage = 0;
-                            vm.AccBillTable[index].igstPercentage = tempIgst;	
+                            if($scope.enableDisableGST){
+                                // console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz',$scope.enableDisableGST);
+                                $scope.igstDisable = false;
+                                $scope.csgstDisable = true;
+                                vm.AccBillTable[index].cgstPercentage = 0;
+                                vm.AccBillTable[index].sgstPercentage = 0;
+                                vm.AccBillTable[index].igstPercentage = tempIgst;	
+                            }
+                            else{
+                                $scope.igstDisable = true;
+                                $scope.csgstDisable = true;
+                                vm.AccBillTable[index].cgstPercentage = 0;
+                                vm.AccBillTable[index].sgstPercentage = 0;
+                                vm.AccBillTable[index].igstPercentage = 0;	
+                            }
                         }
                         
                         vm.AccBillTable[index].price = grandPrice;
@@ -842,8 +862,10 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                         vm.AccBillTable[index].size = item.size;
                         vm.AccBillTable[index].variant = item.variant != undefined ? item.variant : '';
                         if (item.hasOwnProperty('realQtyData') && angular.isDefined(item.realQtyData)) {
+                            console.log('item.realQtyData',item.realQtyData);
                             vm.AccBillTable[index].realQtyData = item.realQtyData;
                         }else{
+                            // console.log('item.qty',item.qty);
                             vm.AccBillTable[index].realQtyData = item.qty;
                         }
                         
@@ -853,16 +875,20 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                         if (item.taxInclusive == "inclusive")
                         {
                             vm.AccBillTable[index].amount = $filter('setDecimal')(grandPrice * vm.AccBillTable[index].qty,$scope.noOfDecimalPoints);
-                            $scope.calculateTaxReverseTwo(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage,index);
+                            if($scope.enableDisableGST){
+                                // console.log('iiiiiiiiiiiiiiiiii');
+                                $scope.calculateTaxReverseTwo(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage,index);
+                            }
                         }
                         else{
+                            // console.log('nnnnnnnnnnnnnnnnnn');
                             $scope.calculateTaxReverse(vm.AccBillTable[index],tempCgst,tempSgst,tempIgst,index);
                         }
                         
                         $scope.changeProductArray = true;
                         
                         if(!$scope.quickBill.EditBillData){
-                            $scope.advanceValueUpdate();
+                            // $scope.advanceValueUpdate();
                         }
                         clearInterval(timeTrigger);
                     }
@@ -1038,8 +1064,10 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                     }
                 }
                 
-                $scope.changeQuantity = function(index)
+                $scope.changeQuantity = function(item,index)
                 {
+                    item.totalFt = $filter('setDecimal')(parseFloat(item.qty)*item.lengthValue*item.widthValue*item.heightValue/parseFloat(item.devideFactor),$scope.noOfDecimalPoints);
+                    item.amount =  $filter('setDecimal')(item.price*item.qty);
                     var productId = vm.AccBillTable[index].productId;
                     productFactory.getSingleProduct(productId).then(function(response)
                     {
@@ -1053,21 +1081,28 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                     if(vm.AccBillTable[index].amount == 0) {
                                         vm.AccBillTable[index].amount = $filter('setDecimal')(response.mrp * vm.AccBillTable[index].qty,$scope.noOfDecimalPoints);
                                     }
-                                    $scope.calculateTaxReverseTwo(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage,index);
+                                    if($scope.enableDisableGST){
+                                        $scope.calculateTaxReverseTwo(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage,index);
+                                    }
                                 });
                             }
                             else{
                                 $scope.getAdvanceMouCalculationPrice(response,index, function (responsePrice) {
                                     vm.AccBillTable[index].price = responsePrice;
-                                    $scope.calculateTaxReverse(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage,index);
+                                    if($scope.enableDisableGST){
+                                        $scope.calculateTaxReverse(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage,index);
+                                    }
                                 });
                             }
                         }
                         else if ($scope.enableDisableLWHSetting) {
+                            
                             if (response.taxInclusive == 'inclusive')
                             {
                                 var calcQty = getCalcQty(vm.AccBillTable[index],$scope.enableDisableLWHArray[index]);
-                                var calcTax = parseFloat(vm.AccBillTable[index].cgstPercentage) + parseFloat(vm.AccBillTable[index].sgstPercentage) + parseFloat(vm.AccBillTable[index].igstPercentage);
+                                if($scope.enableDisableGST){
+                                    var calcTax = parseFloat(vm.AccBillTable[index].cgstPercentage) + parseFloat(vm.AccBillTable[index].sgstPercentage) + parseFloat(vm.AccBillTable[index].igstPercentage);
+                                }
                                 vm.AccBillTable[index].stockFt = calcQty;
                                 if (angular.isDefined(vm.AccBillTable[index].price) && !isNaN(vm.AccBillTable[index].price) && vm.AccBillTable[index].price != 0) {
                                     vm.AccBillTable[index].amount = $filter('setDecimal')(vm.AccBillTable[index].price*calcQty*(1+(calcTax)),$scope.noOfDecimalPoints);
@@ -1077,9 +1112,13 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                 if(vm.AccBillTable[index].amount == 0) {
                                     vm.AccBillTable[index].amount = $filter('setDecimal')(response.mrp * calcQty,$scope.noOfDecimalPoints);
                                 }
-                                $scope.calculateTaxReverseTwo(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage,index);
+                                if($scope.enableDisableGST){
+                                    $scope.calculateTaxReverseTwo(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage,index);
+                                }
                             }else{
-                                $scope.calculateTaxReverse(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage,index);
+                                if($scope.enableDisableGST){
+                                    $scope.calculateTaxReverse(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage,index);
+                                }
                             }
                         }
                         else
@@ -1090,9 +1129,13 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                 if(vm.AccBillTable[index].amount == 0){
                                     vm.AccBillTable[index].amount = $filter('setDecimal')(response.mrp * vm.AccBillTable[index].qty,$scope.noOfDecimalPoints);
                                 }
-                                $scope.calculateTaxReverseTwo(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage,index);
+                                if($scope.enableDisableGST){
+                                    $scope.calculateTaxReverseTwo(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage,index);
+                                }
                             }else{
-                                $scope.calculateTaxReverse(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage,index);
+                                if($scope.enableDisableGST){
+                                    $scope.calculateTaxReverse(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage,index);
+                                }
                             }
                         }
                     });
@@ -1188,6 +1231,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                     {
                         var product = vm.AccBillTable[i];
                         // var vartax = vm.productTax[i];
+                        // console.log('GST?',$scope.enableDisableGST);
                         gst.cgst += parseFloat(product.cgstAmount);
                         gst.sgst += parseFloat(product.sgstAmount);
                         gst.igst += parseFloat(product.igstAmount);
@@ -1286,7 +1330,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                     }
                     
                     if(!$scope.quickBill.EditBillData){
-                        $scope.advanceValueUpdate();
+                        // $scope.advanceValueUpdate();
                     }
                 }
                 
@@ -1314,37 +1358,38 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                     }else{
                         getFlatCess = calcQty * item.cessFlat;
                     }
-                    var TaxSum = getCgst+getSgst+getIgst+getCess;
-                    vm.AccBillTable[index].price = $filter('setDecimal')(((item.amount-getFlatCess)/ (1+(TaxSum/100))) / parseFloat(calcQty),$scope.noOfDecimalPoints);
-                    vm.AccBillTable[index].cgstAmount = $filter('setDecimal')(vm.AccBillTable[index].price * getCgst/100,$scope.noOfDecimalPoints);
-                    vm.AccBillTable[index].sgstAmount = $filter('setDecimal')(vm.AccBillTable[index].price * getSgst/100,$scope.noOfDecimalPoints);
-                    vm.AccBillTable[index].igstAmount = $filter('setDecimal')(vm.AccBillTable[index].price * getIgst/100,$scope.noOfDecimalPoints);
-                    vm.AccBillTable[index].cessAmount = $filter('setDecimal')((vm.AccBillTable[index].price * getCess/100)+getFlatCess,$scope.noOfDecimalPoints);
-                    
+                    if($scope.enableDisableGST){
+                        var TaxSum = getCgst+getSgst+getIgst+getCess;
+                        vm.AccBillTable[index].price = $filter('setDecimal')(((item.amount-getFlatCess)/ (1+(TaxSum/100))) / parseFloat(calcQty),$scope.noOfDecimalPoints);
+                        vm.AccBillTable[index].cgstAmount = $filter('setDecimal')(vm.AccBillTable[index].price * getCgst/100,$scope.noOfDecimalPoints);
+                        vm.AccBillTable[index].sgstAmount = $filter('setDecimal')(vm.AccBillTable[index].price * getSgst/100,$scope.noOfDecimalPoints);
+                        vm.AccBillTable[index].igstAmount = $filter('setDecimal')(vm.AccBillTable[index].price * getIgst/100,$scope.noOfDecimalPoints);
+                        vm.AccBillTable[index].cessAmount = $filter('setDecimal')((vm.AccBillTable[index].price * getCess/100)+getFlatCess,$scope.noOfDecimalPoints);
+                        
+                    }
                     if(!$scope.quickBill.EditBillData){
-                        $scope.advanceValueUpdate();
+                        // $scope.advanceValueUpdate();
                     }
                 }
                 
                 /** END **/
                 
                 
-                $scope.advanceValueUpdate = function(){
-                    
-                    setTimeout(function () { // wait until all resources loaded 
-                        var expenseData;
-                        if($scope.openExpenseRawData)
-                        {
-                            expenseData = $scope.expenseAmount[$scope.expenseAmount.length-1];
-                        }
-                        else
-                        {
-                            expenseData = $scope.total_without_expense;
-                        }
-                        $scope.quickBill.advance = $filter('setDecimal')(expenseData,2);
-                        $scope.$digest();
-                    }, 1000);
-                }
+                // $scope.advanceValueUpdate = function(){
+                //     setTimeout(function () { // wait until all resources loaded 
+                //         var expenseData;
+                //         if($scope.openExpenseRawData)
+                //         {
+                //             expenseData = $scope.expenseAmount[$scope.expenseAmount.length-1];
+                //         }
+                //         else
+                //         {
+                //             expenseData = $scope.total_without_expense;
+                //         }
+                //         $scope.quickBill.advance = $filter('setDecimal')(expenseData,2);
+                //         $scope.$digest();
+                //     }, 1000);
+                // }
                 
                 /** Check Update Or Insert Bill **/
                 
@@ -1405,6 +1450,8 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                 $scope.quickBill.EditBillData.lastPdf = articleWithMaxNumber || {};
                             }
                         }
+                        
+                        // console.log('$scope.quickBill.EditBillData',$scope.quickBill.EditBillData);
                         
                         if($scope.saleType == 'RetailsaleBill' || $scope.saleType == 'WholesaleBill' || $scope.saleType == 'SalesOrder'){
                             
@@ -1576,7 +1623,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                         }
                         vm.AccBillTable = angular.copy(jsonProduct.inventory);
                         
-                        
                         //inventory
                         var EditProducArray = angular.copy(jsonProduct.inventory);
                         var count = EditProducArray.length;
@@ -1601,9 +1647,12 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                     $scope.calculateTaxReverse(vm.AccBillTable[d],parseFloat(resData.vat),parseFloat(resData.additionalTax),0,d);
                                 }
                                 else{
-                                    vm.AccBillTable[d].cgstPercentage = checkGSTValue(EditProducArray[d].cgstPercentage);
-                                    vm.AccBillTable[d].sgstPercentage = checkGSTValue(EditProducArray[d].sgstPercentage);
-                                    vm.AccBillTable[d].igstPercentage = checkGSTValue(EditProducArray[d].igstPercentage);
+                                    // console.log('in else part');
+                                    if($scope.enableDisableGST){
+                                        vm.AccBillTable[d].cgstPercentage = checkGSTValue(EditProducArray[d].cgstPercentage);
+                                        vm.AccBillTable[d].sgstPercentage = checkGSTValue(EditProducArray[d].sgstPercentage);
+                                        vm.AccBillTable[d].igstPercentage = checkGSTValue(EditProducArray[d].igstPercentage);
+                                    }
                                 }
                                 vm.AccBillTable[d].amount = EditProducArray[d].amount; // For Amount (Reverse Calculation) not be Incorrect
                                 
@@ -1746,9 +1795,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                             }
                         }	
                         /** End **/
-                        
-                        
-                        
                         
                         //Change in Product Table
                         $scope.changeProductTable = function(){
@@ -1961,40 +2007,44 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                     {
                                         if($scope.quickBill.companyId.state.stateAbb==state)
                                         {
-                                            /* per product GST */
-                                            var tempCgst = checkGSTValue(response.vat);
-                                            var tempSgst = checkGSTValue(response.additionalTax);
-                                            vm.AccBillTable[indexProduct].cgstPercentage = tempCgst;
-                                            vm.AccBillTable[indexProduct].sgstPercentage = tempSgst;
-                                            vm.AccBillTable[indexProduct].igstPercentage = 0;
-                                            $scope.igstDisable=true;
-                                            $scope.csgstDisable=false;
-                                            /* per product GST */
-                                            
-                                            /* Overall GST */
-                                            $scope.totalCSgstDisable = false;
-                                            $scope.totalIgstDisable = true;
-                                            $scope.quickBill.totalCgstPercentage = 0;
-                                            $scope.quickBill.totalSgstPercentage = 0;
-                                            $scope.quickBill.totalIgstPercentage = 0;
-                                            /* End */
+                                            if($scope.enableDisableGST){
+                                                /* per product GST */
+                                                var tempCgst = checkGSTValue(response.vat);
+                                                var tempSgst = checkGSTValue(response.additionalTax);
+                                                vm.AccBillTable[indexProduct].cgstPercentage = tempCgst;
+                                                vm.AccBillTable[indexProduct].sgstPercentage = tempSgst;
+                                                vm.AccBillTable[indexProduct].igstPercentage = 0;
+                                                $scope.igstDisable=true;
+                                                $scope.csgstDisable=false;
+                                                /* per product GST */
+                                                
+                                                /* Overall GST */
+                                                $scope.totalCSgstDisable = false;
+                                                $scope.totalIgstDisable = true;
+                                                $scope.quickBill.totalCgstPercentage = 0;
+                                                $scope.quickBill.totalSgstPercentage = 0;
+                                                $scope.quickBill.totalIgstPercentage = 0;
+                                                /* End */
+                                            }
                                         }
                                         else
                                         {
-                                            /* per product GST */
-                                            var tempIgst = checkGSTValue(response.igst);
-                                            vm.AccBillTable[indexProduct].cgstPercentage = 0;
-                                            vm.AccBillTable[indexProduct].sgstPercentage = 0;
-                                            vm.AccBillTable[indexProduct].igstPercentage = tempIgst;
-                                            $scope.csgstDisable = true;
-                                            $scope.igstDisable = false;
-                                            /* per product GST */
-                                            
-                                            /* Overall GST */
-                                            $scope.totalCSgstDisable = true;
-                                            $scope.totalIgstDisable = false;
-                                            /* End */
-                                        }		
+                                            if($scope.enableDisableGST){
+                                                /* per product GST */
+                                                var tempIgst = checkGSTValue(response.igst);
+                                                vm.AccBillTable[indexProduct].cgstPercentage = 0;
+                                                vm.AccBillTable[indexProduct].sgstPercentage = 0;
+                                                vm.AccBillTable[indexProduct].igstPercentage = tempIgst;
+                                                $scope.csgstDisable = true;
+                                                $scope.igstDisable = false;
+                                                /* per product GST */
+                                                
+                                                /* Overall GST */
+                                                $scope.totalCSgstDisable = true;
+                                                $scope.totalIgstDisable = false;
+                                                /* End */
+                                            }	
+                                        }	
                                     }
                                 });	
                             }
@@ -2129,7 +2179,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                         $scope.popFurther(generate);
                                     }
                                     
-                                }, function (returnModalData2) {
+                                }, function (returnModalData2){
                                     Modalopened = false;
                                     formdata.set('workflowStatus',returnModalData2.statusId);
                                     formdata.set('assignedTo',$rootScope.$storage.authUser.userId);
@@ -2141,6 +2191,8 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                             }
                         }
                         $scope.popFurther = function(generate) {
+                            // console.log('generate',generate);
+                            // console.log('$scope.saleType',$scope.saleType);
                             if($scope.quickBill.EditBillData){
                                 
                                 formdata.delete('companyId');
@@ -2164,8 +2216,9 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                 if($scope.changeProductArray){
                                     
                                     formdata.set('total',$scope.total);
+                                    // console.log('$scope.enableDisableGST',$scope.enableDisableGST);
                                     // if($scope.enableDisableGST){
-                                    //     formdata.set('tax',$scope.quickBill.tax);
+                                    formdata.set('tax',$scope.quickBill.tax);
                                     // }
                                     
                                     formdata.delete('extraCharge');
@@ -2177,10 +2230,11 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                     
                                     $scope.quickBill.totalDiscounttype ? formdata.set('totalDiscounttype',$scope.quickBill.totalDiscounttype):formdata.set('totalDiscounttype','flat');
                                     $scope.quickBill.totalDiscount ? formdata.set('totalDiscount',$scope.quickBill.totalDiscount):formdata.set('totalDiscount',0);
-                                    
+                                    // if($scope.enableDisableGST){
                                     formdata.set('totalCgstPercentage',checkGSTValue($scope.quickBill.totalCgstPercentage));
                                     formdata.set('totalSgstPercentage',checkGSTValue($scope.quickBill.totalSgstPercentage));
                                     formdata.set('totalIgstPercentage',checkGSTValue($scope.quickBill.totalIgstPercentage));
+                                    // }
                                     
                                 }
                                 
@@ -2279,6 +2333,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                     formdata.set('cityId',$scope.quickBill.cityId.cityId);
                                 }
                                 
+                                
                                 /** End **/
                                 
                                 if($scope.saleType == 'QuotationPrint'){
@@ -2296,7 +2351,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                     {
                                         formdata.set('serviceDate',fServiceDate);
                                     }
-                                    
                                     formdata.set('invoiceNumber',$scope.quickBill.invoiceNumber);
                                     
                                     if(!formdata.has('paymentMode')){
@@ -2354,8 +2408,8 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                     formdata.set('transactionDate',tdate);	
                                 }
                                 
-                                
                                 //Inventory
+                                // console.log('vm.AccBillTable',vm.AccBillTable);
                                 var json2 = angular.copy(vm.AccBillTable);
                                 
                                 for(var i=0;i<json2.length;i++){
@@ -2397,7 +2451,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                 if(generate == 'preprint'){
                                     headerData.operation = 'preprint';
                                 }else if(generate == 'generate'){
-                                    headerData.operation = 'generate';
+                                    headerData.operation = ' ';
                                 }
                                 if($scope.saleType == 'SalesOrder')
                                 {
@@ -2410,7 +2464,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                         headerData.isSalesOrder = 'ok';
                                     }
                                     //headerData.isSalesOrderUpdate = 'ok';
-                                }
+                                }       
                                 // else if($scope.saleType == 'WholesaleBill' && formdata.has('isSalesOrderUpdate')){
                                 // 	headerData.isSalesOrderUpdate = 'ok';
                                 // 	formdata.delete('isSalesOrderUpdate');
@@ -2424,7 +2478,19 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                     }
                                 }
                             }
+                            // for (var pair of formdata.entries()) {
+                            //     console.log('formdata?',pair[0]+ ', ' + pair[1]);
+                            // }
+                            // console.log('headerData',headerData);
+                            
+                            // for (var pair of formdata.entries()) {
+                            //     console.log('formdata',pair[0]+ ', ' + pair[1]); 
+                            // }
+                            
+                            // console.log('BillPath',BillPath);
                             apiCall.postCallHeader(BillPath,headerData,formdata).then(function(data) {
+                                // console.log('data',data);
+                                
                                 toaster.clear();
                                 // Delete formdata  keys
                                 // for (var key of formdata.keys()) {
@@ -2432,6 +2498,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                 // }
                                 //Delete Inventory Data From Formdata Object
                                 var json3 = angular.copy(vm.AccBillTable);
+                                // console.log('vm.AccBillTable',vm.AccBillTable);
                                 for (var i=0;i<json3.length;i++) {
                                     angular.forEach(json3[i], function (value,key) {
                                         formdata.delete('inventory['+i+']['+key+']');
@@ -2558,7 +2625,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                     
                                     //$scope.stateAndCityDefault(defStateData,defCityData); 
                                     
-                                    $scope.quickBill.paymentMode = 'cash';
+                                    $scope.quickBill.paymentMode = 'credit';
                                     $scope.quickBill.totalDiscounttype = 'flat';
                                     
                                     $anchorScroll();
@@ -2586,6 +2653,8 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                         toaster.pop('info', 'Check Your Internet Connection');
                                     }
                                     else{
+                                        // console.log('in else part',data);
+                                        // console.log('data',data);
                                         toaster.pop('warning', 'Something Wrong', data);
                                     }
                                     
@@ -2593,7 +2662,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                 }
                             }).catch(function (reason) {
                                 if (reason.status === 500) {
-                                    console.log('Encountered server error');
+                                    // console.log('Encountered server error');
                                 }
                             });
                         }
@@ -2663,6 +2732,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                 var pdfFile = new Blob([ data ], {
                                     type : 'application/pdf'
                                 });
+                                // console.log('pdfFile',pdfFile);
                                 var pdfUrl = URL.createObjectURL(pdfFile);
                                 $scope.content = $sce.trustAsResourceUrl(pdfUrl);
                                 
@@ -2981,10 +3051,12 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                             toaster.pop('warning', 'Opps!!', 'Data Not Available');
                                         }
                                         else if(response.status == 500){
+                                            // console.log('else if');
                                             toaster.clear();
                                             toaster.pop('warning', 'Something Wrong', response.statusText);
                                         }
                                         else{
+                                            // console.log('else');
                                             toaster.clear();
                                             toaster.pop('warning', 'Something Wrong', response);
                                         }
@@ -3059,14 +3131,14 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                             
                             if (Modalopened)
                             {
-                                console.log('opened');
+                                // console.log('opened');
                                 return;
                             }
                             
                             toaster.pop('wait', 'Please Wait', 'popup opening....',600000);
                             
                             if($scope.quickBill.companyId) {
-                                
+                                // console.log('quickBill',$scope.quickBill);
                                 var modalInstance = $modal.open({
                                     templateUrl: 'app/views/PopupModal/QuickMenu/PreviewBillModal.html',
                                     controller: previewBillModalController,
@@ -3085,7 +3157,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                             return $scope.enableDisableLWHArray;
                                         },
                                         inventoryData: function(){
-                                            
+                                            // console.log('vm.AccBillTable',vm.AccBillTable);
                                             return vm.AccBillTable;
                                         },
                                         total: function(){
@@ -3124,7 +3196,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                                 return 'update';
                                             }
                                             else{
-                                                
                                                 return 'insert';
                                             }
                                         }
@@ -3202,10 +3273,12 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                         toaster.pop('info', 'Opps!!', 'Data Not Available');
                                     }
                                     else if(response.status == 500){
+                                        // console.log('in else if');
                                         toaster.clear();
                                         toaster.pop('warning', 'Something Wrong', response.statusText);
                                     }
                                     else{
+                                        // console.log('in else');
                                         toaster.clear();
                                         toaster.pop('warning', 'Something Wrong', response);
                                     }
@@ -3378,7 +3451,6 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                             Product Redirect Edit Start
                             **/
                             $scope.editProductWithRedirect = function(index){
-                                
                                 getSetFactory.blank();
                                 var  id = vm.AccBillTable[index].productId;
                                 
@@ -3725,7 +3797,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                     // console.log(length);	
                                 });
                                 
-                            }		
+                            }
                             
                             $scope.focusbarcode = function()
                             {
@@ -3857,12 +3929,12 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                 /** Processes the scan result */
                                 function displayImagesOnPage(successful, mesg, response) {
                                     if(!successful) { // On error
-                                        console.error('Failed: ' + mesg);
+                                        // console.error('Failed: ' + mesg);
                                         return;
                                     }
                                     
                                     if(successful && mesg != null && mesg.toLowerCase().indexOf('user cancel') >= 0) { // User cancelled.
-                                        console.info('User cancelled');
+                                        // console.info('User cancelled');
                                         return;
                                     }
                                     
@@ -4131,8 +4203,9 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                     }
                                     
                                     //Expense
+                                    // console.log('AccExpense',vm.AccExpense);
                                     var expenseJson = angular.copy(vm.AccExpense);
-                                    
+                                    // console.log('AccExpense',AccExpense);
                                     for(var jsonIndex=0;jsonIndex<expenseJson.length;jsonIndex++){
                                         var breakForeach = true;
                                         
@@ -4152,7 +4225,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                     }
                                     var headerDraftData = {};
                                     if(formdata.has('isDraft')){
-                                        console.log("innn",formdata.get('isDraft'));
+                                        // console.log("innn",formdata.get('isDraft'));
                                         headerDraftData.saleId = formdata.get('isDraft');
                                         formdata.delete('isDraft');
                                     }
@@ -4261,7 +4334,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                         billArrayTag.CompanyAdd = $scope.quickBill.companyId.address1 == 'undefined' ? '' : $scope.quickBill.companyId.address1 +' '+ ($scope.quickBill.companyId.address2 == 'undefined' ? '' : ', '+$scope.quickBill.companyId.address2);
                                         billArrayTag.CreditCashMemo = "CASH";
                                         
-                                        billArrayTag.BILLLABEL = 'Tax Invoice';
+                                        billArrayTag.BILLLABEL = 'sale bill';
                                         
                                         billArrayTag.ClientName = $scope.quickBill.clientName;
                                         billArrayTag.INVID = $scope.quickBill.invoiceNumber;
@@ -4289,7 +4362,7 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                         billArrayTag.REMAINAMT = $scope.quickBill.balance;
                                         billArrayTag.REMARK = angular.isUndefined($scope.quickBill.remark) ? '': $scope.quickBill.remark;
                                         billArrayTag.Description = itemTable;
-                                        billArrayTag.TotalTaxableAmt = $filter('number')($scope.quickBill.tax,$scope.noOfDecimalPoints);
+                                        // billArrayTag.TotalTaxableAmt = $filter('number')($scope.quickBill.tax,$scope.noOfDecimalPoints);
                                         billArrayTag.TotalCgst = $scope.quickBill.totalCgst;
                                         billArrayTag.TotalCgstAmt = $filter('number')($scope.quickBill.totalCgstAmount,$scope.noOfDecimalPoints);
                                         billArrayTag.TotalSgst = $scope.quickBill.totalSgst;
@@ -4304,9 +4377,11 @@ function RetailsaleBillController($rootScope,$scope,apiCall,apiPath,$http,$windo
                                         var tempData = thermalTemplate[0].templateBody;
                                         var mywindow = window.open('', 'PRINT');
                                         var is_chrome = Boolean(mywindow.chrome);
+                                        
                                         angular.forEach(billArrayTag,function(value,key){
                                             tempData = tempData.replace("["+key+"]",value,"g");
                                         });
+                                        
                                         mywindow.document.write('<html><head><title>' + document.title  + '</title>');
                                         mywindow.document.write("</head><body>");
                                         mywindow.document.write(tempData);

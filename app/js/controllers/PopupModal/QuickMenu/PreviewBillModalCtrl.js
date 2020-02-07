@@ -15,9 +15,11 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
     $scope.billData = billData;
     // console.log('billData', $scope.billData);
     var settingData = settingData;
+    // console.log('settingData',settingData);
     $scope.companyData = $scope.billData.companyId;
     $scope.noOfDecimalPoints = parseInt($scope.companyData.noOfDecimalPoints);
     $scope.inventoryData = inventoryData;
+    // console.log('inventoryDataaaaaaaaaaaaaaaaaaaaaaaaaaaa',inventoryData);
     var allProductHsn = productHsn;
     $scope.total = total;
     $scope.grandTotal = grandTotal;
@@ -297,11 +299,11 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
                 extraFlag = 1;
             }
             
-            var productColspan = "3";
+            var productColspan = "4";
             
             if (!extraFlag) {
-                extraColumnColSpan = "1";
-                productColspan = "5";
+                extraColumnColSpan = "2";
+                productColspan = "6";
             }
             
             if($scope.enableDisableGST){
@@ -316,8 +318,8 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
                 <td class='tg-m36b theqp' style='font-size: 12px; padding: 2px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px;' colspan='1' rowspan='2'><strong>HSN</strong></td>
                 [extraColumns]
                 <td class='tg-ullm thsrno' style='font-size: 12px; padding: 2px; height: 15px; width: 10px; text-align: center; border: 1px solid black; border-right: 0px;' colspan='1' rowspan='2'><strong>Qty</strong></td>
+                `+unitColumn+`
                 <td class='tg-ullm thsrno' style='font-size: 12px; padding: 2px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px;' colspan='1' rowspan='2'><strong>Rate</strong></td>
-                <td class='tg-ullm thsrno' style='font-size: 12px; padding: 2px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px;' colspan='1' rowspan='2'><strong>Amt</strong></td>
                 <td class='tg-ullm thamt' style='font-size: 12px; padding: 0px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px; border-bottom: 0px;' colspan='2'><strong>Discount</strong></td>
                 <td class='tg-ullm thsrno' style='font-size: 12px; padding: 2px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px;' colspan='1' rowspan='2'><strong>Taxable Amt</strong></td>
                 <td class='tg-m36b theqp' style='font-size: 12px; padding: 2px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px;' colspan='1' rowspan='2'><strong>GST</strong></td>
@@ -332,7 +334,7 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
                 <tr style='text-align: left; height: 1px; background-color: transparent; display: [displayNone];'>
                 <td style='font-size: 11px; height: 1px;' colspan='16'>[Description]`;
                 
-                var extraColumns = "<td class='tg-m36b theqp' style='font-size: 12px; padding: 2px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px; overflow-wrap: break-word; max-width: 100px;' colspan='"+extraColumnColSpan+"' rowspan='2'><strong>"+customLabel+"</strong></td>"+unitColumn;
+                var extraColumns = "<td class='tg-m36b theqp' style='font-size: 12px; padding: 2px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px; overflow-wrap: break-word; max-width: 100px;' colspan='"+extraColumnColSpan+"' rowspan='2'><strong>"+customLabel+"</strong></td>";
                 
                 productTitleHead = productTitleHead.replace('[extraColumns]', extraColumns, 'g');
                 return productTitleHead;
@@ -347,8 +349,8 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
                 <td class='tg-m36b theqp' style='font-size: 12px; padding: 2px; height: 15px; text-align: left; border: 1px solid black; border-right: 0px; border-left: 0px; max-width: 120px; overflow-wrap: break-word;' colspan='`+productColspan+`' rowspan='2'><strong>Perticular</strong></td>
                 [extraColumns]
                 <td class='tg-ullm thsrno' style='font-size: 12px; padding: 2px; height: 15px; width: 10px; text-align: center; border: 1px solid black; border-right: 0px;' colspan='1' rowspan='2'><strong>Qty</strong></td>
+                `+unitColumn+`
                 <td class='tg-ullm thsrno' style='font-size: 12px; padding: 2px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px;' colspan='1' rowspan='2'><strong>Rate</strong></td>
-                <td class='tg-ullm thsrno' style='font-size: 12px; padding: 2px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px;' colspan='1' rowspan='2'><strong>Amt</strong></td>
                 <td class='tg-ullm thamt' style='font-size: 12px; padding: 0px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px; border-bottom: 0px;' colspan='2'><strong>Discount</strong></td>
                 <td class='tg-ullm thamt' style='font-size: 12px; padding: 1px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px; min-width: 50px;' colspan='4' rowspan='2'><strong>Amount</strong></td>
                 </tr>
@@ -361,12 +363,14 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
                 <tr style='text-align: left; height: 1px; background-color: transparent; display: [displayNone];'>
                 <td style='font-size: 11px; height: 1px;' colspan='16'>[Description]`;
                 
-                var extraColumns = "<td class='tg-m36b theqp' style='font-size: 12px; padding: 2px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px; overflow-wrap: break-word; max-width: 100px;' colspan='"+extraColumnColSpan+"' rowspan='2'><strong>"+customLabel+"</strong></td>"+unitColumn;
+                var extraColumns = "<td class='tg-m36b theqp' style='font-size: 12px; padding: 2px; height: 15px; text-align: center; border: 1px solid black; border-right: 0px; overflow-wrap: break-word; max-width: 100px;' colspan='"+extraColumnColSpan+"' rowspan='2'><strong>"+customLabel+"</strong></td>";
                 
                 productTitleHead = productTitleHead.replace('[extraColumns]', extraColumns, 'g');
                 // console.log('productTitleHead',productTitleHead);
                 return productTitleHead;
             }
+            
+            Description = output;
         }
         
         // var obj = {name: 'misko', gender: 'male'};
@@ -390,9 +394,11 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
         var totalCessAmount = 0;
         
         
+        // console.log(' inventoryCount',inventoryCount);
         for(var productArray=0;productArray<inventoryCount;productArray++){
             
             var productData = $scope.inventoryData[productArray];
+            
             
             if(productData.productId != ""){
                 // console.log("product = ",productData);
@@ -458,13 +464,14 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
                 else{
                     // var hsnNo = allProductHsn[productArray];
                 }
-                
+                // console.log('productData',productData);
+                // console.log('unit?????????????????????????',productData.measurementUnit['unitName']);
                 var display_product_name = productData.productName;
-                var productColspan = "3",extraColumnColspan = "3";
+                var productColspan = "4",extraColumnColspan = "3";
                 var variantColumn = "";
                 /* Color/Size By Setting */
                 var extraFlag = 0;
-                var extraColumnValue = "test";
+                var extraColumnValue = productData.measurementUnit['unitName'];
                 if (settingData.color) {
                     extraColumnValue += " | "+productData.color;
                     extraFlag = 1;
@@ -489,9 +496,16 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
                     
                     var d_length = "", d_width = "", d_height = "";
                     /* L W H */
-                    d_length = productData.lengthValue ? productData.lengthValue+'x ': "";
-                    d_width = productData.widthValue ? productData.widthValue+'x ' : "";
-                    d_height = productData.heightValue ? productData.heightValue+'x' : "";
+                    // console.log('productData',productData);
+                    if(productData.measurementUnit.lengthStatus=="enable")
+                    d_length = productData.lengthValue ? productData.lengthValue: "";
+                    // console.log('d_length',d_length);
+                    if(productData.measurementUnit.widthStatus=="enable")
+                    d_width =  productData.widthValue ? 'x '+  productData.widthValue : "";
+                    // console.log('d_width',d_width);
+                    if(productData.measurementUnit.heightStatus=="enable")
+                    d_height =  productData.heightValue ? 'x '+  productData.heightValue : "";
+                    // console.log('d_height',d_height);
                     if (d_length != "" || d_width != "" || d_height != "") {
                         display_product_name += " <span >"+d_length+d_width+d_height+"</span>";
                     }
@@ -502,8 +516,8 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
                 }
                 
                 if (!extraFlag) {
-                    productColspan = "5";
-                    extraColumnColspan = "1";
+                    productColspan = "6";
+                    extraColumnColspan = "2";
                 }
                 
                 var extraColumnHtml = "<td colspan='"+extraColumnColspan+"' style='font-size: 11px;  height:  0.7cm; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);text-align:center'>"+extraColumnValue+"</td>";
@@ -511,12 +525,12 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
                 /* End */
                 if($scope.enableDisableGST){
                     output = output+"<tr  style='font-family: Calibri; text-align: left; height:  0.7cm; background-color: transparent;'><td  style='font-size: 12px; height: 0.7cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);'>"+ srNumber +
-                    "</td><td colspan='3' style='font-size: 12px;  height:  0.7cm; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' >&nbsp;"
+                    "</td><td colspan='4' style='font-size: 12px;  height:  0.7cm; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' >&nbsp;"
                     + display_product_name +
                     "</td><td  style='font-size: 12px;  height:  0.7cm; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);text-align:center'>"+ (hsnNo ? hsnNo : '-') +
-                    "</td>"+extraColumnHtml+variantColumn+"<td  style='font-size: 12px;  height:  0.7cm; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);text-align:center'>"+ productData.qty +
-                    "</td><td  style='font-size: 12px;   height:  0.7cm; text-align: right; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);'>"+ $filter('number')(productData.price,$scope.noOfDecimalPoints) +
-                    "&nbsp;</td><td  style='font-size: 12px;   height:  0.7cm; text-align: right; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);'>"+ $filter('number')(mainPrice,$scope.noOfDecimalPoints) +
+                    "</td>"+extraColumnHtml+
+                    "<td  style='font-size: 12px;  height:  0.7cm; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);text-align:center'>"+ productData.qty +
+                    "&nbsp;</td>"+ variantColumn+"<td  style='font-size: 12px;   height:  0.7cm; text-align: right; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);'>"+ $filter('number')(mainPrice,$scope.noOfDecimalPoints) +
                     "&nbsp;</td><td  style='font-size: 12px; height:  0.7cm; text-align: center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);'>"+ discountInPercentage +
                     "</td><td class='tg-ullm thamt' style='font-size: 12px;  height:  0.7cm; text-align: right; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);'>"+ $filter('number')(discount,$scope.noOfDecimalPoints) +
                     "&nbsp;</td><td class='tg-ullm thamt' style='font-size: 12px;  height:  0.7cm; text-align: right; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);'>"+ $filter('number')(taxableValue,$scope.noOfDecimalPoints) +
@@ -525,11 +539,12 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
                 }
                 else{
                     output = output+"<tr  style='font-family: Calibri; text-align: left; height:  0.7cm; background-color: transparent;'><td  style='font-size: 12px; height: 0.7cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);'>"+ srNumber +
-                    "</td><td colspan='3' style='font-size: 12px;  height:  0.7cm; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' >&nbsp;"
+                    "</td><td colspan='4' style='font-size: 12px;  height:  0.7cm; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' >&nbsp;"
                     + display_product_name +
-                    "</td>"+extraColumnHtml+variantColumn+"<td  style='font-size: 12px;  height:  0.7cm; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);text-align:center'>"+ productData.qty +
-                    "</td><td  style='font-size: 12px;   height:  0.7cm; text-align: right; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);'>"+ $filter('number')(productData.price,$scope.noOfDecimalPoints) +
-                    "&nbsp;</td><td  style='font-size: 12px;   height:  0.7cm; text-align: right; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);'>"+ $filter('number')(mainPrice,$scope.noOfDecimalPoints) +
+                    "</td>"
+                    +extraColumnHtml+
+                    "<td  style='font-size: 12px;  height:  0.7cm; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);text-align:center'>"+ productData.qty +
+                    "&nbsp;</td>"+variantColumn+"<td  style='font-size: 12px;   height:  0.7cm; text-align: right; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);'>"+ $filter('number')(mainPrice,$scope.noOfDecimalPoints) +
                     "&nbsp;</td><td  style='font-size: 12px; height:  0.7cm; text-align: center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);'>"+ discountInPercentage +
                     "</td><td class='tg-ullm thamt' style='font-size: 12px;  height:  0.7cm; text-align: right; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);'>"+ $filter('number')(discount,$scope.noOfDecimalPoints) +
                     "&nbsp;</td><td colspan='4' class='tg-ullm thamt' style='font-size: 12px;  height: 0.7cm; text-align: right; padding:0 0 0 0;'>"+ $filter('number')(productData.amount,$scope.noOfDecimalPoints)+"&nbsp;";
@@ -587,10 +602,10 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
                 if(productArray == inventoryCount-1)
                 {
                     var lastManageSpace = parseInt(srNumber) + gstSummarySizeManage;
-                    console.log('lastManageSpace',lastManageSpace);
+                    // console.log('lastManageSpace',lastManageSpace);
                     var totalProductSpace = lastManageSpace*0.7;
                     var finalProductBlankSpace = parseFloat(descTotalCM) - parseFloat(totalProductSpace);
-                    console.log('finalProductBlankSpace',finalProductBlankSpace);
+                    // console.log('finalProductBlankSpace',finalProductBlankSpace);
                     
                     var blankExtraColumn = "<td colspan='"+extraColumnColspan+"' style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td>";
                     
@@ -603,7 +618,7 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
                         output = output + "<tr  style='height:"+finalProductBlankSpace+"cm; background-color: transparent;'><td style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' colspan='"+productColspan+"' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td>"+blankExtraColumn+variantBlankHtml+"<td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, 1);' ></td></tr>";
                     }
                     else{
-                        output = output + "<tr  style='height:"+finalProductBlankSpace+"cm; background-color: transparent;'><td style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' colspan='"+productColspan+"' ></td>"+blankExtraColumn+variantBlankHtml+"<td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  colspan='3' style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);'></td></tr>";
+                        output = output + "<tr  style='height:"+finalProductBlankSpace+"cm; background-color: transparent;'><td style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' colspan='"+productColspan+"' ></td>"+blankExtraColumn+variantBlankHtml+"<td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);' ></td><td  colspan='4' style='font-size: 12px; height: "+finalProductBlankSpace+"cm; text-align:center; padding:0 0 0 0;border-right: 1px solid rgba(0, 0, 0, .3);'></td></tr>";
                     }
                 }
                 srNumber++;
@@ -724,14 +739,13 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
         $scope.RoundFigure =  $filter('setDecimal')($scope.RoundTotal - roundableAmount,$scope.noOfDecimalPoints);
         
         var billArrayTag = {};
-        
         billArrayTag.CMPLOGO = $scope.companyLogo;
         billArrayTag.TotalCessAmount = $filter('setDecimal')(totalCessAmount,$scope.noOfDecimalPoints);
         billArrayTag.Company = $scope.companyData.companyName;
         billArrayTag.CompanyWebsite = $scope.companyData.websiteName == undefined || $scope.companyData.websiteName == '' ? '' : $scope.companyData.websiteName;
         billArrayTag.CompanyContact = $scope.companyData.customerCare == undefined || $scope.companyData.customerCare == '' ? '' : $scope.companyData.customerCare;
         billArrayTag.CompanyEmail = $scope.companyData.emailId == 'undefined' || $scope.companyData.emailId == '' ? '' : $scope.companyData.emailId;
-        billArrayTag.CompanyAdd = $scope.companyData.address1 == 'undefined' ? '' : $scope.companyData.address1 +' '+ $scope.companyData.address2 == 'undefined' ? '' : ', '+$scope.companyData.address2;
+        billArrayTag.CompanyAdd = ($scope.companyData.address1 == 'undefined' ? '' : $scope.companyData.address1) +' '+ ($scope.companyData.address2 == 'undefined' ? '' : ', '+$scope.companyData.address2);        
         billArrayTag.CreditCashMemo = "CASH";
         if($scope.saleType == 'QuotationPrint'){
             billArrayTag.BILLLABEL = 'Quotation';
@@ -740,11 +754,11 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
             billArrayTag.BILLLABEL = 'Sales Order';
         }
         else{
-            billArrayTag.BILLLABEL = 'Tax Invoice';
+            billArrayTag.BILLLABEL = 'Sales Bill';
         }
         
         // console.log("bill-data = ",$scope.billData);
-        //billArrayTag.BILLLABEL = $scope.saleType == 'QuotationPrint' ? 'Quotation' : 'Tax Invoice';
+        //billArrayTag.BILLLABEL = $scope.saleType == 'QuotationPrint' ? 'Quotation' : 'Sales Bill';
         billArrayTag.ClientName = $scope.billData.clientName;
         billArrayTag.INVID = $scope.billData.invoiceNumber;
         billArrayTag.ChallanNo = " ";
@@ -797,7 +811,7 @@ function previewBillModalController($scope, $modalInstance,$rootScope,apiCall,ap
                     var tempData = TemplateData.templateBody;
                     tempData = tempData.replace("[productInfo]",productInfoHtml,"g");
                     // tempData = tempData.replace("[quotationinfo]",productInfoHtml,"g");
-                    console.log('tempData',tempData);
+                    // console.log('tempData',tempData);
                     
                     angular.forEach(billArrayTag,function(value,key){
                         // var check = "/\[["+key+"\]]+\]/g";

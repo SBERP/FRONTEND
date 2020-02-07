@@ -210,6 +210,8 @@ modules: [{
     'getOneBranch': 'branches/company/',
     'getAllCompany': 'companies',
     'getAllSalebill' : 'accounting/bills/monthwise',
+    'getAllOutstanding' : 'accounting/ledgers/outstanding',
+    'getAllNewLedgers' : 'accounting/ledgers/getall',
     'getAllPurchasebill' : 'accounting/purchase-bills/monthwise',
     'getsalebillbyid' : 'accounting/bills/byid/',
     'getpurchasebillbyid' : 'accounting/purchase-bills/byid/',

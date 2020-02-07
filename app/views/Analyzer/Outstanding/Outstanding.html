@@ -1,0 +1,86 @@
+<style>.hackyhack{position:relative}.hackyhack .dropdown-menu{left:auto!important;right:0}h4 .control-label{font-size:13px!important}.contentOfForm{padding-left:11px;padding-right:7px}.goButton{padding:6px 16px}.imageAncher{position:relative;vertical-align:middle;display:inline-block}.myCrossDesign{position:absolute;top:0;right:0;height:20px;width:20px;color:#eb615f;font-size:20px}.myCrossDesign:hover{color:red}.documentRight{display:block;position:absolute;top:10%;right:60%;font-size:40px;color:#88bf57}.documentRight:hover{color:green}.documentCross{display:block;position:absolute;font-size:40px;color:#eb615f;top:10%;right:20%}.documentCross:hover{color:red}.input-file{position:relative;margin:60px 60px 0}.input-file .input-group-addon{border:0;padding:0}.input-file .input-group-addon .btn{border-radius:0 4px 4px 0}.input-file .input-group-addon input{cursor:pointer;position:absolute;width:72px;z-index:2;top:0;right:0;filter:alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent}
+</style>
+
+<h3>
+    <small>
+        <a ui-sref="app.dashboard" ><i class="fa fa-home"></i>Home</a> >> 
+        <a ui-sref="app.SalesReport" ng-if="headerType == 'Wholesales'" > Outstanding Receivable </a>
+        <a ui-sref="app.SalesReport" ng-if="headerType == 'purchase'" > Outstanding Payable </a>        
+    </small>
+</h3>
+<div   class="container-fluid" >
+    <toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+    <div id="panelDemo14" class="panel panel-default">
+        <div class="panel-body">
+            <tabset>
+                <!--sales-->
+                <tab heading="All" ng-if="headerType == 'Wholesales'" ng-click="onSalesBillTabSelect(0)" >
+                    <div ng-include="'salesBillContentData'" ng-if="currentActiveSalestab == 0">
+                    </div>
+                </tab>
+                
+                <!-- Purchase -->
+                <tab heading="All" ng-if="headerType == 'purchase'" ng-click="onSalesBillTabSelect(0)" >
+                    <div ng-include="'purchaseBillContentData'" ng-if="currentActiveSalestab == 0">
+                    </div>
+                </tab>
+            </tabset>
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="salesBillContentData">
+    <div class="table-responsive">
+        <table ng-table="table.tableParams" export-csv="salesBillCsv" csv-ignore="ignore" class="table table-bordered table-striped" >
+            <tbody>
+                <tr data-ng-repeat="user in users track by ($index)">
+                    <td style="text-align: left" header="'ng-table/headers/checkbox.html'"  >
+                        <div class="checkbox c-checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="user.selected" ng-change="changeBox(user.selected,user)" />
+                                <span class="fa fa-check"></span>
+                            </label>
+                        </div>
+                    </td>
+                    <!-- <td title="'Client Name'"  sortable="'clientName'" filter="{ 'clientName': 'text' }" ng-click="myfunction(user)" >{{user.clientName}}</td> -->
+                    <td title="'Client Name'"  sortable="'clientName'" filter="{ 'clientName': 'text' }" >
+                        <a ng-click="myfunction(user)">{{user.clientName}}</a>
+                    </td>
+                    <td title="'Total Paid'" sortable="'totalPaid'" filter="{ 'totalPaid': 'text' }" >{{user.totalPaid}}</td>
+                    <td title="'Total UnPaid'" sortable="'totalUnPaid'" filter="{ 'totalUnPaid': 'text' }" >{{user.totalUnPaid}}</td>
+                    <td title="'Total Amount'"  sortable="'total'" filter="{ 'total': 'text' }">{{user.total}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
+</script>
+
+<script type="text/ng-template" id="purchaseBillContentData">
+    <div class="table-responsive">
+        <table ng-table="table.tableParams" export-csv="salesBillCsv" csv-ignore="ignore"class="table table-bordered table-striped" >
+            <tbody>
+                <tr data-ng-repeat="user in users track by ($index)">
+                    <td style="text-align: left" header="'ng-table/headers/checkbox.html'"  >
+                        <div class="checkbox c-checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="user.selected" ng-change="changeBox(user.selected,user)" />
+                                <span class="fa fa-check"></span>
+                            </label>
+                        </div>
+                    </td>
+                    <!-- <td title="'Vendor Name'"  sortable="'vendorName'" filter="{ 'vendorName': 'text' }" ng-click="myfunctionpurchase(user)" >{{user.vendorName}}</td> -->
+                    <td title="'Vendor Name'"  sortable="'vendorName'" filter="{ 'vendorName': 'text' }" >
+                        <a ng-click="myfunctionpurchase(user)">{{user.vendorName}}</a>
+                    </td>
+                    <td title="'Total Paid'" sortable="'totalPaid'" filter="{ 'totalPaid': 'text' }" >{{user.totalPaid}}</td>
+                    <td title="'Total UnPaid'" sortable="'totalUnPaid'" filter="{ 'totalUnPaid': 'text' }" >{{user.totalUnPaid}}</td>
+                    <td title="'Total Amount'"  sortable="'total'" filter="{ 'total': 'text' }">{{user.total}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <span ng-include="'app/views/partials/tableFooter/tableFooter.html'" >  </span>
+</script>
+
+</script>

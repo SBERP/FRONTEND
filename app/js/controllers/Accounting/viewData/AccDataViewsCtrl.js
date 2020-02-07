@@ -8,6 +8,7 @@ App.controller('AccViewDataController', AccViewDataController);
 
 function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,apiCall,apiPath,flotOptions, colors,$timeout,getSetFactory,$state,headerType,$modal,$window,toaster,apiResponse,apiDateFormate, productFactory) {
     'use strict';
+    console.log('in controller',headerType);
     var vm = this;
     var data = [];
     $scope.paidData = [];
@@ -77,6 +78,11 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
         var headerData = {'Content-Type': undefined,'fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate,'salestype':'whole_sales','isSalesOrder': 'ok'};
     }
     else if($scope.headerType == 'Quotations'){
+        
+        var getJrnlPath = apiPath.postQuotationBill;
+        var headerData = {'Content-Type': undefined,'fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate,'companyId':$rootScope.accView.companyId};
+    }
+    else if($scope.headerType == 'Categorywise'){
         
         var getJrnlPath = apiPath.postQuotationBill;
         var headerData = {'Content-Type': undefined,'fromDate':$rootScope.accView.fromDate,'toDate':$rootScope.accView.toDate,'companyId':$rootScope.accView.companyId};
@@ -233,6 +239,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
     
     $scope.loadInit = function(onDateChange = null) 
     {
+        // console.log('aaaaaaaaaaaaaaaaaaaaaaaaa');
         toaster.clear();
         toaster.pop('wait', 'Please Wait', 'Data Loading....',30000);
         
@@ -250,6 +257,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
         }
         
         apiCall.getCallHeader(getJrnlPath,headerData).then(function(response){
+            // console.log('response',response);
             $scope.reLoadPdfData(response);
         }).catch(function (reason) {
             // err
@@ -262,7 +270,6 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
     }
     
     $scope.loadInit();
-    
     
     $scope.displayProduct = function(productArray)
     {
@@ -283,7 +290,6 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
     }
     
     $scope.TableData = function(){
-        
         
         vm.tableParams = new ngTableParams({
             page: 1,            // show first page
@@ -557,7 +563,6 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
                 }
             });
             
-            
             vm.tableParams3 = new ngTableParams({
                 page: 1,            // show first page
                 count: 10,          // count per page
@@ -772,14 +777,13 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
                 
             }, function () {
                 
-                console.log('Cancel');	
+                // console.log('Cancel');	
                 Modalopened = false;
                 
             });
             
             
         }
-        
         
         $scope.returnSingleData = function(saleId)
         {
@@ -821,6 +825,8 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
         /** Reload Load Data **/
         $scope.reLoadPdfData = function(response)
         {
+            // console.log('in reload function');
+            // console.log('Response',response);
             toaster.clear();
             
             $scope.allSalesData = [];
@@ -1061,7 +1067,6 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
             
             $scope.contents = data;
             
-            
             $scope.contents.sort(function(a, b){
                 var entDate = a.entryDate.split("-").reverse().join("-");
                 var toDate = b.entryDate.split("-").reverse().join("-");
@@ -1070,6 +1075,7 @@ function AccViewDataController($rootScope,$scope, $filter, $http, ngTableParams,
             });
             
             data= $scope.contents;
+            // console.log('data',data);
             
             $scope.TableData();
             // for (var i = 0; i < data.length; i++) {
@@ -1231,7 +1237,6 @@ function loadSorting ()
 /** Regenerate Pdf **/
 
 $scope.reGeneratePdf = function(sId){
-    
     //alert(sId);
     var reFormData = new FormData();
     reFormData.append('saleId',sId);
@@ -1303,7 +1308,7 @@ $scope.openImageGallery = function (size,saleId,isPurchaseBill = 'no') {
         
     }, function () {
         
-        console.log('Cancel');	
+        // console.log('Cancel');	
         Modalopened = false;
         
     });
@@ -1353,7 +1358,7 @@ $scope.openPdf = function (size,saleId) {
         
     }, function () {
         
-        console.log('Cancel');	
+        // console.log('Cancel');	
         Modalopened = false;
         
     });
@@ -1413,12 +1418,12 @@ $scope.openPayment = function (size,saleId,transaction) {
         $scope.loadInit('yes');
         /** End **/
         
-        console.log('success');
+        // console.log('success');
         Modalopened = false;
         
     }, function () {
         
-        console.log('Cancel');
+        // console.log('Cancel');
         Modalopened = false;
         
     });

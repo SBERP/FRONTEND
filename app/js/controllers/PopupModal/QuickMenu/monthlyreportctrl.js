@@ -11,7 +11,7 @@ function monthlyreportctrl($scope, $modalInstance,$rootScope, $filter, ngTablePa
     $scope.erpPath = $rootScope.erpPath; //Erp Path
     
     $scope.responseData = responseData;
-    console.log('responseData from model controller',responseData);
+    // console.log('responseData from model controller',responseData);
     // $scope.noOfDecimalPoints = parseInt($scope.responseData[0].company);
     $scope.dateFormats = $rootScope.dateFormats;
     $scope.draftOrSalesOrder = draftOrSalesOrder;

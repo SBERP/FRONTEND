@@ -10,6 +10,7 @@
         <a ui-sref="app.AccViewPurchase" ng-if="headerType == 'purchase'" > {{headerType}} </a>
         <a ui-sref="app.AccViewPayment" ng-if="headerType == 'payment'" > {{headerType}} </a>
         <a ui-sref="app.AccViewReceipt" ng-if="headerType == 'receipt'" > {{headerType}} </a>
+        <a ui-sref="app.AccViewReceipt" ng-if="headerType == 'Categorywise'" > {{headerType}} </a>
         <a ui-sref="app.AccViewSpecialJrnl" ng-if="headerType == 'specialJournal'" > {{headerType}} </a>
         <a ui-sref="app.AccViewSalesOrders" ng-if="headerType == 'Sales Orders'" > {{headerType}} </a>
         <a ui-sref="app.AccViewQuotations" ng-if="headerType == 'Quotations'" > {{headerType}} </a>
@@ -211,7 +212,7 @@
                 <tbody>
                     <tr data-ng-repeat="user in $data track by (user.saleId+user.total+user.clientName+$index)"  >
                         <!--td data-title="'#'"  style="text-align:center">{{ (itemsPerPage * (pageNumber-1)) + $index+1 }}</td-->
-                        <td style="text-align: left" header="'ng-table/headers/checkbox.html'"  >
+                        <td style="text-align: left" header="'ng-table/headers/checkbox.html'">
                             <div class="checkbox c-checkbox">
                                 <label>
                                     <input type="checkbox" ng-model="user.selected" ng-change="changeBox(user.selected,user)" />

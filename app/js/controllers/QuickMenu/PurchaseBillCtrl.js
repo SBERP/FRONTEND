@@ -64,7 +64,7 @@ function PurchaseBillController($rootScope, $scope, apiCall, apiPath, $http, $wi
         var headerCr = { 'Content-Type': undefined, 'ledgerGroup': [31] };
         
         apiCall.getCallHeader(jsuggestPath, headerCr).then(function(response3) {
-            console.log(response3);
+            // console.log(response3);
             if (angular.isArray(response3)) {
                 var tCount = response3.length;
                 while (tCount--) {
@@ -1377,7 +1377,9 @@ function PurchaseBillController($rootScope, $scope, apiCall, apiPath, $http, $wi
                         if ($scope.purchaseType == 'purchaseOrder') {
                             headerData.isPurchaseOrder = "ok";
                         }
-                        
+                        for (var pair of formdata.entries()) {
+                            console.log('formdata?',pair[0]+ ', ' + pair[1]);
+                        }
                         apiCall.postCallHeader(BillPath, headerData, formdata).then(function(data) {
                             
                             toaster.clear();
@@ -1854,11 +1856,11 @@ function PurchaseBillController($rootScope, $scope, apiCall, apiPath, $http, $wi
                     
                     /* Ledger Model Start */
                     $scope.openLedger = function(size, index = 'purchaseBill') {
-                        
+                        // console.log('in below loop',index);
                         if (Modalopened) return;
                         
                         if ($scope.purchaseBill.companyDropDown) {
-                            
+                            console.log($scope.purchaseBill.companyDropDown);
                             var modalInstance = $modal.open({
                                 templateUrl: 'app/views/PopupModal/Accounting/ledgerModal.html',
                                 controller: AccLedgerModalController,

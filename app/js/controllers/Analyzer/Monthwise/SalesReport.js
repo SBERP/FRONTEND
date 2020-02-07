@@ -89,7 +89,7 @@ function SalesReportController($rootScope,$scope, $filter, $http, ngTableParams,
     else if ($scope.headerType == 'purchase'){  
         // console.log('headerType',$scope.headerType);
         apiCall.getCall(apiPath.getAllPurchasebill).then(function(response) {
-            console.log('response frrom tabledata  apicall',response);
+            // console.log('response frrom tabledata  apicall',response);
             data2 = response;
             $scope.users=data2;
         })
@@ -104,7 +104,7 @@ function SalesReportController($rootScope,$scope, $filter, $http, ngTableParams,
         }
         $scope.openBillHistoryModalpurchase = function (size,responseData,draftOrSalesOrder) {
             toaster.clear();
-            console.log('response frrom table > model responsedata',responseData);
+            // console.log('response frrom table > model responsedata',responseData);
             if (Modalopened) return;
             
             toaster.pop('wait', 'Please Wait', 'Modal Data Loading....',60000);
@@ -1178,7 +1178,6 @@ function SalesReportController($rootScope,$scope, $filter, $http, ngTableParams,
             //console.log(vm.pieFlotCharts);
             
             $scope.contents = data;
-            
             
             $scope.contents.sort(function(a, b){
                 var entDate = a.entryDate.split("-").reverse().join("-");

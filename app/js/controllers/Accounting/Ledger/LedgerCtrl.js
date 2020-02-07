@@ -5,20 +5,48 @@ App.directive('ledgerlist', function() {
     directive.restrict = 'E';
     
     directive.template = '<table class="table  table-striped" >'
-    + '<tr data-ng-repeat="item in ledgerdata | filter:querydata track by item.ledgerId" >'
-    + '<td >'
-    +'<span style="letter-spacing: .025em;font-weight: bold;cursor:pointer" ng-click="viewledgerdetail({ledgerId:item.ledgerId})"> <i class="sidebar-item-icon icon-layers" ></i> {{::item.ledgerName}}</span>'
+    + '<thead style="font-size: 14px;">'
+    + '<th>'
+    + 'Ledger Name'
+    + '</th>'
+    + '<th>'
+    + 'Contact'
+    + '</th>'
+    + '<th>'
+    + 'Address'
+    + '</th>'
+    + '<th>'
+    + 'Opening Balance'
+    + '</th>'
+    + '<th>'
+    + 'Closing Balance'
+    + '</th>'
+    + '<th>'
+    + 'Action'
+    + '</th>'
+    + '</thead>'
+    + '<tr data-ng-repeat="item in ledgerdata | filter:querydata track by item.ledgerId">'
+    + '<td>'
+    +'<span style="letter-spacing: .025em;font-weight;cursor:pointer" ng-click="viewledgerdetail({ledgerId:item.ledgerId})"> <i class="sidebar-item-icon icon-layers" ></i> {{::item.ledgerName}}</span>'
+    +'</td>'
+    +'<td class="myCursorPointer">'
+    +' {{::item.ledgerContact}}'
+    +'</td>'
+    +'<td class="myCursorPointer">'
+    +' {{::item.ledgerAddress}}'
+    +'</td>'
+    +'<td class="myCursorPointer">'
+    +' {{::item.ledgerOpening}}'
+    +'</td>'
+    +'<td class="myCursorPointer">'
+    +' {{::item.ledgerClosing}}'
     +'</td>'
     +'<td>'
     +'<i  title="Edit" ng-click="editdata({ledgerId:item.ledgerId})" class="fa fa-edit myCursorPointer" style="font-size:17px;color:#17A1E5"> </i>'
-    +'</td>'
-    +'<td>'
+    +'&nbsp;'
     +'<i  title="View" ng-click="viewdata({ledgerId:item.ledgerId})" viewData class="fa fa-list-alt myCursorPointer" style="font-size:17px;color:#17A1E5"></i>'
-    +'</td>'
-    +'<td>'
-    +'<i  title="Balance" ng-click="viewledgerdetail({ledgerId:item.ledgerId})" viewLedgerData class="sidebar-item-icon icon-stack myCursorPointer" style="font-size:17px;color:#17A1E5"></i>'
-    +'</td>'
-    +'</tr>'
+    // +'&nbsp;'
+    // +'<i  title="Balance" ng-click="viewledgerdetail({ledgerId:item.ledgerId})" viewLedgerData class="sidebar-item-icon icon-stack myCursorPointer" style="font-size:17px;color:#17A1E5"></i>'
     +'</table>';
     
     directive.scope = {
@@ -28,7 +56,7 @@ App.directive('ledgerlist', function() {
         viewledgerdetail : "&",
         querydata: "=querydata"
     }
-    
+    // console.log('directive',directive);
     return directive;
 });
 
@@ -45,6 +73,7 @@ function AccLedgerController($rootScope,$scope,$filter, ngTableParams,apiCall,ap
     vm.disableValue = false;
     vm.disableCompanyValue = false;
     
+    $scope.ledgeropen = false;
     $scope.trueData = false;
     $scope.alertData = true;
     $scope.defaultLedger = false;
@@ -59,7 +88,8 @@ function AccLedgerController($rootScope,$scope,$filter, ngTableParams,apiCall,ap
     $scope.viewLedgerDetails = function(id){
         
         //alert(id);
-        getSetFactory.set(id);
+        // getSetFactory.set(id);
+        $rootScope.$storage.ledgerId = id;
         //$location.path('app/AccDataLedger');
         $state.go("app.AccDataLedger");
         
@@ -120,11 +150,12 @@ function AccLedgerController($rootScope,$scope,$filter, ngTableParams,apiCall,ap
     //View Single Ledger In Readonly Mode
     $scope.viewReadOlny = function(id)
     {
-        
+        $scope.ledgeropen = true;
         $scope.trueData = true;
         $scope.alertData = false;
         
         apiCall.getCall(apiPath.getAllLedger+'/'+id).then(function(response){
+            // console.log('response',response);
             
             $scope.ledgerForm.ledgerName = response.ledgerName;
             $scope.ledgerForm.emailId = response.emailId;
@@ -185,6 +216,7 @@ function AccLedgerController($rootScope,$scope,$filter, ngTableParams,apiCall,ap
     
     $scope.editLedgerData = function(id)
     {
+        $scope.ledgeropen = true;
         vm.disableValue = false;
         vm.disableCompanyValue = true;
         $scope.trueData = true;
@@ -193,6 +225,7 @@ function AccLedgerController($rootScope,$scope,$filter, ngTableParams,apiCall,ap
         
         apiCall.getCall(apiPath.getAllLedger+'/'+id).then(function(response)
         {
+            // console.log('response',response);
             $scope.ledgerForm.ledgerName = response.ledgerName;
             $scope.ledgerForm.emailId = response.emailId;
             $scope.ledgerForm.alias = response.alias;
@@ -244,7 +277,10 @@ function AccLedgerController($rootScope,$scope,$filter, ngTableParams,apiCall,ap
         });
     }
     
-    
+    //ledgers all-data
+    // apiCall.getCall(apiPath.getAllNewLedgers).then(function(res){
+    // console.log('res',res);
+    // });
     // Chosen data
     // ----------------------------------- 
     vm.underWhat=[];
@@ -374,12 +410,15 @@ function AccLedgerController($rootScope,$scope,$filter, ngTableParams,apiCall,ap
         //Auto suggest Client Name For Debit
         var jsuggestPath = apiPath.getLedgerJrnl+id;
         
-        apiCall.getCall(jsuggestPath).then(function(response3){
-            // console.log(response3)
+        // apiCall.getCall(jsuggestPath).then(function(response3){
+        apiCall.getCall(apiPath.getAllNewLedgers).then(function(response3){
+            // console.log('response3',response3)
             toaster.clear();
             
             if(angular.isArray(response3)){
                 vm.allLedgerData = response3;
+                
+                // vm.allLedgerData.sortBy('ledgerName')
             }
             else{
                 vm.allLedgerData = [];

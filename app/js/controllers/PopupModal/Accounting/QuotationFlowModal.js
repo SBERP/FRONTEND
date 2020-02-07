@@ -30,6 +30,7 @@ function QuotationFlowController($scope,toaster,$filter, $modalInstance,$rootSco
 		}
 	});
 	$scope.ok = function() {
+        console.log('in ok');
 		var res1 = {};
 		res1.userId = $scope.assignTo;
 		res1.statusId = $scope.quotationStatus;

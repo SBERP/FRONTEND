@@ -40,7 +40,8 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 			$rootScope.accView.fromDate = moment(vm.dt1).format(apiDateFormate);
 			$rootScope.accView.toDate = moment(vm.dt2).format(apiDateFormate);
 		}
-		var headerData = {'Content-Type': undefined,'fromDate':$rootScope.accView.fromDate,'companyId':$rootScope.accView.companyId,'toDate':$rootScope.accView.toDate,'isQuotationProcess':'yes'};
+        var headerData = {'Content-Type': undefined,'fromDate':$rootScope.accView.fromDate,'companyId':$rootScope.accView.companyId,'toDate':$rootScope.accView.toDate,'isQuotationProcess':'yes'};
+        console.log('headerData',headerData);
 		var getJrnlPath = apiPath.postQuotationBill;
 		toaster.clear();
 		toaster.pop('wait', 'Please Wait', 'Data Loading....',30000);
@@ -86,6 +87,7 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 			var getJrnlPath = apiPath.postQuotationBill;
 		}
 		apiCall.getCallHeader(getStatusPath,headerData).then(function(response){
+            // console.log('response',response);
 			$scope.statusCounts = response;
 			finalStatus = fetchArrayService.getfilteredSingleObject(response,'finalized','statusPosition');
 			toaster.clear();
@@ -283,7 +285,7 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 			
 		}, function () {
 			
-			console.log('Cancel');	
+			// console.log('Cancel');	
 			Modalopened = false;
 			
 		});
@@ -371,6 +373,7 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 	}
 	$scope.loadStatusData = function(obj)
 	{
+        // console.log('obj',obj);
 		if (obj.statusPosition=='quotation') {
 			$scope.activeStatus = {statusId : obj.statusId};
 			
@@ -564,7 +567,7 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 	}
 	$scope.itemListModel = function(sale){
 		if (Modalopened) return;
-		toaster.pop('wait', 'Please Wait', 'popup opening....',600000);
+		// toaster.pop('wait', 'Please Wait', 'popup opening....',600000);
 		var statusType = 'list';
 		if (sale.dispatchStatus == 0)
 		{
@@ -581,9 +584,11 @@ function AccFlowViewController($rootScope,$scope, $filter, $http, ngTableParams,
 			resolve:
 			{
 				billData: function(){
+                    // console.log('sale',sale);s
 					return sale;
 				},
 				statusType: function(){
+                    // console.log('statusType',statusType);
 					return statusType;
 				}
 			}

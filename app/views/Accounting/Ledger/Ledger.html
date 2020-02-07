@@ -7,21 +7,18 @@
     <!-- START panel-->
     <div data-ng-controller="AccLedgerController as form" class="container-fluid">
         <toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
-        <div class="col-md-9" style="padding-left:0px">
+        <div class="col-md-6" style="padding-left:0px">
             <div class="panel panel-default" ng-show="alertData">
                 <div class="panel-body">
-                    <!--div class="alert alert-info" style="background-color:#17A1E5 !important;" data-ng-class="app.theme.brand" -->
                     <div class="alert alert-info"  data-ng-class="app.theme.brand" >
                         <i class="fa fa-exclamation-triangle"></i> &nbsp; <b>Select Ledger</b>
                     </div>
-                    <!-- Not Visible -->
                     <div class="alert alert-info" style="visibility:hidden">
                         Select Ledger
                     </div>
                     <div class="alert alert-info" style="visibility:hidden">
                         Select Ledger
                     </div>
-                    <!-- END -->
                 </div>
             </div>
             
@@ -272,86 +269,133 @@
                     </div>
                 </div>
                 
-                <div class="col-md-3" style="padding-right:0px">
-                    <div class="panel panel-default">
-                        
-                        <div class="panel-heading myHeading" >
-                            <div class="panel-title">
-                                Ledger
-                                <button class="btn btn-labeled btn-primary pull-right btn-sm"  ng-click="showInput()" data-ng-class="app.theme.brand" >
-                                    <span class="btn-label"><i class="fa fa-plus"></i></span>
-                                    Add Ledger</button>
-                                    
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    
-                                    <div class="form-group">
-                                        <h7 style="color:#7da6c2 ;" >Choose company to filter:</h7>
-                                        <select chosen="" ng-model="getLegderCompany.companyDropDown"  data-ng-options="s.companyName for s in form.companyDrop track by s.companyId" ng-change="changeCompanyToGetList(getLegderCompany.companyDropDown.companyId)"   class="form-control chosen-select hightlight-company" >
-                                            
-                                        </select>
+                <!-- <div class="col-md-6" style="padding-right:0px" ng-show="trueData">
+                    <div style="padding-right:0px">
+                        <div class="panel panel-default">
+                            
+                            <div class="panel-heading myHeading" >
+                                <div class="panel-title">
+                                    Ledger
+                                    <button class="btn btn-labeled btn-primary pull-right btn-sm"  ng-click="showInput()" data-ng-class="app.theme.brand" >
+                                        <span class="btn-label"><i class="fa fa-plus"></i></span>
+                                        Add Ledger</button>
+                                        
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    
-                                    <div class="form-group">
-                                        <h7 style="color:#7da6c2 ;" >Choose Ledger Group to filter:</h7>
-                                        <select chosen="" ng-model="getLegderGroup.companyDropDown"  data-ng-options="s.ledgerGroupName for s in form.groupDrop track by s.ledgerGroupId" ng-change="changeGroupToGetList(getLegderGroup.companyDropDown.ledgerGroupId)"   class="form-control chosen-select hightlight-company" >
-                                            
-                                        </select>
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        
+                                        <div class="form-group">
+                                            <h7 style="color:#7da6c2 ;" >Choose company to filter:</h7>
+                                            <select chosen="" ng-model="getLegderCompany.companyDropDown"  data-ng-options="s.companyName for s in form.companyDrop track by s.companyId" ng-change="changeCompanyToGetList(getLegderCompany.companyDropDown.companyId)"   class="form-control chosen-select hightlight-company" >
+                                                
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div class="input-group m-b"> 
-                                        <input  ng-model="query" type="text" class="form-control" placeholder="Search" />
-                                        <span class="input-group-addon input-sm"><i class="fa fa-search" ></i></span>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        
+                                        <div class="form-group">
+                                            <h7 style="color:#7da6c2 ;" >Choose Ledger Group to filter:</h7>
+                                            <select chosen="" ng-model="getLegderGroup.companyDropDown"  data-ng-options="s.ledgerGroupName for s in form.groupDrop track by s.ledgerGroupId" ng-change="changeGroupToGetList(getLegderGroup.companyDropDown.ledgerGroupId)"   class="form-control chosen-select hightlight-company" >
+                                                
+                                            </select>
+                                        </div>
+                                        <div class="input-group m-b">
+                                            <input  ng-model="query" type="text" class="form-control" placeholder="Search" />
+                                            <span class="input-group-addon input-sm"><i class="fa fa-search" ></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="panel-body" style="overflow-y: scroll !important; max-height: calc(139vh - 300px) !important;">
+                                    <ledgerlist ledgerdata="form.allLedgerData" querydata="query" viewledgerdetail="viewLedgerDetails(ledgerId)" viewdata="viewReadOlny(ledgerId)" editdata="editLedgerData(ledgerId)" viewLedgerData="viewLedgerDetails(ledgerId)"></ledgerlist>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                    <!-- <div class="col-md-6" style="padding-right:0px" ng-hide="trueData"> -->
+                        <div class="col-md-6" style="padding-right:0px">
+                            <div style="padding-right:0px">
+                                <div class="panel panel-default">
+                                    
+                                    <div class="panel-heading myHeading" >
+                                        <div class="panel-title">
+                                            Ledger
+                                            <button class="btn btn-labeled btn-primary pull-right btn-sm"  ng-click="showInput()" data-ng-class="app.theme.brand" >
+                                                <span class="btn-label"><i class="fa fa-plus"></i></span>
+                                                Add Ledger</button>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                
+                                                <div class="form-group">
+                                                    <h7 style="color:#7da6c2 ;" >Choose company to filter:</h7>
+                                                    <select chosen="" ng-model="getLegderCompany.companyDropDown"  data-ng-options="s.companyName for s in form.companyDrop track by s.companyId" ng-change="changeCompanyToGetList(getLegderCompany.companyDropDown.companyId)"   class="form-control chosen-select hightlight-company" >
+                                                        
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                
+                                                <div class="form-group">
+                                                    <h7 style="color:#7da6c2 ;" >Choose Ledger Group to filter:</h7>
+                                                    <select chosen="" ng-model="getLegderGroup.companyDropDown"  data-ng-options="s.ledgerGroupName for s in form.groupDrop track by s.ledgerGroupId" ng-change="changeGroupToGetList(getLegderGroup.companyDropDown.ledgerGroupId)"   class="form-control chosen-select hightlight-company" >
+                                                        
+                                                    </select>
+                                                </div>
+                                                <div class="input-group m-b">
+                                                    <input  ng-model="query" type="text" class="form-control" placeholder="Search" />
+                                                    <span class="input-group-addon input-sm"><i class="fa fa-search" ></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="panel-body" style="overflow-y: scroll !important; max-height: calc(139vh - 300px) !important;">
+                                            <ledgerlist ledgerdata="form.allLedgerData" querydata="query" viewledgerdetail="viewLedgerDetails(ledgerId)" viewdata="viewReadOlny(ledgerId)" editdata="editLedgerData(ledgerId)" viewLedgerData="viewLedgerDetails(ledgerId)"></ledgerlist>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class="panel-body" style="overflow-y: scroll !important;
-                            max-height: calc(100vh - 300px) !important;">
-                            <ledgerlist ledgerdata="form.allLedgerData" querydata="query" viewledgerdetail="viewLedgerDetails(ledgerId)" viewdata="viewReadOlny(ledgerId)" editdata="editLedgerData(ledgerId)" viewLedgerData="viewLedgerDetails(ledgerId)"></ledgerlist>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            
-            <script type="text/ng-template" id="errorRequired">
-                <span class="text-danger" ng-message="required">{{errorMessage.require}}</span>
-            </script>
-            
-            <script type="text/ng-template" id="errorEmail">
-                <span class="text-danger" ng-message="pattern">{{errorMessage.email}}</span>
-            </script>
-            
-            <script type="text/ng-template" id="errorLonglength">
-                <span class="text-danger" ng-message="maxlength">{{errorMessage.longLength}}</span>
-            </script>
-            
-            <script type="text/ng-template" id="errorShortlength">
-                <span class="text-danger" ng-message="minlength">{{errorMessage.shortLength}}</span>
-            </script>
-            
-            <script type="text/ng-template" id="errorPatternAlpha">
-                <span class="text-danger" ng-message="pattern">{{errorMessage.Alphabets}}</span>
-            </script>
-            
-            <script type="text/ng-template" id="errorPatternNumber">
-                <span class="text-danger" ng-message="pattern">{{errorMessage.Numbers}}</span>
-            </script>
-            
-            <script type="text/ng-template" id="errorPatternAlphaNumeric">
-                <span class="text-danger" ng-message="pattern">{{errorMessage.AlphaNumeric}}</span>
-            </script>
-            
-            <script type="text/ng-template" id="errorPatternThisSpecial">
-                <span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacter}}</span>
-            </script>
-            
-            <script type="text/ng-template" id="errorPatternThisSpecial&Number">
-                <span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacterAndNumber}}</span>
-            </script>
+                            
+                            <script type="text/ng-template" id="errorRequired">
+                                <span class="text-danger" ng-message="required">{{errorMessage.require}}</span>
+                            </script>
+                            
+                            <script type="text/ng-template" id="errorEmail">
+                                <span class="text-danger" ng-message="pattern">{{errorMessage.email}}</span>
+                            </script>
+                            
+                            <script type="text/ng-template" id="errorLonglength">
+                                <span class="text-danger" ng-message="maxlength">{{errorMessage.longLength}}</span>
+                            </script>
+                            
+                            <script type="text/ng-template" id="errorShortlength">
+                                <span class="text-danger" ng-message="minlength">{{errorMessage.shortLength}}</span>
+                            </script>
+                            
+                            <script type="text/ng-template" id="errorPatternAlpha">
+                                <span class="text-danger" ng-message="pattern">{{errorMessage.Alphabets}}</span>
+                            </script>
+                            
+                            <script type="text/ng-template" id="errorPatternNumber">
+                                <span class="text-danger" ng-message="pattern">{{errorMessage.Numbers}}</span>
+                            </script>
+                            
+                            <script type="text/ng-template" id="errorPatternAlphaNumeric">
+                                <span class="text-danger" ng-message="pattern">{{errorMessage.AlphaNumeric}}</span>
+                            </script>
+                            
+                            <script type="text/ng-template" id="errorPatternThisSpecial">
+                                <span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacter}}</span>
+                            </script>
+                            
+                            <script type="text/ng-template" id="errorPatternThisSpecial&Number">
+                                <span class="text-danger" ng-message="pattern">{{errorMessage.thisSpecialCharacterAndNumber}}</span>
+                            </script>

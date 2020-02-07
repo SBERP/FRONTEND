@@ -133,7 +133,12 @@ function PurchaseReturnController($rootScope, $scope, apiCall, apiPath, apiRespo
 				} else if (response[arrayData].settingType == "advance") {
 					var arrayData1 = response[arrayData];
 					$scope.enableDisableTaxReadOnly = arrayData1.advanceTaxReadOnlyStatus == "enable" ? true : false;
-				}
+				} else if (response[arrayData].settingType=="taxation") 
+                {
+                    var arrayData1 = response[arrayData];
+                    $scope.enableDisableGST = arrayData1.taxationGstStatus=="enable" ? true : false;
+                    // console.log('$scope.enableDisableGST',$scope.enableDisableGST);
+                }
 			}
 		}
 	}

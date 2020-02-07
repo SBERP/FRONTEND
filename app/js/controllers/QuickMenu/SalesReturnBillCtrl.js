@@ -217,7 +217,13 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 					var arrayData1 = response[arrayData];
 					$scope.enableItemizedPurchaseSales = arrayData1.inventoryItemizeStatus=="enable" ? true : false;
 					
-				}
+                }       
+                else if (response[arrayData].settingType=="taxation") 
+                {
+                    var arrayData1 = response[arrayData];
+                    $scope.enableDisableGST = arrayData1.taxationGstStatus=="enable" ? true : false;
+                    // console.log('$scope.enableDisableGST',$scope.enableDisableGST);
+                }
 				else if (response[arrayData].settingType=="advance") 
 				{
 					var arrayData1 = response[arrayData];
@@ -519,9 +525,11 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 						vm.AccBillTable[index].amount = $filter('setDecimal')(calPrice * vm.AccBillTable[index].qty,$scope.noOfDecimalPoints);
 						if(vm.AccBillTable[index].amount == 0){
 							vm.AccBillTable[index].amount = $filter('setDecimal')(response.mrp * vm.AccBillTable[index].qty,$scope.noOfDecimalPoints);
-						}
+                        }
+                        if($scope.enableDisableGST){
 						$scope.calculateTaxReverseTwo(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage,index);
-					});
+                    }
+                });
 				}
 				else{
 					$scope.getAdvanceMouCalculationPrice(response,index, function (responsePrice) {
@@ -537,9 +545,11 @@ function SalesReturnBillController($rootScope,$scope,apiCall,apiPath,$http,$wind
 					vm.AccBillTable[index].amount = $filter('setDecimal')(response.purchasePrice * vm.AccBillTable[index].qty,$scope.noOfDecimalPoints);
 					if(vm.AccBillTable[index].amount == 0){
 						vm.AccBillTable[index].amount = $filter('setDecimal')(response.mrp * vm.AccBillTable[index].qty,$scope.noOfDecimalPoints);
-					}
+                    }
+                    if($scope.enableDisableGST){
 					$scope.calculateTaxReverseTwo(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage,index);
-				}else{
+                }
+            }else{
 					$scope.calculateTaxReverse(vm.AccBillTable[index],vm.AccBillTable[index].cgstPercentage,vm.AccBillTable[index].sgstPercentage,vm.AccBillTable[index].igstPercentage);
 				}
 			}

@@ -230,7 +230,7 @@
                                                         <div class="form-group" style="margin-bottom: 0px">
                                                             <label  class="col-sm-2 control-label">*Name</label>
                                                             <div class="col-sm-10">
-                                                                <input typeahead="s.clientName for s in form.clientSuggest | filter:$viewValue | limitTo:10"  typeahead-on-select="setClientSuggest('clientName',$item);" ng-model="quickBill.clientName" name="clientName"  type="text" placeholder="Client Name" class="form-control input-sm"  ng-required="true" ng-pattern="/^[a-zA-Z0-9 &_`#().\'-]*$/"  ng-disabled="form.stateDataLoaded" ng-maxlength="100" ng-change="changeInBill('clientName',quickBill.clientName)" />
+                                                                <input typeahead="s.clientName for s in form.clientSuggest | filter:$viewValue"  typeahead-on-select="setClientSuggest('clientName',$item);" ng-model="quickBill.clientName" name="clientName"  type="text" placeholder="Client Name" class="form-control input-sm"  ng-required="true" ng-pattern="/^[a-zA-Z0-9 &_`#().\'-]*$/"  ng-disabled="form.stateDataLoaded" ng-maxlength="100" ng-change="changeInBill('clientName',quickBill.clientName)" />
                                                                 <!-- <span  only-alpha ></span> -->
                                                                 <span ng-messages="formBill.clientName.$error" ng-if="formBill.clientName.$dirty || formBill.clientName.$touched" role="alert">
                                                                     <span ng-messages-include="errorRequired"></span>
@@ -352,7 +352,7 @@
                                                                                                 </th>
                                                                                                 <th ng-if="enableDisableLWHSetting" class="header" style="text-align:center;width:11%;padding-top:5px !important;padding-bottom:5px !important;">L | W | H</th>
                                                                                                 <th ng-if="divTag" class="header" style="width:11%;padding-top:5px !important;padding-bottom:5px !important;text-align:center">
-                                                                                                    <span  ng-if="enableDisableColor">Color  </span> 
+                                                                                                    <span  ng-if="enableDisableColor">Color  </span>
                                                                                                     <span ng-if="(enableDisableColor && enableDisableSize)"> | </span>
                                                                                                     <span ng-if="enableDisableSize">Size</span>
                                                                                                     <span ng-if="(enableDisableColor && enableDisableVariant) || (enableDisableSize && enableDisableVariant) "> | </span>
@@ -363,9 +363,9 @@
                                                                                                 <th class="header" style="width:8%;padding-top:5px !important;padding-bottom:5px !important;" >Rate</th>
                                                                                                 <th class="header" style="width:9%;padding-top:5px !important;padding-bottom:5px !important;">Discount</th>
                                                                                                 
-                                                                                                <th ng-if="enableDisableGST" class="header" style="width:3%;padding-top:5px !important;padding-bottom:5px !important;" >CGST</th ng-if="enableDisableGST">
-                                                                                                    <th ng-if="enableDisableGST" class="header" style="width:3%;padding-top:5px !important;padding-bottom:5px !important;" >SGST</th ng-if="enableDisableGST">
-                                                                                                        <th ng-if="enableDisableGST" class="header" style="width:3%;padding-top:5px !important;padding-bottom:5px !important;" >IGST</th ng-if="enableDisableGST">
+                                                                                                <th ng-if="enableDisableGST" class="header" style="width:3%;padding-top:5px !important;padding-bottom:5px !important;" >CGST</th>
+                                                                                                    <th ng-if="enableDisableGST" class="header" style="width:3%;padding-top:5px !important;padding-bottom:5px !important;" >SGST</th>
+                                                                                                        <th ng-if="enableDisableGST" class="header" style="width:3%;padding-top:5px !important;padding-bottom:5px !important;" >IGST</th>
                                                                                                             
                                                                                                             <th class="header" style="width:9%;padding-top:5px !important;padding-bottom:5px !important;" >Amount</th>
                                                                                                             <th class="header" style="width:4%;padding-top:5px !important;padding-bottom:5px !important;">Action</th>
@@ -412,11 +412,10 @@
                                                                                                                 </select>
                                                                                                             </td>
                                                                                                             <td ng-if="enableDisableLWHSetting" class="header" style="text-align:center;">
-                                                                                                                <input ng-if="enableDisableLWHArray[$index].lengthStatus" ng-required="true" ng-minlength="1" ng-pattern="/^(0*[1-9][0-9]*([\.][0-9]+)?|0+[\.][0-9]*[1-9][0-9]*)$/" ng-model="item.lengthValue" placeholder="Length" ng-change="changeProductTable();changeQuantity($index);" ng-style="enableDisableLWHArray[$index].styleObj" type="text" class="form-control input-sm" only-number/>
-                                                                                                                <input ng-if="enableDisableLWHArray[$index].widthStatus" ng-required="true" ng-minlength="1" ng-pattern="/^(0*[1-9][0-9]*([\.][0-9]+)?|0+[\.][0-9]*[1-9][0-9]*)$/" ng-model="item.widthValue" ng-change="changeProductTable();changeQuantity($index);" ng-style="enableDisableLWHArray[$index].styleObj" type="text" class="form-control input-sm" placeholder="Width" only-number/>
-                                                                                                                <input ng-if="enableDisableLWHArray[$index].heightStatus" ng-required="true" ng-minlength="1" ng-pattern="/^(0*[1-9][0-9]*([\.][0-9]+)?|0+[\.][0-9]*[1-9][0-9]*)$/" ng-model="item.heightValue" ng-change="changeProductTable();changeQuantity($index);" ng-style="enableDisableLWHArray[$index].styleObj" type="text" class="form-control input-sm" placeholder="Height" only-number/>
+                                                                                                                <input ng-if="enableDisableLWHArray[$index].lengthStatus" ng-required="true" ng-minlength="1" ng-pattern="/^(0*[1-9][0-9]*([\.][0-9]+)?|0+[\.][0-9]*[1-9][0-9]*)$/" ng-model="item.lengthValue" placeholder="Length" ng-change="changeProductTable();changeQuantity(item,$index);" ng-style="enableDisableLWHArray[$index].styleObj" type="text" class="form-control input-sm" only-number/>
+                                                                                                                <input ng-if="enableDisableLWHArray[$index].widthStatus" ng-required="true" ng-minlength="1" ng-pattern="/^(0*[1-9][0-9]*([\.][0-9]+)?|0+[\.][0-9]*[1-9][0-9]*)$/" ng-model="item.widthValue" ng-change="changeProductTable();changeQuantity(item,$index);" ng-style="enableDisableLWHArray[$index].styleObj" type="text" class="form-control input-sm" placeholder="Width" only-number/>
+                                                                                                                <input ng-if="enableDisableLWHArray[$index].heightStatus" ng-required="true" ng-minlength="1" ng-pattern="/^(0*[1-9][0-9]*([\.][0-9]+)?|0+[\.][0-9]*[1-9][0-9]*)$/" ng-model="item.heightValue" ng-change="changeProductTable();changeQuantity(item,$index);" ng-style="enableDisableLWHArray[$index].styleObj" type="text" class="form-control input-sm" placeholder="Height" only-number/>
                                                                                                                 <span class="pull-right" ng-show="enableDisableLWHArray[$index].lengthStatus || enableDisableLWHArray[$index].heightStatus || enableDisableLWHArray[$index].widthStatus">{{item.totalFt}} Ft</span>
-                                                                                                                
                                                                                                             </td>
                                                                                                             <td style="text-align:center;" ng-if="divTag">
                                                                                                                 <input  ng-if="enableDisableColor" placeholder="Color" type="text" ng-model="item.color"  class="form-control input-sm " ng-class="ProductColorSizeVarDesign"  ng-change="changeProductTable()" /> 
@@ -429,7 +428,7 @@
                                                                                                                 <input placeholder="Frame No" type="text" ng-model="item.frameNo"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"   ng-pattern="/^[a-z-A-Z0-9 ]*$/" ng-change="changeProductTable()" /> 
                                                                                                             </td>
                                                                                                             <td>
-                                                                                                                <input  type="text" ng-model="item.qty"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"  ng-required="true" ng-minlength="1" ng-pattern="/^\s*(?=.*[1-9])\d*(?:\.\d{1,2})?\s*$/" ng-change="changeProductTable();changeQuantity($index)" only-number /> 
+                                                                                                                <input  type="text" ng-model="item.qty"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"  ng-required="true" ng-minlength="1" ng-pattern="/^\s*(?=.*[1-9])\d*(?:\.\d{1,2})?\s*$/" ng-change="changeProductTable();changeQuantity(item,$index)" only-number /> 
                                                                                                             </td>
                                                                                                             
                                                                                                             <td>
@@ -461,7 +460,7 @@
                                                                                                             
                                                                                                             <td>
                                                                                                                 
-                                                                                                                <input placeholder="(&#x20b9;)Amount" type="text" ng-model="item.amount"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"  ng-required="true" ng-minlength="1" ng-pattern="/^[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverseTwo(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage,$index);" only-number /> 
+                                                                                                                <input placeholder="(&#x20b9;)Amount" type="text" ng-model="item.amount"  class="form-control input-sm" style="width:100%;padding-left: 6px;padding-right: 6px;"  ng-required="true" ng-minlength="1" ng-pattern="/^[0-9 .]*$/" ng-change="changeProductTable();calculateTaxReverseTwo(item,item.cgstPercentage,item.sgstPercentage,item.igstPercentage,item.quantity,$index);" only-number /> 
                                                                                                             </td>
                                                                                                             
                                                                                                             <td>
@@ -482,10 +481,11 @@
                                                                                                     </tbody>
                                                                                                     <tfoot>
                                                                                                         <tr>
+                                                                                                            <td></td>
                                                                                                             <td style="text-align:right" title="Total Quantity" colspan="{{colspanValue}}" >
                                                                                                                 <strong ng-bind="getTotalQuantity()"><strong>
                                                                                                                 </td>
-                                                                                                                <!-- <td></td> -->
+                                                                                                                <td></td>
                                                                                                                 <td> 
                                                                                                                     <select  ng-model="quickBill.totalDiscounttype"  class="form-control input-sm" style="padding-left: 3px;padding-right: 3px;width:60%;float:left;" ng-change="changeProductTable();advanceValueUpdate()" >
                                                                                                                         <option value="flat" selected="selected">Flat</option>
@@ -493,19 +493,19 @@
                                                                                                                     </select>
                                                                                                                     <input  type="text" ng-model="quickBill.totalDiscount"  class="form-control input-sm" style="padding-left: 5px;padding-right: 5px;width:40%;" ng-pattern="/^[0-9 .]*$/" ng-change="changeProductTable();advanceValueUpdate()"  ng-attr-max="{{quickBill.totalDiscounttype == 'percentage' && '100' || ''}}" only-number /> 
                                                                                                                 </td>
-                                                                                                                <td style="text-align:right">
+                                                                                                                <td style="text-align:right"  ng-if="enableDisableGST">
                                                                                                                     <input id="price" type="text" ng-disabled="totalCSgstDisable" ng-model="quickBill.totalCgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%"  ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();zeroGstApply();advanceValueUpdate()" only-number /> 
                                                                                                                     <span ng-if="quickBill.totalCgstAmount > 0 && !totalCSgstDisable" ng-disabled="totalCSgstDisable" ng-bind="quickBill.totalCgstAmount"></span>
                                                                                                                 </td>
-                                                                                                                <td style="text-align:right">
+                                                                                                                <td style="text-align:right"  ng-if="enableDisableGST">
                                                                                                                     <input id="price" type="text" ng-disabled="totalCSgstDisable" ng-model="quickBill.totalSgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%"  ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();zeroGstApply();advanceValueUpdate()" only-number /> 
                                                                                                                     <span ng-if="quickBill.totalSgstAmount > 0 && !totalCSgstDisable" ng-disabled="totalCSgstDisable" ng-bind="quickBill.totalSgstAmount" ></span>
                                                                                                                 </td>
-                                                                                                                <td style="text-align:right">
+                                                                                                                <td style="text-align:right"  ng-if="enableDisableGST">
                                                                                                                     <input id="price" type="text" ng-disabled="totalIgstDisable" ng-model="quickBill.totalIgstPercentage"  class="form-control input-sm" placeholder="%" style="width:100%;padding-left: 6px;padding-right: 6px;height:10%" ng-minlength="1" ng-pattern="/^[0-9]+[0-9 .]*$/" ng-change="changeProductTable();zeroGstApply();advanceValueUpdate()" only-number /> 
                                                                                                                     <span ng-if="quickBill.totalIgstAmount > 0" ng-disabled="totalIgstDisable" ng-bind="quickBill.totalIgstAmount"></span>
                                                                                                                 </td>
-                                                                                                                <!-- <td ></td> -->
+                                                                                                                <td ></td>
                                                                                                                 <!-- <td colspan="1"></td> -->
                                                                                                             </tr>
                                                                                                             <tr>
@@ -516,8 +516,8 @@
                                                                                                                             <span ng-messages-include="errorPatternNumber"></span>
                                                                                                                         </span>
                                                                                                                     </td>
-                                                                                                                    <td> 
-                                                                                                                    </td>
+                                                                                                                    <!-- <td> 
+                                                                                                                    </td> -->
                                                                                                                     <td ng-if="enableDisableGST" colspan="3" style="text-align:right" ng-bind="quickBill.tax = getTotalTax() ? (getTotalTax() | setDecimal: noOfDecimalPoints) : 0"></td>
                                                                                                                     <td style="text-align:right" ng-bind="total_without_expense = getTotal() ? (getTotal() | setDecimal: noOfDecimalPoints) : 0;(openExpenseRawData ? total_without_expense : total = total_without_expense)" ></td>
                                                                                                                     <!--td style="text-align:right"><span style="visibility:hidden">{{grandTotalTable = ((totalTable -- quickBill.tax) + (quickBill.extraCharge ? quickBill.extraCharge*1 : 0) | setDecimal: noOfDecimalPoints)}}<span></td-->
@@ -548,14 +548,14 @@
                                                                                                                             
                                                                                                                         </td>
                                                                                                                         
-                                                                                                                        <td colspan="1" style="text-align:right;">
+                                                                                                                        <td colspan="2" style="text-align:right;">
                                                                                                                             <select  ng-model="item.expenseType"  class="form-control input-sm" style="padding-left: 3px;padding-right: 3px;width:60%;float:left;" ng-change="changeProductTable();advanceValueUpdate();" ng-required="true">
                                                                                                                                 <option value="flat" selected="selected">Flat</option>
                                                                                                                                 <option value="percentage">%</option>
                                                                                                                             </select>
                                                                                                                             <input  type="text" ng-model="item.expenseValue"  class="form-control input-sm" style="padding-left: 5px;padding-right: 5px;width:40%;" ng-pattern="/^[0-9 .]*$/" ng-change="changeProductTable();advanceValueUpdate();" ng-required="true"  only-number /> 
                                                                                                                         </td>
-                                                                                                                        <td colspan="3">
+                                                                                                                        <td colspan="1">
                                                                                                                             <input type="text" placeholder="GST(%)" ng-model="item.expenseTax" ng-change="changeProductTable();advanceValueUpdate();" class="form-control input-sm pull-left"  style="padding-left: 5px;padding-right: 5px;width:40%;" only-number>
                                                                                                                             <span class="pull-right" ng-bind='item.expenseAmt | setDecimal: noOfDecimalPoints'></span>
                                                                                                                         </td>
